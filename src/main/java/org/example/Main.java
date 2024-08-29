@@ -1,7 +1,6 @@
 package org.example;
 
 import org.example.services.TraineeService;
-import org.example.services.TraineeService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -23,6 +22,11 @@ public class Main {
         trainee.createTrainee("Jack", "Johnes", "pass78+-rt",
                 LocalDate.now(), "myAddress");
 
+        trainee.createTrainee("Jack", "Johnes", "gnh5t+-r&t",
+                LocalDate.now(), "myAddress");
+
+        trainee.createTrainee("Jack", "Johnes", "gnh5t+-r&t",
+                LocalDate.now(), "myAddress");
 
 
 
