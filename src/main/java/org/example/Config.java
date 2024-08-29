@@ -1,7 +1,5 @@
 package org.example;
 
-import org.example.model.Trainee;
-import org.example.model.Trainer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
