@@ -30,7 +30,6 @@ public class TraineeService {
             trainee.setPassword(password);
         }
         else{
-            System.out.println("passowrd = " + password);
             throw new IllegalArgumentException("Invalid password");
         }
 
@@ -72,6 +71,14 @@ public class TraineeService {
         }catch (IOException e){
             e.printStackTrace();
         }
+    }
+
+    public Trainee getTrainee(String username) throws Exception {
+        Trainee trainee = (Trainee) storageMap.get("Trainee").get(username);
+        if (trainee == null){
+            throw new Exception("No trainee with the username: " + username);
+        }
+        return trainee;
     }
 
 

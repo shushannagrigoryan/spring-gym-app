@@ -18,7 +18,15 @@ public class Trainer extends User{
                 ", password='" + password + '\'' +
                 ", isActive=" + isActive +
                 '}';
+    }
 
 
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUserName(String userName){
+        this.username = userName;
     }
 }

@@ -1,6 +1,9 @@
 package org.example.model;
 
+import org.springframework.stereotype.Repository;
+
 import java.time.LocalDate;
+
 
 public class Trainee extends User{
     private final LocalDate dateOfBirth;
