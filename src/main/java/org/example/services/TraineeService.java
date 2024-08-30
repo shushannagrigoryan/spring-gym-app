@@ -1,5 +1,6 @@
 package org.example.services;
 
+import org.example.MapDataClass;
 import org.example.ValidatePassword;
 import org.example.model.Trainee;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import java.util.Map;
 @Service
 public class TraineeService {
     @Autowired
-    private Map<String, Map<String, Object>> storageMap;
+    private MapDataClass storageMap;
 
     @Value("${username.suffix}")
     private String usernameSuffixPath;
@@ -21,7 +22,7 @@ public class TraineeService {
     public void createTrainee(String firstName, String lastName, String password,
                               LocalDate dateOfBirth, String address){
 
-        Map<String, Object> traineeMap = storageMap.get("Trainee");
+        Map<String, Trainee> traineeMap = storageMap.getTraineeMap();
         Trainee trainee = new Trainee(firstName, lastName, dateOfBirth, address);
         String username = generateUsername(firstName, lastName);
         trainee.setUserName(username);
@@ -34,13 +35,13 @@ public class TraineeService {
         }
 
         traineeMap.put(username,trainee);
-        System.out.println(storageMap);
+        System.out.println(traineeMap);
     }
 
     private String generateUsername(String firstName, String lastName){
         String username = firstName + lastName;
 
-        if(storageMap.get("Trainee").get(username) != null){
+        if(storageMap.getTraineeMap().get(username) != null){
             return username + getUsernameSuffix();
         }
         return username;
@@ -74,16 +75,11 @@ public class TraineeService {
     }
 
     public Trainee getTrainee(String username) throws Exception {
-        Trainee trainee = (Trainee) storageMap.get("Trainee").get(username);
+        Trainee trainee = storageMap.getTraineeMap().get(username);
         if (trainee == null){
             throw new Exception("No trainee with the username: " + username);
         }
         return trainee;
     }
-
-
-
-
-
 
 }

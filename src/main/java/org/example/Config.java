@@ -15,12 +15,9 @@ import java.util.Map;
 public class Config {
 
     @Bean
-    public Map<String, Map<String, Object>> storageMap(){
-        Map<String, Map<String, Object>>  map = new HashMap<>();
-        map.put("Trainee", new HashMap<>());
-        map.put("Trainer", new HashMap<>());
-        map.put("Training", new HashMap<>());
-        return map;
+    public MapDataClass storageMap(){
+        return new MapDataClass();
+
     }
 
     @Bean
