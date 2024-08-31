@@ -19,12 +19,19 @@ public class TraineeService {
     @Value("${username.suffix}")
     private String usernameSuffixPath;
 
+    private UserService userService;
+
+    @Autowired
+    public void setDependencies(UserService userService){
+        this.userService = userService;
+    }
+
     public void createTrainee(String firstName, String lastName, String password,
                               LocalDate dateOfBirth, String address){
 
         Map<String, Trainee> traineeMap = storageMap.getTraineeMap();
         Trainee trainee = new Trainee(firstName, lastName, dateOfBirth, address);
-        String username = generateUsername(firstName, lastName);
+        String username = userService.generateUsername(firstName, lastName);
         trainee.setUserName(username);
 
         if (ValidatePassword.isValidPassword(password)){
@@ -36,42 +43,7 @@ public class TraineeService {
 
         traineeMap.put(username,trainee);
         System.out.println(traineeMap);
-    }
-
-    private String generateUsername(String firstName, String lastName){
-        String username = firstName + lastName;
-
-        if(storageMap.getTraineeMap().get(username) != null){
-            return username + getUsernameSuffix();
-        }
-        return username;
-    }
-
-    private Long getUsernameSuffix(){
-        long usernameSuffix = 0L;
-        try(FileReader fileReader = new FileReader(usernameSuffixPath);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-        ){
-            String fileNumber = bufferedReader.readLine();
-            System.out.println(fileNumber);
-            if(fileNumber != null){
-                System.out.println(fileNumber);
-                usernameSuffix = Long.parseLong(fileNumber) + 1;
-            }
-            writeUsernameSuffixToFile(usernameSuffix);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        return usernameSuffix;
-    }
-
-    private void writeUsernameSuffixToFile(long usernameSuffix){
-        try(FileWriter fileWriter = new FileWriter(usernameSuffixPath);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)){
-            bufferedWriter.write(String.valueOf(usernameSuffix));
-        }catch (IOException e){
-            e.printStackTrace();
-        }
+        System.out.println(traineeMap.keySet());
     }
 
     public Trainee getTrainee(String username) throws Exception {
@@ -81,5 +53,7 @@ public class TraineeService {
         }
         return trainee;
     }
+
+
 
 }
