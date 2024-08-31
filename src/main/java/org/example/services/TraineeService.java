@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.OptionalLong;
 
 @Service
 public class TraineeService {
@@ -41,9 +42,22 @@ public class TraineeService {
             throw new IllegalArgumentException("Invalid password");
         }
 
+        trainee.setId(generateId());
         traineeMap.put(username,trainee);
         System.out.println(traineeMap);
         System.out.println(traineeMap.keySet());
+    }
+
+    private Long generateId(){
+        OptionalLong lastId = storageMap.getTraineeMap().values().stream()
+                .mapToLong(Trainee::getUserID)
+                .max();
+        if(lastId.isPresent()){
+            return lastId.getAsLong() + 1;
+        }
+        else{
+            return 0L;
+        }
     }
 
     public Trainee getTrainee(String username) throws Exception {
