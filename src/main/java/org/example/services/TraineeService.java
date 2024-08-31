@@ -72,9 +72,4 @@ public class TraineeService {
             traineeMap.remove(username);
         }
     }
-
-
-
-
-
 }

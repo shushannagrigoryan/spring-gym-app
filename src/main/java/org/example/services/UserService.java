@@ -20,7 +20,8 @@ public class UserService {
     String generateUsername(String firstName, String lastName){
         String username = firstName + lastName;
 
-        if(storageMap.getTraineeMap().get(username) != null){
+        if((storageMap.getTraineeMap().get(username) != null) || (storageMap.getTrainerMap().get(username) != null)){
+            System.out.println("Username: " + username + " taken");
             return username + getUsernameSuffix();
         }
         return username;
