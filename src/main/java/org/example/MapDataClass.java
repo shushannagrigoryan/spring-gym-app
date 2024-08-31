@@ -11,7 +11,7 @@ import java.util.Map;
 public class MapDataClass {
     private Map<String, Trainee> traineeMap = new HashMap<>();
     private Map<String, Trainer> trainerMap = new HashMap<>();
-    private Map<String, Training> trainingMap = new HashMap<>();
+    private Map<Long, Training> trainingMap = new HashMap<>();
 
     public Map<String, Trainee> getTraineeMap() {
         return traineeMap;
@@ -21,7 +21,7 @@ public class MapDataClass {
         return trainerMap;
     }
 
-    public Map<String, Training> getTrainingMap() {
+    public Map<Long, Training> getTrainingMap() {
         return trainingMap;
     }
 }

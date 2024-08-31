@@ -58,7 +58,4 @@ public class TrainerService {
             return 0L;
         }
     }
-
-
-
 }
