@@ -1,18 +1,21 @@
 package org.example.services;
 
-import org.example.MapDataClass;
 import org.example.model.Trainee;
+import org.example.model.Trainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.util.Map;
 
 @Service
 public class UserService {
 
     @Autowired
-    private MapDataClass storageMap;
+    private Map<String, Trainee> traineeMap;
+    @Autowired
+    private Map<String, Trainer> trainerMap;
 
     @Value("${username.suffix}")
     private String usernameSuffixPath;
@@ -20,7 +23,7 @@ public class UserService {
     String generateUsername(String firstName, String lastName){
         String username = firstName + lastName;
 
-        if((storageMap.getTraineeMap().get(username) != null) || (storageMap.getTrainerMap().get(username) != null)){
+        if((traineeMap.get(username) != null) || (trainerMap.get(username) != null)){
             System.out.println("Username: " + username + " taken");
             return username + getUsernameSuffix();
         }

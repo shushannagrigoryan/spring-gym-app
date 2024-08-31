@@ -1,20 +1,18 @@
 package org.example.services;
 
-import org.example.MapDataClass;
 import org.example.ValidatePassword;
-import org.example.model.Trainee;
 import org.example.model.Trainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.Map;
 import java.util.OptionalLong;
 
 @Service
 public class TrainerService {
+
     @Autowired
-    private MapDataClass storageMap;
+    private Map<String, Trainer> trainerMap;
 
     private UserService userService;
 
@@ -23,7 +21,7 @@ public class TrainerService {
         this.userService = userService;
     }
     public Trainer getTrainer(String username) throws Exception {
-        Trainer trainer = storageMap.getTrainerMap().get(username);
+        Trainer trainer = trainerMap.get(username);
         if (trainer == null){
             throw new Exception("No trainer with the username: " + username);
         }
@@ -42,13 +40,13 @@ public class TrainerService {
             throw new IllegalArgumentException("Invalid password");
         }
         trainer.setId(generateId());
-        storageMap.getTrainerMap().put(username,trainer);
+        trainerMap.put(username,trainer);
 
-        System.out.println(storageMap.getTrainerMap());
+        System.out.println(trainerMap);
     }
 
     private Long generateId(){
-        OptionalLong lastId = storageMap.getTrainerMap().values().stream()
+        OptionalLong lastId = trainerMap.values().stream()
                 .mapToLong(Trainer::getUserID)
                 .max();
         if(lastId.isPresent()){

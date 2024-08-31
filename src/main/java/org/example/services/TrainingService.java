@@ -1,6 +1,5 @@
 package org.example.services;
 
-import org.example.MapDataClass;
 import org.example.TrainingType;
 import org.example.model.Trainee;
 import org.example.model.Trainer;
@@ -10,12 +9,14 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.OptionalLong;
 
 @Service
 public class TrainingService {
+
     @Autowired
-    private MapDataClass storageMap;
+    private Map<Long, Training> trainingMap;
     private TraineeService traineeService;
     private TrainerService trainerService;
 
@@ -33,18 +34,18 @@ public class TrainingService {
                     trainingType, trainingDate, trainingDuration);
             Long trainingId = generateId();
             training.setTrainingId(trainingId);
-            storageMap.getTrainingMap().put(trainingId, training);
+            trainingMap.put(trainingId, training);
 
         }catch(Exception e){
             e.printStackTrace();
         }
 
-        System.out.println(storageMap.getTrainingMap());
+        System.out.println(trainingMap);
 
     }
 
     private Long generateId(){
-        OptionalLong lastId = storageMap.getTrainingMap().values().stream()
+        OptionalLong lastId = trainingMap.values().stream()
                 .mapToLong(Training::getTrainingId)
                 .max();
         if(lastId.isPresent()){
@@ -56,7 +57,7 @@ public class TrainingService {
     }
 
     public Training getTraining(Long trainingId){
-        Training training = storageMap.getTrainingMap().get(trainingId);
+        Training training = trainingMap.get(trainingId);
         if (training == null){
             throw new IllegalArgumentException("No such with id: " + trainingId);
         }
