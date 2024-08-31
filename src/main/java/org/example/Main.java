@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.time.LocalDate;
+import java.time.Month;
 
 public class Main {
     public static void main(String[] args) {
@@ -27,6 +28,12 @@ public class Main {
 
         trainee.createTrainee("Jack", "Johnes", "gnh5t+-r&t",
                 LocalDate.now(), "myAddress");
+
+        trainee.deleteTrainee("JackJohnes");
+
+        trainee.createTrainee("Sam", "Smith", "password%^",
+                LocalDate.of(1990, Month.OCTOBER, 8),
+                "myAddress");
 
 
 

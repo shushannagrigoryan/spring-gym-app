@@ -4,10 +4,8 @@ import org.example.MapDataClass;
 import org.example.ValidatePassword;
 import org.example.model.Trainee;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.OptionalLong;
@@ -16,9 +14,6 @@ import java.util.OptionalLong;
 public class TraineeService {
     @Autowired
     private MapDataClass storageMap;
-
-    @Value("${username.suffix}")
-    private String usernameSuffixPath;
 
     private UserService userService;
 
