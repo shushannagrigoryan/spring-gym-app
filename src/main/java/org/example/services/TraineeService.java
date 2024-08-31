@@ -68,6 +68,18 @@ public class TraineeService {
         return trainee;
     }
 
+    public void deleteTrainee(String username){
+        Map<String, Trainee> traineeMap = storageMap.getTraineeMap();
+        if(!traineeMap.containsKey(username)){
+            throw new IllegalArgumentException("No trainee with username: " + username);
+        }
+        else{
+            traineeMap.remove(username);
+        }
+    }
+
+
+
 
 
 }
