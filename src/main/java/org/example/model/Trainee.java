@@ -41,4 +41,8 @@ public class Trainee extends User{
     public void setUserName(String userName){
         this.username = userName;
     }
+
+    public Long getUserID(){
+        return this.userId;
+    }
 }
