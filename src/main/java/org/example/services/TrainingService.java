@@ -30,7 +30,7 @@ public class TrainingService {
         try{
             Trainee trainee = traineeService.getTrainee(traineeUsername);
             Trainer trainer = trainerService.getTrainer(trainerUsername);
-            Training training = new Training(trainer.getUserID(), trainee.getUserID(), trainingName,
+            Training training = new Training(trainer.getUserID(), trainee.getUserId(), trainingName,
                     trainingType, trainingDate, trainingDuration);
             Long trainingId = generateId();
             training.setTrainingId(trainingId);

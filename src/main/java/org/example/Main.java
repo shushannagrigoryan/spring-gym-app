@@ -46,7 +46,7 @@ public class Main {
 
         TrainingService training = context.getBean(TrainingService.class);
         training.createTraining("JackJohnes", "AB", "boxing",
-                TrainingType.CARDIO, LocalDateTime.now(), Duration.ofHours(1));
+                TrainingType.CARDIO, LocalDateTime.of(2024, 8, 30, 13,30), Duration.ofMinutes(70));
 
         System.out.println(training.getTraining(0L));
 
