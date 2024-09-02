@@ -3,9 +3,9 @@ package org.example;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import org.example.model.Trainee;
-import org.example.model.Trainer;
-import org.example.model.Training;
+import org.example.entity.TraineeEntity;
+//import org.example.entity.Trainer;
+import org.example.entity.Training;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +20,13 @@ import java.util.Map;
 public class SaveDataToFile {
     private static final Logger logger = LoggerFactory.getLogger(SaveDataToFile.class);
     @Autowired
-    private  Map<String, Trainee> traineeStorage;
+    private  Map<Long, TraineeEntity> traineeStorage;
 
     @Value("${trainee.storage}")
     private  String traineeStorageFile;
 
-    @Autowired
-    private  Map<String, Trainer> trainerStorage;
+//    @Autowired
+//    private  Map<String, Trainer> trainerStorage;
 
     @Value("${trainer.storage}")
     private  String trainerStorageFile;
@@ -44,10 +44,10 @@ public class SaveDataToFile {
                 storageMap = traineeStorage;
                 fileName = traineeStorageFile;
                 break;
-            case "Trainer":
-                storageMap = trainerStorage;
-                fileName = trainerStorageFile;
-                break;
+//            case "Trainer":
+//                storageMap = trainerStorage;
+//                fileName = trainerStorageFile;
+//                break;
             case "Training":
                 storageMap = trainingStorage;
                 fileName = trainingStorageFile;

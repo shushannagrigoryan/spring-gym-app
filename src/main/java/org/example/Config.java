@@ -3,9 +3,9 @@ package org.example;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
-import org.example.model.Trainee;
-import org.example.model.Trainer;
-import org.example.model.Training;
+import org.example.entity.TraineeEntity;
+//import org.example.entity.Trainer;
+import org.example.entity.Training;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,16 +36,16 @@ public class Config {
     private String trainingStorageFile;
 
     @Bean
-    public Map<String, Trainee> traineeMap(){
+    public Map<Long, TraineeEntity> traineeMap(){
         logger.debug("Creating a bean for trainee storage.");
         return new HashMap<>();
     }
 
-    @Bean
-    public Map<String, Trainer> trainerMap(){
-        logger.debug("Creating a bean for trainer storage.");
-        return new HashMap<>();
-    }
+//    @Bean
+//    public Map<String, Trainer> trainerMap(){
+//        logger.debug("Creating a bean for trainer storage.");
+//        return new HashMap<>();
+//    }
 
     @Bean
     public Map<Long, Training> trainingMap(){
@@ -64,12 +64,12 @@ public class Config {
 
             if (traineeFile.length() > 0){
                 logger.debug("Initializing trainee storage map from file data.");
-                traineeMap().putAll(objectMapper.readValue(traineeFile, new TypeReference<Map<String, Trainee>>(){}));
+                traineeMap().putAll(objectMapper.readValue(traineeFile, new TypeReference<Map<Long, TraineeEntity>>(){}));
             }
-            if (trainerFile.length() > 0){
-                logger.debug("Initializing trainer storage map from file data.");
-                trainerMap().putAll(objectMapper.readValue(trainerFile, new TypeReference<Map<String, Trainer>>(){}));
-            }
+//            if (trainerFile.length() > 0){
+//                logger.debug("Initializing trainer storage map from file data.");
+//                trainerMap().putAll(objectMapper.readValue(trainerFile, new TypeReference<Map<String, Trainer>>(){}));
+//            }
             if (trainingFile.length() > 0){
                 logger.debug("Initializing training storage map from file data.");
                 trainingMap().putAll(objectMapper.readValue(trainingFile, new TypeReference<Map<Long, Training>>(){}));

@@ -1,0 +1,32 @@
+{
+  "0" : {
+    "userId" : 0,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "JohnSmith",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 3 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "1" : {
+    "userId" : 1,
+    "firstName" : "Sam",
+    "lastName" : "Smith",
+    "username" : "SamSmith",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 3 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "2" : {
+    "userId" : 2,
+    "firstName" : "Ann",
+    "lastName" : "Tompson",
+    "username" : "AnnTompson",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 3 ],
+    "address" : "myAddress",
+    "active" : false
+  }
+}

@@ -25,6 +25,9 @@ dependencies {
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.16'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.5.7'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.7'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
+
 }
 
 group = 'org.example'
