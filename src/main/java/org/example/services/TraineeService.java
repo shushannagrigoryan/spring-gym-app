@@ -1,10 +1,17 @@
 package org.example.services;
 
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import org.example.SaveDataToFile;
 import org.example.ValidatePassword;
 import org.example.model.Trainee;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.OptionalLong;
@@ -14,11 +21,18 @@ public class TraineeService {
     @Autowired
     private Map<String, Trainee> traineeStorage;
 
+
+
+    @Value("${trainee.storage}")
+    private String traineeStorageFile;
+
     private UserService userService;
+    private SaveDataToFile saveDataToFile;
 
     @Autowired
-    public void setDependencies(UserService userService){
+    public void setDependencies(UserService userService, SaveDataToFile saveDataToFile){
         this.userService = userService;
+        this.saveDataToFile = saveDataToFile;
     }
 
     public void createTrainee(String firstName, String lastName, String password,
@@ -33,16 +47,27 @@ public class TraineeService {
         else{
             throw new IllegalArgumentException("Invalid password");
         }
-
         trainee.setId(generateId());
         traineeStorage.put(username,trainee);
-        System.out.println(traineeStorage);
-        System.out.println(traineeStorage.keySet());
+//        writeMapToFile();
+        saveDataToFile.writeMapToFile("Trainee");
     }
+
+//    private void writeMapToFile() {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        objectMapper.findAndRegisterModules();
+//        ObjectWriter writer = objectMapper.writer(new DefaultPrettyPrinter());
+//        try (FileWriter fileWriter = new FileWriter(traineeStorageFile)) {
+//            fileWriter.write(writer.writeValueAsString(traineeStorage));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
 
     private Long generateId(){
         OptionalLong lastId = traineeStorage.values().stream()
-                .mapToLong(Trainee::getUserID)
+                .mapToLong(Trainee::getUserId)
                 .max();
         if(lastId.isPresent()){
             return lastId.getAsLong() + 1;
@@ -68,4 +93,5 @@ public class TraineeService {
             traineeStorage.remove(username);
         }
     }
+
 }
