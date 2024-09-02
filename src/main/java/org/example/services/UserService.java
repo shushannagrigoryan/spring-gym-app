@@ -2,11 +2,9 @@ package org.example.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TraineeDto;
+import org.example.dto.TrainerDto;
 import org.example.entity.TraineeEntity;
-//import org.example.entity.Trainer;
 import org.example.entity.TrainerEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,24 +23,26 @@ public class UserService {
     private Map<Long, TrainerEntity> trainerMap;
 
     private TraineeService traineeService;
+    private TrainerService trainerService;
     @Autowired
-    public void setDependencies(TraineeService traineeService){
+    public void setDependencies(TraineeService traineeService, TrainerService trainerService){
         this.traineeService = traineeService;
+        this.trainerService = trainerService;
     }
 
     String generateUsername(String firstName, String lastName) {
         String username = firstName + lastName;
         TraineeDto trainee = null;
+        TrainerDto trainer = null;
         try{
             trainee = traineeService.getTraineeByUsername(username);
+            trainer = trainerService.getTrainerByUsername(username);
+
         }catch(Exception e){
             log.debug("no trainee with username: " + username + e.getMessage());
         }
-//        if((trainee != null) || (trainerMap.get(username) != null)){
-//            logger.debug("Username taken.");
-//            return username + getSuffix(username);
-//        }
-        if((trainee != null) || (trainerMap.get(username) != null)){
+
+        if((trainee != null) || (trainer != null)){
             log.debug("Username taken.");
             return username + getSuffix(username);
         }
@@ -52,9 +52,6 @@ public class UserService {
     private Long getSuffix(String username){
         log.debug("Generating suffix for username: " + username);
         long suffix = 0L;
-//        Set<Long> traineeSuffixSet = traineeMap.keySet().stream().filter(key -> key.startsWith(username))
-//                .map(key -> key.substring(username.length()))
-//                .filter(s -> !s.isEmpty()).map(Long::valueOf).collect(Collectors.toSet());
 
         Set<Long> traineeSuffixSet = traineeMap.values().stream().map(TraineeEntity::getUsername).filter(u -> u.startsWith(username))
                 .map(key -> key.substring(username.length()))
@@ -63,10 +60,6 @@ public class UserService {
         Set<Long> trainerSuffixSet = trainerMap.values().stream().map(TrainerEntity::getUsername).filter(u -> u.startsWith(username))
                 .map(key -> key.substring(username.length()))
                 .filter(s -> !s.isEmpty()).map(Long::valueOf).collect(Collectors.toSet());
-
-//        Set<Long> trainerSuffixSet = trainerMap.keySet().stream().filter(key -> key.startsWith(username))
-//                .map(key -> key.substring(username.length()))
-//                .filter(s -> !s.isEmpty()).map(Long::valueOf).collect(Collectors.toSet());
 
         traineeSuffixSet.addAll(trainerSuffixSet);
 

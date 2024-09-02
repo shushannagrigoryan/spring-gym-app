@@ -1,8 +1,6 @@
 package org.example.mapper;
 
-import org.example.dto.TraineeDto;
 import org.example.dto.TrainerDto;
-import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.springframework.stereotype.Component;
 
