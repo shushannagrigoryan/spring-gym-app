@@ -3,11 +3,12 @@ package org.example.services;
 import org.example.model.Trainee;
 import org.example.model.Trainer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -17,44 +18,32 @@ public class UserService {
     @Autowired
     private Map<String, Trainer> trainerMap;
 
-    @Value("${username.suffix}")
-    private String usernameSuffixPath;
-
     String generateUsername(String firstName, String lastName){
         String username = firstName + lastName;
-
         if((traineeMap.get(username) != null) || (trainerMap.get(username) != null)){
-            System.out.println("Username: " + username + " taken");
-            return username + getUsernameSuffix();
+            return username + getSuffix(username);
         }
         return username;
     }
 
-    private Long getUsernameSuffix(){
-        long usernameSuffix = 0L;
-        try(FileReader fileReader = new FileReader(usernameSuffixPath);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-        ){
-            String fileNumber = bufferedReader.readLine();
-            System.out.println(fileNumber);
-            if(fileNumber != null){
-                System.out.println(fileNumber);
-                usernameSuffix = Long.parseLong(fileNumber) + 1;
-            }
-            writeUsernameSuffixToFile(usernameSuffix);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        return usernameSuffix;
-    }
+    private Long getSuffix(String username){
+        long s = 0L;
+        Set<Long> traineeSuffixSet = traineeMap.keySet().stream().filter(key -> key.startsWith(username))
+                .map(key -> key.substring(username.length()))
+                .filter(suffix -> !suffix.isEmpty()).map(Long::valueOf).collect(Collectors.toSet());
 
-    private void writeUsernameSuffixToFile(long usernameSuffix){
-        try(FileWriter fileWriter = new FileWriter(usernameSuffixPath);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)){
-            bufferedWriter.write(String.valueOf(usernameSuffix));
-        }catch (IOException e){
-            e.printStackTrace();
+        Set<Long> trainerSuffixSet = trainerMap.keySet().stream().filter(key -> key.startsWith(username))
+                .map(key -> key.substring(username.length()))
+                .filter(suffix -> !suffix.isEmpty()).map(Long::valueOf).collect(Collectors.toSet());
+
+        traineeSuffixSet.addAll(trainerSuffixSet);
+
+        if(!traineeSuffixSet.isEmpty()){
+            s = Collections.max(traineeSuffixSet) + 1;
+
         }
+
+        return s;
     }
 
 

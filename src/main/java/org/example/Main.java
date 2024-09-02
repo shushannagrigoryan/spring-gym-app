@@ -27,11 +27,11 @@ public class Main {
         trainee.createTrainee("Jack", "Johnes", "pass78+-rt",
                 LocalDate.now(), "myAddress");
 
-        trainee.createTrainee("Jack", "Johnes", "gnh5t+-r&t",
-                LocalDate.now(), "myAddress");
-
-        trainee.createTrainee("Jack", "Johnes", "gnh5t+-r&t",
-                LocalDate.now(), "myAddress");
+//        trainee.createTrainee("Jack", "Johnes", "gnh5t+-r&t",
+//                LocalDate.now(), "myAddress");
+//
+//        trainee.createTrainee("Jack", "Johnes", "gnh5t+-r&t",
+//                LocalDate.now(), "myAddress");
 
         //trainee.deleteTrainee("JackJohnes");
 
@@ -43,12 +43,13 @@ public class Main {
         TrainerService trainer = context.getBean(TrainerService.class);
         trainer.createTrainer("A", "B", "mypassword", "boxing trainer");
         trainer.createTrainer("A", "B", "mypassword", "pilates trainer");
-
-        TrainingService training = context.getBean(TrainingService.class);
-        training.createTraining("JackJohnes", "AB", "boxing",
-                TrainingType.CARDIO, LocalDateTime.of(2024, 8, 30, 13,30), Duration.ofMinutes(70));
-
-        System.out.println(training.getTraining(0L));
+        trainer.createTrainer("Jack", "Johnes", "mypassword", "pilates trainer");
+//
+//        TrainingService training = context.getBean(TrainingService.class);
+//        training.createTraining("JackJohnes", "AB", "boxing",
+//                TrainingType.CARDIO, LocalDateTime.of(2024, 8, 30, 13,30), Duration.ofMinutes(70));
+//
+//        System.out.println(training.getTraining(0L));
 
 
 
