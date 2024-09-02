@@ -16,5 +16,23 @@
     "trainingType" : "FLEXIBILITY",
     "trainingDate" : [ 2024, 8, 30, 13, 30 ],
     "trainingDuration" : 4200.000000000
+  },
+  "2" : {
+    "trainingId" : 2,
+    "trainerId" : 0,
+    "traineeId" : 1,
+    "trainingName" : "boxing",
+    "trainingType" : "CARDIO",
+    "trainingDate" : [ 2024, 8, 30, 13, 30 ],
+    "trainingDuration" : 4200.000000000
+  },
+  "3" : {
+    "trainingId" : 3,
+    "trainerId" : 2,
+    "traineeId" : 3,
+    "trainingName" : "pilates",
+    "trainingType" : "FLEXIBILITY",
+    "trainingDate" : [ 2024, 8, 30, 13, 30 ],
+    "trainingDuration" : 4200.000000000
   }
 }

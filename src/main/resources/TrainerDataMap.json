@@ -152,6 +152,24 @@
     "isActive" : false,
     "specialization" : "pilates trainer"
   },
+  "AB14" : {
+    "userId" : 22,
+    "firstName" : "A",
+    "lastName" : "B",
+    "username" : "AB14",
+    "password" : "mypassword",
+    "isActive" : false,
+    "specialization" : "pilates trainer"
+  },
+  "JackJohnes22" : {
+    "userId" : 23,
+    "firstName" : "Jack",
+    "lastName" : "Johnes",
+    "username" : "JackJohnes22",
+    "password" : "mypassword",
+    "isActive" : false,
+    "specialization" : "pilates trainer"
+  },
   "AB12" : {
     "userId" : 19,
     "firstName" : "A",
@@ -160,6 +178,15 @@
     "password" : "mypassword",
     "isActive" : false,
     "specialization" : "pilates trainer"
+  },
+  "AB13" : {
+    "userId" : 21,
+    "firstName" : "A",
+    "lastName" : "B",
+    "username" : "AB13",
+    "password" : "mypassword",
+    "isActive" : false,
+    "specialization" : "boxing trainer"
   },
   "AB10" : {
     "userId" : 16,

@@ -119,6 +119,16 @@
     "dateOfBirth" : [ 1990, 10, 8 ],
     "address" : "myAddress"
   },
+  "SamSmith6" : {
+    "userId" : 31,
+    "firstName" : "Sam",
+    "lastName" : "Smith",
+    "username" : "SamSmith6",
+    "password" : "password%^",
+    "isActive" : false,
+    "dateOfBirth" : [ 1990, 10, 8 ],
+    "address" : "myAddress"
+  },
   "JackJohnes0" : {
     "userId" : 2,
     "firstName" : "Jack",
@@ -199,11 +209,31 @@
     "dateOfBirth" : [ 2024, 9, 2 ],
     "address" : "myAddress"
   },
+  "JackJohnes21" : {
+    "userId" : 30,
+    "firstName" : "Jack",
+    "lastName" : "Johnes",
+    "username" : "JackJohnes21",
+    "password" : "pass78+-rt",
+    "isActive" : false,
+    "dateOfBirth" : [ 2024, 9, 2 ],
+    "address" : "myAddress"
+  },
   "JackJohnes5" : {
     "userId" : 9,
     "firstName" : "Jack",
     "lastName" : "Johnes",
     "username" : "JackJohnes5",
+    "password" : "mypassword",
+    "isActive" : false,
+    "dateOfBirth" : [ 2024, 9, 2 ],
+    "address" : "myAddress"
+  },
+  "JackJohnes20" : {
+    "userId" : 29,
+    "firstName" : "Jack",
+    "lastName" : "Johnes",
+    "username" : "JackJohnes20",
     "password" : "mypassword",
     "isActive" : false,
     "dateOfBirth" : [ 2024, 9, 2 ],
@@ -254,6 +284,16 @@
     "firstName" : "John",
     "lastName" : "Smith",
     "username" : "JohnSmith1",
+    "password" : "password15",
+    "isActive" : false,
+    "dateOfBirth" : [ 2024, 9, 2 ],
+    "address" : "myAddress"
+  },
+  "JohnSmith6" : {
+    "userId" : 28,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "JohnSmith6",
     "password" : "password15",
     "isActive" : false,
     "dateOfBirth" : [ 2024, 9, 2 ],
