@@ -1,9 +1,11 @@
 package org.example;
 
 import org.example.dto.TraineeDto;
+import org.example.dto.TrainerDto;
 import org.example.exceptions.IllegalIdException;
 import org.example.exceptions.IllegalUsernameException;
 import org.example.facade.TraineeFacade;
+import org.example.facade.TrainerFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -28,7 +30,6 @@ public class Main {
             traineeDto = traineeFacade.getTraineeByUsername("AB");
         }catch (IllegalUsernameException exception){
             logger.error(exception.getMessage(), exception);
-//            exception.printStackTrace();
         }
         System.out.println(traineeDto);
 
@@ -40,7 +41,6 @@ public class Main {
             traineeDto1 = traineeFacade.getTraineeById(1000L);
         }catch (IllegalIdException exception){
             logger.error(exception.getMessage(), exception);
-//            exception.printStackTrace();
         }
         System.out.println(traineeDto1);
 
@@ -52,6 +52,39 @@ public class Main {
                 "myPasswordefe", LocalDate.now(), "myAddress"));
         traineeFacade.updateTraineeById(3L, new TraineeDto("Tom", "Tompson",
                 "myPassword", LocalDate.now(), "myNewAddress"));
+
+
+
+        TrainerFacade trainerFacade = context.getBean(TrainerFacade.class);
+        trainerFacade.createTrainer(new TrainerDto("A", "B",
+                "myPassword", "boxing"));
+        trainerFacade.createTrainer(new TrainerDto("John", "Smith",
+                "myPassword", "boxing"));
+
+
+
+
+        TrainerDto trainerDto = null;
+        try{
+            trainerDto = trainerFacade.getTrainerById(2L);
+        }catch (IllegalIdException exception){
+            logger.error(exception.getMessage(), exception);
+        }
+        System.out.println(trainerDto);
+
+
+        TrainerDto trainerDto1 = null;
+        try{
+            trainerDto1 = trainerFacade.getTrainerByUsername("AB");
+        }catch (IllegalUsernameException exception){
+            logger.error(exception.getMessage(), exception);
+        }
+        System.out.println(trainerDto1);
+
+        trainerFacade.updateTrainerById(3L, new TrainerDto("E", "E",
+                "Mypassword", "boxing") );
+
+
 
 
 

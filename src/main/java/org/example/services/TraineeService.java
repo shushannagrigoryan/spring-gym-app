@@ -1,5 +1,6 @@
 package org.example.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.SaveDataToFile;
 import org.example.ValidatePassword;
 import org.example.dao.TraineeDao;
@@ -17,8 +18,8 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class TraineeService {
-    private static final Logger logger = LoggerFactory.getLogger(TraineeService.class);
 
     @Autowired
     private TraineeDao traineeDao;
@@ -35,28 +36,28 @@ public class TraineeService {
     }
 
     public void createTrainee(TraineeEntity traineeEntity){
-        logger.debug("Creating trainee with firstName: {}, lastName: {}",
+        log.debug("Creating trainee with firstName: {}, lastName: {}",
                 traineeEntity.getFirstName(), traineeEntity.getLastName());
 
         if (!ValidatePassword.isValidPassword(traineeEntity.getPassword())){
-            logger.debug("Invalid password for trainee");
+            log.debug("Invalid password for trainee");
             throw new IllegalPasswordException(traineeEntity.getPassword());
         }
 
         String username = userService.generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName());
         traineeEntity.setUsername(username);
         traineeDao.createTrainee(traineeEntity);
-        logger.debug("Created a new trainee with username: "+ username);
+        log.debug("Created a new trainee with username: "+ username);
         saveDataToFile.writeMapToFile("Trainee");
     }
 
     public TraineeDto getTraineeByUsername(String username){
         Optional<TraineeEntity> trainee = traineeDao.getTraineeByUsername(username);
         if (!trainee.isPresent()){
-            logger.debug("No trainee with the username: " + username);
+            log.debug("No trainee with the username: " + username);
             throw new IllegalUsernameException(username);
         }
-        logger.debug("Getting trainee with username: " + username);
+        log.debug("Getting trainee with username: " + username);
         return traineeMapper.entityToDto(trainee.get());
     }
 
@@ -65,7 +66,7 @@ public class TraineeService {
         if (!trainee.isPresent()){
             throw new IllegalIdException(id);
         }
-        logger.debug("Getting trainee with username: " + id);
+        log.debug("Getting trainee with username: " + id);
         return traineeMapper.entityToDto(trainee.get());
     }
 
@@ -76,7 +77,7 @@ public class TraineeService {
 
     public void updateTraineeById(Long id, TraineeEntity traineeEntity){
         if (!ValidatePassword.isValidPassword(traineeEntity.getPassword())){
-            logger.debug("Invalid password for trainee");
+            log.debug("Invalid password for trainee");
             throw new IllegalPasswordException(traineeEntity.getPassword());
         }
 
@@ -84,7 +85,7 @@ public class TraineeService {
         traineeEntity.setUsername(username);
         traineeEntity.setUserId(id);
         traineeDao.updateTraineeById(id, traineeEntity);
-        logger.debug("Updated trainee with id: " + id);
+        log.debug("Updated trainee with id: " + id);
         saveDataToFile.writeMapToFile("Trainee");
     }
 }

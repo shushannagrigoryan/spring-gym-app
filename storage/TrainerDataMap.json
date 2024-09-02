@@ -1,0 +1,110 @@
+{
+  "0" : {
+    "userId" : 0,
+    "firstName" : "A",
+    "lastName" : "B",
+    "username" : "AB",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "1" : {
+    "userId" : 1,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "JohnSmith0",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "2" : {
+    "userId" : 2,
+    "firstName" : "A",
+    "lastName" : "B",
+    "username" : "AB",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "3" : {
+    "userId" : 3,
+    "firstName" : "E",
+    "lastName" : "E",
+    "username" : "EE",
+    "password" : "Mypassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "4" : {
+    "userId" : 4,
+    "firstName" : "A",
+    "lastName" : "B",
+    "username" : "AB",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "5" : {
+    "userId" : 5,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "JohnSmith2",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "6" : {
+    "userId" : 6,
+    "firstName" : "A",
+    "lastName" : "B",
+    "username" : "AB",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "7" : {
+    "userId" : 7,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "JohnSmith4",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "8" : {
+    "userId" : 8,
+    "firstName" : "A",
+    "lastName" : "B",
+    "username" : "AB",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "9" : {
+    "userId" : 9,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "JohnSmith6",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "10" : {
+    "userId" : 10,
+    "firstName" : "A",
+    "lastName" : "B",
+    "username" : "AB",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "11" : {
+    "userId" : 11,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "JohnSmith8",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  }
+}

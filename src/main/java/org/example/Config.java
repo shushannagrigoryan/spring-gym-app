@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import org.example.entity.TraineeEntity;
-//import org.example.entity.Trainer;
+import org.example.entity.TrainerEntity;
 import org.example.entity.Training;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,11 +41,11 @@ public class Config {
         return new HashMap<>();
     }
 
-//    @Bean
-//    public Map<String, Trainer> trainerMap(){
-//        logger.debug("Creating a bean for trainer storage.");
-//        return new HashMap<>();
-//    }
+    @Bean
+    public Map<Long, TrainerEntity> trainerMap(){
+        logger.debug("Creating a bean for trainer storage.");
+        return new HashMap<>();
+    }
 
     @Bean
     public Map<Long, Training> trainingMap(){
@@ -66,10 +66,10 @@ public class Config {
                 logger.debug("Initializing trainee storage map from file data.");
                 traineeMap().putAll(objectMapper.readValue(traineeFile, new TypeReference<Map<Long, TraineeEntity>>(){}));
             }
-//            if (trainerFile.length() > 0){
-//                logger.debug("Initializing trainer storage map from file data.");
-//                trainerMap().putAll(objectMapper.readValue(trainerFile, new TypeReference<Map<String, Trainer>>(){}));
-//            }
+            if (trainerFile.length() > 0){
+                logger.debug("Initializing trainer storage map from file data.");
+                trainerMap().putAll(objectMapper.readValue(trainerFile, new TypeReference<Map<Long, TrainerEntity>>(){}));
+            }
             if (trainingFile.length() > 0){
                 logger.debug("Initializing training storage map from file data.");
                 trainingMap().putAll(objectMapper.readValue(trainingFile, new TypeReference<Map<Long, Training>>(){}));

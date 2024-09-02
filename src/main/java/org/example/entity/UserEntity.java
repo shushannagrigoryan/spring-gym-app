@@ -5,17 +5,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class User {
+public class UserEntity {
     protected Long userId;
     protected  String firstName;
     protected String lastName;
     protected String username;
     protected String password;
     protected boolean isActive;
-
-
-
-
-
-
 }

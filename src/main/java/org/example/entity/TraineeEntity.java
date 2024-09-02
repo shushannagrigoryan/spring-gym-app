@@ -7,17 +7,17 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class TraineeEntity extends User {
+public class TraineeEntity extends UserEntity {
     private LocalDate dateOfBirth;
     private String address;
 
-    public TraineeEntity(String firstName, String lastName,
-                         LocalDate dateOfBirth, String address) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.dateOfBirth = dateOfBirth;
-        this.address = address;
-    }
+//    public TraineeEntity(String firstName, String lastName,
+//                         LocalDate dateOfBirth, String address) {
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.dateOfBirth = dateOfBirth;
+//        this.address = address;
+//    }
 
     public TraineeEntity() {
 

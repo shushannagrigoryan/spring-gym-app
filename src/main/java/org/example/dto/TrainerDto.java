@@ -8,19 +8,16 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-public class TraineeDto {
+public class TrainerDto {
     private String firstName;
     private String lastName;
     private String password;
-    private LocalDate dateOfBirth;
-    private String address;
+    private String specialization;
 
-    public TraineeDto(String firstName, String lastName, String password, LocalDate dateOfBirth, String address){
+    public TrainerDto(String firstName, String lastName, String password, String specialization){
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
-        this.dateOfBirth = dateOfBirth;
-        this.address = address;
+        this.specialization = specialization;
     }
-
 }
