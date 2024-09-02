@@ -2,6 +2,8 @@ package org.example.services;
 
 import org.example.model.Trainee;
 import org.example.model.Trainer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService {
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private Map<String, Trainee> traineeMap;
@@ -21,29 +24,31 @@ public class UserService {
     String generateUsername(String firstName, String lastName){
         String username = firstName + lastName;
         if((traineeMap.get(username) != null) || (trainerMap.get(username) != null)){
+            logger.debug("Username taken.");
             return username + getSuffix(username);
         }
         return username;
     }
 
     private Long getSuffix(String username){
-        long s = 0L;
+        logger.debug("Generating suffix for username: " + username);
+        long suffix = 0L;
         Set<Long> traineeSuffixSet = traineeMap.keySet().stream().filter(key -> key.startsWith(username))
                 .map(key -> key.substring(username.length()))
-                .filter(suffix -> !suffix.isEmpty()).map(Long::valueOf).collect(Collectors.toSet());
+                .filter(s -> !s.isEmpty()).map(Long::valueOf).collect(Collectors.toSet());
 
         Set<Long> trainerSuffixSet = trainerMap.keySet().stream().filter(key -> key.startsWith(username))
                 .map(key -> key.substring(username.length()))
-                .filter(suffix -> !suffix.isEmpty()).map(Long::valueOf).collect(Collectors.toSet());
+                .filter(s -> !s.isEmpty()).map(Long::valueOf).collect(Collectors.toSet());
 
         traineeSuffixSet.addAll(trainerSuffixSet);
 
         if(!traineeSuffixSet.isEmpty()){
-            s = Collections.max(traineeSuffixSet) + 1;
+            suffix = Collections.max(traineeSuffixSet) + 1;
 
         }
 
-        return s;
+        return suffix;
     }
 
 

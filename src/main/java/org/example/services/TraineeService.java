@@ -1,30 +1,23 @@
 package org.example.services;
 
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import org.example.SaveDataToFile;
 import org.example.ValidatePassword;
 import org.example.model.Trainee;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.OptionalLong;
 
 @Service
 public class TraineeService {
+    private static final Logger logger = LoggerFactory.getLogger(TraineeService.class);
+
     @Autowired
     private Map<String, Trainee> traineeStorage;
-
-
-
-    @Value("${trainee.storage}")
-    private String traineeStorageFile;
 
     private UserService userService;
     private SaveDataToFile saveDataToFile;
@@ -37,6 +30,8 @@ public class TraineeService {
 
     public void createTrainee(String firstName, String lastName, String password,
                               LocalDate dateOfBirth, String address){
+        logger.debug("Creating trainee with firstName: {}, lastName: {}",
+                firstName, lastName);
         Trainee trainee = new Trainee(firstName, lastName, dateOfBirth, address);
         String username = userService.generateUsername(firstName, lastName);
         trainee.setUserName(username);
@@ -45,25 +40,14 @@ public class TraineeService {
             trainee.setPassword(password);
         }
         else{
+            logger.debug("Invalid password for trainee");
             throw new IllegalArgumentException("Invalid password");
         }
         trainee.setId(generateId());
         traineeStorage.put(username,trainee);
-//        writeMapToFile();
+        logger.debug("Created a new trainee with username: "+ username);
         saveDataToFile.writeMapToFile("Trainee");
     }
-
-//    private void writeMapToFile() {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        objectMapper.findAndRegisterModules();
-//        ObjectWriter writer = objectMapper.writer(new DefaultPrettyPrinter());
-//        try (FileWriter fileWriter = new FileWriter(traineeStorageFile)) {
-//            fileWriter.write(writer.writeValueAsString(traineeStorage));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
 
     private Long generateId(){
         OptionalLong lastId = traineeStorage.values().stream()
@@ -82,16 +66,19 @@ public class TraineeService {
         if (trainee == null){
             throw new Exception("No trainee with the username: " + username);
         }
+        logger.debug("Getting trainee with username: " + username);
         return trainee;
     }
 
     public void deleteTrainee(String username){
         if(!traineeStorage.containsKey(username)){
+            logger.debug("Can't delete trainee: No trainee with username: " + username);
             throw new IllegalArgumentException("No trainee with username: " + username);
         }
         else{
             traineeStorage.remove(username);
         }
+        logger.debug("Deleted trainee with username: " + username);
     }
 
 }

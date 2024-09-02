@@ -22,6 +22,9 @@ dependencies {
     implementation group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: '3.0.0'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.2'
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.17.2'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.16'
+    implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.5.7'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.7'
 }
 
 group = 'org.example'

@@ -6,6 +6,8 @@ import jakarta.annotation.PostConstruct;
 import org.example.model.Trainee;
 import org.example.model.Trainer;
 import org.example.model.Training;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -22,6 +24,7 @@ import java.util.Map;
 @ComponentScan(basePackages = "org.example")
 @PropertySource("classpath:application.properties")
 public class Config {
+    private static final Logger logger = LoggerFactory.getLogger(Config.class);
 
     @Value("${trainee.storage}")
     private String traineeStorageFile;
@@ -34,16 +37,19 @@ public class Config {
 
     @Bean
     public Map<String, Trainee> traineeMap(){
+        logger.debug("Creating a bean for trainee storage.");
         return new HashMap<>();
     }
 
     @Bean
     public Map<String, Trainer> trainerMap(){
+        logger.debug("Creating a bean for trainer storage.");
         return new HashMap<>();
     }
 
     @Bean
     public Map<Long, Training> trainingMap(){
+        logger.debug("Creating a bean for training storage.");
         return new HashMap<>();
     }
 
@@ -57,16 +63,20 @@ public class Config {
             File trainingFile = new File(trainingStorageFile);
 
             if (traineeFile.length() > 0){
+                logger.debug("Initializing trainee storage map from file data.");
                 traineeMap().putAll(objectMapper.readValue(traineeFile, new TypeReference<Map<String, Trainee>>(){}));
             }
             if (trainerFile.length() > 0){
+                logger.debug("Initializing trainer storage map from file data.");
                 trainerMap().putAll(objectMapper.readValue(trainerFile, new TypeReference<Map<String, Trainer>>(){}));
             }
             if (trainingFile.length() > 0){
+                logger.debug("Initializing training storage map from file data.");
                 trainingMap().putAll(objectMapper.readValue(trainingFile, new TypeReference<Map<Long, Training>>(){}));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.debug("Failed to read  files: {}, {}, {}. Exception: {}",
+                    traineeStorageFile, trainerStorageFile, trainingStorageFile, e.getMessage());
         }
     }
 

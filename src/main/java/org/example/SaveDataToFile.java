@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import org.example.model.Trainee;
 import org.example.model.Trainer;
 import org.example.model.Training;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,6 +18,7 @@ import java.util.Map;
 
 @Component
 public class SaveDataToFile {
+    private static final Logger logger = LoggerFactory.getLogger(SaveDataToFile.class);
     @Autowired
     private  Map<String, Trainee> traineeStorage;
 
@@ -57,8 +60,10 @@ public class SaveDataToFile {
         ObjectWriter writer = objectMapper.writer(new DefaultPrettyPrinter());
         try (FileWriter fileWriter = new FileWriter(fileName)) {
             fileWriter.write(writer.writeValueAsString(storageMap));
+            logger.debug("Writing map storage for " + dataType +  " entity to file.");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.debug("Failed to write map data to file: {}. Exception: {}",
+                    storageMap, e.getMessage());
         }
     }
 }
