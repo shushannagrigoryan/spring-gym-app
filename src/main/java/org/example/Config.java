@@ -26,6 +26,12 @@ public class Config {
     @Value("${trainee.storage}")
     private String traineeStorageFile;
 
+    @Value("${trainer.storage}")
+    private String trainerStorageFile;
+
+    @Value("${training.storage}")
+    private String trainingStorageFile;
+
     @Bean
     public Map<String, Trainee> traineeMap(){
         return new HashMap<>();
@@ -46,9 +52,18 @@ public class Config {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
         try {
-            File file = new File(traineeStorageFile);
-            if (file.length() > 0){
-                traineeMap().putAll(objectMapper.readValue(file, new TypeReference<Map<String, Trainee>>(){}));
+            File traineeFile = new File(traineeStorageFile);
+            File trainerFile = new File(trainerStorageFile);
+            File trainingFile = new File(trainingStorageFile);
+
+            if (traineeFile.length() > 0){
+                traineeMap().putAll(objectMapper.readValue(traineeFile, new TypeReference<Map<String, Trainee>>(){}));
+            }
+            if (trainerFile.length() > 0){
+                trainerMap().putAll(objectMapper.readValue(trainerFile, new TypeReference<Map<String, Trainer>>(){}));
+            }
+            if (trainingFile.length() > 0){
+                trainingMap().putAll(objectMapper.readValue(trainingFile, new TypeReference<Map<Long, Training>>(){}));
             }
         } catch (IOException e) {
             e.printStackTrace();

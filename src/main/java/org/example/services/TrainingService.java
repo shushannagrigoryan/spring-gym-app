@@ -1,5 +1,6 @@
 package org.example.services;
 
+import org.example.SaveDataToFile;
 import org.example.TrainingType;
 import org.example.model.Trainee;
 import org.example.model.Trainer;
@@ -20,28 +21,30 @@ public class TrainingService {
     private TraineeService traineeService;
     private TrainerService trainerService;
 
+    private SaveDataToFile saveDataToFile;
+
     @Autowired
-    public void setDependencies(TraineeService traineeService, TrainerService trainerService){
+    public void setDependencies(TraineeService traineeService, TrainerService trainerService,
+                                SaveDataToFile saveDataToFile){
         this.traineeService = traineeService;
         this.trainerService = trainerService;
+        this.saveDataToFile = saveDataToFile;
     }
     public void createTraining(String traineeUsername,String trainerUsername, String trainingName, TrainingType trainingType,
                                LocalDateTime trainingDate, Duration trainingDuration){
         try{
             Trainee trainee = traineeService.getTrainee(traineeUsername);
             Trainer trainer = trainerService.getTrainer(trainerUsername);
-            Training training = new Training(trainer.getUserID(), trainee.getUserId(), trainingName,
+            Training training = new Training(trainer.getUserId(), trainee.getUserId(), trainingName,
                     trainingType, trainingDate, trainingDuration);
             Long trainingId = generateId();
             training.setTrainingId(trainingId);
             trainingMap.put(trainingId, training);
+            saveDataToFile.writeMapToFile("Training");
 
         }catch(Exception e){
             e.printStackTrace();
         }
-
-        System.out.println(trainingMap);
-
     }
 
     private Long generateId(){

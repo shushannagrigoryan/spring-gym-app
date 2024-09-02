@@ -3,6 +3,7 @@ package org.example.services;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import org.example.SaveDataToFile;
 import org.example.ValidatePassword;
 import org.example.model.Trainee;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +21,18 @@ public class TraineeService {
     @Autowired
     private Map<String, Trainee> traineeStorage;
 
+
+
     @Value("${trainee.storage}")
     private String traineeStorageFile;
 
     private UserService userService;
+    private SaveDataToFile saveDataToFile;
 
     @Autowired
-    public void setDependencies(UserService userService){
+    public void setDependencies(UserService userService, SaveDataToFile saveDataToFile){
         this.userService = userService;
+        this.saveDataToFile = saveDataToFile;
     }
 
     public void createTrainee(String firstName, String lastName, String password,
@@ -44,19 +49,20 @@ public class TraineeService {
         }
         trainee.setId(generateId());
         traineeStorage.put(username,trainee);
-        writeMapToFile();
+//        writeMapToFile();
+        saveDataToFile.writeMapToFile("Trainee");
     }
 
-    private void writeMapToFile() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.findAndRegisterModules();
-        ObjectWriter writer = objectMapper.writer(new DefaultPrettyPrinter());
-        try (FileWriter fileWriter = new FileWriter(traineeStorageFile)) {
-            fileWriter.write(writer.writeValueAsString(traineeStorage));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void writeMapToFile() {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        objectMapper.findAndRegisterModules();
+//        ObjectWriter writer = objectMapper.writer(new DefaultPrettyPrinter());
+//        try (FileWriter fileWriter = new FileWriter(traineeStorageFile)) {
+//            fileWriter.write(writer.writeValueAsString(traineeStorage));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
     private Long generateId(){

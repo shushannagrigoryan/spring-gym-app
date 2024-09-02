@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class Training {
     private Long trainingId;
     private Long trainerId;
-    private Long traineeId;
+    private  Long traineeId;
     private String trainingName;
     private TrainingType trainingType;
     private LocalDateTime trainingDate;
@@ -25,8 +25,36 @@ public class Training {
         this.trainingDuration = trainingDuration;
     }
 
+    public Training(){
+
+    }
+
     public long getTrainingId() {
         return this.trainingId;
+    }
+
+    public Long getTrainerId() {
+        return trainerId;
+    }
+
+    public Long getTraineeId() {
+        return traineeId;
+    }
+
+    public String getTrainingName() {
+        return trainingName;
+    }
+
+    public TrainingType getTrainingType() {
+        return trainingType;
+    }
+
+    public LocalDateTime getTrainingDate() {
+        return trainingDate;
+    }
+
+    public Duration getTrainingDuration() {
+        return trainingDuration;
     }
 
     @Override

@@ -3,13 +3,19 @@ package org.example.model;
 import java.time.LocalDate;
 
 public class Trainer extends User{
-    private final String specialization;
+    private  String specialization;
 
     public Trainer(String firstName, String lastName, String specialization) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.specialization = specialization;
     }
+
+    public Trainer(){
+
+    }
+
+
 
     @Override
     public String toString() {
@@ -36,7 +42,36 @@ public class Trainer extends User{
         this.userId = id;
     }
 
-    public long getUserID() {
+    public long getUserId() {
         return this.userId;
     }
+
+    public String getSpecialization() {
+        return specialization;
+    }
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public String getLastName() {
+        return this.lastName;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public boolean getIsActive(){
+        return this.isActive;
+    }
+
+
+
+
+
+
 }

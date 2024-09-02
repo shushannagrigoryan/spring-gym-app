@@ -1,5 +1,6 @@
 package org.example.services;
 
+import org.example.SaveDataToFile;
 import org.example.ValidatePassword;
 import org.example.model.Trainer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,12 @@ public class TrainerService {
     private Map<String, Trainer> trainerMap;
 
     private UserService userService;
+    private SaveDataToFile saveDataToFile;
 
     @Autowired
-    private void setDependencies(UserService userService){
+    private void setDependencies(UserService userService, SaveDataToFile saveDataToFile){
         this.userService = userService;
+        this.saveDataToFile = saveDataToFile;
     }
     public Trainer getTrainer(String username) throws Exception {
         Trainer trainer = trainerMap.get(username);
@@ -42,12 +45,12 @@ public class TrainerService {
         trainer.setId(generateId());
         trainerMap.put(username,trainer);
 
-        System.out.println(trainerMap);
+        saveDataToFile.writeMapToFile("Trainer");
     }
 
     private Long generateId(){
         OptionalLong lastId = trainerMap.values().stream()
-                .mapToLong(Trainer::getUserID)
+                .mapToLong(Trainer::getUserId)
                 .max();
         if(lastId.isPresent()){
             return lastId.getAsLong() + 1;

@@ -7,17 +7,17 @@ public class Trainee extends User{
     private  LocalDate dateOfBirth;
     private  String address;
 
-    public Trainee(Long userId,String firstName, String lastName, String username, String password,
-                   boolean isActive, LocalDate dateOfBirth, String address){
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.password = password;
-        this.isActive = isActive;
-        this.dateOfBirth = dateOfBirth;
-        this.address = address;
-        this.userId = userId;
-    }
+//    public Trainee(Long userId,String firstName, String lastName, String username, String password,
+//                   boolean isActive, LocalDate dateOfBirth, String address){
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.username = username;
+//        this.password = password;
+//        this.isActive = isActive;
+//        this.dateOfBirth = dateOfBirth;
+//        this.address = address;
+//        this.userId = userId;
+//    }
 
 
 

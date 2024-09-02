@@ -44,12 +44,15 @@ public class Main {
         trainer.createTrainer("A", "B", "mypassword", "boxing trainer");
         trainer.createTrainer("A", "B", "mypassword", "pilates trainer");
         trainer.createTrainer("Jack", "Johnes", "mypassword", "pilates trainer");
-//
-//        TrainingService training = context.getBean(TrainingService.class);
-//        training.createTraining("JackJohnes", "AB", "boxing",
-//                TrainingType.CARDIO, LocalDateTime.of(2024, 8, 30, 13,30), Duration.ofMinutes(70));
-//
-//        System.out.println(training.getTraining(0L));
+
+        TrainingService training = context.getBean(TrainingService.class);
+        training.createTraining("JackJohnes", "AB", "boxing",
+                TrainingType.CARDIO, LocalDateTime.of(2024, 8, 30, 13,30), Duration.ofMinutes(70));
+
+
+        training.createTraining("SamSmith", "JackJohnes1", "pilates",
+                TrainingType.FLEXIBILITY, LocalDateTime.of(2024, 8, 30, 13,30), Duration.ofMinutes(70));
+        System.out.println(training.getTraining(0L));
 
 
 
