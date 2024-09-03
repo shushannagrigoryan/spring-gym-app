@@ -88,11 +88,11 @@ public class TraineeService {
 
     public void updateTraineeById(Long id, TraineeEntity traineeEntity){
         log.debug("Updating trainee by id: {}", id);
+
         if (validatePassword.passwordNotValid(traineeEntity.getPassword())){
             log.debug("Invalid password for trainee");
             throw new IllegalPasswordException(traineeEntity.getPassword());
         }
-        System.out.println(traineeEntity);
 
         String username = userService.generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName());
         traineeEntity.setUsername(username);

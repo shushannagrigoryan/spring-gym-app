@@ -189,7 +189,18 @@ public class TraineeServiceTest {
 
     }
 
+    @Test
+    public void updateTraineeByIdInvalidId(){
+        TraineeEntity trainee = new TraineeEntity();
+        Long id = 1L;
+        doThrow(new IllegalIdException("No trainee with id: " + id)).when(traineeDao).updateTraineeById(id, trainee);
 
+        assertThatThrownBy(() -> traineeService.updateTraineeById(id,trainee))
+                .isInstanceOf(IllegalIdException.class)
+                .hasMessageContaining("No trainee with id: " + id);
+        verify(traineeDao, times(1)).updateTraineeById(id, trainee);
+
+    }
 
 
 }
