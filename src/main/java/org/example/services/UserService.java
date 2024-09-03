@@ -30,7 +30,7 @@ public class UserService {
         this.trainerService = trainerService;
     }
 
-    String generateUsername(String firstName, String lastName) {
+    public String generateUsername(String firstName, String lastName) {
         String username = firstName + lastName;
         TraineeDto trainee = null;
         TrainerDto trainer = null;

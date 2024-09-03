@@ -17,11 +17,11 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class TrainingService {
+    @Autowired
+    private TrainingDao trainingDao;
     private TraineeService traineeService;
     private TrainerService trainerService;
     private SaveDataToFile saveDataToFile;
-    @Autowired
-    private TrainingDao trainingDao;
     private TrainingMapper trainingMapper;
     @Autowired
     public void setDependencies(TraineeService traineeService, TrainerService trainerService,

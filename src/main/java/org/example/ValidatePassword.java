@@ -2,16 +2,17 @@ package org.example;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.regex.Pattern;
-
+@Component
 public class ValidatePassword {
-    private static final Logger logger = LoggerFactory.getLogger(ValidatePassword.class);
-    private static final String PATTERN = "^[a-zA-Z0-9@#$%^&+-=!]{10}$";
+    private final Logger logger = LoggerFactory.getLogger(ValidatePassword.class);
+    private final String PATTERN = "^[a-zA-Z0-9@#$%^&+-=!]{10}$";
 
 
-    public static boolean passwordNotValid(String password){
-        logger.debug("Checking if password: " + password +" id valid");
+    public  boolean passwordNotValid(String password){
+        logger.debug("Checking if password: " + password +" is valid");
         if(password == null){
             return true;
         }

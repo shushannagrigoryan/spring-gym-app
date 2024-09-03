@@ -6,16 +6,20 @@ import org.example.entity.TrainingEntity;
 import org.example.exceptions.IllegalIdException;
 import org.example.mapper.TrainingMapper;
 import org.example.services.TrainingService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class TrainingFacade {
     private final TrainingService trainingService;
-    private final TrainingMapper trainingMapper;
+    private TrainingMapper trainingMapper;
 
-    public TrainingFacade(TrainingService trainingService, TrainingMapper trainingMapper) {
+    public TrainingFacade(TrainingService trainingService) {
         this.trainingService = trainingService;
+    }
+    @Autowired
+    public void setTrainingMapper(TrainingMapper trainingMapper){
         this.trainingMapper = trainingMapper;
     }
 

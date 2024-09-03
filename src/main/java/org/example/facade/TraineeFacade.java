@@ -8,16 +8,21 @@ import org.example.exceptions.IllegalPasswordException;
 import org.example.exceptions.IllegalUsernameException;
 import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class TraineeFacade {
     private final TraineeService traineeService;
-    private final TraineeMapper traineeMapper;
+    private TraineeMapper traineeMapper;
 
-    public TraineeFacade(TraineeService traineeService, TraineeMapper traineeMapper){
+    public TraineeFacade(TraineeService traineeService){
         this.traineeService = traineeService;
+    }
+
+    @Autowired
+    public void setTraineeMapper(TraineeMapper traineeMapper){
         this.traineeMapper = traineeMapper;
     }
 

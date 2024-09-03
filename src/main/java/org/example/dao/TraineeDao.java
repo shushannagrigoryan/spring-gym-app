@@ -30,7 +30,7 @@ public class TraineeDao {
         return Optional.ofNullable(traineeStorage.get(id));
     }
 
-    private Long generateId(){
+    public Long generateId(){
         OptionalLong lastId = traineeStorage.values().stream()
                 .mapToLong(TraineeEntity::getUserId)
                 .max();

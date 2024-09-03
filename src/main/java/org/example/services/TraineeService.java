@@ -11,6 +11,7 @@ import org.example.exceptions.IllegalPasswordException;
 import org.example.exceptions.IllegalUsernameException;
 import org.example.mapper.TraineeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -25,21 +26,25 @@ public class TraineeService {
     private UserService userService;
     private SaveDataToFile saveDataToFile;
     private TraineeMapper traineeMapper;
+    private ValidatePassword validatePassword;
 
     @Autowired
-    public void setDependencies(UserService userService, SaveDataToFile saveDataToFile, TraineeMapper traineeMapper){
+    public void setDependencies(UserService userService, SaveDataToFile saveDataToFile,
+                                TraineeMapper traineeMapper, ValidatePassword validatePassword){
         this.userService = userService;
         this.saveDataToFile = saveDataToFile;
         this.traineeMapper = traineeMapper;
+        this.validatePassword = validatePassword;
     }
 
     public void createTrainee(TraineeEntity traineeEntity){
         log.debug("Creating trainee: {}", traineeEntity);
 
-        if (ValidatePassword.passwordNotValid(traineeEntity.getPassword())){
+        if (validatePassword.passwordNotValid(traineeEntity.getPassword())){
             log.debug("Invalid password for trainee");
             throw new IllegalPasswordException(traineeEntity.getPassword());
         }
+        System.out.println(traineeEntity);
 
         String username = userService.generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName());
         traineeEntity.setUsername(username);
@@ -84,10 +89,11 @@ public class TraineeService {
 
     public void updateTraineeById(Long id, TraineeEntity traineeEntity){
         log.debug("Updating trainee by id: {}", id);
-        if (ValidatePassword.passwordNotValid(traineeEntity.getPassword())){
+        if (validatePassword.passwordNotValid(traineeEntity.getPassword())){
             log.debug("Invalid password for trainee");
             throw new IllegalPasswordException(traineeEntity.getPassword());
         }
+        System.out.println(traineeEntity);
 
         String username = userService.generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName());
         traineeEntity.setUsername(username);

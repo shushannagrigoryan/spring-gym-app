@@ -24,19 +24,21 @@ public class TrainerService {
     private UserService userService;
     private SaveDataToFile saveDataToFile;
     private TrainerMapper trainerMapper;
+    private ValidatePassword validatePassword;
 
     @Autowired
     public void setDependencies(UserService userService, SaveDataToFile saveDataToFile,
-                                TrainerMapper trainerMapper){
+                                TrainerMapper trainerMapper, ValidatePassword validatePassword){
         this.userService = userService;
         this.saveDataToFile = saveDataToFile;
         this.trainerMapper = trainerMapper;
+        this.validatePassword = validatePassword;
     }
 
     public void createTrainer(TrainerEntity trainerEntity){
         log.debug("Creating trainer: {}", trainerEntity);
 
-        if (ValidatePassword.passwordNotValid(trainerEntity.getPassword())){
+        if (validatePassword.passwordNotValid(trainerEntity.getPassword())){
             log.debug("Failed to created trainer: {} .Invalid password for trainer: {}",
                     trainerEntity, trainerEntity.getPassword());
             throw new IllegalPasswordException(trainerEntity.getPassword());
@@ -73,7 +75,7 @@ public class TrainerService {
 
     public void updateTrainerById(Long id, TrainerEntity trainerEntity){
         log.debug("Updating trainer by id: {}", id);
-        if (ValidatePassword.passwordNotValid(trainerEntity.getPassword())){
+        if (validatePassword.passwordNotValid(trainerEntity.getPassword())){
             log.debug("Invalid password for trainer");
             throw new IllegalPasswordException(trainerEntity.getPassword());
         }
