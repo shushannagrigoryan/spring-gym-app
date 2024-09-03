@@ -21,7 +21,7 @@ public class TrainerDao {
         trainerStorage.put(id,trainerEntity);
     }
 
-    private Long generateId(){
+    public Long generateId(){
         OptionalLong lastId = trainerStorage.values().stream()
                 .mapToLong(TrainerEntity::getUserId)
                 .max();
@@ -45,7 +45,7 @@ public class TrainerDao {
 
     public void updateTrainerById(Long id, TrainerEntity trainerEntity) {
         if (!trainerStorage.containsKey(id)){
-            throw new IllegalIdException("No trainee with id: " + id);
+            throw new IllegalIdException("No trainer with id: " + id);
         }
         trainerStorage.put(id, trainerEntity);
     }
