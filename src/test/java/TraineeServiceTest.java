@@ -139,9 +139,6 @@ public class TraineeServiceTest {
 
     @Test
     public void getTraineeByIdFailure(){
-        String firstName = "traineeF1";
-        String lastName = "traineeF2";
-        String username = firstName + lastName;
         Long id = 1L;
 
         when(traineeDao.getTraineeById(id)).thenReturn(Optional.empty());
@@ -149,6 +146,20 @@ public class TraineeServiceTest {
                 .isInstanceOf(IllegalIdException.class)
                 .hasMessageContaining("No trainee with id: " + id);
         verify(traineeDao, times(1)).getTraineeById(id);
+    }
+
+    @Test
+    public void deleteTraineeByIdSuccess(){
+        long id = 1L;
+
+        doNothing().when(traineeDao).deleteTraineeById(id);
+        doNothing().when(saveDataToFile).writeMapToFile("Trainee");
+
+        traineeService.deleteTraineeById(id);
+
+        verify(traineeDao, times(1)).deleteTraineeById(id);
+        verify(saveDataToFile, times(1)).writeMapToFile("Trainee");
+
     }
 
 

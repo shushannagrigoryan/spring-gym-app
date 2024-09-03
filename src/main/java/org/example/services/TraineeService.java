@@ -83,8 +83,6 @@ public class TraineeService {
         }catch (IllegalIdException exception){
             log.debug("Failed to delete trainee by id: {}", id);
         }
-
-
     }
 
     public void updateTraineeById(Long id, TraineeEntity traineeEntity){
