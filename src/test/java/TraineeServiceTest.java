@@ -1,6 +1,7 @@
 import org.example.SaveDataToFile;
 import org.example.ValidatePassword;
 import org.example.dao.TraineeDao;
+import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
 import org.example.exceptions.IllegalIdException;
 import org.example.exceptions.IllegalPasswordException;
@@ -20,6 +21,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -81,5 +83,22 @@ public class TraineeServiceTest {
 
     }
 
+    @Test
+    public void getTraineeByUsernameSuccess(){
+        String firstName = "traineeF1";
+        String lastName = "traineeF2";
+        String password = "myPassword";
+        String address = "myAddress";
+        String username = firstName + lastName;
+        LocalDate dateOfBirth = LocalDate.of(2024,9,3);
+        TraineeEntity traineeEntity = new TraineeEntity(firstName, lastName,
+                password, dateOfBirth, address);
 
+        when(traineeDao.getTraineeByUsername(username)).thenReturn(Optional.of(traineeEntity));
+
+        TraineeDto traineeDto = traineeService.getTraineeByUsername(username);
+
+        assertEquals(traineeMapper.entityToDto(traineeEntity), traineeDto);
+        verify(traineeDao, times(1)).getTraineeByUsername(username);
+    }
 }
