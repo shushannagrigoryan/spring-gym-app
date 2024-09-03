@@ -174,5 +174,22 @@ public class TraineeServiceTest {
         verify(traineeDao, times(1)).deleteTraineeById(id);
     }
 
+    @Test
+    public void updateTraineeByIdInvalidPassword(){
+        TraineeEntity trainee = new TraineeEntity();
+        String password = "myPassword";
+        Long id = 1L;
+        trainee.setPassword(password);
+        when(validatePassword.passwordNotValid(password)).thenReturn(true);
+
+        assertThatThrownBy(() -> traineeService.updateTraineeById(id,trainee))
+                .isInstanceOf(IllegalPasswordException.class)
+                .hasMessageContaining("Illegal password: " + password);
+        verify(validatePassword, times(1)).passwordNotValid(password);
+
+    }
+
+
+
 
 }
