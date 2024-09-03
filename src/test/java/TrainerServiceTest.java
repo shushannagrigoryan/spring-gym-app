@@ -137,6 +137,62 @@ public class TrainerServiceTest {
         verify(trainerDao, times(1)).getTrainerById(id);
     }
 
+        @Test
+    public void testUpdateTrainerByIdInvalidPassword(){
+        TrainerEntity trainer = new TrainerEntity();
+        String password = "myPassword";
+        Long id = 1L;
+        trainer.setPassword(password);
+        when(validatePassword.passwordNotValid(password)).thenReturn(true);
+
+        assertThatThrownBy(() -> trainerService.updateTrainerById(id,trainer))
+                .isInstanceOf(IllegalPasswordException.class)
+                .hasMessageContaining("Illegal password: " + password);
+        verify(validatePassword, times(1)).passwordNotValid(password);
+
+    }
+
+    @Test
+    public void testUpdateTrainerByIdInvalidId(){
+        TrainerEntity trainer = new TrainerEntity();
+        Long id = 1L;
+        doThrow(new IllegalIdException("No trainer with id: " + id)).when(trainerDao).updateTrainerById(id, trainer);
+
+        assertThatThrownBy(() -> trainerService.updateTrainerById(id,trainer))
+                .isInstanceOf(IllegalIdException.class)
+                .hasMessageContaining("No trainer with id: " + id);
+        verify(trainerDao, times(1)).updateTrainerById(id, trainer);
+
+    }
+
+    @Test
+    public void testUpdateTrainerSuccess(){
+        String firstName = "trainerF1";
+        String lastName = "trainerF2";
+        String password = "myPassword";
+        String specialization = "boxing";
+        String username = firstName + lastName;
+        TrainerEntity trainerEntity = new TrainerEntity(firstName, lastName, password, specialization);
+        Long id = 1L;
+
+        when(validatePassword.passwordNotValid(trainerEntity.getPassword())).thenReturn(false);
+        when(userService.generateUsername(trainerEntity.getFirstName(), trainerEntity.getLastName()))
+                .thenReturn(username);
+
+
+        trainerService.updateTrainerById(id, trainerEntity);
+
+        assertEquals(username, trainerEntity.getUsername());
+        verify(validatePassword, times(1)).passwordNotValid(trainerEntity.getPassword());
+        verify(userService, times(1)).generateUsername(trainerEntity.getFirstName(),
+                trainerEntity.getLastName());
+        verify(trainerDao, times(1)).updateTrainerById(id, trainerEntity);
+        verify(saveDataToFile, times(1)).writeMapToFile("Trainer");
+        assertEquals(username, trainerEntity.getUsername());
+        assertEquals(id, trainerEntity.getUserId());
+
+    }
+
 
 
 
