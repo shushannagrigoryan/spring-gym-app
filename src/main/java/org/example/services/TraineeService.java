@@ -82,6 +82,7 @@ public class TraineeService {
             log.debug("Successfully deleted trainee by id: {}", id);
         }catch (IllegalIdException exception){
             log.debug("Failed to delete trainee by id: {}", id);
+            throw exception;
         }
     }
 

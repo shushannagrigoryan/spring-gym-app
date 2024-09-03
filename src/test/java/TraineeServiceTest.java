@@ -162,5 +162,17 @@ public class TraineeServiceTest {
 
     }
 
+    @Test
+    public void deleteTraineeByIdFailure(){
+        long id = 1L;
+
+        doThrow(new IllegalIdException("No trainee with id: " + id)).when(traineeDao).deleteTraineeById(id);
+        assertThatThrownBy(() -> traineeService.deleteTraineeById(id))
+                .isInstanceOf(IllegalIdException.class)
+                .hasMessageContaining(("No trainee with id: " + id));
+
+        verify(traineeDao, times(1)).deleteTraineeById(id);
+    }
+
 
 }
