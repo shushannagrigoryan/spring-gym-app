@@ -21,7 +21,7 @@ public class TrainingDao {
         trainingStorage.put(id,trainingEntity);
     }
 
-    private Long generateId(){
+    public Long generateId(){
         OptionalLong lastId = trainingStorage.values().stream()
                 .mapToLong(TrainingEntity::getTrainingId)
                 .max();
