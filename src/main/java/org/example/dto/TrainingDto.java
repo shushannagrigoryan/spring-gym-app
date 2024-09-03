@@ -1,9 +1,6 @@
 package org.example.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.example.TrainingType;
 
 import java.time.Duration;
@@ -12,6 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @ToString
+@NoArgsConstructor
 public class TrainingDto {
     private Long trainerId;
     private  Long traineeId;

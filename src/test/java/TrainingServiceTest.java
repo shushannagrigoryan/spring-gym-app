@@ -3,9 +3,11 @@ import org.example.TrainingType;
 import org.example.dao.TrainingDao;
 import org.example.dto.TraineeDto;
 import org.example.dto.TrainerDto;
+import org.example.dto.TrainingDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainingEntity;
 import org.example.exceptions.IllegalIdException;
+import org.example.mapper.TrainingMapper;
 import org.example.services.TraineeService;
 import org.example.services.TrainerService;
 import org.example.services.TrainingService;
@@ -17,8 +19,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,6 +37,9 @@ public class TrainingServiceTest {
 
     @Mock
     private SaveDataToFile saveDataToFile;
+
+    @Mock
+    private TrainingMapper trainingMapper;
 
     @InjectMocks
     private TrainingService trainingService;
@@ -92,6 +100,36 @@ public class TrainingServiceTest {
 
         verify(trainingDao, times(1)).createTraining(trainingEntity);
         verify(saveDataToFile, times(1)).writeMapToFile("Training");
+    }
+
+    @Test
+    public void testGetTrainingByIdSuccess(){
+        Long trainingId = 1L;
+        TrainingEntity trainingEntity = new TrainingEntity();
+        TrainingDto trainingDto = new TrainingDto();
+        trainingEntity.setTrainingId(trainingId);
+
+        when(trainingDao.getTrainingById(trainingId)).thenReturn(Optional.of(trainingEntity));
+        when(trainingMapper.entityToDto(trainingEntity)).thenReturn(trainingDto);
+
+        TrainingDto trainingDtoActual = trainingService.getTrainingById(trainingId);
+
+        assertNotNull(trainingDto);
+        assertEquals(trainingDto, trainingDtoActual);
+        verify(trainingDao, times(1)).getTrainingById(trainingId);
+        verify(trainingMapper, times(1)).entityToDto(trainingEntity);
+    }
+
+    @Test
+    public void testGetTrainingByIdInvalidId(){
+        Long trainingId = 1L;
+        when(trainingDao.getTrainingById(trainingId)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> trainingService.getTrainingById(trainingId))
+                .isInstanceOf(IllegalIdException.class)
+                .hasMessageContaining("No training with id: " + trainingId);
+
+        verify(trainingDao, times(1)).getTrainingById(trainingId);
     }
 
 
