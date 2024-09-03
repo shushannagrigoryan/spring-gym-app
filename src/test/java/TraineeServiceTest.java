@@ -5,6 +5,7 @@ import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
 import org.example.exceptions.IllegalIdException;
 import org.example.exceptions.IllegalPasswordException;
+import org.example.exceptions.IllegalUsernameException;
 import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
 import org.example.services.UserService;
@@ -101,4 +102,54 @@ public class TraineeServiceTest {
         assertEquals(traineeMapper.entityToDto(traineeEntity), traineeDto);
         verify(traineeDao, times(1)).getTraineeByUsername(username);
     }
+
+    @Test
+    public void getTraineeByUsernameFailure(){
+        String firstName = "traineeF1";
+        String lastName = "traineeF2";
+        String username = firstName + lastName;
+
+        when(traineeDao.getTraineeByUsername(username)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> traineeService.getTraineeByUsername(username))
+                .isInstanceOf(IllegalUsernameException.class)
+                .hasMessageContaining("Illegal username: " + username);
+        verify(traineeDao, times(1)).getTraineeByUsername(username);
+    }
+
+    @Test
+    public void getTraineeByIdSuccess(){
+        String firstName = "traineeF1";
+        String lastName = "traineeF2";
+        String password = "myPassword";
+        String address = "myAddress";
+        String username = firstName + lastName;
+        LocalDate dateOfBirth = LocalDate.of(2024,9,3);
+        TraineeEntity traineeEntity = new TraineeEntity(firstName, lastName,
+                password, dateOfBirth, address);
+        Long id = 1L;
+        traineeEntity.setUserId(id);
+
+        when(traineeDao.getTraineeById(id)).thenReturn(Optional.of(traineeEntity));
+
+        TraineeDto traineeDto = traineeService.getTraineeById(id);
+
+        assertEquals(traineeMapper.entityToDto(traineeEntity), traineeDto);
+        verify(traineeDao, times(1)).getTraineeById(id);
+    }
+
+    @Test
+    public void getTraineeByIdFailure(){
+        String firstName = "traineeF1";
+        String lastName = "traineeF2";
+        String username = firstName + lastName;
+        Long id = 1L;
+
+        when(traineeDao.getTraineeById(id)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> traineeService.getTraineeById(id))
+                .isInstanceOf(IllegalIdException.class)
+                .hasMessageContaining("No trainee with id: " + id);
+        verify(traineeDao, times(1)).getTraineeById(id);
+    }
+
+
 }
