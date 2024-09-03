@@ -33,9 +33,9 @@
     "userId" : 3,
     "firstName" : "Tom",
     "lastName" : "Tompson",
-    "username" : "TomTompson0",
+    "username" : "TomTompson",
     "password" : "myPassword",
-    "dateOfBirth" : [ 2024, 9, 3 ],
+    "dateOfBirth" : [ 2024, 9, 4 ],
     "address" : "myNewAddress",
     "active" : false
   },
@@ -486,6 +486,36 @@
     "username" : "AnnTompson14",
     "password" : "myPassword",
     "dateOfBirth" : [ 2024, 9, 3 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "50" : {
+    "userId" : 50,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "JohnSmith30",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 4 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "51" : {
+    "userId" : 51,
+    "firstName" : "Sam",
+    "lastName" : "Smith",
+    "username" : "SamSmith16",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 4 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "52" : {
+    "userId" : 52,
+    "firstName" : "Ann",
+    "lastName" : "Tompson",
+    "username" : "AnnTompson15",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 4 ],
     "address" : "myAddress",
     "active" : false
   }

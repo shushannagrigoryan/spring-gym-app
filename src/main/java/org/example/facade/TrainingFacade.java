@@ -6,7 +6,6 @@ import org.example.entity.TrainingEntity;
 import org.example.exceptions.IllegalIdException;
 import org.example.mapper.TrainingMapper;
 import org.example.services.TrainingService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component

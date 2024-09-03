@@ -8,7 +8,6 @@ import org.example.exceptions.IllegalPasswordException;
 import org.example.exceptions.IllegalUsernameException;
 import org.example.mapper.TrainerMapper;
 import org.example.services.TrainerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component

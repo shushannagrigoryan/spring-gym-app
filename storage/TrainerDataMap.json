@@ -304,5 +304,23 @@
     "password" : "myPassword",
     "specialization" : "boxing",
     "active" : false
+  },
+  "34" : {
+    "userId" : 34,
+    "firstName" : "A",
+    "lastName" : "B",
+    "username" : "AB",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "35" : {
+    "userId" : 35,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "JohnSmith31",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
   }
 }
