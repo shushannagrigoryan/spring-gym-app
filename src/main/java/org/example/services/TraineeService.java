@@ -11,7 +11,6 @@ import org.example.exceptions.IllegalPasswordException;
 import org.example.exceptions.IllegalUsernameException;
 import org.example.mapper.TraineeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -100,5 +99,7 @@ public class TraineeService {
         traineeDao.updateTraineeById(id, traineeEntity);
         log.debug("Successfully updated trainee with id: " + id);
         saveDataToFile.writeMapToFile("Trainee");
+
+
     }
 }

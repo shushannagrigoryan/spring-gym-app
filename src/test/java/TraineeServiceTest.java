@@ -19,10 +19,8 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -68,7 +66,7 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void createTraineeInvalidPassword(){
+    public void testCreateTraineeInvalidPassword(){
         String firstName = "traineeF1";
         String lastName = "traineeF2";
         String password = "myPassword";
@@ -85,7 +83,7 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void getTraineeByUsernameSuccess(){
+    public void testGetTraineeByUsernameSuccess(){
         String firstName = "traineeF1";
         String lastName = "traineeF2";
         String password = "myPassword";
@@ -104,7 +102,7 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void getTraineeByUsernameFailure(){
+    public void testGetTraineeByUsernameFailure(){
         String firstName = "traineeF1";
         String lastName = "traineeF2";
         String username = firstName + lastName;
@@ -117,7 +115,7 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void getTraineeByIdSuccess(){
+    public void testGetTraineeByIdSuccess(){
         String firstName = "traineeF1";
         String lastName = "traineeF2";
         String password = "myPassword";
@@ -138,7 +136,7 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void getTraineeByIdFailure(){
+    public void testGetTraineeByIdFailure(){
         Long id = 1L;
 
         when(traineeDao.getTraineeById(id)).thenReturn(Optional.empty());
@@ -149,7 +147,7 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void deleteTraineeByIdSuccess(){
+    public void testDeleteTraineeByIdSuccess(){
         long id = 1L;
 
         doNothing().when(traineeDao).deleteTraineeById(id);
@@ -163,7 +161,7 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void deleteTraineeByIdFailure(){
+    public void testDeleteTraineeByIdFailure(){
         long id = 1L;
 
         doThrow(new IllegalIdException("No trainee with id: " + id)).when(traineeDao).deleteTraineeById(id);
@@ -175,7 +173,7 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void updateTraineeByIdInvalidPassword(){
+    public void testUpdateTraineeByIdInvalidPassword(){
         TraineeEntity trainee = new TraineeEntity();
         String password = "myPassword";
         Long id = 1L;
@@ -190,7 +188,7 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void updateTraineeByIdInvalidId(){
+    public void testUpdateTraineeByIdInvalidId(){
         TraineeEntity trainee = new TraineeEntity();
         Long id = 1L;
         doThrow(new IllegalIdException("No trainee with id: " + id)).when(traineeDao).updateTraineeById(id, trainee);
@@ -199,6 +197,35 @@ public class TraineeServiceTest {
                 .isInstanceOf(IllegalIdException.class)
                 .hasMessageContaining("No trainee with id: " + id);
         verify(traineeDao, times(1)).updateTraineeById(id, trainee);
+
+    }
+
+    @Test
+    public void testUpdateTraineeSuccess(){
+        String firstName = "traineeF1";
+        String lastName = "traineeF2";
+        String password = "myPassword";
+        String username = firstName + lastName;
+        String address = "myAddress";
+        LocalDate dateOfBirth = LocalDate.of(2024,9,3);
+        TraineeEntity traineeEntity = new TraineeEntity(firstName, lastName,
+                password, dateOfBirth, address);
+        Long id = 1L;
+
+        when(validatePassword.passwordNotValid(traineeEntity.getPassword())).thenReturn(false);
+        when(userService.generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName()))
+                .thenReturn(username);
+
+
+        traineeService.updateTraineeById(id, traineeEntity);
+
+        assertEquals(username, traineeEntity.getUsername());
+        verify(validatePassword, times(1)).passwordNotValid(traineeEntity.getPassword());
+        verify(userService, times(1)).generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName());
+        verify(traineeDao, times(1)).updateTraineeById(id, traineeEntity);
+        verify(saveDataToFile, times(1)).writeMapToFile("Trainee");
+        assertEquals(username, traineeEntity.getUsername());
+        assertEquals(id, traineeEntity.getUserId());
 
     }
 
