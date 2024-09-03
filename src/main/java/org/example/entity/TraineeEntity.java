@@ -15,4 +15,13 @@ public class TraineeEntity extends UserEntity {
     private LocalDate dateOfBirth;
     private String address;
 
+    public TraineeEntity(String firstname, String lastName,
+                         String password, LocalDate dateOfBirth,
+                         String address){
+        this.firstName = firstname;
+        this.lastName = lastName;
+        this.password = password;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
+    }
 }

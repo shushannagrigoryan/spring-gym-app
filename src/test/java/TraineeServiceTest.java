@@ -43,20 +43,16 @@ public class TraineeServiceTest {
     @InjectMocks
     private TraineeService traineeService;
 
-//    @Test
+    @Test
     public void testCreateTraineeSuccess(){
-        TraineeEntity traineeEntity = new TraineeEntity();
         String firstName = "traineeF1";
         String lastName = "traineeF2";
         String password = "myPassword";
         String username = firstName + lastName;
         String address = "myAddress";
         LocalDate dateOfBirth = LocalDate.of(2024,9,3);
-        traineeEntity.setFirstName(firstName);
-        traineeEntity.setLastName(lastName);
-        traineeEntity.setPassword(password);
-        traineeEntity.setDateOfBirth(dateOfBirth);
-        traineeEntity.setAddress(address);
+        TraineeEntity traineeEntity = new TraineeEntity(firstName, lastName,
+                password, dateOfBirth, address);
 
         when(validatePassword.passwordNotValid(traineeEntity.getPassword())).thenReturn(false);
         when(userService.generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName())).thenReturn(username);
@@ -70,18 +66,13 @@ public class TraineeServiceTest {
 
     @Test
     public void createTraineeInvalidPassword(){
-        TraineeEntity traineeEntity = new TraineeEntity();
         String firstName = "traineeF1";
         String lastName = "traineeF2";
         String password = "myPassword";
-        String username = firstName + lastName;
         String address = "myAddress";
         LocalDate dateOfBirth = LocalDate.of(2024,9,3);
-        traineeEntity.setFirstName(firstName);
-        traineeEntity.setLastName(lastName);
-        traineeEntity.setPassword(password);
-        traineeEntity.setDateOfBirth(dateOfBirth);
-        traineeEntity.setAddress(address);
+        TraineeEntity traineeEntity = new TraineeEntity(firstName, lastName,
+                password, dateOfBirth, address);
 
         when(validatePassword.passwordNotValid(password)).thenReturn(true);
         assertThatThrownBy(() -> traineeService.createTrainee(traineeEntity))
@@ -89,4 +80,6 @@ public class TraineeServiceTest {
                 .hasMessageContaining("Illegal password: " + password);
 
     }
+
+
 }
