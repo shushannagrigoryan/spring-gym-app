@@ -5,6 +5,7 @@ import org.example.dto.TraineeDto;
 import org.example.dto.TrainerDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
+import org.example.exceptions.IllegalUsernameException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class UserService {
             trainee = traineeService.getTraineeByUsername(username);
             trainer = trainerService.getTrainerByUsername(username);
 
-        }catch(Exception e){
+        }catch(IllegalUsernameException e){
             log.debug("no trainee with username: " + username + e.getMessage());
         }
 
