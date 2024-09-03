@@ -1,18 +1,14 @@
 import org.example.SaveDataToFile;
 import org.example.TrainingType;
-import org.example.ValidatePassword;
-import org.example.dao.TrainerDao;
 import org.example.dao.TrainingDao;
 import org.example.dto.TraineeDto;
+import org.example.dto.TrainerDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainingEntity;
 import org.example.exceptions.IllegalIdException;
-import org.example.mapper.TraineeMapper;
-import org.example.mapper.TrainerMapper;
 import org.example.services.TraineeService;
 import org.example.services.TrainerService;
 import org.example.services.TrainingService;
-import org.example.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,6 +27,11 @@ public class TrainingServiceTest {
     private TraineeService traineeService;
     @Mock
     private TrainerService trainerService;
+    @Mock
+    private TrainingDao trainingDao;
+
+    @Mock
+    private SaveDataToFile saveDataToFile;
 
     @InjectMocks
     private TrainingService trainingService;
@@ -71,6 +72,31 @@ public class TrainingServiceTest {
 
         verify(trainerService, times(1)).getTrainerById(trainerId);
     }
+
+    @Test
+    public void testCreateTrainingSuccess(){
+        // Arrange
+        long traineeId = 1L;
+        long trainerId = 1L;
+        TrainingEntity trainingEntity = new TrainingEntity();
+        trainingEntity.setTraineeId(traineeId);
+        trainingEntity.setTrainerId(trainerId);
+
+        TraineeDto traineeDto = new TraineeDto();
+        TrainerDto trainerDto = new TrainerDto();
+
+        when(traineeService.getTraineeById(traineeId)).thenReturn(traineeDto);
+        when(trainerService.getTrainerById(trainerId)).thenReturn(trainerDto);
+
+        trainingService.createTraining(trainingEntity);
+
+        verify(trainingDao, times(1)).createTraining(trainingEntity);
+        verify(saveDataToFile, times(1)).writeMapToFile("Training");
+    }
+
+
+
+
 
 
 
