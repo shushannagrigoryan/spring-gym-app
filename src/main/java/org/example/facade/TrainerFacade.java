@@ -15,16 +15,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class TrainerFacade {
     private final TrainerService trainerService;
-    private TrainerMapper trainerMapper;
+    private final TrainerMapper trainerMapper;
 
-    public TrainerFacade(TrainerService trainerService){
+    public TrainerFacade(TrainerService trainerService, TrainerMapper trainerMapper){
         this.trainerService = trainerService;
-    }
-
-    @Autowired
-    public void setTrainerMapper(TrainerMapper trainerMapper){
         this.trainerMapper = trainerMapper;
     }
+
     public void createTrainer(TrainerDto trainerDto){
         log.info("Request to create trainer");
         TrainerEntity trainerEntity = trainerMapper.dtoToEntity(trainerDto);

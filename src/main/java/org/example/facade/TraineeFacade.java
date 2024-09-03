@@ -15,14 +15,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class TraineeFacade {
     private final TraineeService traineeService;
-    private TraineeMapper traineeMapper;
+    private final TraineeMapper traineeMapper;
 
-    public TraineeFacade(TraineeService traineeService){
+    public TraineeFacade(TraineeService traineeService, TraineeMapper traineeMapper){
         this.traineeService = traineeService;
-    }
-
-    @Autowired
-    public void setTraineeMapper(TraineeMapper traineeMapper){
         this.traineeMapper = traineeMapper;
     }
 

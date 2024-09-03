@@ -13,15 +13,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class TrainingFacade {
     private final TrainingService trainingService;
-    private TrainingMapper trainingMapper;
+    private final TrainingMapper trainingMapper;
 
-    public TrainingFacade(TrainingService trainingService) {
+    public TrainingFacade(TrainingService trainingService, TrainingMapper trainingMapper) {
         this.trainingService = trainingService;
-    }
-    @Autowired
-    public void setTrainingMapper(TrainingMapper trainingMapper){
         this.trainingMapper = trainingMapper;
     }
+
 
     public void createTraining(TrainingDto trainingDto){
         log.info("Request to create training");
