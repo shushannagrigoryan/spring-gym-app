@@ -22,9 +22,11 @@ public class TraineeFacade {
     }
 
     public void createTrainee(TraineeDto traineeDto){
+        log.info("Request to create trainee");
         TraineeEntity traineeEntity = traineeMapper.dtoToEntity(traineeDto);
         try{
             traineeService.createTrainee(traineeEntity);
+            log.info("Successfully created trainee");
         }
         catch (IllegalPasswordException exception){
             log.error(exception.getMessage(), exception);
@@ -32,9 +34,11 @@ public class TraineeFacade {
     }
 
     public TraineeDto getTraineeByUsername(String username){
+        log.info("Request to retrieve trainee by username");
         TraineeDto traineeDto;
         try{
             traineeDto = traineeService.getTraineeByUsername(username);
+            log.info("Successfully retrieved trainee by username");
         }catch (IllegalUsernameException exception){
             log.error(exception.getMessage());
             throw exception;
@@ -43,9 +47,11 @@ public class TraineeFacade {
     }
 
     public TraineeDto getTraineeById(Long id){
+        log.info("Request to retrieve trainee by id");
         TraineeDto traineeDto;
         try{
             traineeDto = traineeService.getTraineeById(id);
+            log.info("Successfully retrieved trainee by id");
         }catch (IllegalIdException exception){
             log.error(exception.getMessage());
             throw exception;
@@ -54,8 +60,10 @@ public class TraineeFacade {
     }
 
     public void deleteTraineeById(Long id){
+        log.info("Request to delete trainee by id");
         try{
             traineeService.deleteTraineeById(id);
+            log.info("Successfully deleted trainee by id");
         }catch (IllegalIdException exception){
             log.error("No trainee with id: {} for deleting",id, exception);
         }
@@ -63,8 +71,10 @@ public class TraineeFacade {
     }
 
     public void updateTraineeById(Long id, TraineeDto traineeDto){
+        log.info("Request to update trainee by id");
         try{
             traineeService.updateTraineeById(id, traineeMapper.dtoToEntity(traineeDto));
+            log.info("Successfully updated trainee by id");
         }catch(IllegalPasswordException | IllegalIdException exception){
             log.error(exception.getMessage(), exception);
         }

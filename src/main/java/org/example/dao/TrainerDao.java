@@ -45,7 +45,7 @@ public class TrainerDao {
 
     public void updateTrainerById(Long id, TrainerEntity trainerEntity) {
         if (!trainerStorage.containsKey(id)){
-            throw new IllegalIdException(id);
+            throw new IllegalIdException("No trainee with id: " + id);
         }
         trainerStorage.put(id, trainerEntity);
     }

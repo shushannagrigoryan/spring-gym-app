@@ -34,11 +34,11 @@ public class TrainerService {
     }
 
     public void createTrainer(TrainerEntity trainerEntity){
-        log.debug("Creating trainer with firstName: {}, lastName: {}",
-                trainerEntity.getFirstName(), trainerEntity.getLastName());
+        log.debug("Creating trainer: {}", trainerEntity);
 
-        if (!ValidatePassword.isValidPassword(trainerEntity.getPassword())){
-            log.debug("Invalid password for trainer");
+        if (ValidatePassword.passwordNotValid(trainerEntity.getPassword())){
+            log.debug("Failed to created trainer: {} .Invalid password for trainer: {}",
+                    trainerEntity, trainerEntity.getPassword());
             throw new IllegalPasswordException(trainerEntity.getPassword());
         }
 
@@ -46,31 +46,34 @@ public class TrainerService {
                 trainerEntity.getLastName());
         trainerEntity.setUsername(username);
         trainerDao.createTrainer(trainerEntity);
-        log.debug("Created a new trainer with username: "+ username);
+        log.debug("Successfully created a new trainer with username: "+ username);
         saveDataToFile.writeMapToFile("Trainer");
     }
 
     public TrainerDto getTrainerByUsername(String username){
+        log.debug("Retrieving trainer by username: {}", username);
         Optional<TrainerEntity> trainer = trainerDao.getTrainerByUsername(username);
         if (!trainer.isPresent()){
             log.debug("No trainer with the username: " + username);
             throw new IllegalUsernameException(username);
         }
-        log.debug("Getting trainer with username: " + username);
+        log.debug("Successfully retrieved trainer with username: " + username);
         return trainerMapper.entityToDto(trainer.get());
     }
 
     public TrainerDto getTrainerById(Long id){
+        log.debug("Retrieving trainer by id: {}", id);
         Optional<TrainerEntity> trainer = trainerDao.getTrainerById(id);
         if (!trainer.isPresent()){
-            throw new IllegalIdException(id);
+            throw new IllegalIdException("No trainer with id: " + id);
         }
-        log.debug("Getting trainer with username: " + id);
+        log.debug("Successfully retrieved trainer with id: " + id);
         return trainerMapper.entityToDto(trainer.get());
     }
 
     public void updateTrainerById(Long id, TrainerEntity trainerEntity){
-        if (!ValidatePassword.isValidPassword(trainerEntity.getPassword())){
+        log.debug("Updating trainer by id: {}", id);
+        if (ValidatePassword.passwordNotValid(trainerEntity.getPassword())){
             log.debug("Invalid password for trainer");
             throw new IllegalPasswordException(trainerEntity.getPassword());
         }
@@ -80,7 +83,7 @@ public class TrainerService {
         trainerEntity.setUsername(username);
         trainerEntity.setUserId(id);
         trainerDao.updateTrainerById(id, trainerEntity);
-        log.debug("Updated trainer with id: " + id);
+        log.debug("Successfully updated trainer with id: " + id);
         saveDataToFile.writeMapToFile("Trainer");
     }
 }

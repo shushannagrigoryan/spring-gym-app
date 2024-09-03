@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
-import org.example.entity.Training;
+import org.example.entity.TrainingEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class SaveDataToFile {
     private  String trainerStorageFile;
 
     @Autowired
-    private  Map<Long, Training> trainingStorage;
+    private  Map<Long, TrainingEntity> trainingStorage;
 
     @Value("${training.storage}")
     private  String trainingStorageFile;

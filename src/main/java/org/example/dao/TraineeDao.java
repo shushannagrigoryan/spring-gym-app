@@ -46,13 +46,13 @@ public class TraineeDao {
         if(traineeStorage.containsKey(id)){
             traineeStorage.remove(id);
         }else{
-            throw new IllegalIdException(id);
+            throw new IllegalIdException("No trainee with id: " + id);
         }
     }
 
     public void updateTraineeById(Long id, TraineeEntity traineeEntity) {
         if (!traineeStorage.containsKey(id)){
-            throw new IllegalIdException(id);
+            throw new IllegalIdException("No trainee with id: " + id);
         }
         traineeStorage.put(id, traineeEntity);
     }

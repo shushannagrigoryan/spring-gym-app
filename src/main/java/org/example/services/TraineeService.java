@@ -10,8 +10,6 @@ import org.example.exceptions.IllegalIdException;
 import org.example.exceptions.IllegalPasswordException;
 import org.example.exceptions.IllegalUsernameException;
 import org.example.mapper.TraineeMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,10 +34,9 @@ public class TraineeService {
     }
 
     public void createTrainee(TraineeEntity traineeEntity){
-        log.debug("Creating trainee with firstName: {}, lastName: {}",
-                traineeEntity.getFirstName(), traineeEntity.getLastName());
+        log.debug("Creating trainee: {}", traineeEntity);
 
-        if (!ValidatePassword.isValidPassword(traineeEntity.getPassword())){
+        if (ValidatePassword.passwordNotValid(traineeEntity.getPassword())){
             log.debug("Invalid password for trainee");
             throw new IllegalPasswordException(traineeEntity.getPassword());
         }
@@ -47,36 +44,47 @@ public class TraineeService {
         String username = userService.generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName());
         traineeEntity.setUsername(username);
         traineeDao.createTrainee(traineeEntity);
-        log.debug("Created a new trainee with username: "+ username);
         saveDataToFile.writeMapToFile("Trainee");
+        log.debug("Successfully created trainee: {}", traineeEntity);
     }
 
     public TraineeDto getTraineeByUsername(String username){
+        log.debug("Retrieving trainee by username: {}", username);
         Optional<TraineeEntity> trainee = traineeDao.getTraineeByUsername(username);
         if (!trainee.isPresent()){
             log.debug("No trainee with the username: " + username);
             throw new IllegalUsernameException(username);
         }
-        log.debug("Getting trainee with username: " + username);
+        log.debug("Successfully retrieved trainee by username: {}", username);
         return traineeMapper.entityToDto(trainee.get());
     }
 
     public TraineeDto getTraineeById(Long id){
+        log.debug("Retrieving trainee by id: {}", id);
         Optional<TraineeEntity> trainee = traineeDao.getTraineeById(id);
         if (!trainee.isPresent()){
-            throw new IllegalIdException(id);
+            throw new IllegalIdException("No trainee with id: " + id);
         }
-        log.debug("Getting trainee with username: " + id);
+        log.debug("Successfully retrieved trainee by id: {}", id);
         return traineeMapper.entityToDto(trainee.get());
     }
 
     public void deleteTraineeById(Long id) {
-        traineeDao.deleteTraineeById(id);
-        saveDataToFile.writeMapToFile("Trainee");
+        log.debug("Deleting trainee by id: {}", id);
+        try{
+            traineeDao.deleteTraineeById(id);
+            saveDataToFile.writeMapToFile("Trainee");
+            log.debug("Successfully deleted trainee by id: {}", id);
+        }catch (IllegalIdException exception){
+            log.debug("Failed to delete trainee by id: {}", id);
+        }
+
+
     }
 
     public void updateTraineeById(Long id, TraineeEntity traineeEntity){
-        if (!ValidatePassword.isValidPassword(traineeEntity.getPassword())){
+        log.debug("Updating trainee by id: {}", id);
+        if (ValidatePassword.passwordNotValid(traineeEntity.getPassword())){
             log.debug("Invalid password for trainee");
             throw new IllegalPasswordException(traineeEntity.getPassword());
         }
@@ -85,7 +93,7 @@ public class TraineeService {
         traineeEntity.setUsername(username);
         traineeEntity.setUserId(id);
         traineeDao.updateTraineeById(id, traineeEntity);
-        log.debug("Updated trainee with id: " + id);
+        log.debug("Successfully updated trainee with id: " + id);
         saveDataToFile.writeMapToFile("Trainee");
     }
 }

@@ -2,16 +2,20 @@ package org.example;
 
 import org.example.dto.TraineeDto;
 import org.example.dto.TrainerDto;
+import org.example.dto.TrainingDto;
 import org.example.exceptions.IllegalIdException;
 import org.example.exceptions.IllegalUsernameException;
 import org.example.facade.TraineeFacade;
 import org.example.facade.TrainerFacade;
+import org.example.facade.TrainingFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
@@ -62,8 +66,6 @@ public class Main {
                 "myPassword", "boxing"));
 
 
-
-
         TrainerDto trainerDto = null;
         try{
             trainerDto = trainerFacade.getTrainerById(2L);
@@ -84,53 +86,19 @@ public class Main {
         trainerFacade.updateTrainerById(3L, new TrainerDto("E", "E",
                 "Mypassword", "boxing") );
 
+        TrainingFacade trainingFacade = context.getBean(TrainingFacade.class);
+        trainingFacade.createTraining(new TrainingDto(80L, 600L,
+                "Boxing", TrainingType.CARDIO, LocalDateTime.now(), Duration.ofHours(1)));
+        trainingFacade.createTraining(new TrainingDto(10L, 10L,
+                "Boxing", TrainingType.CARDIO, LocalDateTime.now(), Duration.ofHours(1)));
 
-
-
-
-//
-//        TraineeService trainee = context.getBean(TraineeService.class);
-//
-//        trainee.createTrainee("John", "Smith", "password15",
-//                LocalDate.now(), "myAddress");
-//
-//
-//        trainee.createTrainee("Jack", "Johnes", "mypassword",
-//                LocalDate.now(), "myAddress");
-//
-//        trainee.createTrainee("Jack", "Johnes", "pass78+-rt",
-//                LocalDate.now(), "myAddress");
-//
-////        trainee.createTrainee("Jack", "Johnes", "gnh5t+-r&t",
-////                LocalDate.now(), "myAddress");
-////
-////        trainee.createTrainee("Jack", "Johnes", "gnh5t+-r&t",
-////                LocalDate.now(), "myAddress");
-//
-//        //trainee.deleteTrainee("JackJohnes");
-//
-//        trainee.createTrainee("Sam", "Smith", "password%^",
-//                LocalDate.of(1990, Month.OCTOBER, 8),
-//                "myAddress");
-//
-//
-//        TrainerService trainer = context.getBean(TrainerService.class);
-//        trainer.createTrainer("A", "B", "mypassword", "boxing trainer");
-//        trainer.createTrainer("A", "B", "mypassword", "pilates trainer");
-//        trainer.createTrainer("Jack", "Johnes", "mypassword", "pilates trainer");
-//
-//        TrainingService training = context.getBean(TrainingService.class);
-//        training.createTraining("JackJohnes", "AB", "boxing",
-//                TrainingType.CARDIO, LocalDateTime.of(2024, 8, 30, 13,30), Duration.ofMinutes(70));
-//
-//
-//        training.createTraining("SamSmith", "JackJohnes1", "pilates",
-//                TrainingType.FLEXIBILITY, LocalDateTime.of(2024, 8, 30, 13,30), Duration.ofMinutes(70));
-//        System.out.println(training.getTraining(0L));
-
-
-
-
+        TrainingDto trainingDto = null;
+        try{
+            trainingDto = trainingFacade.getTrainingById(2L);
+        }catch (IllegalIdException exception){
+            logger.error(exception.getMessage(), exception);
+        }
+        System.out.println(trainingDto);
 
     }
 }

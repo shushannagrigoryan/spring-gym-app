@@ -1,77 +1,65 @@
 package org.example.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.SaveDataToFile;
-import org.example.TrainingType;
-import org.example.model.Trainee;
-import org.example.model.Trainer;
-import org.example.model.Training;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.example.dao.TrainingDao;
+import org.example.dto.TraineeDto;
+import org.example.dto.TrainerDto;
+import org.example.dto.TrainingDto;
+import org.example.entity.TrainingEntity;
+import org.example.exceptions.IllegalIdException;
+import org.example.mapper.TrainingMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.OptionalLong;
+import java.util.Optional;
 
 @Service
+@Slf4j
 public class TrainingService {
-    private static final Logger logger = LoggerFactory.getLogger(TrainerService.class);
-
-    @Autowired
-    private Map<Long, Training> trainingMap;
     private TraineeService traineeService;
     private TrainerService trainerService;
-
     private SaveDataToFile saveDataToFile;
-
+    @Autowired
+    private TrainingDao trainingDao;
+    private TrainingMapper trainingMapper;
     @Autowired
     public void setDependencies(TraineeService traineeService, TrainerService trainerService,
-                                SaveDataToFile saveDataToFile){
+                                SaveDataToFile saveDataToFile, TrainingMapper trainingMapper){
         this.traineeService = traineeService;
         this.trainerService = trainerService;
         this.saveDataToFile = saveDataToFile;
-    }
-    public void createTraining(String traineeUsername,String trainerUsername, String trainingName, TrainingType trainingType,
-                               LocalDateTime trainingDate, Duration trainingDuration){
-        logger.debug("Creating training with traineeUsername: {}, trainerUsername: {}",
-                traineeUsername, trainerUsername);
-        try{
-            Trainee trainee = traineeService.getTrainee(traineeUsername);
-            Trainer trainer = trainerService.getTrainer(trainerUsername);
-            Training training = new Training(trainer.getUserId(), trainee.getUserId(), trainingName,
-                    trainingType, trainingDate, trainingDuration);
-            Long trainingId = generateId();
-            training.setTrainingId(trainingId);
-            trainingMap.put(trainingId, training);
-            logger.debug("Created training: traineeUsername = " + traineeUsername + " trainerUsername = " + trainerUsername);
-            saveDataToFile.writeMapToFile("Training");
-
-        }catch(Exception e){
-            logger.debug("Failed to create training: traineeUsername = " + traineeUsername + " trainerUsername = " + trainerUsername);
-        }
+        this.trainingMapper = trainingMapper;
     }
 
-    private Long generateId(){
-        OptionalLong lastId = trainingMap.values().stream()
-                .mapToLong(Training::getTrainingId)
-                .max();
-        if(lastId.isPresent()){
-            return lastId.getAsLong() + 1;
+    public void createTraining(TrainingEntity trainingEntity){
+        log.debug("Creating training : {}", trainingEntity);
+
+        TraineeDto traineeDto = traineeService.getTraineeById(trainingEntity.getTraineeId());
+        TrainerDto trainerDto = trainerService.getTrainerById(trainingEntity.getTrainerId());
+        if(traineeDto == null){
+            log.debug("Invalid id for trainee: {}", trainingEntity.getTraineeId());
+            throw new IllegalIdException("No trainee with id: " + trainingEntity.getTraineeId());
         }
-        else{
-            return 0L;
+        if(trainerDto == null){
+            log.debug("Invalid id for trainer: {}", trainingEntity.getTrainerId());
+            throw new IllegalIdException("No trainer with id: " + trainingEntity.getTrainerId());
         }
+
+        trainingDao.createTraining(trainingEntity);
+        log.debug("Successfully created new training with id: "+ trainingEntity.getTrainingId());
+        saveDataToFile.writeMapToFile("Training");
     }
 
-    public Training getTraining(Long trainingId){
-        Training training = trainingMap.get(trainingId);
-        if (training == null){
-            throw new IllegalArgumentException("No such with id: " + trainingId);
+    public TrainingDto getTrainingById(Long id){
+        log.debug("Retrieving training by id: {}", id);
+        Optional<TrainingEntity> training = trainingDao.getTrainingById(id);
+        if (!training.isPresent()){
+            log.debug("Invalid id for training: {}", id);
+            throw new IllegalIdException("No training with id: " + id);
         }
-        logger.debug("Getting training with id: " + trainingId);
-        return training;
+        log.debug("Getting training with id: " + id);
+        return trainingMapper.entityToDto(training.get());
     }
 
 

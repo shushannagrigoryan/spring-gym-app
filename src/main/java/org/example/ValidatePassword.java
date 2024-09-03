@@ -10,12 +10,12 @@ public class ValidatePassword {
     private static final String PATTERN = "^[a-zA-Z0-9@#$%^&+-=!]{10}$";
 
 
-    public static boolean isValidPassword(String password){
+    public static boolean passwordNotValid(String password){
         logger.debug("Checking if password: " + password +" id valid");
         if(password == null){
-            return false;
+            return true;
         }
         Pattern pattern = Pattern.compile(PATTERN);
-        return pattern.matcher(password).matches();
+        return !pattern.matcher(password).matches();
     }
 }
