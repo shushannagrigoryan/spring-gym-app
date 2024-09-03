@@ -34,9 +34,10 @@ public class TrainingService {
 
     public void createTraining(TrainingEntity trainingEntity){
         log.debug("Creating training : {}", trainingEntity);
-
+        System.out.println(trainingEntity.getTrainerId());
         TraineeDto traineeDto = traineeService.getTraineeById(trainingEntity.getTraineeId());
         TrainerDto trainerDto = trainerService.getTrainerById(trainingEntity.getTrainerId());
+
         if(traineeDto == null){
             log.debug("Invalid id for trainee: {}", trainingEntity.getTraineeId());
             throw new IllegalIdException("No trainee with id: " + trainingEntity.getTraineeId());
