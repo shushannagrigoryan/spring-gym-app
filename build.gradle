@@ -1,21 +1,23 @@
 plugins {
-//    id 'java-library'
-//    id 'maven-publish'
     id 'java'
     id 'checkstyle'
 }
 
+java{
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+description = 'spring-core-task'
+
+
 repositories {
-//    mavenLocal()
-//    maven {
-//        url = uri('https://repo.maven.apache.org/maven2/')
-//    }
     mavenCentral()
 }
 
 dependencies {
-//    api libs.org.springframework.spring.core
-//    api libs.org.springframework.spring.context
     implementation group: 'org.springframework', name: 'spring-core', version: '6.1.12'
     implementation group: 'org.springframework', name: 'spring-context', version: '6.1.12'
     implementation group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: '3.0.0'
@@ -33,27 +35,6 @@ dependencies {
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.26.3'
 
 }
-
-group = 'org.example'
-version = '1.0-SNAPSHOT'
-description = 'spring-core-task'
-//java.sourceCompatibility = JavaVersion.VERSION_1_8
-
-//publishing {
-//    publications {
-//        maven(MavenPublication) {
-//            from(components.java)
-//        }
-//    }
-//}
-
-//tasks.withType(JavaCompile).configureEach {
-//    options.encoding = 'UTF-8'
-//}
-//
-//tasks.withType(Javadoc).configureEach {
-//    options.encoding = 'UTF-8'
-//}
 
 test{
     useJUnitPlatform()
