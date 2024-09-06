@@ -1,3 +1,5 @@
+package serviceTest;
+
 import org.example.SaveDataToFile;
 import org.example.TrainingType;
 import org.example.dao.TrainingDao;
@@ -7,7 +9,6 @@ import org.example.dto.TrainingDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainingEntity;
 import org.example.exceptions.IllegalIdException;
-import org.example.facade.TrainingFacade;
 import org.example.mapper.TrainingMapper;
 import org.example.services.TraineeService;
 import org.example.services.TrainerService;
@@ -28,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class TrainingFacadeTest {
+public class TrainingServiceTest {
     @Mock
     private TraineeService traineeService;
     @Mock
@@ -42,54 +43,64 @@ public class TrainingFacadeTest {
     @Mock
     private TrainingMapper trainingMapper;
 
-    @Mock
-    private TrainingService trainingService;
-
     @InjectMocks
-    private TrainingFacade trainingFacade;
+    private TrainingService trainingService;
 
     @Test
     public void testCreateTrainingInvalidTraineeId(){
 
-        long traineeId = 1L;
-        TrainingEntity trainingEntity = new TrainingEntity();
-        trainingEntity.setTraineeId(traineeId);
+        Long traineeId = 1L;
+        TrainingEntity trainingEntity = new TrainingEntity(traineeId, 2L, "Boxing",
+                TrainingType.CARDIO, LocalDateTime.now(), Duration.ofHours(1));
 
-        doThrow(new IllegalIdException("No trainee with id: " + traineeId))
-                .when(trainingService).createTraining(trainingEntity);
+        when(traineeService.getTraineeById(traineeId)).thenReturn(null);
 
         assertThatThrownBy(() -> trainingService.createTraining(trainingEntity))
                 .isInstanceOf(IllegalIdException.class)
                 .hasMessageContaining("No trainee with id: " + trainingEntity.getTraineeId());
 
-        verify(trainingService, times(1)).createTraining(trainingEntity);
+        verify(traineeService, times(1)).getTraineeById(traineeId);
     }
 
     @Test
     public void testCreateTrainingInvalidTrainerId(){
-        long trainerId = 1L;
-        TrainingEntity trainingEntity = new TrainingEntity();
-        trainingEntity.setTrainerId(trainerId);
 
-        doThrow(new IllegalIdException("No trainer with id: " + trainerId))
-                .when(trainingService).createTraining(trainingEntity);
+        Long trainerId = 1L;
+        TraineeEntity traineeEntity = new TraineeEntity();
+        Long traineeId = 1L;
+        traineeEntity.setUserId(traineeId);
+        TrainingEntity trainingEntity = new TrainingEntity(traineeId, trainerId, "Boxing",
+                TrainingType.CARDIO, LocalDateTime.now(), Duration.ofHours(1));
+
+
+        when(traineeService.getTraineeById(traineeEntity.getUserId())).thenReturn(new TraineeDto());
+        when(trainerService.getTrainerById(trainerId)).thenReturn(null);
 
         assertThatThrownBy(() -> trainingService.createTraining(trainingEntity))
                 .isInstanceOf(IllegalIdException.class)
                 .hasMessageContaining("No trainer with id: " + trainingEntity.getTrainerId());
 
-        verify(trainingService, times(1)).createTraining(trainingEntity);
+        verify(trainerService, times(1)).getTrainerById(trainerId);
     }
 
     @Test
     public void testCreateTrainingSuccess(){
-        TrainingDto trainingDto = new TrainingDto();
-        TrainingEntity trainingEntity = trainingMapper.dtoToEntity(trainingDto);
-        doNothing().when(trainingService).createTraining(trainingEntity);
+        long traineeId = 1L;
+        long trainerId = 1L;
+        TrainingEntity trainingEntity = new TrainingEntity();
+        trainingEntity.setTraineeId(traineeId);
+        trainingEntity.setTrainerId(trainerId);
 
-        trainingFacade.createTraining(trainingDto);
+        TraineeDto traineeDto = new TraineeDto();
+        TrainerDto trainerDto = new TrainerDto();
 
-        verify(trainingService, times(1)).createTraining(trainingEntity);
+        when(traineeService.getTraineeById(traineeId)).thenReturn(traineeDto);
+        when(trainerService.getTrainerById(trainerId)).thenReturn(trainerDto);
+
+        trainingService.createTraining(trainingEntity);
+
+        verify(trainingDao, times(1)).createTraining(trainingEntity);
+        verify(saveDataToFile, times(1)).writeMapToFile("Training");
     }
 
     @Test
@@ -99,26 +110,27 @@ public class TrainingFacadeTest {
         TrainingDto trainingDto = new TrainingDto();
         trainingEntity.setTrainingId(trainingId);
 
-        when(trainingService.getTrainingById(trainingId)).thenReturn(trainingDto);
+        when(trainingDao.getTrainingById(trainingId)).thenReturn(Optional.of(trainingEntity));
+        when(trainingMapper.entityToDto(trainingEntity)).thenReturn(trainingDto);
 
         TrainingDto trainingDtoActual = trainingService.getTrainingById(trainingId);
 
         assertNotNull(trainingDto);
         assertEquals(trainingDto, trainingDtoActual);
-        verify(trainingService, times(1)).getTrainingById(trainingId);
+        verify(trainingDao, times(1)).getTrainingById(trainingId);
+        verify(trainingMapper, times(1)).entityToDto(trainingEntity);
     }
 
     @Test
     public void testGetTrainingByIdInvalidId(){
         Long trainingId = 1L;
-        when(trainingService.getTrainingById(trainingId))
-                .thenThrow(new IllegalIdException("No training with id: " + trainingId));
+        when(trainingDao.getTrainingById(trainingId)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> trainingService.getTrainingById(trainingId))
                 .isInstanceOf(IllegalIdException.class)
                 .hasMessageContaining("No training with id: " + trainingId);
 
-        verify(trainingService, times(1)).getTrainingById(trainingId);
+        verify(trainingDao, times(1)).getTrainingById(trainingId);
     }
 
 

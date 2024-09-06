@@ -1,3 +1,5 @@
+package daoTest;
+
 import org.example.dao.TrainerDao;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.IllegalIdException;

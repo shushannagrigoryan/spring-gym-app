@@ -1,3 +1,5 @@
+package serviceTest;
+
 import org.example.dto.TraineeDto;
 import org.example.services.TraineeService;
 import org.example.services.TrainerService;

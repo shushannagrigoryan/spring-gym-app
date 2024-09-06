@@ -1,3 +1,5 @@
+package daoTest;
+
 import org.example.dao.TrainingDao;
 import org.example.entity.TrainingEntity;
 import org.junit.jupiter.api.Test;

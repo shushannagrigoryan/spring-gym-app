@@ -1,3 +1,5 @@
+package facadeTest;
+
 import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.IllegalIdException;
