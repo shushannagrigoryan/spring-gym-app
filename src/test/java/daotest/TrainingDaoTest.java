@@ -1,5 +1,16 @@
-package daoTest;
+package daotest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import org.example.dao.TrainingDao;
 import org.example.entity.TrainingEntity;
 import org.junit.jupiter.api.Test;
@@ -7,14 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TrainingDaoTest {
@@ -25,7 +28,7 @@ public class TrainingDaoTest {
     private TrainingDao trainingDao;
 
     @Test
-    public void testGetTrainingByIdSuccess(){
+    public void testGetTrainingByIdSuccess() {
         Long id = 1L;
         TrainingEntity trainingEntity = new TrainingEntity();
         trainingEntity.setTrainingId(id);
@@ -46,7 +49,7 @@ public class TrainingDaoTest {
     }
 
     @Test
-    public void generateIdEmptyMap(){
+    public void generateIdEmptyMap() {
         when(trainingStorage.values()).thenReturn(Collections.emptyList());
 
         Long generatedId = trainingDao.generateId();

@@ -1,5 +1,17 @@
-package daoTest;
+package daotest;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import org.example.dao.TraineeDao;
 import org.example.entity.TraineeEntity;
 import org.example.exceptions.IllegalIdException;
@@ -8,15 +20,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TraineeDaoTest {
@@ -27,7 +30,7 @@ public class TraineeDaoTest {
     private TraineeDao traineeDao;
 
     @Test
-    public void testGetTraineeByIdSuccess(){
+    public void testGetTraineeByIdSuccess() {
         Long id = 1L;
         TraineeEntity traineeEntity = new TraineeEntity();
         traineeEntity.setUserId(id);
@@ -48,7 +51,7 @@ public class TraineeDaoTest {
     }
 
     @Test
-    public void generateIdEmptyMap(){
+    public void generateIdEmptyMap() {
         when(traineeStorage.values()).thenReturn(Collections.emptyList());
 
         Long generatedId = traineeDao.generateId();
@@ -83,7 +86,6 @@ public class TraineeDaoTest {
     }
 
 
-
     @Test
     void testUpdateTraineeById() {
         TraineeEntity traineeEntity = new TraineeEntity();
@@ -102,7 +104,7 @@ public class TraineeDaoTest {
 
         assertThatThrownBy(() -> traineeDao.updateTraineeById(1L, traineeEntity))
                 .isInstanceOf(IllegalIdException.class)
-                        .hasMessageContaining("No trainee with id: " + 1L);
+                .hasMessageContaining("No trainee with id: " + 1L);
     }
 
     @Test

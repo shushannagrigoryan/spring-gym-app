@@ -1,5 +1,16 @@
-package serviceTest;
+package servicetest;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.util.Map;
+import java.util.Optional;
 import org.example.SaveDataToFile;
 import org.example.ValidatePassword;
 import org.example.dao.TraineeDao;
@@ -16,14 +27,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDate;
-import java.util.Map;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TraineeServiceTest {
@@ -47,18 +50,19 @@ public class TraineeServiceTest {
     private TraineeService traineeService;
 
     @Test
-    public void testCreateTraineeSuccess(){
+    public void testCreateTraineeSuccess() {
         String firstName = "traineeF1";
         String lastName = "traineeF2";
         String password = "myPassword";
         String username = firstName + lastName;
         String address = "myAddress";
-        LocalDate dateOfBirth = LocalDate.of(2024,9,3);
+        LocalDate dateOfBirth = LocalDate.of(2024, 9, 3);
         TraineeEntity traineeEntity = new TraineeEntity(firstName, lastName,
                 password, dateOfBirth, address);
 
         when(validatePassword.passwordNotValid(traineeEntity.getPassword())).thenReturn(false);
-        when(userService.generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName())).thenReturn(username);
+        when(userService.generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName()))
+                .thenReturn(username);
 
         traineeService.createTrainee(traineeEntity);
 
@@ -68,12 +72,12 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void testCreateTraineeInvalidPassword(){
+    public void testCreateTraineeInvalidPassword() {
         String firstName = "traineeF1";
         String lastName = "traineeF2";
         String password = "myPassword";
         String address = "myAddress";
-        LocalDate dateOfBirth = LocalDate.of(2024,9,3);
+        LocalDate dateOfBirth = LocalDate.of(2024, 9, 3);
         TraineeEntity traineeEntity = new TraineeEntity(firstName, lastName,
                 password, dateOfBirth, address);
 
@@ -85,13 +89,13 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void testGetTraineeByUsernameSuccess(){
+    public void testGetTraineeByUsernameSuccess() {
         String firstName = "traineeF1";
         String lastName = "traineeF2";
         String password = "myPassword";
         String address = "myAddress";
         String username = firstName + lastName;
-        LocalDate dateOfBirth = LocalDate.of(2024,9,3);
+        LocalDate dateOfBirth = LocalDate.of(2024, 9, 3);
         TraineeEntity traineeEntity = new TraineeEntity(firstName, lastName,
                 password, dateOfBirth, address);
 
@@ -104,7 +108,7 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void testGetTraineeByUsernameFailure(){
+    public void testGetTraineeByUsernameFailure() {
         String firstName = "traineeF1";
         String lastName = "traineeF2";
         String username = firstName + lastName;
@@ -117,13 +121,13 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void testGetTraineeByIdSuccess(){
+    public void testGetTraineeByIdSuccess() {
         String firstName = "traineeF1";
         String lastName = "traineeF2";
         String password = "myPassword";
         String address = "myAddress";
         String username = firstName + lastName;
-        LocalDate dateOfBirth = LocalDate.of(2024,9,3);
+        LocalDate dateOfBirth = LocalDate.of(2024, 9, 3);
         TraineeEntity traineeEntity = new TraineeEntity(firstName, lastName,
                 password, dateOfBirth, address);
         Long id = 1L;
@@ -138,7 +142,7 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void testGetTraineeByIdFailure(){
+    public void testGetTraineeByIdFailure() {
         Long id = 1L;
 
         when(traineeDao.getTraineeById(id)).thenReturn(Optional.empty());
@@ -149,7 +153,7 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void testDeleteTraineeByIdSuccess(){
+    public void testDeleteTraineeByIdSuccess() {
         long id = 1L;
 
         doNothing().when(traineeDao).deleteTraineeById(id);
@@ -163,7 +167,7 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void testDeleteTraineeByIdFailure(){
+    public void testDeleteTraineeByIdFailure() {
         long id = 1L;
 
         doThrow(new IllegalIdException("No trainee with id: " + id)).when(traineeDao).deleteTraineeById(id);
@@ -175,14 +179,14 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void testUpdateTraineeByIdInvalidPassword(){
+    public void testUpdateTraineeByIdInvalidPassword() {
         TraineeEntity trainee = new TraineeEntity();
         String password = "myPassword";
         Long id = 1L;
         trainee.setPassword(password);
         when(validatePassword.passwordNotValid(password)).thenReturn(true);
 
-        assertThatThrownBy(() -> traineeService.updateTraineeById(id,trainee))
+        assertThatThrownBy(() -> traineeService.updateTraineeById(id, trainee))
                 .isInstanceOf(IllegalPasswordException.class)
                 .hasMessageContaining("Illegal password: " + password);
         verify(validatePassword, times(1)).passwordNotValid(password);
@@ -190,12 +194,12 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void testUpdateTraineeByIdInvalidId(){
+    public void testUpdateTraineeByIdInvalidId() {
         TraineeEntity trainee = new TraineeEntity();
         Long id = 1L;
         doThrow(new IllegalIdException("No trainee with id: " + id)).when(traineeDao).updateTraineeById(id, trainee);
 
-        assertThatThrownBy(() -> traineeService.updateTraineeById(id,trainee))
+        assertThatThrownBy(() -> traineeService.updateTraineeById(id, trainee))
                 .isInstanceOf(IllegalIdException.class)
                 .hasMessageContaining("No trainee with id: " + id);
         verify(traineeDao, times(1)).updateTraineeById(id, trainee);
@@ -203,13 +207,13 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void testUpdateTraineeSuccess(){
+    public void testUpdateTraineeSuccess() {
         String firstName = "traineeF1";
         String lastName = "traineeF2";
         String password = "myPassword";
         String username = firstName + lastName;
         String address = "myAddress";
-        LocalDate dateOfBirth = LocalDate.of(2024,9,3);
+        LocalDate dateOfBirth = LocalDate.of(2024, 9, 3);
         TraineeEntity traineeEntity = new TraineeEntity(firstName, lastName,
                 password, dateOfBirth, address);
         Long id = 1L;

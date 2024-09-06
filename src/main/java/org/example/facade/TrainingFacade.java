@@ -19,25 +19,32 @@ public class TrainingFacade {
         this.trainingMapper = trainingMapper;
     }
 
-
-    public void createTraining(TrainingDto trainingDto){
+    /** Creates a new training in the facade layer. */
+    public void createTraining(TrainingDto trainingDto) {
         log.info("Request to create training");
         TrainingEntity trainingEntity = trainingMapper.dtoToEntity(trainingDto);
-        try{
+        try {
             trainingService.createTraining(trainingEntity);
             log.info("Successfully created training");
-        }catch(IllegalIdException exception){
+        } catch (IllegalIdException exception) {
             log.error(exception.getMessage(), exception);
         }
     }
 
-    public TrainingDto getTrainingById(Long id){
+    /**
+     * Gets the training by id in the facade layer.
+     * If there is no training with the given id throws an IllegalIdException.
+     *
+     * @param id id of the training
+     * @return returns the TrainingDto
+     */
+    public TrainingDto getTrainingById(Long id) {
         log.info("Request to retrieve training by id");
         TrainingDto trainingDto;
-        try{
+        try {
             trainingDto = trainingService.getTrainingById(id);
             log.info("Successfully retrieved training by id");
-        }catch (IllegalIdException exception){
+        } catch (IllegalIdException exception) {
             log.error(exception.getMessage());
             throw exception;
         }

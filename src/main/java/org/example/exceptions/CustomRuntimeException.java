@@ -1,7 +1,7 @@
 package org.example.exceptions;
 
-public class CustomRuntimeException extends RuntimeException{
-    public CustomRuntimeException(String message){
-       super(message);
+public class CustomRuntimeException extends RuntimeException {
+    public CustomRuntimeException(String message) {
+        super(message);
     }
 }

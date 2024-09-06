@@ -1,5 +1,6 @@
 package org.example.services;
 
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.SaveDataToFile;
 import org.example.ValidatePassword;
@@ -12,8 +13,6 @@ import org.example.exceptions.IllegalUsernameException;
 import org.example.mapper.TrainerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -28,17 +27,17 @@ public class TrainerService {
 
     @Autowired
     public void setDependencies(UserService userService, SaveDataToFile saveDataToFile,
-                                TrainerMapper trainerMapper, ValidatePassword validatePassword){
+                                TrainerMapper trainerMapper, ValidatePassword validatePassword) {
         this.userService = userService;
         this.saveDataToFile = saveDataToFile;
         this.trainerMapper = trainerMapper;
         this.validatePassword = validatePassword;
     }
 
-    public void createTrainer(TrainerEntity trainerEntity){
+    public void createTrainer(TrainerEntity trainerEntity) {
         log.debug("Creating trainer: {}", trainerEntity);
 
-        if (validatePassword.passwordNotValid(trainerEntity.getPassword())){
+        if (validatePassword.passwordNotValid(trainerEntity.getPassword())) {
             log.debug("Failed to created trainer: {} .Invalid password for trainer: {}",
                     trainerEntity, trainerEntity.getPassword());
             throw new IllegalPasswordException(trainerEntity.getPassword());
@@ -48,14 +47,14 @@ public class TrainerService {
                 trainerEntity.getLastName());
         trainerEntity.setUsername(username);
         trainerDao.createTrainer(trainerEntity);
-        log.debug("Successfully created a new trainer with username: "+ username);
+        log.debug("Successfully created a new trainer with username: " + username);
         saveDataToFile.writeMapToFile("Trainer");
     }
 
-    public TrainerDto getTrainerByUsername(String username){
+    public TrainerDto getTrainerByUsername(String username) {
         log.debug("Retrieving trainer by username: {}", username);
         Optional<TrainerEntity> trainer = trainerDao.getTrainerByUsername(username);
-        if (!trainer.isPresent()){
+        if (!trainer.isPresent()) {
             log.debug("No trainer with the username: " + username);
             throw new IllegalUsernameException(username);
         }
@@ -63,19 +62,19 @@ public class TrainerService {
         return trainerMapper.entityToDto(trainer.get());
     }
 
-    public TrainerDto getTrainerById(Long id){
+    public TrainerDto getTrainerById(Long id) {
         log.debug("Retrieving trainer by id: {}", id);
         Optional<TrainerEntity> trainer = trainerDao.getTrainerById(id);
-        if (!trainer.isPresent()){
+        if (!trainer.isPresent()) {
             throw new IllegalIdException("No trainer with id: " + id);
         }
         log.debug("Successfully retrieved trainer with id: " + id);
         return trainerMapper.entityToDto(trainer.get());
     }
 
-    public void updateTrainerById(Long id, TrainerEntity trainerEntity){
+    public void updateTrainerById(Long id, TrainerEntity trainerEntity) {
         log.debug("Updating trainer by id: {}", id);
-        if (validatePassword.passwordNotValid(trainerEntity.getPassword())){
+        if (validatePassword.passwordNotValid(trainerEntity.getPassword())) {
             log.debug("Invalid password for trainer");
             throw new IllegalPasswordException(trainerEntity.getPassword());
         }

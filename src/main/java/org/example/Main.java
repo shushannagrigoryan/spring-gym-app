@@ -1,5 +1,8 @@
 package org.example;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.example.dto.TraineeDto;
 import org.example.dto.TrainerDto;
 import org.example.dto.TrainingDto;
@@ -13,14 +16,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
+    /** Main method. */
     public static void main(String[] args) {
-        ApplicationContext  context = new AnnotationConfigApplicationContext(Config.class);
+        ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
         TraineeFacade traineeFacade = context.getBean(TraineeFacade.class);
         traineeFacade.createTrainee(new TraineeDto("John", "Smith",
                 "myPassword", LocalDate.now(), "myAddress"));
@@ -30,9 +31,9 @@ public class Main {
                 "myPassword", LocalDate.now(), "myAddress"));
 
         TraineeDto traineeDto = null;
-        try{
+        try {
             traineeDto = traineeFacade.getTraineeByUsername("AB");
-        }catch (IllegalUsernameException exception){
+        } catch (IllegalUsernameException exception) {
             logger.error(exception.getMessage(), exception);
         }
         System.out.println(traineeDto);
@@ -41,9 +42,9 @@ public class Main {
                 "myPassword", LocalDate.now(), "myAddress"));
 
         TraineeDto traineeDto1 = null;
-        try{
+        try {
             traineeDto1 = traineeFacade.getTraineeById(1000L);
-        }catch (IllegalIdException exception){
+        } catch (IllegalIdException exception) {
             logger.error(exception.getMessage(), exception);
         }
         System.out.println(traineeDto1);
@@ -58,7 +59,6 @@ public class Main {
                 "myPassword", LocalDate.now(), "myNewAddress"));
 
 
-
         TrainerFacade trainerFacade = context.getBean(TrainerFacade.class);
         trainerFacade.createTrainer(new TrainerDto("A", "B",
                 "myPassword", "boxing"));
@@ -67,24 +67,24 @@ public class Main {
 
 
         TrainerDto trainerDto = null;
-        try{
+        try {
             trainerDto = trainerFacade.getTrainerById(2L);
-        }catch (IllegalIdException exception){
+        } catch (IllegalIdException exception) {
             logger.error(exception.getMessage(), exception);
         }
         System.out.println(trainerDto);
 
 
         TrainerDto trainerDto1 = null;
-        try{
+        try {
             trainerDto1 = trainerFacade.getTrainerByUsername("AB");
-        }catch (IllegalUsernameException exception){
+        } catch (IllegalUsernameException exception) {
             logger.error(exception.getMessage(), exception);
         }
         System.out.println(trainerDto1);
 
         trainerFacade.updateTrainerById(3L, new TrainerDto("E", "E",
-                "Mypassword", "boxing") );
+                "Mypassword", "boxing"));
 
         TrainingFacade trainingFacade = context.getBean(TrainingFacade.class);
         trainingFacade.createTraining(new TrainingDto(80L, 600L,
@@ -93,9 +93,9 @@ public class Main {
                 "Boxing", TrainingType.CARDIO, LocalDateTime.now(), Duration.ofHours(1)));
 
         TrainingDto trainingDto = null;
-        try{
+        try {
             trainingDto = trainingFacade.getTrainingById(2L);
-        }catch (IllegalIdException exception){
+        } catch (IllegalIdException exception) {
             logger.error(exception.getMessage(), exception);
         }
         System.out.println(trainingDto);

@@ -1,12 +1,17 @@
-package facadeTest;
+package facadetest;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.example.SaveDataToFile;
-import org.example.TrainingType;
 import org.example.dao.TrainingDao;
-import org.example.dto.TraineeDto;
-import org.example.dto.TrainerDto;
 import org.example.dto.TrainingDto;
-import org.example.entity.TraineeEntity;
 import org.example.entity.TrainingEntity;
 import org.example.exceptions.IllegalIdException;
 import org.example.facade.TrainingFacade;
@@ -19,15 +24,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TrainingFacadeTest {
@@ -51,7 +47,7 @@ public class TrainingFacadeTest {
     private TrainingFacade trainingFacade;
 
     @Test
-    public void testCreateTrainingInvalidTraineeId(){
+    public void testCreateTrainingInvalidTraineeId() {
 
         long traineeId = 1L;
         TrainingEntity trainingEntity = new TrainingEntity();
@@ -68,13 +64,13 @@ public class TrainingFacadeTest {
     }
 
     @Test
-    public void testCreateTrainingInvalidTrainerId(){
+    public void testCreateTrainingInvalidTrainerId() {
         long trainerId = 1L;
         TrainingEntity trainingEntity = new TrainingEntity();
         trainingEntity.setTrainerId(trainerId);
 
-        doThrow(new IllegalIdException("No trainer with id: " + trainerId))
-                .when(trainingService).createTraining(trainingEntity);
+        doThrow(new IllegalIdException("No trainer with id: " + trainerId)).when(trainingService)
+                .createTraining(trainingEntity);
 
         assertThatThrownBy(() -> trainingService.createTraining(trainingEntity))
                 .isInstanceOf(IllegalIdException.class)
@@ -84,7 +80,7 @@ public class TrainingFacadeTest {
     }
 
     @Test
-    public void testCreateTrainingSuccess(){
+    public void testCreateTrainingSuccess() {
         TrainingDto trainingDto = new TrainingDto();
         TrainingEntity trainingEntity = trainingMapper.dtoToEntity(trainingDto);
         doNothing().when(trainingService).createTraining(trainingEntity);
@@ -95,7 +91,7 @@ public class TrainingFacadeTest {
     }
 
     @Test
-    public void testGetTrainingByIdSuccess(){
+    public void testGetTrainingByIdSuccess() {
         Long trainingId = 1L;
         TrainingEntity trainingEntity = new TrainingEntity();
         TrainingDto trainingDto = new TrainingDto();
@@ -111,25 +107,16 @@ public class TrainingFacadeTest {
     }
 
     @Test
-    public void testGetTrainingByIdInvalidId(){
+    public void testGetTrainingByIdInvalidId() {
         Long trainingId = 1L;
         when(trainingService.getTrainingById(trainingId))
                 .thenThrow(new IllegalIdException("No training with id: " + trainingId));
 
         assertThatThrownBy(() -> trainingService.getTrainingById(trainingId))
-                .isInstanceOf(IllegalIdException.class)
-                .hasMessageContaining("No training with id: " + trainingId);
+                .isInstanceOf(IllegalIdException.class).hasMessageContaining("No training with id: " + trainingId);
 
         verify(trainingService, times(1)).getTrainingById(trainingId);
     }
-
-
-
-
-
-
-
-
 
 
 }

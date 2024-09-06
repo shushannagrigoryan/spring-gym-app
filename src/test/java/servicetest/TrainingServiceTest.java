@@ -1,5 +1,15 @@
-package serviceTest;
+package servicetest;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import org.example.SaveDataToFile;
 import org.example.TrainingType;
 import org.example.dao.TrainingDao;
@@ -18,15 +28,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TrainingServiceTest {
@@ -47,7 +48,7 @@ public class TrainingServiceTest {
     private TrainingService trainingService;
 
     @Test
-    public void testCreateTrainingInvalidTraineeId(){
+    public void testCreateTrainingInvalidTraineeId() {
 
         Long traineeId = 1L;
         TrainingEntity trainingEntity = new TrainingEntity(traineeId, 2L, "Boxing",
@@ -63,7 +64,7 @@ public class TrainingServiceTest {
     }
 
     @Test
-    public void testCreateTrainingInvalidTrainerId(){
+    public void testCreateTrainingInvalidTrainerId() {
 
         Long trainerId = 1L;
         TraineeEntity traineeEntity = new TraineeEntity();
@@ -84,7 +85,7 @@ public class TrainingServiceTest {
     }
 
     @Test
-    public void testCreateTrainingSuccess(){
+    public void testCreateTrainingSuccess() {
         long traineeId = 1L;
         long trainerId = 1L;
         TrainingEntity trainingEntity = new TrainingEntity();
@@ -104,7 +105,7 @@ public class TrainingServiceTest {
     }
 
     @Test
-    public void testGetTrainingByIdSuccess(){
+    public void testGetTrainingByIdSuccess() {
         Long trainingId = 1L;
         TrainingEntity trainingEntity = new TrainingEntity();
         TrainingDto trainingDto = new TrainingDto();
@@ -122,7 +123,7 @@ public class TrainingServiceTest {
     }
 
     @Test
-    public void testGetTrainingByIdInvalidId(){
+    public void testGetTrainingByIdInvalidId() {
         Long trainingId = 1L;
         when(trainingDao.getTrainingById(trainingId)).thenReturn(Optional.empty());
 
@@ -132,14 +133,6 @@ public class TrainingServiceTest {
 
         verify(trainingDao, times(1)).getTrainingById(trainingId);
     }
-
-
-
-
-
-
-
-
 
 
 }

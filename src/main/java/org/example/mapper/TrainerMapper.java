@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TrainerMapper {
+
+    /** Maps a TrainerEntity to a TrainerDto. */
     public TrainerDto entityToDto(TrainerEntity trainerEntity) {
         if (trainerEntity == null) {
             return null;
@@ -15,6 +17,7 @@ public class TrainerMapper {
                 trainerEntity.getPassword(), trainerEntity.getSpecialization());
     }
 
+    /** Maps a TrainerDto to a TrainerEntity. */
     public TrainerEntity dtoToEntity(TrainerDto trainerDto) {
         if (trainerDto == null) {
             return null;

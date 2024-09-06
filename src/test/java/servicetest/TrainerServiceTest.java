@@ -1,5 +1,13 @@
-package serviceTest;
+package servicetest;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
 import org.example.SaveDataToFile;
 import org.example.ValidatePassword;
 import org.example.dao.TrainerDao;
@@ -16,12 +24,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TrainerServiceTest {
@@ -43,7 +45,7 @@ public class TrainerServiceTest {
     private TrainerService trainerService;
 
     @Test
-    public void testCreateTrainerSuccess(){
+    public void testCreateTrainerSuccess() {
         String firstName = "trainerF1";
         String lastName = "trainerF2";
         String password = "myPassword";
@@ -53,7 +55,8 @@ public class TrainerServiceTest {
         TrainerEntity trainerEntity = new TrainerEntity(firstName, lastName, password, specialization);
 
         when(validatePassword.passwordNotValid(trainerEntity.getPassword())).thenReturn(false);
-        when(userService.generateUsername(trainerEntity.getFirstName(), trainerEntity.getLastName())).thenReturn(username);
+        when(userService.generateUsername(trainerEntity.getFirstName(), trainerEntity.getLastName()))
+                .thenReturn(username);
 
         trainerService.createTrainer(trainerEntity);
 
@@ -63,7 +66,7 @@ public class TrainerServiceTest {
     }
 
     @Test
-    public void testCreateTrainerInvalidPassword(){
+    public void testCreateTrainerInvalidPassword() {
         String firstName = "trainerF1";
         String lastName = "trainerF2";
         String password = "myPassword";
@@ -80,7 +83,7 @@ public class TrainerServiceTest {
 
 
     @Test
-    public void testGetTrainerByUsernameSuccess(){
+    public void testGetTrainerByUsernameSuccess() {
         String firstName = "trainerF1";
         String lastName = "trainerF2";
         String password = "myPassword";
@@ -98,7 +101,7 @@ public class TrainerServiceTest {
 
 
     @Test
-    public void testGetTrainerByUsernameFailure(){
+    public void testGetTrainerByUsernameFailure() {
         String firstName = "trainerF1";
         String lastName = "trainerF2";
         String username = firstName + lastName;
@@ -111,7 +114,7 @@ public class TrainerServiceTest {
     }
 
     @Test
-    public void testGetTrainerByIdSuccess(){
+    public void testGetTrainerByIdSuccess() {
         String firstName = "trainerF1";
         String lastName = "trainerF2";
         String password = "myPassword";
@@ -129,7 +132,7 @@ public class TrainerServiceTest {
     }
 
     @Test
-    public void testGetTrainerByIdFailure(){
+    public void testGetTrainerByIdFailure() {
         Long id = 1L;
 
         when(trainerDao.getTrainerById(id)).thenReturn(Optional.empty());
@@ -139,15 +142,15 @@ public class TrainerServiceTest {
         verify(trainerDao, times(1)).getTrainerById(id);
     }
 
-        @Test
-    public void testUpdateTrainerByIdInvalidPassword(){
+    @Test
+    public void testUpdateTrainerByIdInvalidPassword() {
         TrainerEntity trainer = new TrainerEntity();
         String password = "myPassword";
         Long id = 1L;
         trainer.setPassword(password);
         when(validatePassword.passwordNotValid(password)).thenReturn(true);
 
-        assertThatThrownBy(() -> trainerService.updateTrainerById(id,trainer))
+        assertThatThrownBy(() -> trainerService.updateTrainerById(id, trainer))
                 .isInstanceOf(IllegalPasswordException.class)
                 .hasMessageContaining("Illegal password: " + password);
         verify(validatePassword, times(1)).passwordNotValid(password);
@@ -155,12 +158,12 @@ public class TrainerServiceTest {
     }
 
     @Test
-    public void testUpdateTrainerByIdInvalidId(){
+    public void testUpdateTrainerByIdInvalidId() {
         TrainerEntity trainer = new TrainerEntity();
         Long id = 1L;
         doThrow(new IllegalIdException("No trainer with id: " + id)).when(trainerDao).updateTrainerById(id, trainer);
 
-        assertThatThrownBy(() -> trainerService.updateTrainerById(id,trainer))
+        assertThatThrownBy(() -> trainerService.updateTrainerById(id, trainer))
                 .isInstanceOf(IllegalIdException.class)
                 .hasMessageContaining("No trainer with id: " + id);
         verify(trainerDao, times(1)).updateTrainerById(id, trainer);
@@ -168,7 +171,7 @@ public class TrainerServiceTest {
     }
 
     @Test
-    public void testUpdateTrainerSuccess(){
+    public void testUpdateTrainerSuccess() {
         String firstName = "trainerF1";
         String lastName = "trainerF2";
         String password = "myPassword";
@@ -194,8 +197,6 @@ public class TrainerServiceTest {
         assertEquals(id, trainerEntity.getUserId());
 
     }
-
-
 
 
 }

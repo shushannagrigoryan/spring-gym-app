@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class UserEntity {
     protected Long userId;
-    protected  String firstName;
+    protected String firstName;
     protected String lastName;
     protected String username;
     protected String password;

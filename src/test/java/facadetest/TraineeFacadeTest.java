@@ -1,4 +1,11 @@
-package facadeTest;
+package facadetest;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
@@ -14,10 +21,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 public class TraineeFacadeTest {
     @Mock
@@ -28,7 +31,7 @@ public class TraineeFacadeTest {
     private TraineeFacade traineeFacade;
 
     @Test
-    public void testCreateTraineeSuccess(){
+    public void testCreateTraineeSuccess() {
         TraineeDto traineeDto = new TraineeDto();
         TraineeEntity traineeEntity = new TraineeEntity();
         when(traineeMapper.dtoToEntity(traineeDto)).thenReturn(traineeEntity);
@@ -51,7 +54,7 @@ public class TraineeFacadeTest {
     }
 
     @Test
-    public void testGetTraineeByUsernameSuccess(){
+    public void testGetTraineeByUsernameSuccess() {
         String username = "JackSmith";
         TraineeDto traineeDto = new TraineeDto();
         when(traineeService.getTraineeByUsername(username)).thenReturn(traineeDto);
@@ -68,13 +71,13 @@ public class TraineeFacadeTest {
 
         assertThatThrownBy(() -> traineeFacade.getTraineeByUsername(username))
                 .isInstanceOf(IllegalUsernameException.class)
-                        .hasMessageContaining("Illegal username: " + username);
+                .hasMessageContaining("Illegal username: " + username);
 
         verify(traineeService, times(1)).getTraineeByUsername(username);
     }
 
     @Test
-    public void testGetTraineeByIdSuccess(){
+    public void testGetTraineeByIdSuccess() {
         Long id = 1L;
         TraineeDto traineeDto = new TraineeDto();
 
@@ -87,7 +90,7 @@ public class TraineeFacadeTest {
     }
 
     @Test
-    public void testGetTraineeByIdFailure(){
+    public void testGetTraineeByIdFailure() {
         Long id = 1L;
 
         when(traineeService.getTraineeById(id)).thenThrow(new IllegalIdException("No trainee with id: " + id));

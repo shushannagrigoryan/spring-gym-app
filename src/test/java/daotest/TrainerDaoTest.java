@@ -1,5 +1,17 @@
-package daoTest;
+package daotest;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import org.example.dao.TrainerDao;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.IllegalIdException;
@@ -8,15 +20,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TrainerDaoTest {
@@ -27,7 +30,7 @@ public class TrainerDaoTest {
     private TrainerDao trainerDao;
 
     @Test
-    public void testGetTrainerByIdSuccess(){
+    public void testGetTrainerByIdSuccess() {
         Long id = 1L;
         TrainerEntity trainerEntity = new TrainerEntity();
         trainerEntity.setUserId(id);
@@ -48,14 +51,12 @@ public class TrainerDaoTest {
     }
 
     @Test
-    public void generateIdEmptyMap(){
+    public void generateIdEmptyMap() {
         when(trainerStorage.values()).thenReturn(Collections.emptyList());
 
         Long generatedId = trainerDao.generateId();
         assertEquals(0L, generatedId);
     }
-
-
 
 
     @Test
@@ -66,7 +67,6 @@ public class TrainerDaoTest {
 
         assertFalse(result.isPresent());
     }
-
 
 
     @Test

@@ -1,4 +1,11 @@
-package facadeTest;
+package facadetest;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
@@ -14,9 +21,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TrainerFacadeTest {
@@ -28,7 +32,7 @@ public class TrainerFacadeTest {
     private TrainerFacade trainerFacade;
 
     @Test
-    public void testCreateTrainerSuccess(){
+    public void testCreateTrainerSuccess() {
         TrainerDto trainerDto = new TrainerDto();
         TrainerEntity trainerEntity = new TrainerEntity();
         when(trainerMapper.dtoToEntity(trainerDto)).thenReturn(trainerEntity);
@@ -51,7 +55,7 @@ public class TrainerFacadeTest {
     }
 
     @Test
-    public void testGetTrainerByUsernameSuccess(){
+    public void testGetTrainerByUsernameSuccess() {
         String username = "JackSmith";
         TrainerDto trainerDto = new TrainerDto();
         when(trainerService.getTrainerByUsername(username)).thenReturn(trainerDto);
@@ -67,14 +71,13 @@ public class TrainerFacadeTest {
         when(trainerService.getTrainerByUsername(username)).thenThrow(new IllegalUsernameException(username));
 
         assertThatThrownBy(() -> trainerFacade.getTrainerByUsername(username))
-                .isInstanceOf(IllegalUsernameException.class)
-                .hasMessageContaining("Illegal username: " + username);
+                .isInstanceOf(IllegalUsernameException.class).hasMessageContaining("Illegal username: " + username);
 
         verify(trainerService, times(1)).getTrainerByUsername(username);
     }
 
     @Test
-    public void testGetTrainerByIdSuccess(){
+    public void testGetTrainerByIdSuccess() {
         Long id = 1L;
         TrainerDto trainerDto = new TrainerDto();
 
@@ -87,13 +90,13 @@ public class TrainerFacadeTest {
     }
 
     @Test
-    public void testGetTrainerByIdFailure(){
+    public void testGetTrainerByIdFailure() {
         Long id = 1L;
 
-        when(trainerService.getTrainerById(id)).thenThrow(new IllegalIdException("No trainer with id: " + id));
+        when(trainerService.getTrainerById(id))
+                .thenThrow(new IllegalIdException("No trainer with id: " + id));
         assertThatThrownBy(() -> trainerService.getTrainerById(id))
-                .isInstanceOf(IllegalIdException.class)
-                .hasMessageContaining("No trainer with id: " + id);
+                .isInstanceOf(IllegalIdException.class).hasMessageContaining("No trainer with id: " + id);
         verify(trainerService, times(1)).getTrainerById(id);
 
     }

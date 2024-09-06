@@ -16,55 +16,74 @@ public class TrainerFacade {
     private final TrainerService trainerService;
     private final TrainerMapper trainerMapper;
 
-    public TrainerFacade(TrainerService trainerService, TrainerMapper trainerMapper){
+    public TrainerFacade(TrainerService trainerService, TrainerMapper trainerMapper) {
         this.trainerService = trainerService;
         this.trainerMapper = trainerMapper;
     }
 
-    public void createTrainer(TrainerDto trainerDto){
+    /** Creates a new Trainer in the facade layer. */
+    public void createTrainer(TrainerDto trainerDto) {
         log.info("Request to create trainer");
         TrainerEntity trainerEntity = trainerMapper.dtoToEntity(trainerDto);
-        try{
+        try {
             trainerService.createTrainer(trainerEntity);
             log.info("Successfully created trainer");
-        }
-        catch (IllegalPasswordException exception){
+        } catch (IllegalPasswordException exception) {
             log.error(exception.getMessage(), exception);
         }
     }
 
-    public TrainerDto getTrainerByUsername(String username){
+    /** Gets the trainer by username.
+     * If no there is no trainer with the given username, throws an IllegalUsernameException.
+     *
+     * @param username username to get the trainer by
+     * @return returns the TrainerDto
+     */
+    public TrainerDto getTrainerByUsername(String username) {
         log.info("Request to retrieve trainer by username");
         TrainerDto trainerDto;
-        try{
+        try {
             trainerDto = trainerService.getTrainerByUsername(username);
             log.info("Successfully retrieved trainer by username");
-        }catch (IllegalUsernameException exception){
+        } catch (IllegalUsernameException exception) {
             log.error(exception.getMessage());
             throw exception;
         }
         return trainerDto;
     }
 
-    public TrainerDto getTrainerById(Long id){
+    /**
+     * Gets the trainer by id.
+     * If there is no trainer with the given id, throws an IllegalIdException.
+     *
+     * @param id the id of the trainer
+     * @return the TrainerDto
+     */
+    public TrainerDto getTrainerById(Long id) {
         log.info("Request to retrieve trainer by id");
         TrainerDto trainerDto;
-        try{
+        try {
             trainerDto = trainerService.getTrainerById(id);
             log.info("Successfully retrieved trainer by id");
-        }catch (IllegalIdException exception){
+        } catch (IllegalIdException exception) {
             log.error(exception.getMessage());
             throw exception;
         }
         return trainerDto;
     }
 
-    public void updateTrainerById(Long id, TrainerDto trainerDto){
+    /**
+     * Updates the trainer with the given id in the facade layer.
+     *
+     * @param id id of the trainer
+     * @param trainerDto the new trainer data to update with
+     */
+    public void updateTrainerById(Long id, TrainerDto trainerDto) {
         log.info("Request to update trainer by id");
-        try{
+        try {
             trainerService.updateTrainerById(id, trainerMapper.dtoToEntity(trainerDto));
             log.info("Successfully updated trainer by id");
-        }catch(IllegalPasswordException | IllegalIdException exception){
+        } catch (IllegalPasswordException | IllegalIdException exception) {
             log.error(exception.getMessage(), exception);
         }
 
