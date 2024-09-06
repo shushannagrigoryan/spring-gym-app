@@ -67,12 +67,14 @@
 //
 //            if (traineeFile.length() > 0) {
 //                log.debug("Initializing trainee storage map from file data.");
-//                traineeMap().putAll(objectMapper.readValue(traineeFile, new TypeReference<Map<Long, TraineeEntity>>() {
+//                traineeMap()
+//                .putAll(objectMapper.readValue(traineeFile, new TypeReference<Map<Long, TraineeEntity>>() {
 //                }));
 //            }
 //            if (trainerFile.length() > 0) {
 //                log.debug("Initializing trainer storage map from file data.");
-//                trainerMap().putAll(objectMapper.readValue(trainerFile, new TypeReference<Map<Long, TrainerEntity>>() {
+//                trainerMap()
+//                .putAll(objectMapper.readValue(trainerFile, new TypeReference<Map<Long, TrainerEntity>>() {
 //                }));
 //            }
 //            if (trainingFile.length() > 0) {

@@ -6,7 +6,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TraineeMapper {
-    /** Maps a TraineeEntity to a TraineeDto. */
+    /**
+     * Maps a TraineeEntity to a TraineeDto.
+     */
     public TraineeDto entityToDto(TraineeEntity traineeEntity) {
         if (traineeEntity == null) {
             return null;
@@ -16,7 +18,9 @@ public class TraineeMapper {
                 traineeEntity.getPassword(), traineeEntity.getDateOfBirth(), traineeEntity.getAddress());
     }
 
-    /** Maps a TraineeDto to TraineeEntity. */
+    /**
+     * Maps a TraineeDto to TraineeEntity.
+     */
     public TraineeEntity dtoToEntity(TraineeDto traineeDto) {
         if (traineeDto == null) {
             return null;

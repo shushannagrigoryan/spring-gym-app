@@ -9,7 +9,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
-import java.util.Map;
 import java.util.Optional;
 import org.example.SaveDataToFile;
 import org.example.ValidatePassword;
@@ -30,8 +29,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class TraineeServiceTest {
-    @Mock
-    private Map<Long, TraineeEntity> traineeStorage;
     @Mock
     private UserService userService;
 

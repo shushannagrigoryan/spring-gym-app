@@ -15,14 +15,18 @@ public class TrainerDao {
         this.dataStorage = dataStorage;
     }
 
-    /** Generates an id for the Trainer entity and adds the entity to the storage map. */
+    /**
+     * Generates an id for the Trainer entity and adds the entity to the storage map.
+     */
     public void createTrainer(TrainerEntity trainerEntity) {
         Long id = generateId();
         trainerEntity.setUserId(id);
         dataStorage.getTrainerStorage().put(id, trainerEntity);
     }
 
-    /** Generates a unique id for the Trainer entity.*/
+    /**
+     * Generates a unique id for the Trainer entity.
+     */
     public Long generateId() {
         OptionalLong lastId = dataStorage.getTrainerStorage()
                 .values().stream().mapToLong(TrainerEntity::getUserId).max();
@@ -42,7 +46,9 @@ public class TrainerDao {
         return Optional.ofNullable(dataStorage.getTrainerStorage().get(id));
     }
 
-    /** Updates Trainer entity in storage by id. If no trainer is found throws a IllegalIdException */
+    /**
+     * Updates Trainer entity in storage by id. If no trainer is found throws a IllegalIdException
+     */
     public void updateTrainerById(Long id, TrainerEntity trainerEntity) {
         if (!dataStorage.getTrainerStorage().containsKey(id)) {
             throw new IllegalIdException("No trainer with id: " + id);

@@ -26,7 +26,9 @@ public class TraineeService {
     private TraineeMapper traineeMapper;
     private ValidatePassword validatePassword;
 
-    /** Setting the dependencies for the TraineeService bean. */
+    /**
+     * Setting the dependencies for the TraineeService bean.
+     */
     @Autowired
     public void setDependencies(UserService userService, SaveDataToFile saveDataToFile,
                                 TraineeMapper traineeMapper, ValidatePassword validatePassword) {
@@ -58,7 +60,9 @@ public class TraineeService {
         log.debug("Successfully created trainee: {}", traineeEntity);
     }
 
-    /** Gets trainee by username. */
+    /**
+     * Gets trainee by username.
+     */
     public TraineeDto getTraineeByUsername(String username) {
         log.debug("Retrieving trainee by username: {}", username);
         Optional<TraineeEntity> trainee = traineeDao.getTraineeByUsername(username);
@@ -70,7 +74,8 @@ public class TraineeService {
         return traineeMapper.entityToDto(trainee.get());
     }
 
-    /** Gets the trainee by id in the service layer.
+    /**
+     * Gets the trainee by id in the service layer.
      *
      * @param id id of the trainee to get
      * @return the TraineeDto
@@ -85,7 +90,8 @@ public class TraineeService {
         return traineeMapper.entityToDto(trainee.get());
     }
 
-    /**Deletes a trainee by id in the service layer.
+    /**
+     * Deletes a trainee by id in the service layer.
      * If there is no trainee with the given id throws an IllegalIdException.
      *
      * @param id the id of the trainee
@@ -106,7 +112,7 @@ public class TraineeService {
      * Updates trainee by id.
      * If password is not valid throws an IllegalPasswordException.
      *
-     * @param id id of the trainee
+     * @param id            id of the trainee
      * @param traineeEntity to update with
      */
     public void updateTraineeById(Long id, TraineeEntity traineeEntity) {

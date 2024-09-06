@@ -19,7 +19,9 @@ public class TrainingFacade {
         this.trainingMapper = trainingMapper;
     }
 
-    /** Creates a new training in the facade layer. */
+    /**
+     * Creates a new training in the facade layer.
+     */
     public void createTraining(TrainingDto trainingDto) {
         log.info("Request to create training");
         TrainingEntity trainingEntity = trainingMapper.dtoToEntity(trainingDto);

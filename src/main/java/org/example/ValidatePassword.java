@@ -10,7 +10,9 @@ public class ValidatePassword {
     private final Logger logger = LoggerFactory.getLogger(ValidatePassword.class);
 
 
-    /** Password validation method. */
+    /**
+     * Password validation method.
+     */
     public boolean passwordNotValid(String password) {
         logger.debug("Checking if password: " + password + " is valid");
         if (password == null) {

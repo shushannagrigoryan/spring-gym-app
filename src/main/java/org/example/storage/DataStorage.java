@@ -49,19 +49,20 @@ public class DataStorage {
             if (traineeFile.length() > 0) {
                 log.debug("Initializing trainee storage map from file data.");
                 traineeStorage
-                .putAll(objectMapper.readValue(traineeFile, new TypeReference<Map<Long, TraineeEntity>>() {
-                }));
+                        .putAll(objectMapper.readValue(traineeFile, new TypeReference<Map<Long, TraineeEntity>>() {
+                        }));
             }
             if (trainerFile.length() > 0) {
                 log.debug("Initializing trainer storage map from file data.");
                 trainerStorage
-                .putAll(objectMapper.readValue(trainerFile, new TypeReference<Map<Long, TrainerEntity>>() {
-                }));
+                        .putAll(objectMapper.readValue(trainerFile, new TypeReference<Map<Long, TrainerEntity>>() {
+                        }));
             }
             if (trainingFile.length() > 0) {
                 log.debug("Initializing training storage map from file data.");
                 trainingStorage.putAll(objectMapper.readValue(trainingFile,
-                        new TypeReference<Map<Long, TrainingEntity>>() {}));
+                        new TypeReference<Map<Long, TrainingEntity>>() {
+                        }));
             }
         } catch (IOException e) {
             log.debug("Failed to read  files: {}, {}, {}. Exception: {}",

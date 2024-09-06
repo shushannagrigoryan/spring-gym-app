@@ -15,7 +15,9 @@ public class TraineeDao {
         this.dataStorage = dataStorage;
     }
 
-    /** Generates id for the trainee entity and adds that entity to the storage map.*/
+    /**
+     * Generates id for the trainee entity and adds that entity to the storage map.
+     */
     public void createTrainee(TraineeEntity traineeEntity) {
         Long id = generateId();
         traineeEntity.setUserId(id);
@@ -31,7 +33,9 @@ public class TraineeDao {
         return Optional.ofNullable(dataStorage.getTraineeStorage().get(id));
     }
 
-    /** Generates a unique id for the Trainee entity.*/
+    /**
+     * Generates a unique id for the Trainee entity.
+     */
     public Long generateId() {
         OptionalLong lastId = dataStorage.getTraineeStorage()
                 .values().stream().mapToLong(TraineeEntity::getUserId).max();
@@ -42,7 +46,9 @@ public class TraineeDao {
         }
     }
 
-    /** Deletes the Trainee entity from the storage by id. If no trainee was found throws an IllegalIdException. */
+    /**
+     * Deletes the Trainee entity from the storage by id. If no trainee was found throws an IllegalIdException.
+     */
     public void deleteTraineeById(Long id) {
         if (dataStorage.getTraineeStorage().containsKey(id)) {
             dataStorage.getTraineeStorage().remove(id);
@@ -51,7 +57,9 @@ public class TraineeDao {
         }
     }
 
-    /** Updates Trainee entity in storage by id. If no trainee is found throws a IllegalIdException */
+    /**
+     * Updates Trainee entity in storage by id. If no trainee is found throws a IllegalIdException
+     */
     public void updateTraineeById(Long id, TraineeEntity traineeEntity) {
         if (!dataStorage.getTraineeStorage().containsKey(id)) {
             throw new IllegalIdException("No trainee with id: " + id);

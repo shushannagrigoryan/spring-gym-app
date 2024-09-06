@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.example.dao.TrainingDao;
 import org.example.entity.TrainingEntity;
+import org.example.storage.DataStorage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,7 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class TrainingDaoTest {
     @Mock
-    private Map<Long, TrainingEntity> trainingStorage;
+    private DataStorage dataStorage;
 
     @InjectMocks
     private TrainingDao trainingDao;
@@ -33,15 +34,15 @@ public class TrainingDaoTest {
         TrainingEntity trainingEntity = new TrainingEntity();
         trainingEntity.setTrainingId(id);
 
-        when(trainingStorage.get(id)).thenReturn(trainingEntity);
+        when(dataStorage.getTrainingStorage().get(id)).thenReturn(trainingEntity);
         Optional<TrainingEntity> actualTraining = trainingDao.getTrainingById(id);
         assertTrue(actualTraining.isPresent());
-        verify(trainingStorage, times(1)).get(id);
+        verify(dataStorage.getTrainingStorage(), times(1)).get(id);
     }
 
     @Test
     void testGetTrainingByIdFailure() {
-        when(trainingStorage.get(1L)).thenReturn(null);
+        when(dataStorage.getTrainingStorage().get(1L)).thenReturn(null);
 
         Optional<TrainingEntity> result = trainingDao.getTrainingById(1L);
 
@@ -50,7 +51,7 @@ public class TrainingDaoTest {
 
     @Test
     public void generateIdEmptyMap() {
-        when(trainingStorage.values()).thenReturn(Collections.emptyList());
+        when(dataStorage.getTrainingStorage().values()).thenReturn(Collections.emptyList());
 
         Long generatedId = trainingDao.generateId();
         assertEquals(0L, generatedId);
@@ -63,7 +64,7 @@ public class TrainingDaoTest {
 
         Map<Long, TrainingEntity> map = new HashMap<>();
         map.put(1L, trainingEntity);
-        when(trainingStorage.values()).thenReturn(map.values());
+        when(dataStorage.getTrainingStorage().values()).thenReturn(map.values());
 
         Long generatedId = trainingDao.generateId();
 

@@ -15,6 +15,7 @@ import java.util.Optional;
 import org.example.dao.TrainerDao;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.IllegalIdException;
+import org.example.storage.DataStorage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,7 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class TrainerDaoTest {
     @Mock
-    private Map<Long, TrainerEntity> trainerStorage;
+    private DataStorage dataStorage;
 
     @InjectMocks
     private TrainerDao trainerDao;
@@ -35,15 +36,15 @@ public class TrainerDaoTest {
         TrainerEntity trainerEntity = new TrainerEntity();
         trainerEntity.setUserId(id);
 
-        when(trainerStorage.get(id)).thenReturn(trainerEntity);
+        when(dataStorage.getTrainerStorage().get(id)).thenReturn(trainerEntity);
         Optional<TrainerEntity> actualTrainer = trainerDao.getTrainerById(id);
         assertTrue(actualTrainer.isPresent());
-        verify(trainerStorage, times(1)).get(id);
+        verify(dataStorage.getTrainerStorage(), times(1)).get(id);
     }
 
     @Test
     void testGetTrainerByIdFailure() {
-        when(trainerStorage.get(1L)).thenReturn(null);
+        when(dataStorage.getTrainerStorage().get(1L)).thenReturn(null);
 
         Optional<TrainerEntity> result = trainerDao.getTrainerById(1L);
 
@@ -52,7 +53,7 @@ public class TrainerDaoTest {
 
     @Test
     public void generateIdEmptyMap() {
-        when(trainerStorage.values()).thenReturn(Collections.emptyList());
+        when(dataStorage.getTrainerStorage().values()).thenReturn(Collections.emptyList());
 
         Long generatedId = trainerDao.generateId();
         assertEquals(0L, generatedId);
@@ -61,7 +62,7 @@ public class TrainerDaoTest {
 
     @Test
     void testGetTrainerByUsernameNotFound() {
-        when(trainerStorage.values()).thenReturn(Collections.emptyList());
+        when(dataStorage.getTrainerStorage().values()).thenReturn(Collections.emptyList());
 
         Optional<TrainerEntity> result = trainerDao.getTrainerByUsername("JackSmith");
 
@@ -73,17 +74,17 @@ public class TrainerDaoTest {
     void testUpdateTrainerById() {
         TrainerEntity trainerEntity = new TrainerEntity();
 
-        when(trainerStorage.containsKey(1L)).thenReturn(true);
+        when(dataStorage.getTrainerStorage().containsKey(1L)).thenReturn(true);
 
         trainerDao.updateTrainerById(1L, trainerEntity);
 
-        verify(trainerStorage).put(1L, trainerEntity);
+        verify(dataStorage.getTrainerStorage()).put(1L, trainerEntity);
     }
 
     @Test
     void testUpdateTrainerByIdThrowsException() {
         TrainerEntity trainerEntity = new TrainerEntity();
-        when(trainerStorage.containsKey(1L)).thenReturn(false);
+        when(dataStorage.getTrainerStorage().containsKey(1L)).thenReturn(false);
 
         assertThatThrownBy(() -> trainerDao.updateTrainerById(1L, trainerEntity))
                 .isInstanceOf(IllegalIdException.class)
@@ -97,7 +98,7 @@ public class TrainerDaoTest {
 
         Map<Long, TrainerEntity> map = new HashMap<>();
         map.put(1L, trainerEntity);
-        when(trainerStorage.values()).thenReturn(map.values());
+        when(dataStorage.getTrainerStorage().values()).thenReturn(map.values());
 
         Long generatedId = trainerDao.generateId();
 

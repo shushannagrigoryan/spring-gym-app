@@ -29,7 +29,9 @@ public class UserService {
     }
 
 
-    /** Generates username for user. */
+    /**
+     * Generates username for user.
+     */
     public String generateUsername(String firstName, String lastName) {
         String username = firstName + lastName;
         TraineeDto trainee = null;
@@ -49,7 +51,9 @@ public class UserService {
         return username;
     }
 
-    /** Getting suffix for the given username if the username is already taken. */
+    /**
+     * Getting suffix for the given username if the username is already taken.
+     */
     private Long getSuffix(String username) {
         log.debug("Generating suffix for username: " + username);
         long suffix = 0L;

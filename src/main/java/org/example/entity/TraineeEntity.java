@@ -18,11 +18,11 @@ public class TraineeEntity extends UserEntity {
     /**
      * Constructs a new instance of {@code TraineeEntity}.
      *
-     * @param firstname The firstname of the Trainee.
-     * @param lastName The lastname of the Trainee.
-     * @param password The password of the Trainee.
+     * @param firstname   The firstname of the Trainee.
+     * @param lastName    The lastname of the Trainee.
+     * @param password    The password of the Trainee.
      * @param dateOfBirth The dateOfBirth of the Trainee.
-     * @param address The address of the Trainee.
+     * @param address     The address of the Trainee.
      */
     public TraineeEntity(String firstname, String lastName,
                          String password, LocalDate dateOfBirth,

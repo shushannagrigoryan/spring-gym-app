@@ -21,7 +21,9 @@ public class TrainerFacade {
         this.trainerMapper = trainerMapper;
     }
 
-    /** Creates a new Trainer in the facade layer. */
+    /**
+     * Creates a new Trainer in the facade layer.
+     */
     public void createTrainer(TrainerDto trainerDto) {
         log.info("Request to create trainer");
         TrainerEntity trainerEntity = trainerMapper.dtoToEntity(trainerDto);
@@ -33,7 +35,8 @@ public class TrainerFacade {
         }
     }
 
-    /** Gets the trainer by username.
+    /**
+     * Gets the trainer by username.
      * If no there is no trainer with the given username, throws an IllegalUsernameException.
      *
      * @param username username to get the trainer by
@@ -75,7 +78,7 @@ public class TrainerFacade {
     /**
      * Updates the trainer with the given id in the facade layer.
      *
-     * @param id id of the trainer
+     * @param id         id of the trainer
      * @param trainerDto the new trainer data to update with
      */
     public void updateTrainerById(Long id, TrainerDto trainerDto) {

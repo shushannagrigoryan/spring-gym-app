@@ -20,7 +20,9 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
-    /** Main method. */
+    /**
+     * Main method.
+     */
     public static void main(String[] args) {
         ApplicationContext context = new AnnotationConfigApplicationContext(DataStorage.class);
         TraineeFacade traineeFacade = context.getBean(TraineeFacade.class);

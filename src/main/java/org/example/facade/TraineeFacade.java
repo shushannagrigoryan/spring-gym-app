@@ -21,7 +21,9 @@ public class TraineeFacade {
         this.traineeMapper = traineeMapper;
     }
 
-    /** Creates a trainee in the facade layer.*/
+    /**
+     * Creates a trainee in the facade layer.
+     */
     public void createTrainee(TraineeDto traineeDto) {
         log.info("Request to create trainee");
         TraineeEntity traineeEntity = traineeMapper.dtoToEntity(traineeDto);
@@ -33,8 +35,10 @@ public class TraineeFacade {
         }
     }
 
-    /** Gets the trainee by username in the facade layer.
-     *  If there is no trainee with the given username, throws a IllegalUsernameException. */
+    /**
+     * Gets the trainee by username in the facade layer.
+     * If there is no trainee with the given username, throws a IllegalUsernameException.
+     */
     public TraineeDto getTraineeByUsername(String username) {
         log.info("Request to retrieve trainee by username");
         TraineeDto traineeDto;
@@ -48,8 +52,10 @@ public class TraineeFacade {
         return traineeDto;
     }
 
-    /** Gets Trainee by id in the facade layer.
-     * If there is no trainee with the given id throws an IllegalIdException. */
+    /**
+     * Gets Trainee by id in the facade layer.
+     * If there is no trainee with the given id throws an IllegalIdException.
+     */
     public TraineeDto getTraineeById(Long id) {
         log.info("Request to retrieve trainee by id");
         TraineeDto traineeDto;
@@ -63,8 +69,10 @@ public class TraineeFacade {
         return traineeDto;
     }
 
-    /** Deletes Trainee by id.
-     *  If there is no trainee with the given id, throws an IllegalIdException */
+    /**
+     * Deletes Trainee by id.
+     * If there is no trainee with the given id, throws an IllegalIdException
+     */
     public void deleteTraineeById(Long id) {
         log.info("Request to delete trainee by id");
         try {
@@ -76,9 +84,10 @@ public class TraineeFacade {
 
     }
 
-    /** Updates Trainee by id.
+    /**
+     * Updates Trainee by id.
      *
-     * @param id id of the trainee to update
+     * @param id         id of the trainee to update
      * @param traineeDto new trainee data to update with
      */
     public void updateTraineeById(Long id, TraineeDto traineeDto) {

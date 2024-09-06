@@ -23,7 +23,9 @@ public class TrainingService {
     private SaveDataToFile saveDataToFile;
     private TrainingMapper trainingMapper;
 
-    /** Setting dependencies for TrainingService. */
+    /**
+     * Setting dependencies for TrainingService.
+     */
     @Autowired
     public void setDependencies(TraineeService traineeService, TrainerService trainerService,
                                 SaveDataToFile saveDataToFile, TrainingMapper trainingMapper) {
@@ -33,7 +35,9 @@ public class TrainingService {
         this.trainingMapper = trainingMapper;
     }
 
-    /** Creates training in service layer. */
+    /**
+     * Creates training in service layer.
+     */
     public void createTraining(TrainingEntity trainingEntity) {
         log.debug("Creating training : {}", trainingEntity);
         System.out.println(trainingEntity.getTrainerId());
@@ -54,7 +58,8 @@ public class TrainingService {
         saveDataToFile.writeMapToFile("Training");
     }
 
-    /** Gets training by id.
+    /**
+     * Gets training by id.
      *
      * @param id of the training
      * @return the TrainingDto
