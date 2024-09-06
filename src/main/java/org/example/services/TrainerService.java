@@ -25,6 +25,7 @@ public class TrainerService {
     private TrainerMapper trainerMapper;
     private ValidatePassword validatePassword;
 
+    /** Setting dependencies for TrainerService. */
     @Autowired
     public void setDependencies(UserService userService, SaveDataToFile saveDataToFile,
                                 TrainerMapper trainerMapper, ValidatePassword validatePassword) {
@@ -34,6 +35,7 @@ public class TrainerService {
         this.validatePassword = validatePassword;
     }
 
+    /** Creates Trainer in the Service layer. */
     public void createTrainer(TrainerEntity trainerEntity) {
         log.debug("Creating trainer: {}", trainerEntity);
 
@@ -51,6 +53,7 @@ public class TrainerService {
         saveDataToFile.writeMapToFile("Trainer");
     }
 
+    /** Gets Trainer by username. */
     public TrainerDto getTrainerByUsername(String username) {
         log.debug("Retrieving trainer by username: {}", username);
         Optional<TrainerEntity> trainer = trainerDao.getTrainerByUsername(username);
@@ -62,6 +65,12 @@ public class TrainerService {
         return trainerMapper.entityToDto(trainer.get());
     }
 
+    /** Gets Trainer by id.
+     * If there is no trainer with the given id throws an IllegalIdException
+     *
+     * @param id of the trainer
+     * @return the TrainerDao
+     */
     public TrainerDto getTrainerById(Long id) {
         log.debug("Retrieving trainer by id: {}", id);
         Optional<TrainerEntity> trainer = trainerDao.getTrainerById(id);
@@ -72,6 +81,13 @@ public class TrainerService {
         return trainerMapper.entityToDto(trainer.get());
     }
 
+    /**
+     * Updates trainer by id.
+     * If new password is not valid throws IllegalPasswordException.
+     *
+     * @param id of the trainer
+     * @param trainerEntity to update with
+     */
     public void updateTrainerById(Long id, TrainerEntity trainerEntity) {
         log.debug("Updating trainer by id: {}", id);
         if (validatePassword.passwordNotValid(trainerEntity.getPassword())) {

@@ -11,6 +11,7 @@ import org.example.exceptions.IllegalUsernameException;
 import org.example.facade.TraineeFacade;
 import org.example.facade.TrainerFacade;
 import org.example.facade.TrainingFacade;
+import org.example.storage.DataStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -21,7 +22,7 @@ public class Main {
 
     /** Main method. */
     public static void main(String[] args) {
-        ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+        ApplicationContext context = new AnnotationConfigApplicationContext(DataStorage.class);
         TraineeFacade traineeFacade = context.getBean(TraineeFacade.class);
         traineeFacade.createTrainee(new TraineeDto("John", "Smith",
                 "myPassword", LocalDate.now(), "myAddress"));

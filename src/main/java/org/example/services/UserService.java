@@ -1,7 +1,6 @@
 package org.example.services;
 
 import java.util.Collections;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +9,7 @@ import org.example.dto.TrainerDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.IllegalUsernameException;
+import org.example.storage.DataStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +17,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserService {
     @Autowired
-    private Map<Long, TraineeEntity> traineeMap;
-
-    @Autowired
-    private Map<Long, TrainerEntity> trainerMap;
+    private DataStorage dataStorage;
 
     private TraineeService traineeService;
     private TrainerService trainerService;
@@ -32,6 +29,7 @@ public class UserService {
     }
 
 
+    /** Generates username for user. */
     public String generateUsername(String firstName, String lastName) {
         String username = firstName + lastName;
         TraineeDto trainee = null;
@@ -56,7 +54,7 @@ public class UserService {
         log.debug("Generating suffix for username: " + username);
         long suffix = 0L;
 
-        Set<Long> traineeSuffixSet = traineeMap.values()
+        Set<Long> traineeSuffixSet = dataStorage.getTraineeStorage().values()
                 .stream()
                 .map(TraineeEntity::getUsername)
                 .filter(u -> u.startsWith(username))
@@ -64,7 +62,7 @@ public class UserService {
                 .filter(s -> !s.isEmpty()).map(Long::valueOf)
                 .collect(Collectors.toSet());
 
-        Set<Long> trainerSuffixSet = trainerMap.values()
+        Set<Long> trainerSuffixSet = dataStorage.getTrainerStorage().values()
                 .stream()
                 .map(TrainerEntity::getUsername)
                 .filter(u -> u.startsWith(username))

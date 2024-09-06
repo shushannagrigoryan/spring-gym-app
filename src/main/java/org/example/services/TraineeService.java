@@ -58,6 +58,7 @@ public class TraineeService {
         log.debug("Successfully created trainee: {}", traineeEntity);
     }
 
+    /** Gets trainee by username. */
     public TraineeDto getTraineeByUsername(String username) {
         log.debug("Retrieving trainee by username: {}", username);
         Optional<TraineeEntity> trainee = traineeDao.getTraineeByUsername(username);
@@ -101,7 +102,13 @@ public class TraineeService {
         }
     }
 
-
+    /**
+     * Updates trainee by id.
+     * If password is not valid throws an IllegalPasswordException.
+     *
+     * @param id id of the trainee
+     * @param traineeEntity to update with
+     */
     public void updateTraineeById(Long id, TraineeEntity traineeEntity) {
         log.debug("Updating trainee by id: {}", id);
 
@@ -110,7 +117,8 @@ public class TraineeService {
             throw new IllegalPasswordException(traineeEntity.getPassword());
         }
 
-        String username = userService.generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName());
+        String username = userService
+                .generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName());
         traineeEntity.setUsername(username);
         traineeEntity.setUserId(id);
         traineeDao.updateTraineeById(id, traineeEntity);
