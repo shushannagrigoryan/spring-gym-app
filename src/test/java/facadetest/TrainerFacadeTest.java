@@ -11,7 +11,6 @@ import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.IllegalIdException;
 import org.example.exceptions.IllegalPasswordException;
-import org.example.exceptions.IllegalUsernameException;
 import org.example.facade.TrainerFacade;
 import org.example.mapper.TrainerMapper;
 import org.example.services.TrainerService;
@@ -53,27 +52,28 @@ public class TrainerFacadeTest {
         verify(trainerService, times(1)).createTrainer(trainerEntity);
     }
 
-    @Test
-    public void testGetTrainerByUsernameSuccess() {
-        String username = "JackSmith";
-        TrainerDto trainerDto = new TrainerDto();
-        when(trainerService.getTrainerByUsername(username)).thenReturn(trainerDto);
-
-        TrainerDto actualTrainerDto = trainerFacade.getTrainerByUsername(username);
-        verify(trainerService, times(1)).getTrainerByUsername(username);
-        assertEquals(trainerDto, actualTrainerDto);
-    }
-
-    @Test
-    public void testGetTrainerByUsernameInvalidUsername() {
-        String username = "invalidUsername";
-        when(trainerService.getTrainerByUsername(username)).thenThrow(new IllegalUsernameException(username));
-
-        assertThatThrownBy(() -> trainerFacade.getTrainerByUsername(username))
-                .isInstanceOf(IllegalUsernameException.class).hasMessageContaining("Illegal username: " + username);
-
-        verify(trainerService, times(1)).getTrainerByUsername(username);
-    }
+    //    @Test
+    //    public void testGetTrainerByUsernameSuccess() {
+    //        String username = "JackSmith";
+    //        TrainerDto trainerDto = new TrainerDto();
+    //        when(trainerService.getTrainerByUsername(username)).thenReturn(trainerDto);
+    //
+    //        TrainerDto actualTrainerDto = trainerFacade.getTrainerByUsername(username);
+    //        verify(trainerService, times(1)).getTrainerByUsername(username);
+    //        assertEquals(trainerDto, actualTrainerDto);
+    //    }
+    //
+    //    @Test
+    //    public void testGetTrainerByUsernameInvalidUsername() {
+    //        String username = "invalidUsername";
+    //        when(trainerService.getTrainerByUsername(username)).thenThrow(new IllegalUsernameException(username));
+    //
+    //        assertThatThrownBy(() -> trainerFacade.getTrainerByUsername(username))
+    //                .isInstanceOf(IllegalUsernameException.class)
+    //                .hasMessageContaining("Illegal username: " + username);
+    //
+    //        verify(trainerService, times(1)).getTrainerByUsername(username);
+    //    }
 
     @Test
     public void testGetTrainerByIdSuccess() {

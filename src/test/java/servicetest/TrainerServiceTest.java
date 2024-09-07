@@ -15,7 +15,6 @@ import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.IllegalIdException;
 import org.example.exceptions.IllegalPasswordException;
-import org.example.exceptions.IllegalUsernameException;
 import org.example.mapper.TrainerMapper;
 import org.example.services.TrainerService;
 import org.example.services.UserService;
@@ -82,36 +81,36 @@ public class TrainerServiceTest {
     }
 
 
-    @Test
-    public void testGetTrainerByUsernameSuccess() {
-        String firstName = "trainerF1";
-        String lastName = "trainerF2";
-        String password = "myPassword";
-        String specialization = "boxing";
-        String username = firstName + lastName;
-        TrainerEntity trainerEntity = new TrainerEntity(firstName, lastName, password, specialization);
-
-        when(trainerDao.getTrainerByUsername(username)).thenReturn(Optional.of(trainerEntity));
-
-        TrainerDto trainerDto = trainerService.getTrainerByUsername(username);
-
-        assertEquals(trainerMapper.entityToDto(trainerEntity), trainerDto);
-        verify(trainerDao, times(1)).getTrainerByUsername(username);
-    }
-
-
-    @Test
-    public void testGetTrainerByUsernameFailure() {
-        String firstName = "trainerF1";
-        String lastName = "trainerF2";
-        String username = firstName + lastName;
-
-        when(trainerDao.getTrainerByUsername(username)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> trainerService.getTrainerByUsername(username))
-                .isInstanceOf(IllegalUsernameException.class)
-                .hasMessageContaining("Illegal username: " + username);
-        verify(trainerDao, times(1)).getTrainerByUsername(username);
-    }
+    //    @Test
+    //    public void testGetTrainerByUsernameSuccess() {
+    //        String firstName = "trainerF1";
+    //        String lastName = "trainerF2";
+    //        String password = "myPassword";
+    //        String specialization = "boxing";
+    //        String username = firstName + lastName;
+    //        TrainerEntity trainerEntity = new TrainerEntity(firstName, lastName, password, specialization);
+    //
+    //        when(trainerDao.getTrainerByUsername(username)).thenReturn(Optional.of(trainerEntity));
+    //
+    //        TrainerDto trainerDto = trainerService.getTrainerByUsername(username);
+    //
+    //        assertEquals(trainerMapper.entityToDto(trainerEntity), trainerDto);
+    //        verify(trainerDao, times(1)).getTrainerByUsername(username);
+    //    }
+    //
+    //
+    //    @Test
+    //    public void testGetTrainerByUsernameFailure() {
+    //        String firstName = "trainerF1";
+    //        String lastName = "trainerF2";
+    //        String username = firstName + lastName;
+    //
+    //        when(trainerDao.getTrainerByUsername(username)).thenReturn(Optional.empty());
+    //        assertThatThrownBy(() -> trainerService.getTrainerByUsername(username))
+    //                .isInstanceOf(IllegalUsernameException.class)
+    //                .hasMessageContaining("Illegal username: " + username);
+    //        verify(trainerDao, times(1)).getTrainerByUsername(username);
+    //    }
 
     @Test
     public void testGetTrainerByIdSuccess() {

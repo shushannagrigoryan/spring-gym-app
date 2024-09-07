@@ -25,6 +25,9 @@ public class TrainingDaoTest {
     @Mock
     private DataStorage dataStorage;
 
+    @Mock
+    private Map<Long, TrainingEntity> trainingEntityMap;
+
     @InjectMocks
     private TrainingDao trainingDao;
 
@@ -34,7 +37,10 @@ public class TrainingDaoTest {
         TrainingEntity trainingEntity = new TrainingEntity();
         trainingEntity.setTrainingId(id);
 
-        when(dataStorage.getTrainingStorage().get(id)).thenReturn(trainingEntity);
+        when(dataStorage.getTrainingStorage()).thenReturn(trainingEntityMap);
+        when(trainingEntityMap.get(id)).thenReturn(trainingEntity);
+
+
         Optional<TrainingEntity> actualTraining = trainingDao.getTrainingById(id);
         assertTrue(actualTraining.isPresent());
         verify(dataStorage.getTrainingStorage(), times(1)).get(id);
@@ -42,7 +48,9 @@ public class TrainingDaoTest {
 
     @Test
     void testGetTrainingByIdFailure() {
-        when(dataStorage.getTrainingStorage().get(1L)).thenReturn(null);
+        when(dataStorage.getTrainingStorage()).thenReturn(trainingEntityMap);
+        when(trainingEntityMap.get(1L)).thenReturn(null);
+
 
         Optional<TrainingEntity> result = trainingDao.getTrainingById(1L);
 
@@ -51,7 +59,9 @@ public class TrainingDaoTest {
 
     @Test
     public void generateIdEmptyMap() {
-        when(dataStorage.getTrainingStorage().values()).thenReturn(Collections.emptyList());
+        when(dataStorage.getTrainingStorage()).thenReturn(trainingEntityMap);
+        when(trainingEntityMap.values()).thenReturn(Collections.emptyList());
+
 
         Long generatedId = trainingDao.generateId();
         assertEquals(0L, generatedId);
@@ -64,7 +74,8 @@ public class TrainingDaoTest {
 
         Map<Long, TrainingEntity> map = new HashMap<>();
         map.put(1L, trainingEntity);
-        when(dataStorage.getTrainingStorage().values()).thenReturn(map.values());
+        when(dataStorage.getTrainingStorage()).thenReturn(trainingEntityMap);
+        when(trainingEntityMap.values()).thenReturn(map.values());
 
         Long generatedId = trainingDao.generateId();
 

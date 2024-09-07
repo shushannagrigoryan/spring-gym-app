@@ -7,7 +7,6 @@ import org.example.dto.TraineeDto;
 import org.example.dto.TrainerDto;
 import org.example.dto.TrainingDto;
 import org.example.exceptions.IllegalIdException;
-import org.example.exceptions.IllegalUsernameException;
 import org.example.facade.TraineeFacade;
 import org.example.facade.TrainerFacade;
 import org.example.facade.TrainingFacade;
@@ -33,13 +32,6 @@ public class Main {
         traineeFacade.createTrainee(new TraineeDto("Sam", "Smith",
                 "myPassword", LocalDate.now(), "myAddress"));
 
-        TraineeDto traineeDto = null;
-        try {
-            traineeDto = traineeFacade.getTraineeByUsername("AB");
-        } catch (IllegalUsernameException exception) {
-            logger.error(exception.getMessage(), exception);
-        }
-        System.out.println(traineeDto);
 
         traineeFacade.createTrainee(new TraineeDto("Ann", "Tompson",
                 "myPassword", LocalDate.now(), "myAddress"));
@@ -77,14 +69,6 @@ public class Main {
         }
         System.out.println(trainerDto);
 
-
-        TrainerDto trainerDto1 = null;
-        try {
-            trainerDto1 = trainerFacade.getTrainerByUsername("AB");
-        } catch (IllegalUsernameException exception) {
-            logger.error(exception.getMessage(), exception);
-        }
-        System.out.println(trainerDto1);
 
         trainerFacade.updateTrainerById(3L, new TrainerDto("E", "E",
                 "Mypassword", "boxing"));

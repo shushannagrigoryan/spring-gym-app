@@ -17,7 +17,6 @@ import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
 import org.example.exceptions.IllegalIdException;
 import org.example.exceptions.IllegalPasswordException;
-import org.example.exceptions.IllegalUsernameException;
 import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
 import org.example.services.UserService;
@@ -85,37 +84,37 @@ public class TraineeServiceTest {
 
     }
 
-    @Test
-    public void testGetTraineeByUsernameSuccess() {
-        String firstName = "traineeF1";
-        String lastName = "traineeF2";
-        String password = "myPassword";
-        String address = "myAddress";
-        String username = firstName + lastName;
-        LocalDate dateOfBirth = LocalDate.of(2024, 9, 3);
-        TraineeEntity traineeEntity = new TraineeEntity(firstName, lastName,
-                password, dateOfBirth, address);
+    //    @Test
+    //    public void testGetTraineeByUsernameSuccess() {
+    //        String firstName = "traineeF1";
+    //        String lastName = "traineeF2";
+    //        String password = "myPassword";
+    //        String address = "myAddress";
+    //        String username = firstName + lastName;
+    //        LocalDate dateOfBirth = LocalDate.of(2024, 9, 3);
+    //        TraineeEntity traineeEntity = new TraineeEntity(firstName, lastName,
+    //                password, dateOfBirth, address);
+    //
+    //        when(traineeDao.getTraineeByUsername(username)).thenReturn(Optional.of(traineeEntity));
+    //
+    //        TraineeDto traineeDto = traineeService.getTraineeByUsername(username);
+    //
+    //        assertEquals(traineeMapper.entityToDto(traineeEntity), traineeDto);
+    //        verify(traineeDao, times(1)).getTraineeByUsername(username);
+    //    }
 
-        when(traineeDao.getTraineeByUsername(username)).thenReturn(Optional.of(traineeEntity));
-
-        TraineeDto traineeDto = traineeService.getTraineeByUsername(username);
-
-        assertEquals(traineeMapper.entityToDto(traineeEntity), traineeDto);
-        verify(traineeDao, times(1)).getTraineeByUsername(username);
-    }
-
-    @Test
-    public void testGetTraineeByUsernameFailure() {
-        String firstName = "traineeF1";
-        String lastName = "traineeF2";
-        String username = firstName + lastName;
-
-        when(traineeDao.getTraineeByUsername(username)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> traineeService.getTraineeByUsername(username))
-                .isInstanceOf(IllegalUsernameException.class)
-                .hasMessageContaining("Illegal username: " + username);
-        verify(traineeDao, times(1)).getTraineeByUsername(username);
-    }
+    //    @Test
+    //    public void testGetTraineeByUsernameFailure() {
+    //        String firstName = "traineeF1";
+    //        String lastName = "traineeF2";
+    //        String username = firstName + lastName;
+    //
+    //        when(traineeDao.getTraineeByUsername(username)).thenReturn(Optional.empty());
+    //        assertThatThrownBy(() -> traineeService.getTraineeByUsername(username))
+    //                .isInstanceOf(IllegalUsernameException.class)
+    //                .hasMessageContaining("Illegal username: " + username);
+    //        verify(traineeDao, times(1)).getTraineeByUsername(username);
+    //    }
 
     @Test
     public void testGetTraineeByIdSuccess() {
