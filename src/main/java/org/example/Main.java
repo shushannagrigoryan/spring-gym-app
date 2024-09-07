@@ -6,7 +6,8 @@ import java.time.LocalDateTime;
 import org.example.dto.TraineeDto;
 import org.example.dto.TrainerDto;
 import org.example.dto.TrainingDto;
-import org.example.exceptions.IllegalIdException;
+import org.example.entity.TrainingType;
+import org.example.exceptions.GymIllegalIdException;
 import org.example.facade.TraineeFacade;
 import org.example.facade.TrainerFacade;
 import org.example.facade.TrainingFacade;
@@ -39,7 +40,7 @@ public class Main {
         TraineeDto traineeDto1 = null;
         try {
             traineeDto1 = traineeFacade.getTraineeById(1000L);
-        } catch (IllegalIdException exception) {
+        } catch (GymIllegalIdException exception) {
             logger.error(exception.getMessage(), exception);
         }
         System.out.println(traineeDto1);
@@ -64,7 +65,7 @@ public class Main {
         TrainerDto trainerDto = null;
         try {
             trainerDto = trainerFacade.getTrainerById(2L);
-        } catch (IllegalIdException exception) {
+        } catch (GymIllegalIdException exception) {
             logger.error(exception.getMessage(), exception);
         }
         System.out.println(trainerDto);
@@ -82,7 +83,7 @@ public class Main {
         TrainingDto trainingDto = null;
         try {
             trainingDto = trainingFacade.getTrainingById(2L);
-        } catch (IllegalIdException exception) {
+        } catch (GymIllegalIdException exception) {
             logger.error(exception.getMessage(), exception);
         }
         System.out.println(trainingDto);

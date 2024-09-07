@@ -9,8 +9,8 @@ import static org.mockito.Mockito.when;
 
 import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
-import org.example.exceptions.IllegalIdException;
-import org.example.exceptions.IllegalPasswordException;
+import org.example.exceptions.GymIllegalIdException;
+import org.example.exceptions.GymIllegalPasswordException;
 import org.example.facade.TrainerFacade;
 import org.example.mapper.TrainerMapper;
 import org.example.services.TrainerService;
@@ -46,7 +46,7 @@ public class TrainerFacadeTest {
         TrainerEntity trainerEntity = new TrainerEntity();
         when(trainerMapper.dtoToEntity(trainerDto)).thenReturn(trainerEntity);
 
-        doThrow(IllegalPasswordException.class).when(trainerService).createTrainer(trainerEntity);
+        doThrow(GymIllegalPasswordException.class).when(trainerService).createTrainer(trainerEntity);
         trainerFacade.createTrainer(trainerDto);
 
         verify(trainerService, times(1)).createTrainer(trainerEntity);
@@ -93,9 +93,9 @@ public class TrainerFacadeTest {
         Long id = 1L;
 
         when(trainerService.getTrainerById(id))
-                .thenThrow(new IllegalIdException("No trainer with id: " + id));
+                .thenThrow(new GymIllegalIdException("No trainer with id: " + id));
         assertThatThrownBy(() -> trainerService.getTrainerById(id))
-                .isInstanceOf(IllegalIdException.class).hasMessageContaining("No trainer with id: " + id);
+                .isInstanceOf(GymIllegalIdException.class).hasMessageContaining("No trainer with id: " + id);
         verify(trainerService, times(1)).getTrainerById(id);
 
     }

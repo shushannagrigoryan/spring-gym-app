@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.example.dao.TrainerDao;
 import org.example.entity.TrainerEntity;
-import org.example.exceptions.IllegalIdException;
+import org.example.exceptions.GymIllegalIdException;
 import org.example.storage.DataStorage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -97,7 +97,7 @@ public class TrainerDaoTest {
 
 
         assertThatThrownBy(() -> trainerDao.updateTrainerById(1L, trainerEntity))
-                .isInstanceOf(IllegalIdException.class)
+                .isInstanceOf(GymIllegalIdException.class)
                 .hasMessageContaining("No trainer with id: " + 1L);
     }
 

@@ -8,21 +8,22 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
-import org.example.SaveDataToFile;
 import org.example.ValidatePassword;
 import org.example.dao.TrainerDao;
 import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
-import org.example.exceptions.IllegalIdException;
-import org.example.exceptions.IllegalPasswordException;
+import org.example.exceptions.GymIllegalIdException;
+import org.example.exceptions.GymIllegalPasswordException;
 import org.example.mapper.TrainerMapper;
 import org.example.services.TrainerService;
 import org.example.services.UserService;
+import org.example.storage.SaveDataToFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 
 @ExtendWith(MockitoExtension.class)
 public class TrainerServiceTest {
@@ -75,7 +76,7 @@ public class TrainerServiceTest {
 
         when(validatePassword.passwordNotValid(password)).thenReturn(true);
         assertThatThrownBy(() -> trainerService.createTrainer(trainerEntity))
-                .isInstanceOf(IllegalPasswordException.class)
+                .isInstanceOf(GymIllegalPasswordException.class)
                 .hasMessageContaining("Illegal password: " + password);
 
     }
@@ -136,7 +137,7 @@ public class TrainerServiceTest {
 
         when(trainerDao.getTrainerById(id)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> trainerService.getTrainerById(id))
-                .isInstanceOf(IllegalIdException.class)
+                .isInstanceOf(GymIllegalIdException.class)
                 .hasMessageContaining("No trainer with id: " + id);
         verify(trainerDao, times(1)).getTrainerById(id);
     }
@@ -150,7 +151,7 @@ public class TrainerServiceTest {
         when(validatePassword.passwordNotValid(password)).thenReturn(true);
 
         assertThatThrownBy(() -> trainerService.updateTrainerById(id, trainer))
-                .isInstanceOf(IllegalPasswordException.class)
+                .isInstanceOf(GymIllegalPasswordException.class)
                 .hasMessageContaining("Illegal password: " + password);
         verify(validatePassword, times(1)).passwordNotValid(password);
 
@@ -160,10 +161,10 @@ public class TrainerServiceTest {
     public void testUpdateTrainerByIdInvalidId() {
         TrainerEntity trainer = new TrainerEntity();
         Long id = 1L;
-        doThrow(new IllegalIdException("No trainer with id: " + id)).when(trainerDao).updateTrainerById(id, trainer);
+        doThrow(new GymIllegalIdException("No trainer with id: " + id)).when(trainerDao).updateTrainerById(id, trainer);
 
         assertThatThrownBy(() -> trainerService.updateTrainerById(id, trainer))
-                .isInstanceOf(IllegalIdException.class)
+                .isInstanceOf(GymIllegalIdException.class)
                 .hasMessageContaining("No trainer with id: " + id);
         verify(trainerDao, times(1)).updateTrainerById(id, trainer);
 

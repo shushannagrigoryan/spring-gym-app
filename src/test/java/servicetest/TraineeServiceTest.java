@@ -10,21 +10,22 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.Optional;
-import org.example.SaveDataToFile;
 import org.example.ValidatePassword;
 import org.example.dao.TraineeDao;
 import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
-import org.example.exceptions.IllegalIdException;
-import org.example.exceptions.IllegalPasswordException;
+import org.example.exceptions.GymIllegalIdException;
+import org.example.exceptions.GymIllegalPasswordException;
 import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
 import org.example.services.UserService;
+import org.example.storage.SaveDataToFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 
 @ExtendWith(MockitoExtension.class)
 public class TraineeServiceTest {
@@ -79,7 +80,7 @@ public class TraineeServiceTest {
 
         when(validatePassword.passwordNotValid(password)).thenReturn(true);
         assertThatThrownBy(() -> traineeService.createTrainee(traineeEntity))
-                .isInstanceOf(IllegalPasswordException.class)
+                .isInstanceOf(GymIllegalPasswordException.class)
                 .hasMessageContaining("Illegal password: " + password);
 
     }
@@ -143,7 +144,7 @@ public class TraineeServiceTest {
 
         when(traineeDao.getTraineeById(id)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> traineeService.getTraineeById(id))
-                .isInstanceOf(IllegalIdException.class)
+                .isInstanceOf(GymIllegalIdException.class)
                 .hasMessageContaining("No trainee with id: " + id);
         verify(traineeDao, times(1)).getTraineeById(id);
     }
@@ -166,9 +167,9 @@ public class TraineeServiceTest {
     public void testDeleteTraineeByIdFailure() {
         long id = 1L;
 
-        doThrow(new IllegalIdException("No trainee with id: " + id)).when(traineeDao).deleteTraineeById(id);
+        doThrow(new GymIllegalIdException("No trainee with id: " + id)).when(traineeDao).deleteTraineeById(id);
         assertThatThrownBy(() -> traineeService.deleteTraineeById(id))
-                .isInstanceOf(IllegalIdException.class)
+                .isInstanceOf(GymIllegalIdException.class)
                 .hasMessageContaining(("No trainee with id: " + id));
 
         verify(traineeDao, times(1)).deleteTraineeById(id);
@@ -183,7 +184,7 @@ public class TraineeServiceTest {
         when(validatePassword.passwordNotValid(password)).thenReturn(true);
 
         assertThatThrownBy(() -> traineeService.updateTraineeById(id, trainee))
-                .isInstanceOf(IllegalPasswordException.class)
+                .isInstanceOf(GymIllegalPasswordException.class)
                 .hasMessageContaining("Illegal password: " + password);
         verify(validatePassword, times(1)).passwordNotValid(password);
 
@@ -193,10 +194,10 @@ public class TraineeServiceTest {
     public void testUpdateTraineeByIdInvalidId() {
         TraineeEntity trainee = new TraineeEntity();
         Long id = 1L;
-        doThrow(new IllegalIdException("No trainee with id: " + id)).when(traineeDao).updateTraineeById(id, trainee);
+        doThrow(new GymIllegalIdException("No trainee with id: " + id)).when(traineeDao).updateTraineeById(id, trainee);
 
         assertThatThrownBy(() -> traineeService.updateTraineeById(id, trainee))
-                .isInstanceOf(IllegalIdException.class)
+                .isInstanceOf(GymIllegalIdException.class)
                 .hasMessageContaining("No trainee with id: " + id);
         verify(traineeDao, times(1)).updateTraineeById(id, trainee);
 

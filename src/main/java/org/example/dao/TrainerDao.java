@@ -3,7 +3,7 @@ package org.example.dao;
 import java.util.Optional;
 import java.util.OptionalLong;
 import org.example.entity.TrainerEntity;
-import org.example.exceptions.IllegalIdException;
+import org.example.exceptions.GymIllegalIdException;
 import org.example.storage.DataStorage;
 import org.springframework.stereotype.Component;
 
@@ -51,7 +51,7 @@ public class TrainerDao {
      */
     public void updateTrainerById(Long id, TrainerEntity trainerEntity) {
         if (!dataStorage.getTrainerStorage().containsKey(id)) {
-            throw new IllegalIdException("No trainer with id: " + id);
+            throw new GymIllegalIdException("No trainer with id: " + id);
         }
         dataStorage.getTrainerStorage().put(id, trainerEntity);
     }

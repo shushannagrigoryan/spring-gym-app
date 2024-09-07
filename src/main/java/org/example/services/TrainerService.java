@@ -2,15 +2,15 @@ package org.example.services;
 
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.example.SaveDataToFile;
 import org.example.ValidatePassword;
 import org.example.dao.TrainerDao;
 import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
-import org.example.exceptions.IllegalIdException;
-import org.example.exceptions.IllegalPasswordException;
-import org.example.exceptions.IllegalUsernameException;
+import org.example.exceptions.GymIllegalIdException;
+import org.example.exceptions.GymIllegalPasswordException;
+import org.example.exceptions.GymIllegalUsernameException;
 import org.example.mapper.TrainerMapper;
+import org.example.storage.SaveDataToFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +46,7 @@ public class TrainerService {
         if (validatePassword.passwordNotValid(trainerEntity.getPassword())) {
             log.debug("Failed to created trainer: {} .Invalid password for trainer: {}",
                     trainerEntity, trainerEntity.getPassword());
-            throw new IllegalPasswordException(trainerEntity.getPassword());
+            throw new GymIllegalPasswordException(trainerEntity.getPassword());
         }
 
         String username = userService.generateUsername(trainerEntity.getFirstName(),
@@ -65,7 +65,7 @@ public class TrainerService {
         Optional<TrainerEntity> trainer = trainerDao.getTrainerByUsername(username);
         if (trainer.isEmpty()) {
             log.debug("No trainer with the username: " + username);
-            throw new IllegalUsernameException(username);
+            throw new GymIllegalUsernameException(username);
         }
         log.debug("Successfully retrieved trainer with username: " + username);
         return trainerMapper.entityToDto(trainer.get());
@@ -82,7 +82,7 @@ public class TrainerService {
         log.debug("Retrieving trainer by id: {}", id);
         Optional<TrainerEntity> trainer = trainerDao.getTrainerById(id);
         if (trainer.isEmpty()) {
-            throw new IllegalIdException("No trainer with id: " + id);
+            throw new GymIllegalIdException("No trainer with id: " + id);
         }
         log.debug("Successfully retrieved trainer with id: " + id);
         return trainerMapper.entityToDto(trainer.get());
@@ -99,7 +99,7 @@ public class TrainerService {
         log.debug("Updating trainer by id: {}", id);
         if (validatePassword.passwordNotValid(trainerEntity.getPassword())) {
             log.debug("Invalid password for trainer");
-            throw new IllegalPasswordException(trainerEntity.getPassword());
+            throw new GymIllegalPasswordException(trainerEntity.getPassword());
         }
 
         String username = userService.generateUsername(trainerEntity.getFirstName(),

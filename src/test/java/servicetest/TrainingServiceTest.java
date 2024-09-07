@@ -10,24 +10,25 @@ import static org.mockito.Mockito.when;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import org.example.SaveDataToFile;
-import org.example.TrainingType;
 import org.example.dao.TrainingDao;
 import org.example.dto.TraineeDto;
 import org.example.dto.TrainerDto;
 import org.example.dto.TrainingDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainingEntity;
-import org.example.exceptions.IllegalIdException;
+import org.example.entity.TrainingType;
+import org.example.exceptions.GymIllegalIdException;
 import org.example.mapper.TrainingMapper;
 import org.example.services.TraineeService;
 import org.example.services.TrainerService;
 import org.example.services.TrainingService;
+import org.example.storage.SaveDataToFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 
 @ExtendWith(MockitoExtension.class)
 public class TrainingServiceTest {
@@ -57,7 +58,7 @@ public class TrainingServiceTest {
         when(traineeService.getTraineeById(traineeId)).thenReturn(null);
 
         assertThatThrownBy(() -> trainingService.createTraining(trainingEntity))
-                .isInstanceOf(IllegalIdException.class)
+                .isInstanceOf(GymIllegalIdException.class)
                 .hasMessageContaining("No trainee with id: " + trainingEntity.getTraineeId());
 
         verify(traineeService, times(1)).getTraineeById(traineeId);
@@ -78,7 +79,7 @@ public class TrainingServiceTest {
         when(trainerService.getTrainerById(trainerId)).thenReturn(null);
 
         assertThatThrownBy(() -> trainingService.createTraining(trainingEntity))
-                .isInstanceOf(IllegalIdException.class)
+                .isInstanceOf(GymIllegalIdException.class)
                 .hasMessageContaining("No trainer with id: " + trainingEntity.getTrainerId());
 
         verify(trainerService, times(1)).getTrainerById(trainerId);
@@ -128,7 +129,7 @@ public class TrainingServiceTest {
         when(trainingDao.getTrainingById(trainingId)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> trainingService.getTrainingById(trainingId))
-                .isInstanceOf(IllegalIdException.class)
+                .isInstanceOf(GymIllegalIdException.class)
                 .hasMessageContaining("No training with id: " + trainingId);
 
         verify(trainingDao, times(1)).getTrainingById(trainingId);

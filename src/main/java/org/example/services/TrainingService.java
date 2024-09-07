@@ -2,14 +2,14 @@ package org.example.services;
 
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.example.SaveDataToFile;
 import org.example.dao.TrainingDao;
 import org.example.dto.TraineeDto;
 import org.example.dto.TrainerDto;
 import org.example.dto.TrainingDto;
 import org.example.entity.TrainingEntity;
-import org.example.exceptions.IllegalIdException;
+import org.example.exceptions.GymIllegalIdException;
 import org.example.mapper.TrainingMapper;
+import org.example.storage.SaveDataToFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,11 +46,11 @@ public class TrainingService {
 
         if (traineeDto == null) {
             log.debug("Invalid id for trainee: {}", trainingEntity.getTraineeId());
-            throw new IllegalIdException("No trainee with id: " + trainingEntity.getTraineeId());
+            throw new GymIllegalIdException("No trainee with id: " + trainingEntity.getTraineeId());
         }
         if (trainerDto == null) {
             log.debug("Invalid id for trainer: {}", trainingEntity.getTrainerId());
-            throw new IllegalIdException("No trainer with id: " + trainingEntity.getTrainerId());
+            throw new GymIllegalIdException("No trainer with id: " + trainingEntity.getTrainerId());
         }
 
         trainingDao.createTraining(trainingEntity);
@@ -69,7 +69,7 @@ public class TrainingService {
         Optional<TrainingEntity> training = trainingDao.getTrainingById(id);
         if (!training.isPresent()) {
             log.debug("Invalid id for training: {}", id);
-            throw new IllegalIdException("No training with id: " + id);
+            throw new GymIllegalIdException("No training with id: " + id);
         }
         log.debug("Getting training with id: " + id);
         return trainingMapper.entityToDto(training.get());

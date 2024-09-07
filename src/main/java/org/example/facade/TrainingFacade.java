@@ -3,7 +3,7 @@ package org.example.facade;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TrainingDto;
 import org.example.entity.TrainingEntity;
-import org.example.exceptions.IllegalIdException;
+import org.example.exceptions.GymIllegalIdException;
 import org.example.mapper.TrainingMapper;
 import org.example.services.TrainingService;
 import org.springframework.stereotype.Component;
@@ -28,7 +28,7 @@ public class TrainingFacade {
         try {
             trainingService.createTraining(trainingEntity);
             log.info("Successfully created training");
-        } catch (IllegalIdException exception) {
+        } catch (GymIllegalIdException exception) {
             log.error(exception.getMessage(), exception);
         }
     }
@@ -46,7 +46,7 @@ public class TrainingFacade {
         try {
             trainingDto = trainingService.getTrainingById(id);
             log.info("Successfully retrieved training by id");
-        } catch (IllegalIdException exception) {
+        } catch (GymIllegalIdException exception) {
             log.error(exception.getMessage());
             throw exception;
         }

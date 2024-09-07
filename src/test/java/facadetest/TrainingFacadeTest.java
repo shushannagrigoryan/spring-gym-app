@@ -9,21 +9,22 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.example.SaveDataToFile;
 import org.example.dao.TrainingDao;
 import org.example.dto.TrainingDto;
 import org.example.entity.TrainingEntity;
-import org.example.exceptions.IllegalIdException;
+import org.example.exceptions.GymIllegalIdException;
 import org.example.facade.TrainingFacade;
 import org.example.mapper.TrainingMapper;
 import org.example.services.TraineeService;
 import org.example.services.TrainerService;
 import org.example.services.TrainingService;
+import org.example.storage.SaveDataToFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 
 @ExtendWith(MockitoExtension.class)
 public class TrainingFacadeTest {
@@ -53,11 +54,11 @@ public class TrainingFacadeTest {
         TrainingEntity trainingEntity = new TrainingEntity();
         trainingEntity.setTraineeId(traineeId);
 
-        doThrow(new IllegalIdException("No trainee with id: " + traineeId))
+        doThrow(new GymIllegalIdException("No trainee with id: " + traineeId))
                 .when(trainingService).createTraining(trainingEntity);
 
         assertThatThrownBy(() -> trainingService.createTraining(trainingEntity))
-                .isInstanceOf(IllegalIdException.class)
+                .isInstanceOf(GymIllegalIdException.class)
                 .hasMessageContaining("No trainee with id: " + trainingEntity.getTraineeId());
 
         verify(trainingService, times(1)).createTraining(trainingEntity);
@@ -69,11 +70,11 @@ public class TrainingFacadeTest {
         TrainingEntity trainingEntity = new TrainingEntity();
         trainingEntity.setTrainerId(trainerId);
 
-        doThrow(new IllegalIdException("No trainer with id: " + trainerId)).when(trainingService)
+        doThrow(new GymIllegalIdException("No trainer with id: " + trainerId)).when(trainingService)
                 .createTraining(trainingEntity);
 
         assertThatThrownBy(() -> trainingService.createTraining(trainingEntity))
-                .isInstanceOf(IllegalIdException.class)
+                .isInstanceOf(GymIllegalIdException.class)
                 .hasMessageContaining("No trainer with id: " + trainingEntity.getTrainerId());
 
         verify(trainingService, times(1)).createTraining(trainingEntity);
@@ -110,10 +111,10 @@ public class TrainingFacadeTest {
     public void testGetTrainingByIdInvalidId() {
         Long trainingId = 1L;
         when(trainingService.getTrainingById(trainingId))
-                .thenThrow(new IllegalIdException("No training with id: " + trainingId));
+                .thenThrow(new GymIllegalIdException("No training with id: " + trainingId));
 
         assertThatThrownBy(() -> trainingService.getTrainingById(trainingId))
-                .isInstanceOf(IllegalIdException.class).hasMessageContaining("No training with id: " + trainingId);
+                .isInstanceOf(GymIllegalIdException.class).hasMessageContaining("No training with id: " + trainingId);
 
         verify(trainingService, times(1)).getTrainingById(trainingId);
     }

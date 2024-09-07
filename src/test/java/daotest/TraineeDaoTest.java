@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.example.dao.TraineeDao;
 import org.example.entity.TraineeEntity;
-import org.example.exceptions.IllegalIdException;
+import org.example.exceptions.GymIllegalIdException;
 import org.example.storage.DataStorage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -80,7 +80,7 @@ public class TraineeDaoTest {
         when(dataStorage.getTraineeStorage()).thenReturn(traineeEntityMap);
         when(traineeEntityMap.containsKey(1L)).thenReturn(false);
         assertThatThrownBy(() -> traineeDao.deleteTraineeById(1L))
-                .isInstanceOf(IllegalIdException.class)
+                .isInstanceOf(GymIllegalIdException.class)
                 .hasMessageContaining("No trainee with id: " + 1L);
     }
 
@@ -116,7 +116,7 @@ public class TraineeDaoTest {
         when(traineeEntityMap.containsKey(1L)).thenReturn(false);
 
         assertThatThrownBy(() -> traineeDao.updateTraineeById(1L, traineeEntity))
-                .isInstanceOf(IllegalIdException.class)
+                .isInstanceOf(GymIllegalIdException.class)
                 .hasMessageContaining("No trainee with id: " + 1L);
     }
 

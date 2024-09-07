@@ -23,19 +23,15 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Getter
 public class DataStorage {
-    @Value("${trainee.storage}")
-    private String traineeStorageFile;
-
-    @Value("${trainer.storage}")
-    private String trainerStorageFile;
-
-    @Value("${training.storage}")
-    private String trainingStorageFile;
-
     private final Map<Long, TraineeEntity> traineeStorage = new HashMap<>();
     private final Map<Long, TrainerEntity> trainerStorage = new HashMap<>();
     private final Map<Long, TrainingEntity> trainingStorage = new HashMap<>();
-
+    @Value("${trainee.storage}")
+    private String traineeStorageFile;
+    @Value("${trainer.storage}")
+    private String trainerStorageFile;
+    @Value("${training.storage}")
+    private String trainingStorageFile;
 
     @PostConstruct
     private void init() {

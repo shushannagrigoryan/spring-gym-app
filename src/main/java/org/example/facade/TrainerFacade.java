@@ -3,9 +3,9 @@ package org.example.facade;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
-import org.example.exceptions.IllegalIdException;
-import org.example.exceptions.IllegalPasswordException;
-import org.example.exceptions.IllegalUsernameException;
+import org.example.exceptions.GymIllegalIdException;
+import org.example.exceptions.GymIllegalPasswordException;
+import org.example.exceptions.GymIllegalUsernameException;
 import org.example.mapper.TrainerMapper;
 import org.example.services.TrainerService;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class TrainerFacade {
         try {
             trainerService.createTrainer(trainerEntity);
             log.info("Successfully created trainer");
-        } catch (IllegalPasswordException exception) {
+        } catch (GymIllegalPasswordException exception) {
             log.error(exception.getMessage(), exception);
         }
     }
@@ -48,7 +48,7 @@ public class TrainerFacade {
         try {
             trainerDto = trainerService.getTrainerByUsername(username);
             log.info("Successfully retrieved trainer by username");
-        } catch (IllegalUsernameException exception) {
+        } catch (GymIllegalUsernameException exception) {
             log.error(exception.getMessage());
             throw exception;
         }
@@ -68,7 +68,7 @@ public class TrainerFacade {
         try {
             trainerDto = trainerService.getTrainerById(id);
             log.info("Successfully retrieved trainer by id");
-        } catch (IllegalIdException exception) {
+        } catch (GymIllegalIdException exception) {
             log.error(exception.getMessage());
             throw exception;
         }
@@ -86,7 +86,7 @@ public class TrainerFacade {
         try {
             trainerService.updateTrainerById(id, trainerMapper.dtoToEntity(trainerDto));
             log.info("Successfully updated trainer by id");
-        } catch (IllegalPasswordException | IllegalIdException exception) {
+        } catch (GymIllegalPasswordException | GymIllegalIdException exception) {
             log.error(exception.getMessage(), exception);
         }
 

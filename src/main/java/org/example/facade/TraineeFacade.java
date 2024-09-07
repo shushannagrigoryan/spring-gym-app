@@ -3,9 +3,9 @@ package org.example.facade;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
-import org.example.exceptions.IllegalIdException;
-import org.example.exceptions.IllegalPasswordException;
-import org.example.exceptions.IllegalUsernameException;
+import org.example.exceptions.GymIllegalIdException;
+import org.example.exceptions.GymIllegalPasswordException;
+import org.example.exceptions.GymIllegalUsernameException;
 import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class TraineeFacade {
         try {
             traineeService.createTrainee(traineeEntity);
             log.info("Successfully created trainee");
-        } catch (IllegalPasswordException exception) {
+        } catch (GymIllegalPasswordException exception) {
             log.error(exception.getMessage(), exception);
         }
     }
@@ -45,7 +45,7 @@ public class TraineeFacade {
         try {
             traineeDto = traineeService.getTraineeByUsername(username);
             log.info("Successfully retrieved trainee by username");
-        } catch (IllegalUsernameException exception) {
+        } catch (GymIllegalUsernameException exception) {
             log.error(exception.getMessage());
             throw exception;
         }
@@ -62,7 +62,7 @@ public class TraineeFacade {
         try {
             traineeDto = traineeService.getTraineeById(id);
             log.info("Successfully retrieved trainee by id");
-        } catch (IllegalIdException exception) {
+        } catch (GymIllegalIdException exception) {
             log.error(exception.getMessage());
             throw exception;
         }
@@ -78,7 +78,7 @@ public class TraineeFacade {
         try {
             traineeService.deleteTraineeById(id);
             log.info("Successfully deleted trainee by id");
-        } catch (IllegalIdException exception) {
+        } catch (GymIllegalIdException exception) {
             log.error("No trainee with id: {} for deleting", id, exception);
         }
 
@@ -95,7 +95,7 @@ public class TraineeFacade {
         try {
             traineeService.updateTraineeById(id, traineeMapper.dtoToEntity(traineeDto));
             log.info("Successfully updated trainee by id");
-        } catch (IllegalPasswordException | IllegalIdException exception) {
+        } catch (GymIllegalPasswordException | GymIllegalIdException exception) {
             log.error(exception.getMessage(), exception);
         }
 

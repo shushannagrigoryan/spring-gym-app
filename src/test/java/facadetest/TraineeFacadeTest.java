@@ -9,8 +9,8 @@ import static org.mockito.Mockito.when;
 
 import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
-import org.example.exceptions.IllegalIdException;
-import org.example.exceptions.IllegalPasswordException;
+import org.example.exceptions.GymIllegalIdException;
+import org.example.exceptions.GymIllegalPasswordException;
 import org.example.facade.TraineeFacade;
 import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
@@ -46,7 +46,7 @@ public class TraineeFacadeTest {
         TraineeEntity traineeEntity = new TraineeEntity();
         when(traineeMapper.dtoToEntity(traineeDto)).thenReturn(traineeEntity);
 
-        doThrow(IllegalPasswordException.class).when(traineeService).createTrainee(traineeEntity);
+        doThrow(GymIllegalPasswordException.class).when(traineeService).createTrainee(traineeEntity);
         traineeFacade.createTrainee(traineeDto);
 
         verify(traineeService, times(1)).createTrainee(traineeEntity);
@@ -92,9 +92,9 @@ public class TraineeFacadeTest {
     public void testGetTraineeByIdFailure() {
         Long id = 1L;
 
-        when(traineeService.getTraineeById(id)).thenThrow(new IllegalIdException("No trainee with id: " + id));
+        when(traineeService.getTraineeById(id)).thenThrow(new GymIllegalIdException("No trainee with id: " + id));
         assertThatThrownBy(() -> traineeService.getTraineeById(id))
-                .isInstanceOf(IllegalIdException.class)
+                .isInstanceOf(GymIllegalIdException.class)
                 .hasMessageContaining("No trainee with id: " + id);
         verify(traineeService, times(1)).getTraineeById(id);
 
