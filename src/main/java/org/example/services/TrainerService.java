@@ -9,7 +9,6 @@ import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.exceptions.GymIllegalPasswordException;
-import org.example.exceptions.GymIllegalUsernameException;
 import org.example.mapper.TrainerMapper;
 import org.example.storage.SaveDataToFile;
 import org.springframework.beans.factory.annotation.Autowired;
