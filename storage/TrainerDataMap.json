@@ -52,5 +52,23 @@
     "password" : "myPassword",
     "specialization" : "boxing",
     "active" : false
+  },
+  "6" : {
+    "userId" : 6,
+    "firstName" : "A",
+    "lastName" : "B",
+    "username" : "A.B2",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "7" : {
+    "userId" : 7,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith6",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
   }
 }

@@ -88,5 +88,35 @@
     "dateOfBirth" : [ 2024, 9, 8 ],
     "address" : "myAddress",
     "active" : false
+  },
+  "9" : {
+    "userId" : 9,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith5",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "10" : {
+    "userId" : 10,
+    "firstName" : "Sam",
+    "lastName" : "Smith",
+    "username" : "Sam.Smith2",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "11" : {
+    "userId" : 11,
+    "firstName" : "Ann",
+    "lastName" : "Thompson",
+    "username" : "Ann.Thompson2",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
   }
 }
