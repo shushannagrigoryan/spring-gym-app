@@ -5,7 +5,7 @@
     "traineeId" : 0,
     "trainingName" : "Boxing",
     "trainingType" : "CARDIO",
-    "trainingDate" : [ 2024, 9, 7, 16, 3, 14, 48664000 ],
+    "trainingDate" : [ 2024, 9, 8, 1, 10, 50, 336997400 ],
     "trainingDuration" : 3600.000000000
   },
   "1" : {
@@ -14,16 +14,7 @@
     "traineeId" : 0,
     "trainingName" : "Boxing",
     "trainingType" : "CARDIO",
-    "trainingDate" : [ 2024, 9, 7, 16, 3, 19, 256004900 ],
-    "trainingDuration" : 3600.000000000
-  },
-  "2" : {
-    "trainingId" : 2,
-    "trainerId" : 0,
-    "traineeId" : 0,
-    "trainingName" : "Boxing",
-    "trainingType" : "CARDIO",
-    "trainingDate" : [ 2024, 9, 7, 16, 5, 16, 462843600 ],
+    "trainingDate" : [ 2024, 9, 8, 1, 11, 6, 716552900 ],
     "trainingDuration" : 3600.000000000
   }
 }

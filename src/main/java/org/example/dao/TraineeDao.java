@@ -3,6 +3,7 @@ package org.example.dao;
 import java.util.Optional;
 import java.util.OptionalLong;
 import org.example.entity.TraineeEntity;
+import org.example.entity.UserEntity;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.storage.DataStorage;
 import org.springframework.stereotype.Component;

@@ -5,7 +5,6 @@ import org.example.dto.TraineeDto;
 import org.example.dto.TrainerDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
-import org.example.exceptions.GymIllegalUsernameException;
 import org.example.services.TraineeService;
 import org.example.services.TrainerService;
 import org.example.storage.DataStorage;
@@ -30,22 +29,15 @@ public class UserDao {
 
     /**
      * Generates username for user.
+     * Add suffix if the username is taken either by a trainee or a trainer.
      */
     public String generateUsername(String firstName, String lastName) {
         log.debug("Generating username for firstName: {}, lastName: {}", firstName, lastName);
-        System.out.println("STORAGE");
-        System.out.println("Trainee Map: = " + dataStorage.getTraineeStorage());
-        System.out.println("Trainer Map: = " + dataStorage.getTrainerStorage());
-        String username = firstName + lastName;
-        TraineeDto trainee = null;
-        TrainerDto trainer = null;
-        //try {
-        trainee = traineeService.getTraineeByUsername(username);
-        trainer = trainerService.getTrainerByUsername(username);
 
-        //        } catch (GymIllegalUsernameException e) {
-        //            log.debug("no trainee with username: " + username + e.getMessage());
-        //        }
+        String username = firstName.concat(".").concat(lastName);
+
+        TraineeDto trainee = traineeService.getTraineeByUsername(username);
+        TrainerDto trainer = trainerService.getTrainerByUsername(username);
 
         if ((trainee != null) || (trainer != null)) {
             log.debug("Username taken.");
@@ -55,7 +47,7 @@ public class UserDao {
     }
 
     /**
-     * Getting suffix for the given username if the username is already taken.
+     * Getting suffix for the given username which is not present both in trainee and trainer maps.
      */
     private Long getSuffix(String username) {
         log.debug("Generating suffix for username: " + username);
@@ -66,7 +58,7 @@ public class UserDao {
                 .filter(u -> u.startsWith(username))
                 .map(key -> key.substring(username.length()))
                 .filter(s -> !s.isEmpty()).map(Long::valueOf)
-                .max(Long::compareTo).orElse(0L);
+                .max(Long::compareTo).orElse(-1L);
 
         Long maxTrainerSuffix = dataStorage.getTrainerStorage().values()
                 .stream()
@@ -75,8 +67,10 @@ public class UserDao {
                 .map(key -> key.substring(username.length()))
                 .filter(s -> !s.isEmpty())
                 .map(Long::valueOf)
-                .max(Long::compareTo).orElse(0L);
+                .max(Long::compareTo).orElse(-1L);
 
-        return maxTraineeSuffix > maxTrainerSuffix ? maxTraineeSuffix : maxTrainerSuffix;
+        long suffix = maxTraineeSuffix > maxTrainerSuffix ? maxTraineeSuffix : maxTrainerSuffix;
+
+        return suffix + 1;
     }
 }

@@ -3,7 +3,7 @@
     "userId" : 0,
     "firstName" : "A",
     "lastName" : "B",
-    "username" : "AB",
+    "username" : "A.B",
     "password" : "myPassword",
     "specialization" : "boxing",
     "active" : false
@@ -12,7 +12,7 @@
     "userId" : 1,
     "firstName" : "John",
     "lastName" : "Smith",
-    "username" : "JohnSmith0",
+    "username" : "John.Smith0",
     "password" : "myPassword",
     "specialization" : "boxing",
     "active" : false
@@ -21,7 +21,7 @@
     "userId" : 2,
     "firstName" : "A",
     "lastName" : "B",
-    "username" : "AB0",
+    "username" : "A.B0",
     "password" : "myPassword",
     "specialization" : "boxing",
     "active" : false
@@ -30,25 +30,7 @@
     "userId" : 3,
     "firstName" : "John",
     "lastName" : "Smith",
-    "username" : "JohnSmith0",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "4" : {
-    "userId" : 4,
-    "firstName" : "A",
-    "lastName" : "B",
-    "username" : "AB0",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "5" : {
-    "userId" : 5,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "JohnSmith0",
+    "username" : "John.Smith2",
     "password" : "myPassword",
     "specialization" : "boxing",
     "active" : false
