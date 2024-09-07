@@ -10,13 +10,13 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 import org.example.ValidatePassword;
 import org.example.dao.TrainerDao;
+import org.example.dao.UserDao;
 import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.exceptions.GymIllegalPasswordException;
 import org.example.mapper.TrainerMapper;
 import org.example.services.TrainerService;
-import org.example.services.UserService;
 import org.example.storage.SaveDataToFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +28,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class TrainerServiceTest {
     @Mock
-    private UserService userService;
+    private UserDao userDao;
 
     @Mock
     private TrainerDao trainerDao;
@@ -55,7 +55,7 @@ public class TrainerServiceTest {
         TrainerEntity trainerEntity = new TrainerEntity(firstName, lastName, password, specialization);
 
         when(validatePassword.passwordNotValid(trainerEntity.getPassword())).thenReturn(false);
-        when(userService.generateUsername(trainerEntity.getFirstName(), trainerEntity.getLastName()))
+        when(userDao.generateUsername(trainerEntity.getFirstName(), trainerEntity.getLastName()))
                 .thenReturn(username);
 
         trainerService.createTrainer(trainerEntity);
@@ -181,7 +181,7 @@ public class TrainerServiceTest {
         Long id = 1L;
 
         when(validatePassword.passwordNotValid(trainerEntity.getPassword())).thenReturn(false);
-        when(userService.generateUsername(trainerEntity.getFirstName(), trainerEntity.getLastName()))
+        when(userDao.generateUsername(trainerEntity.getFirstName(), trainerEntity.getLastName()))
                 .thenReturn(username);
 
 
@@ -189,7 +189,7 @@ public class TrainerServiceTest {
 
         assertEquals(username, trainerEntity.getUsername());
         verify(validatePassword, times(1)).passwordNotValid(trainerEntity.getPassword());
-        verify(userService, times(1)).generateUsername(trainerEntity.getFirstName(),
+        verify(userDao, times(1)).generateUsername(trainerEntity.getFirstName(),
                 trainerEntity.getLastName());
         verify(trainerDao, times(1)).updateTrainerById(id, trainerEntity);
         verify(saveDataToFile, times(1)).writeMapToFile("Trainer");

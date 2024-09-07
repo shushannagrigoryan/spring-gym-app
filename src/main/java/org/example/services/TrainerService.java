@@ -4,6 +4,7 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.ValidatePassword;
 import org.example.dao.TrainerDao;
+import org.example.dao.UserDao;
 import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.GymIllegalIdException;
@@ -19,8 +20,8 @@ import org.springframework.stereotype.Service;
 public class TrainerService {
     @Autowired
     private TrainerDao trainerDao;
-
-    private UserService userService;
+    @Autowired
+    private UserDao userDao;
     private SaveDataToFile saveDataToFile;
     private TrainerMapper trainerMapper;
     private ValidatePassword validatePassword;
@@ -29,9 +30,8 @@ public class TrainerService {
      * Setting dependencies for TrainerService.
      */
     @Autowired
-    public void setDependencies(UserService userService, SaveDataToFile saveDataToFile,
+    public void setDependencies(SaveDataToFile saveDataToFile,
                                 TrainerMapper trainerMapper, ValidatePassword validatePassword) {
-        this.userService = userService;
         this.saveDataToFile = saveDataToFile;
         this.trainerMapper = trainerMapper;
         this.validatePassword = validatePassword;
@@ -49,7 +49,7 @@ public class TrainerService {
             throw new GymIllegalPasswordException(trainerEntity.getPassword());
         }
 
-        String username = userService.generateUsername(trainerEntity.getFirstName(),
+        String username = userDao.generateUsername(trainerEntity.getFirstName(),
                 trainerEntity.getLastName());
         trainerEntity.setUsername(username);
         trainerDao.createTrainer(trainerEntity);
@@ -102,7 +102,7 @@ public class TrainerService {
             throw new GymIllegalPasswordException(trainerEntity.getPassword());
         }
 
-        String username = userService.generateUsername(trainerEntity.getFirstName(),
+        String username = userDao.generateUsername(trainerEntity.getFirstName(),
                 trainerEntity.getLastName());
         trainerEntity.setUsername(username);
         trainerEntity.setUserId(id);

@@ -4,6 +4,7 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.ValidatePassword;
 import org.example.dao.TraineeDao;
+import org.example.dao.UserDao;
 import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
 import org.example.exceptions.GymIllegalIdException;
@@ -21,7 +22,8 @@ public class TraineeService {
     @Autowired
     private TraineeDao traineeDao;
 
-    private UserService userService;
+    @Autowired
+    private UserDao userDao;
     private SaveDataToFile saveDataToFile;
     private TraineeMapper traineeMapper;
     private ValidatePassword validatePassword;
@@ -30,9 +32,8 @@ public class TraineeService {
      * Setting the dependencies for the TraineeService bean.
      */
     @Autowired
-    public void setDependencies(UserService userService, SaveDataToFile saveDataToFile,
+    public void setDependencies(SaveDataToFile saveDataToFile,
                                 TraineeMapper traineeMapper, ValidatePassword validatePassword) {
-        this.userService = userService;
         this.saveDataToFile = saveDataToFile;
         this.traineeMapper = traineeMapper;
         this.validatePassword = validatePassword;
@@ -53,7 +54,7 @@ public class TraineeService {
         }
         System.out.println(traineeEntity);
 
-        String username = userService.generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName());
+        String username = userDao.generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName());
         traineeEntity.setUsername(username);
         traineeDao.createTrainee(traineeEntity);
         saveDataToFile.writeMapToFile("Trainee");
@@ -123,7 +124,7 @@ public class TraineeService {
             throw new GymIllegalPasswordException(traineeEntity.getPassword());
         }
 
-        String username = userService
+        String username = userDao
                 .generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName());
         traineeEntity.setUsername(username);
         traineeEntity.setUserId(id);

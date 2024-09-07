@@ -12,13 +12,13 @@ import java.time.LocalDate;
 import java.util.Optional;
 import org.example.ValidatePassword;
 import org.example.dao.TraineeDao;
+import org.example.dao.UserDao;
 import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.exceptions.GymIllegalPasswordException;
 import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
-import org.example.services.UserService;
 import org.example.storage.SaveDataToFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +30,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class TraineeServiceTest {
     @Mock
-    private UserService userService;
+    private UserDao userDao;
 
     @Mock
     private TraineeDao traineeDao;
@@ -58,7 +58,7 @@ public class TraineeServiceTest {
                 password, dateOfBirth, address);
 
         when(validatePassword.passwordNotValid(traineeEntity.getPassword())).thenReturn(false);
-        when(userService.generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName()))
+        when(userDao.generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName()))
                 .thenReturn(username);
 
         traineeService.createTrainee(traineeEntity);
@@ -216,7 +216,7 @@ public class TraineeServiceTest {
         Long id = 1L;
 
         when(validatePassword.passwordNotValid(traineeEntity.getPassword())).thenReturn(false);
-        when(userService.generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName()))
+        when(userDao.generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName()))
                 .thenReturn(username);
 
 
@@ -224,7 +224,7 @@ public class TraineeServiceTest {
 
         assertEquals(username, traineeEntity.getUsername());
         verify(validatePassword, times(1)).passwordNotValid(traineeEntity.getPassword());
-        verify(userService, times(1)).generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName());
+        verify(userDao, times(1)).generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName());
         verify(traineeDao, times(1)).updateTraineeById(id, traineeEntity);
         verify(saveDataToFile, times(1)).writeMapToFile("Trainee");
         assertEquals(username, traineeEntity.getUsername());
