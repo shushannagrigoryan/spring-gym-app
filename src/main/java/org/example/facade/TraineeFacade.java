@@ -5,7 +5,6 @@ import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.exceptions.GymIllegalPasswordException;
-import org.example.exceptions.GymIllegalUsernameException;
 import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
 import org.springframework.stereotype.Component;
@@ -35,22 +34,22 @@ public class TraineeFacade {
         }
     }
 
-    /**
-     * Gets the trainee by username in the facade layer.
-     * If there is no trainee with the given username, throws a IllegalUsernameException.
-     */
-    public TraineeDto getTraineeByUsername(String username) {
-        log.info("Request to retrieve trainee by username");
-        TraineeDto traineeDto;
-        try {
-            traineeDto = traineeService.getTraineeByUsername(username);
-            log.info("Successfully retrieved trainee by username");
-        } catch (GymIllegalUsernameException exception) {
-            log.error(exception.getMessage());
-            throw exception;
-        }
-        return traineeDto;
-    }
+    //    /**
+    //     * Gets the trainee by username in the facade layer.
+    //     * If there is no trainee with the given username, throws a IllegalUsernameException.
+    //     */
+    //    public TraineeDto getTraineeByUsername(String username) {
+    //        log.info("Request to retrieve trainee by username");
+    //        TraineeDto traineeDto;
+    //        try {
+    //            traineeDto = traineeService.getTraineeByUsername(username);
+    //            log.info("Successfully retrieved trainee by username");
+    //        } catch (GymIllegalUsernameException exception) {
+    //            log.error(exception.getMessage());
+    //            throw exception;
+    //        }
+    //        return traineeDto;
+    //    }
 
     /**
      * Gets Trainee by id in the facade layer.

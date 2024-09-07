@@ -34,25 +34,25 @@ public class Main {
                 "myPassword", LocalDate.now(), "myAddress"));
 
 
-        traineeFacade.createTrainee(new TraineeDto("Ann", "Tompson",
+        traineeFacade.createTrainee(new TraineeDto("Ann", "Thompson",
                 "myPassword", LocalDate.now(), "myAddress"));
 
-        TraineeDto traineeDto1 = null;
-        try {
-            traineeDto1 = traineeFacade.getTraineeById(1000L);
-        } catch (GymIllegalIdException exception) {
-            logger.error(exception.getMessage(), exception);
-        }
-        System.out.println(traineeDto1);
+        //        TraineeDto traineeDto1 = null;
+        //        try {
+        //            traineeDto1 = traineeFacade.getTraineeById(1000L);
+        //        } catch (GymIllegalIdException exception) {
+        //            logger.error(exception.getMessage(), exception);
+        //        }
+        //        System.out.println(traineeDto1);
 
-        traineeFacade.deleteTraineeById(2000L);
-        traineeFacade.deleteTraineeById(5L);
-        traineeFacade.updateTraineeById(5000L, new TraineeDto("Ann", "Tompson",
-                "myPassword", LocalDate.now(), "myAddress"));
-        traineeFacade.updateTraineeById(2L, new TraineeDto("Ann", "Tompson",
-                "myPasswordefe", LocalDate.now(), "myAddress"));
-        traineeFacade.updateTraineeById(3L, new TraineeDto("Tom", "Tompson",
-                "myPassword", LocalDate.now(), "myNewAddress"));
+        //traineeFacade.deleteTraineeById(2000L);
+        //traineeFacade.deleteTraineeById(5L);
+        //        traineeFacade.updateTraineeById(5000L, new TraineeDto("Ann", "Tompson",
+        //                "myPassword", LocalDate.now(), "myAddress"));
+        //        traineeFacade.updateTraineeById(2L, new TraineeDto("Ann", "Tompson",
+        //                "myPasswordefe", LocalDate.now(), "myAddress"));
+        //        traineeFacade.updateTraineeById(3L, new TraineeDto("Tom", "Tompson",
+        //                "myPassword", LocalDate.now(), "myNewAddress"));
 
 
         TrainerFacade trainerFacade = context.getBean(TrainerFacade.class);
@@ -71,22 +71,25 @@ public class Main {
         System.out.println(trainerDto);
 
 
-        trainerFacade.updateTrainerById(3L, new TrainerDto("E", "E",
-                "Mypassword", "boxing"));
+        //        trainerFacade.updateTrainerById(3L, new TrainerDto("E", "E",
+        //                "MyPassword", "boxing"));
 
         TrainingFacade trainingFacade = context.getBean(TrainingFacade.class);
-        trainingFacade.createTraining(new TrainingDto(80L, 600L,
-                "Boxing", TrainingType.CARDIO, LocalDateTime.now(), Duration.ofHours(1)));
-        trainingFacade.createTraining(new TrainingDto(10L, 10L,
-                "Boxing", TrainingType.CARDIO, LocalDateTime.now(), Duration.ofHours(1)));
+        //        trainingFacade.createTraining(new TrainingDto(80L, 600L,
+        //                "Boxing", TrainingType.CARDIO, LocalDateTime.now(), Duration.ofHours(1)));
+        //        trainingFacade.createTraining(new TrainingDto(10L, 10L,
+        //                "Boxing", TrainingType.CARDIO, LocalDateTime.now(), Duration.ofHours(1)));
+        //
+        //        TrainingDto trainingDto = null;
+        //        try {
+        //            trainingDto = trainingFacade.getTrainingById(2L);
+        //        } catch (GymIllegalIdException exception) {
+        //            logger.error(exception.getMessage(), exception);
+        //        }
+        //        System.out.println(trainingDto);
 
-        TrainingDto trainingDto = null;
-        try {
-            trainingDto = trainingFacade.getTrainingById(2L);
-        } catch (GymIllegalIdException exception) {
-            logger.error(exception.getMessage(), exception);
-        }
-        System.out.println(trainingDto);
+        trainingFacade.createTraining(new TrainingDto(0L, 0L,
+                "Boxing", TrainingType.CARDIO, LocalDateTime.now(), Duration.ofHours(1)));
 
     }
 }

@@ -67,9 +67,9 @@ public class TraineeService {
     public TraineeDto getTraineeByUsername(String username) {
         log.debug("Retrieving trainee by username: {}", username);
         Optional<TraineeEntity> trainee = traineeDao.getTraineeByUsername(username);
-        if (!trainee.isPresent()) {
+        if (trainee.isEmpty()) {
             log.debug("No trainee with the username: " + username);
-            throw new GymIllegalUsernameException(username);
+            return null;
         }
         log.debug("Successfully retrieved trainee by username: {}", username);
         return traineeMapper.entityToDto(trainee.get());

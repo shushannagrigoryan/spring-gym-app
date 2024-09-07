@@ -5,7 +5,6 @@ import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.exceptions.GymIllegalPasswordException;
-import org.example.exceptions.GymIllegalUsernameException;
 import org.example.mapper.TrainerMapper;
 import org.example.services.TrainerService;
 import org.springframework.stereotype.Component;
@@ -35,25 +34,25 @@ public class TrainerFacade {
         }
     }
 
-    /**
-     * Gets the trainer by username.
-     * If no there is no trainer with the given username, throws an IllegalUsernameException.
-     *
-     * @param username username to get the trainer by
-     * @return returns the TrainerDto
-     */
-    public TrainerDto getTrainerByUsername(String username) {
-        log.info("Request to retrieve trainer by username");
-        TrainerDto trainerDto;
-        try {
-            trainerDto = trainerService.getTrainerByUsername(username);
-            log.info("Successfully retrieved trainer by username");
-        } catch (GymIllegalUsernameException exception) {
-            log.error(exception.getMessage());
-            throw exception;
-        }
-        return trainerDto;
-    }
+    //    /**
+    //     * Gets the trainer by username.
+    //     * If no there is no trainer with the given username, throws an IllegalUsernameException.
+    //     *
+    //     * @param username username to get the trainer by
+    //     * @return returns the TrainerDto
+    //     */
+    //    public TrainerDto getTrainerByUsername(String username) {
+    //        log.info("Request to retrieve trainer by username");
+    //        TrainerDto trainerDto;
+    //        try {
+    //            trainerDto = trainerService.getTrainerByUsername(username);
+    //            log.info("Successfully retrieved trainer by username");
+    //        } catch (GymIllegalUsernameException exception) {
+    //            log.error(exception.getMessage());
+    //            throw exception;
+    //        }
+    //        return trainerDto;
+    //    }
 
     /**
      * Gets the trainer by id.

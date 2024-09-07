@@ -65,7 +65,7 @@ public class TrainerService {
         Optional<TrainerEntity> trainer = trainerDao.getTrainerByUsername(username);
         if (trainer.isEmpty()) {
             log.debug("No trainer with the username: " + username);
-            throw new GymIllegalUsernameException(username);
+            return null;
         }
         log.debug("Successfully retrieved trainer with username: " + username);
         return trainerMapper.entityToDto(trainer.get());

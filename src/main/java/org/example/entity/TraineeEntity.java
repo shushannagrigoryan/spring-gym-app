@@ -4,13 +4,10 @@ import java.time.LocalDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
-
 
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 public class TraineeEntity extends UserEntity {
     private LocalDate dateOfBirth;
     private String address;
@@ -32,5 +29,18 @@ public class TraineeEntity extends UserEntity {
         this.password = password;
         this.dateOfBirth = dateOfBirth;
         this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "TraineeEntity{"
+                + "dateOfBirth=" + dateOfBirth
+                + ", address='" + address + '\''
+                + ", userId=" + userId
+                + ", firstName='" + firstName + '\''
+                + ", lastName='" + lastName + '\''
+                + ", username='" + username + '\''
+                + ", password='" + password + '\''
+                + ", isActive=" + isActive + '}';
     }
 }

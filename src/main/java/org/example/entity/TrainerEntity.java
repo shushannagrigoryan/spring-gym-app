@@ -3,12 +3,10 @@ package org.example.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Setter
 @Getter
 @NoArgsConstructor
-@ToString
 public class TrainerEntity extends UserEntity {
     private String specialization;
 
@@ -28,4 +26,15 @@ public class TrainerEntity extends UserEntity {
         this.specialization = specialization;
     }
 
+    @Override
+    public String toString() {
+        return "TrainerEntity{"
+                + "specialization='" + specialization + '\''
+                + ", userId=" + userId
+                + ", firstName='" + firstName + '\''
+                + ", lastName='" + lastName + '\''
+                + ", username='" + username + '\''
+                + ", password='" + password + '\''
+                + ", isActive=" + isActive + '}';
+    }
 }

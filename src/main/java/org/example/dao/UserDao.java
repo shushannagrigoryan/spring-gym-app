@@ -1,8 +1,5 @@
 package org.example.dao;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TraineeDto;
 import org.example.dto.TrainerDto;
@@ -35,16 +32,20 @@ public class UserDao {
      * Generates username for user.
      */
     public String generateUsername(String firstName, String lastName) {
+        log.debug("Generating username for firstName: {}, lastName: {}", firstName, lastName);
+        System.out.println("STORAGE");
+        System.out.println("Trainee Map: = " + dataStorage.getTraineeStorage());
+        System.out.println("Trainer Map: = " + dataStorage.getTrainerStorage());
         String username = firstName + lastName;
         TraineeDto trainee = null;
         TrainerDto trainer = null;
-        try {
-            trainee = traineeService.getTraineeByUsername(username);
-            trainer = trainerService.getTrainerByUsername(username);
+        //try {
+        trainee = traineeService.getTraineeByUsername(username);
+        trainer = trainerService.getTrainerByUsername(username);
 
-        } catch (GymIllegalUsernameException e) {
-            log.debug("no trainee with username: " + username + e.getMessage());
-        }
+        //        } catch (GymIllegalUsernameException e) {
+        //            log.debug("no trainee with username: " + username + e.getMessage());
+        //        }
 
         if ((trainee != null) || (trainer != null)) {
             log.debug("Username taken.");
@@ -58,32 +59,24 @@ public class UserDao {
      */
     private Long getSuffix(String username) {
         log.debug("Generating suffix for username: " + username);
-        long suffix = 0L;
 
-        Set<Long> traineeSuffixSet = dataStorage.getTraineeStorage().values()
+        Long maxTraineeSuffix = dataStorage.getTraineeStorage().values()
                 .stream()
                 .map(TraineeEntity::getUsername)
                 .filter(u -> u.startsWith(username))
                 .map(key -> key.substring(username.length()))
                 .filter(s -> !s.isEmpty()).map(Long::valueOf)
-                .collect(Collectors.toSet());
+                .max(Long::compareTo).orElse(0L);
 
-        Set<Long> trainerSuffixSet = dataStorage.getTrainerStorage().values()
+        Long maxTrainerSuffix = dataStorage.getTrainerStorage().values()
                 .stream()
                 .map(TrainerEntity::getUsername)
                 .filter(u -> u.startsWith(username))
                 .map(key -> key.substring(username.length()))
                 .filter(s -> !s.isEmpty())
                 .map(Long::valueOf)
-                .collect(Collectors.toSet());
+                .max(Long::compareTo).orElse(0L);
 
-        traineeSuffixSet.addAll(trainerSuffixSet);
-
-        if (!traineeSuffixSet.isEmpty()) {
-            suffix = Collections.max(traineeSuffixSet) + 1;
-
-        }
-
-        return suffix;
+        return maxTraineeSuffix > maxTrainerSuffix ? maxTraineeSuffix : maxTrainerSuffix;
     }
 }
