@@ -123,7 +123,6 @@ public class TraineeServiceTest {
         String lastName = "traineeF2";
         String password = "myPassword";
         String address = "myAddress";
-        String username = firstName + lastName;
         LocalDate dateOfBirth = LocalDate.of(2024, 9, 3);
         TraineeEntity traineeEntity = new TraineeEntity(firstName, lastName,
                 password, dateOfBirth, address);

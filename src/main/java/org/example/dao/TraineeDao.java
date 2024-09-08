@@ -24,6 +24,7 @@ public class TraineeDao {
         Long id = generateId();
         traineeEntity.setUserId(id);
         dataStorage.getTraineeStorage().put(id, traineeEntity);
+        dataStorage.getTraineeStorageUsernameKey().put(traineeEntity.getUsername(), traineeEntity);
     }
 
     /**
@@ -33,8 +34,8 @@ public class TraineeDao {
      * @return {@code Optional<TraineeEntity>}
      */
     public Optional<TraineeEntity> getTraineeByUsername(String username) {
-        return dataStorage.getTraineeStorage().values()
-                .stream().filter(elem -> elem.getUsername().equals(username)).findFirst();
+        return Optional.ofNullable(dataStorage.getTraineeStorageUsernameKey().get(username));
+
     }
 
     /**
@@ -84,5 +85,6 @@ public class TraineeDao {
             throw new GymIllegalIdException(String.format("No trainee with id: %d", id));
         }
         dataStorage.getTraineeStorage().put(id, traineeEntity);
+        dataStorage.getTraineeStorageUsernameKey().put(traineeEntity.getUsername(), traineeEntity);
     }
 }

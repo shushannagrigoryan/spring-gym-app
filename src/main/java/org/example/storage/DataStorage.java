@@ -26,6 +26,9 @@ public class DataStorage {
     private final Map<Long, TraineeEntity> traineeStorage = new HashMap<>();
     private final Map<Long, TrainerEntity> trainerStorage = new HashMap<>();
     private final Map<Long, TrainingEntity> trainingStorage = new HashMap<>();
+    private final Map<String, TraineeEntity> traineeStorageUsernameKey = new HashMap<>();
+    private final Map<String, TrainerEntity> trainerStorageUsernameKey = new HashMap<>();
+
     @Value("${trainee.storage}")
     private String traineeStorageFile;
     @Value("${trainer.storage}")
@@ -50,12 +53,25 @@ public class DataStorage {
                 traineeStorage
                         .putAll(objectMapper.readValue(traineeFile, new TypeReference<Map<Long, TraineeEntity>>() {
                         }));
+
+                // populate a different map using username as key
+                for (Map.Entry<Long, TraineeEntity> entry : traineeStorage.entrySet()) {
+                    TraineeEntity trainee = entry.getValue();
+                    traineeStorageUsernameKey.put(trainee.getUsername(), trainee);
+                }
+
             }
             if (trainerFile.length() > 0) {
                 log.debug("Initializing trainer storage map from file data.");
                 trainerStorage
                         .putAll(objectMapper.readValue(trainerFile, new TypeReference<Map<Long, TrainerEntity>>() {
                         }));
+
+                // populate a different map using username as key
+                for (Map.Entry<Long, TrainerEntity> entry : trainerStorage.entrySet()) {
+                    TrainerEntity trainer = entry.getValue();
+                    trainerStorageUsernameKey.put(trainer.getUsername(), trainer);
+                }
             }
             if (trainingFile.length() > 0) {
                 log.debug("Initializing training storage map from file data.");

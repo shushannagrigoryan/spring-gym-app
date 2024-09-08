@@ -178,5 +178,14 @@
     "password" : "myPassword",
     "specialization" : "boxing",
     "active" : false
+  },
+  "20" : {
+    "userId" : 20,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith20",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
   }
 }
