@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -58,8 +57,8 @@ public class TrainerDaoTest {
         trainerDao.createTrainer(trainerEntity);
 
         //then
-        verify(trainerEntityMap, times(1)).put(id, trainerEntity);
-        verify(trainerEntityMapUsernameKey, times(1)).put(username, trainerEntity);
+        verify(trainerEntityMap).put(id, trainerEntity);
+        verify(trainerEntityMapUsernameKey).put(username, trainerEntity);
         assertTrue(trainerEntityMap.containsKey(id));
         assertTrue(trainerEntityMapUsernameKey.containsKey(username));
     }
@@ -74,7 +73,7 @@ public class TrainerDaoTest {
         Optional<TrainerEntity> result = trainerDao.getTrainerById(id);
 
         //then
-        verify(dataStorage.getTrainerStorage(), times(1)).get(id);
+        verify(dataStorage.getTrainerStorage()).get(id);
         assertFalse(result.isPresent());
     }
 
@@ -91,7 +90,7 @@ public class TrainerDaoTest {
 
         //then
         assertTrue(result.isPresent());
-        verify(dataStorage.getTrainerStorage(), times(1)).get(id);
+        verify(dataStorage.getTrainerStorage()).get(id);
     }
 
     @Test

@@ -3,7 +3,6 @@ package daotest;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -51,7 +50,7 @@ public class TrainingDaoTest {
         trainingDao.createTraining(trainingEntity);
 
         //then
-        verify(trainingEntityMap, times(1)).put(id, trainingEntity);
+        verify(trainingEntityMap).put(id, trainingEntity);
         assertTrue(trainingEntityMap.containsKey(id));
     }
 
@@ -68,7 +67,7 @@ public class TrainingDaoTest {
 
         //then
         assertTrue(result.isPresent());
-        verify(dataStorage.getTrainingStorage(), times(1)).get(id);
+        verify(dataStorage.getTrainingStorage()).get(id);
     }
 
     @Test
@@ -81,7 +80,7 @@ public class TrainingDaoTest {
         Optional<TrainingEntity> result = trainingDao.getTrainingById(id);
 
         //then
-        verify(dataStorage.getTrainingStorage(), times(1)).get(id);
+        verify(dataStorage.getTrainingStorage()).get(id);
         assertFalse(result.isPresent());
     }
 }

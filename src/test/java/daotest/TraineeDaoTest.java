@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -59,8 +58,8 @@ public class TraineeDaoTest {
         traineeDao.createTrainee(traineeEntity);
 
         //then
-        verify(traineeEntityMap, times(1)).put(id, traineeEntity);
-        verify(traineeEntityMapUsernameKey, times(1)).put(username, traineeEntity);
+        verify(traineeEntityMap).put(id, traineeEntity);
+        verify(traineeEntityMapUsernameKey).put(username, traineeEntity);
         assertTrue(traineeEntityMap.containsKey(id));
         assertTrue(traineeEntityMapUsernameKey.containsKey(username));
     }
@@ -78,7 +77,7 @@ public class TraineeDaoTest {
 
         //then
         assertTrue(result.isPresent());
-        verify(dataStorage.getTraineeStorage(), times(1)).get(id);
+        verify(dataStorage.getTraineeStorage()).get(id);
     }
 
     @Test
@@ -91,7 +90,7 @@ public class TraineeDaoTest {
         Optional<TraineeEntity> result = traineeDao.getTraineeById(id);
 
         //then
-        verify(dataStorage.getTraineeStorage(), times(1)).get(id);
+        verify(dataStorage.getTraineeStorage()).get(id);
         assertFalse(result.isPresent());
     }
 
@@ -104,7 +103,7 @@ public class TraineeDaoTest {
         traineeDao.deleteTraineeById(1L);
 
         //then
-        verify(dataStorage.getTraineeStorage(), times(1)).remove(1L);
+        verify(dataStorage.getTraineeStorage()).remove(1L);
     }
 
     @Test

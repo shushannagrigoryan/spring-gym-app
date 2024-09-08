@@ -21,7 +21,6 @@ public class IdGenerator {
      * @return the id.
      */
     public Long generateId(String entityType) {
-        System.out.println("GENERATING ID");
         Set<Long> longList = switch (entityType) {
             case "Trainee" -> dataStorage.getTraineeStorage()
                     .keySet();

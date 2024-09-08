@@ -3,7 +3,6 @@ package daotest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -57,7 +56,7 @@ public class IdGeneratorTest {
         Long generatedId = idGenerator.generateId("Trainee");
 
         //then
-        verify(traineeEntityMap, times(1)).keySet();
+        verify(traineeEntityMap).keySet();
         assertEquals(0L, generatedId);
     }
 
@@ -96,7 +95,7 @@ public class IdGeneratorTest {
         Long generatedId = idGenerator.generateId("Trainer");
 
         //then
-        verify(trainerEntityMap, times(1)).keySet();
+        verify(trainerEntityMap).keySet();
         assertEquals(0L, generatedId);
     }
 
@@ -109,7 +108,7 @@ public class IdGeneratorTest {
         Long generatedId = idGenerator.generateId("Training");
 
         //then
-        verify(trainingEntityMap, times(1)).keySet();
+        verify(trainingEntityMap).keySet();
         assertEquals(0L, generatedId);
     }
 
