@@ -1,25 +1,27 @@
 package daotest;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import org.example.dao.IdGenerator;
 import org.example.dao.TrainerDao;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.storage.DataStorage;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,93 +29,135 @@ public class TrainerDaoTest {
     @Mock
     private DataStorage dataStorage;
 
+    @Spy
+    private Map<Long, TrainerEntity> trainerEntityMap = new HashMap<>();
+    @Spy
+    private Map<String, TrainerEntity> trainerEntityMapUsernameKey = new HashMap<>();
     @Mock
-    private Map<Long, TrainerEntity> trainerEntityMap;
+    private IdGenerator idGenerator;
 
     @InjectMocks
     private TrainerDao trainerDao;
 
+    @BeforeEach
+    void setUp() {
+        lenient().when(dataStorage.getTrainerStorage()).thenReturn(trainerEntityMap);
+        lenient().when(dataStorage.getTrainerStorageUsernameKey()).thenReturn(trainerEntityMapUsernameKey);
+    }
+
     @Test
-    public void testGetTrainerByIdSuccess() {
+    public void testCreateTrainer() {
+        //given
         Long id = 1L;
+        String username = "A.B";
         TrainerEntity trainerEntity = new TrainerEntity();
-        trainerEntity.setUserId(id);
+        trainerEntity.setUsername(username);
+        when(idGenerator.generateId("Trainer")).thenReturn(id);
 
-        when(dataStorage.getTrainerStorage()).thenReturn(trainerEntityMap);
-        when(trainerEntityMap.get(id)).thenReturn(trainerEntity);
+        //when
+        trainerDao.createTrainer(trainerEntity);
 
-        Optional<TrainerEntity> actualTrainer = trainerDao.getTrainerById(id);
-        assertTrue(actualTrainer.isPresent());
-        verify(dataStorage.getTrainerStorage(), times(1)).get(id);
+        //then
+        verify(trainerEntityMap, times(1)).put(id, trainerEntity);
+        verify(trainerEntityMapUsernameKey, times(1)).put(username, trainerEntity);
+        assertTrue(trainerEntityMap.containsKey(id));
+        assertTrue(trainerEntityMapUsernameKey.containsKey(username));
     }
 
     @Test
     void testGetTrainerByIdFailure() {
-        when(dataStorage.getTrainerStorage()).thenReturn(trainerEntityMap);
-        when(trainerEntityMap.get(1L)).thenReturn(null);
+        //given
+        Long id = 1L;
+        when(trainerEntityMap.get(id)).thenReturn(null);
 
-        Optional<TrainerEntity> result = trainerDao.getTrainerById(1L);
+        //when
+        Optional<TrainerEntity> result = trainerDao.getTrainerById(id);
 
+        //then
+        verify(dataStorage.getTrainerStorage(), times(1)).get(id);
         assertFalse(result.isPresent());
     }
 
     @Test
-    public void generateIdEmptyMap() {
-        when(dataStorage.getTrainerStorage()).thenReturn(trainerEntityMap);
-        when(trainerEntityMap.values()).thenReturn(Collections.emptyList());
+    public void testGetTrainerByIdSuccess() {
+        //given
+        Long id = 1L;
+        TrainerEntity trainerEntity = new TrainerEntity();
+        trainerEntity.setUserId(id);
+        when(trainerEntityMap.get(id)).thenReturn(trainerEntity);
 
-        Long generatedId = trainerDao.generateId();
-        assertEquals(0L, generatedId);
+        //when
+        Optional<TrainerEntity> result = trainerDao.getTrainerById(id);
+
+        //then
+        assertTrue(result.isPresent());
+        verify(dataStorage.getTrainerStorage(), times(1)).get(id);
     }
 
-
-    //    @Test
-    //    void testGetTrainerByUsernameNotFound() {
-    //        when(dataStorage.getTrainerStorage().values()).thenReturn(Collections.emptyList());
-    //
-    //        Optional<TrainerEntity> result = trainerDao.getTrainerByUsername("JackSmith");
-    //
-    //        assertFalse(result.isPresent());
-    //    }
-
-
     @Test
-    void testUpdateTrainerById() {
-        TrainerEntity trainerEntity = new TrainerEntity();
+    void testUpdateTrainerByIdSuccess() {
+        //given
+        Long id = 1L;
+        TrainerEntity trainerEntity = new TrainerEntity("A", "B",
+                "myPassword", "boxing");
+        trainerEntity.setUserId(id);
 
-        when(dataStorage.getTrainerStorage()).thenReturn(trainerEntityMap);
-        when(trainerEntityMap.containsKey(1L)).thenReturn(true);
+        when(trainerEntityMap.containsKey(id)).thenReturn(true);
 
-        trainerDao.updateTrainerById(1L, trainerEntity);
+        //when
+        trainerDao.updateTrainerById(id, trainerEntity);
 
-        verify(dataStorage.getTrainerStorage()).put(1L, trainerEntity);
+        //then
+        verify(trainerEntityMap).put(id, trainerEntity);
+        verify(trainerEntityMapUsernameKey).put(trainerEntity.getUsername(), trainerEntity);
+        assertTrue(trainerEntityMap.containsKey(id));
+        assertTrue(trainerEntityMapUsernameKey.containsKey(trainerEntity.getUsername()));
     }
 
     @Test
     void testUpdateTrainerByIdThrowsException() {
-        TrainerEntity trainerEntity = new TrainerEntity();
-        when(dataStorage.getTrainerStorage()).thenReturn(trainerEntityMap);
-        when(trainerEntityMap.containsKey(1L)).thenReturn(false);
+        //given
+        Long id = 1L;
+        TrainerEntity trainerEntity = new TrainerEntity("A", "B",
+                "myPassword", "boxing");
+        trainerEntity.setUserId(id);
+        when(trainerEntityMap.containsKey(id)).thenReturn(false);
 
-
-        assertThatThrownBy(() -> trainerDao.updateTrainerById(1L, trainerEntity))
+        //then
+        assertThatThrownBy(() -> trainerDao.updateTrainerById(id, trainerEntity))
                 .isInstanceOf(GymIllegalIdException.class)
-                .hasMessageContaining("No trainer with id: " + 1L);
+                .hasMessageContaining("No trainer with id: " + id);
+    }
+
+
+
+    @Test
+    void testGetTrainerByUsernameNotFound() {
+        //given
+        String username = "Jack.Smith";
+        when(trainerEntityMapUsernameKey.get(username)).thenReturn(null);
+
+        //when
+        Optional<TrainerEntity> result = trainerDao.getTrainerByUsername(username);
+
+        //then
+        assertFalse(result.isPresent());
     }
 
     @Test
-    void testGenerateIdWhenStorageHasElements() {
+    void testGetTrainerByUsernameFound() {
+        //given
+        String username = "Jack.Smith";
         TrainerEntity trainerEntity = new TrainerEntity();
-        trainerEntity.setUserId(1L);
+        when(trainerEntityMapUsernameKey.get(username)).thenReturn(trainerEntity);
 
-        Map<Long, TrainerEntity> map = new HashMap<>();
-        map.put(1L, trainerEntity);
-        when(dataStorage.getTrainerStorage()).thenReturn(trainerEntityMap);
-        when(trainerEntityMap.values()).thenReturn(map.values());
+        //when
+        Optional<TrainerEntity> result = trainerDao.getTrainerByUsername(username);
 
-
-        Long generatedId = trainerDao.generateId();
-
-        assertEquals(2L, generatedId);
+        //then
+        assertTrue(result.isPresent());
     }
+
+
+
 }
