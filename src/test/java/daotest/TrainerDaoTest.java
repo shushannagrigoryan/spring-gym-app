@@ -1,7 +1,8 @@
 package daotest;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
@@ -123,9 +124,9 @@ public class TrainerDaoTest {
         when(trainerEntityMap.containsKey(id)).thenReturn(false);
 
         //then
-        assertThatThrownBy(() -> trainerDao.updateTrainerById(id, trainerEntity))
-                .isInstanceOf(GymIllegalIdException.class)
-                .hasMessageContaining("No trainer with id: " + id);
+        GymIllegalIdException exception = assertThrows(GymIllegalIdException.class,
+                () -> trainerDao.updateTrainerById(id, trainerEntity));
+        assertEquals("No trainer with id: " + id, exception.getMessage());
     }
 
 

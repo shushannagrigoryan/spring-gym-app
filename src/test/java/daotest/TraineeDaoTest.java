@@ -1,7 +1,8 @@
 package daotest;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
@@ -112,9 +113,9 @@ public class TraineeDaoTest {
         when(traineeEntityMap.containsKey(1L)).thenReturn(false);
 
         //then
-        assertThatThrownBy(() -> traineeDao.deleteTraineeById(1L))
-                .isInstanceOf(GymIllegalIdException.class)
-                .hasMessageContaining("No trainee with id: " + 1L);
+        GymIllegalIdException exception =
+                assertThrows(GymIllegalIdException.class, () -> traineeDao.deleteTraineeById(1L));
+        assertEquals("No trainee with id: " + 1L, exception.getMessage());
     }
 
     @Test
@@ -147,9 +148,10 @@ public class TraineeDaoTest {
         when(traineeEntityMap.containsKey(id)).thenReturn(false);
 
         //then
-        assertThatThrownBy(() -> traineeDao.updateTraineeById(id, traineeEntity))
-                .isInstanceOf(GymIllegalIdException.class)
-                .hasMessageContaining("No trainee with id: " + id);
+        GymIllegalIdException exception =
+                assertThrows(GymIllegalIdException.class,
+                        () -> traineeDao.updateTraineeById(id, traineeEntity));
+        assertEquals("No trainee with id: " + id, exception.getMessage());
     }
 
 
