@@ -1,7 +1,6 @@
 package org.example.dao;
 
 import java.util.Optional;
-import java.util.OptionalLong;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.storage.DataStorage;
@@ -10,9 +9,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class TrainerDao {
     private final DataStorage dataStorage;
+    private final IdGenerator idGenerator;
 
-    public TrainerDao(DataStorage dataStorage) {
+    public TrainerDao(DataStorage dataStorage, IdGenerator idGenerator) {
         this.dataStorage = dataStorage;
+        this.idGenerator = idGenerator;
     }
 
     /**
@@ -21,24 +22,12 @@ public class TrainerDao {
      * @param trainerEntity {@code TrainerEntity} to be added to storage
      */
     public void createTrainer(TrainerEntity trainerEntity) {
-        Long id = generateId();
+        Long id = idGenerator.generateId("Trainer");
         trainerEntity.setUserId(id);
         dataStorage.getTrainerStorage().put(id, trainerEntity);
         dataStorage.getTrainerStorageUsernameKey().put(trainerEntity.getUsername(), trainerEntity);
     }
 
-    /**
-     * Generates a unique id for the trainer entity.
-     */
-    public Long generateId() {
-        OptionalLong lastId = dataStorage.getTrainerStorage()
-                .values().stream().mapToLong(TrainerEntity::getUserId).max();
-        if (lastId.isPresent()) {
-            return lastId.getAsLong() + 1;
-        } else {
-            return 0L;
-        }
-    }
 
     /**
      * Gets trainer by username.

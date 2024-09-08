@@ -1,7 +1,6 @@
 package org.example.dao;
 
 import java.util.Optional;
-import java.util.OptionalLong;
 import org.example.entity.TraineeEntity;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.storage.DataStorage;
@@ -10,9 +9,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class TraineeDao {
     private final DataStorage dataStorage;
+    private final IdGenerator idGenerator;
 
-    public TraineeDao(DataStorage dataStorage) {
+    public TraineeDao(DataStorage dataStorage, IdGenerator idGenerator) {
         this.dataStorage = dataStorage;
+        this.idGenerator = idGenerator;
     }
 
     /**
@@ -21,7 +22,7 @@ public class TraineeDao {
      * @param traineeEntity {@code TraineeEntity} to be added to storage
      */
     public void createTrainee(TraineeEntity traineeEntity) {
-        Long id = generateId();
+        Long id = idGenerator.generateId("Trainee");
         traineeEntity.setUserId(id);
         dataStorage.getTraineeStorage().put(id, traineeEntity);
         dataStorage.getTraineeStorageUsernameKey().put(traineeEntity.getUsername(), traineeEntity);
@@ -45,17 +46,6 @@ public class TraineeDao {
      */
     public Optional<TraineeEntity> getTraineeById(Long id) {
         return Optional.ofNullable(dataStorage.getTraineeStorage().get(id));
-    }
-
-    /** Generates a unique id for the trainee entity. */
-    public Long generateId() {
-        OptionalLong lastId = dataStorage.getTraineeStorage()
-                .values().stream().mapToLong(TraineeEntity::getUserId).max();
-        if (lastId.isPresent()) {
-            return lastId.getAsLong() + 1;
-        } else {
-            return 0L;
-        }
     }
 
     /**
