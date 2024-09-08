@@ -15,7 +15,8 @@ public class ValidatePassword {
         if (password == null) {
             return true;
         }
-        String patternToMatch = "^[a-zA-Z0-9@#$%^&+-=!]{10}$";
+        //String patternToMatch = "^[a-zA-Z0-9@#$%^&+-=!]{10}$";
+        String patternToMatch = "^[a-zA-Z0-9`@#$%^&~!\\-*() \"'_+\\[\\]{}|;:,./<>?=-\\\\]{10}$";
         Pattern pattern = Pattern.compile(patternToMatch);
         return !pattern.matcher(password).matches();
     }

@@ -35,7 +35,6 @@ public class TraineeDao {
      */
     public Optional<TraineeEntity> getTraineeByUsername(String username) {
         return Optional.ofNullable(dataStorage.getTraineeStorageUsernameKey().get(username));
-
     }
 
     /**

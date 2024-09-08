@@ -34,14 +34,17 @@ public class TraineeDaoTest {
 
     @Test
     public void testGetTraineeByIdSuccess() {
+        //given
         Long id = 1L;
         TraineeEntity traineeEntity = new TraineeEntity();
         traineeEntity.setUserId(id);
         when(dataStorage.getTraineeStorage()).thenReturn(traineeEntityMap);
         when(traineeEntityMap.get(id)).thenReturn(traineeEntity);
 
+        //when
         Optional<TraineeEntity> actualTrainee = traineeDao.getTraineeById(id);
 
+        //then
         assertTrue(actualTrainee.isPresent());
         verify(dataStorage.getTraineeStorage(), times(1)).get(id);
     }

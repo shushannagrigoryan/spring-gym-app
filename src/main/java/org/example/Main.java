@@ -22,7 +22,6 @@ public class Main {
         traineeFacade.createTrainee(new TraineeDto("John", "Smith",
                 "myPassword", LocalDate.now(), "myAddress"));
 
-
         //        traineeFacade.createTrainee(new TraineeDto("John", "Smith",
         //                "myPassword", LocalDate.now(), "myAddress"));
         //        traineeFacade.createTrainee(new TraineeDto("John", "Smith",

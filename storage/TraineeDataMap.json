@@ -288,5 +288,175 @@
     "dateOfBirth" : [ 2024, 9, 8 ],
     "address" : "myAddress",
     "active" : false
+  },
+  "30" : {
+    "userId" : 30,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith21",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "31" : {
+    "userId" : 31,
+    "firstName" : "J",
+    "lastName" : "S",
+    "username" : "J.S",
+    "password" : "myPass\"ord",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "32" : {
+    "userId" : 32,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith23",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "33" : {
+    "userId" : 33,
+    "firstName" : "J",
+    "lastName" : "S",
+    "username" : "J.S0",
+    "password" : "myPass'ord",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "34" : {
+    "userId" : 34,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith25",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "35" : {
+    "userId" : 35,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith27",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "36" : {
+    "userId" : 36,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith29",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "37" : {
+    "userId" : 37,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith31",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "38" : {
+    "userId" : 38,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith33",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "39" : {
+    "userId" : 39,
+    "firstName" : "J",
+    "lastName" : "S",
+    "username" : "J.S1",
+    "password" : "myPass~ord",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "40" : {
+    "userId" : 40,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith35",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "41" : {
+    "userId" : 41,
+    "firstName" : "J",
+    "lastName" : "S",
+    "username" : "J.S2",
+    "password" : "myPass`ord",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "42" : {
+    "userId" : 42,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith37",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "43" : {
+    "userId" : 43,
+    "firstName" : "J",
+    "lastName" : "S",
+    "username" : "J.S3",
+    "password" : "myPass/ord",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "44" : {
+    "userId" : 44,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith39",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "45" : {
+    "userId" : 45,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith41",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "46" : {
+    "userId" : 46,
+    "firstName" : "J",
+    "lastName" : "S",
+    "username" : "J.S4",
+    "password" : "myPass\\ord",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
   }
 }
