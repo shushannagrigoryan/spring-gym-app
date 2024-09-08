@@ -22,6 +22,8 @@ public class TraineeFacade {
 
     /**
      * Creates a trainee in the facade layer.
+     *
+     * @param traineeDto {@code TraineeDto} to create the {@code TraineeEntity}
      */
     public void createTrainee(TraineeDto traineeDto) {
         log.info("Request to create trainee");
@@ -34,43 +36,28 @@ public class TraineeFacade {
         }
     }
 
-    //    /**
-    //     * Gets the trainee by username in the facade layer.
-    //     * If there is no trainee with the given username, throws a IllegalUsernameException.
-    //     */
-    //    public TraineeDto getTraineeByUsername(String username) {
-    //        log.info("Request to retrieve trainee by username");
-    //        TraineeDto traineeDto;
-    //        try {
-    //            traineeDto = traineeService.getTraineeByUsername(username);
-    //            log.info("Successfully retrieved trainee by username");
-    //        } catch (GymIllegalUsernameException exception) {
-    //            log.error(exception.getMessage());
-    //            throw exception;
-    //        }
-    //        return traineeDto;
-    //    }
-
     /**
-     * Gets Trainee by id in the facade layer.
-     * If there is no trainee with the given id throws an IllegalIdException.
+     * Gets trainee by id in the facade layer.
+     *
+     * @param id id of the trainee
+     * @return the {@code TraineeDto}
      */
     public TraineeDto getTraineeById(Long id) {
         log.info("Request to retrieve trainee by id");
-        TraineeDto traineeDto;
+        TraineeDto traineeDto = null;
         try {
             traineeDto = traineeService.getTraineeById(id);
             log.info("Successfully retrieved trainee by id");
         } catch (GymIllegalIdException exception) {
             log.error(exception.getMessage());
-            throw exception;
         }
         return traineeDto;
     }
 
     /**
-     * Deletes Trainee by id.
-     * If there is no trainee with the given id, throws an IllegalIdException
+     * Deletes trainee by id.
+     *
+     * @param id id of the trainee to delete
      */
     public void deleteTraineeById(Long id) {
         log.info("Request to delete trainee by id");

@@ -28,8 +28,12 @@ public class UserDao {
 
 
     /**
-     * Generates username for user.
-     * Add suffix if the username is taken either by a trainee or a trainer.
+     * Generates username for the user (firstName.lastName)
+     * Adds suffix if the username is taken either by a trainee or a trainer.
+     *
+     * @param firstName firstName of the user
+     * @param lastName lastName of the user
+     * @return the username
      */
     public String generateUsername(String firstName, String lastName) {
         log.debug("Generating username for firstName: {}, lastName: {}", firstName, lastName);
@@ -47,10 +51,13 @@ public class UserDao {
     }
 
     /**
-     * Getting suffix for the given username which is not present both in trainee and trainer maps.
+     * Generates suffix for the given username which is not present both in trainee and trainer maps.
+     *
+     * @param username username for which suffix is generated
+     * @return the suffix
      */
     private Long getSuffix(String username) {
-        log.debug("Generating suffix for username: " + username);
+        log.debug("Generating suffix for username: {}", username);
 
         Long maxTraineeSuffix = dataStorage.getTraineeStorage().values()
                 .stream()

@@ -3,6 +3,7 @@ package org.example;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TraineeDto;
 import org.example.dto.TrainerDto;
 import org.example.dto.TrainingDto;
@@ -12,28 +13,24 @@ import org.example.facade.TraineeFacade;
 import org.example.facade.TrainerFacade;
 import org.example.facade.TrainingFacade;
 import org.example.storage.DataStorage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+@Slf4j
 public class Main {
-    private static final Logger logger = LoggerFactory.getLogger(Main.class);
-
     /**
      * Main method.
      */
     public static void main(String[] args) {
         ApplicationContext context = new AnnotationConfigApplicationContext(DataStorage.class);
         TraineeFacade traineeFacade = context.getBean(TraineeFacade.class);
+
         traineeFacade.createTrainee(new TraineeDto("John", "Smith",
                 "myPassword", LocalDate.now(), "myAddress"));
         traineeFacade.createTrainee(new TraineeDto("John", "Smith",
                 "myPassword123", LocalDate.now(), "myAddress"));
         traineeFacade.createTrainee(new TraineeDto("Sam", "Smith",
                 "myPassword", LocalDate.now(), "myAddress"));
-
-
         traineeFacade.createTrainee(new TraineeDto("Ann", "Thompson",
                 "myPassword", LocalDate.now(), "myAddress"));
 
@@ -66,7 +63,7 @@ public class Main {
         try {
             trainerDto = trainerFacade.getTrainerById(2L);
         } catch (GymIllegalIdException exception) {
-            logger.error(exception.getMessage(), exception);
+            log.error(exception.getMessage(), exception);
         }
         System.out.println(trainerDto);
 

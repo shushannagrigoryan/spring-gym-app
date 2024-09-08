@@ -37,24 +37,28 @@ public class TrainingService {
 
     /**
      * Creates training in service layer.
+     * If either trainee or trainer is not found throws an {@code GymIllegalIdException}
+     *
+     * @param trainingEntity {@code TrainingEntity} to create the trainee
      */
     public void createTraining(TrainingEntity trainingEntity) {
         log.debug("Creating training : {}", trainingEntity);
-        System.out.println(trainingEntity.getTrainerId());
         TraineeDto traineeDto = traineeService.getTraineeById(trainingEntity.getTraineeId());
         TrainerDto trainerDto = trainerService.getTrainerById(trainingEntity.getTrainerId());
 
         if (traineeDto == null) {
             log.debug("Invalid id for trainee: {}", trainingEntity.getTraineeId());
-            throw new GymIllegalIdException("No trainee with id: " + trainingEntity.getTraineeId());
+            throw new GymIllegalIdException(String.format("No trainee with id: %d",
+                    trainingEntity.getTraineeId()));
         }
         if (trainerDto == null) {
             log.debug("Invalid id for trainer: {}", trainingEntity.getTrainerId());
-            throw new GymIllegalIdException("No trainer with id: " + trainingEntity.getTrainerId());
+            throw new GymIllegalIdException(String.format("No trainer with id: %d",
+                    trainingEntity.getTrainerId()));
         }
 
         trainingDao.createTraining(trainingEntity);
-        log.debug("Successfully created new training with id: " + trainingEntity.getTrainingId());
+        log.debug("Successfully created new training with id: {}", trainingEntity.getTrainingId());
         saveDataToFile.writeMapToFile("Training");
     }
 
@@ -62,16 +66,16 @@ public class TrainingService {
      * Gets training by id.
      *
      * @param id of the training
-     * @return the TrainingDto
+     * @return the {@code TrainingDto}
      */
     public TrainingDto getTrainingById(Long id) {
         log.debug("Retrieving training by id: {}", id);
         Optional<TrainingEntity> training = trainingDao.getTrainingById(id);
-        if (!training.isPresent()) {
+        if (training.isEmpty()) {
             log.debug("Invalid id for training: {}", id);
-            throw new GymIllegalIdException("No training with id: " + id);
+            throw new GymIllegalIdException(String.format("No training with id: %d", id));
         }
-        log.debug("Getting training with id: " + id);
+        log.debug("Getting training with id: {}", id);
         return trainingMapper.entityToDto(training.get());
     }
 

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class TrainingMapper {
 
     /**
-     * Maps a TrainingEntity to a TrainingDto.
+     * Maps a {@code TrainingEntity} to a {@code TrainingDto}.
      */
     public TrainingDto entityToDto(TrainingEntity trainingEntity) {
         if (trainingEntity == null) {
@@ -21,7 +21,7 @@ public class TrainingMapper {
     }
 
     /**
-     * Maps a TrainingDto to a TrainingEntity.
+     * Maps a {@code TrainingDto} to a {@code TrainingEntity}.
      */
     public TrainingEntity dtoToEntity(TrainingDto trainingDto) {
         if (trainingDto == null) {

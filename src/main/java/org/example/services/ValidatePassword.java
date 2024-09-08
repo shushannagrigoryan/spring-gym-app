@@ -1,20 +1,17 @@
-package org.example;
+package org.example.services;
 
 import java.util.regex.Pattern;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class ValidatePassword {
-    private final Logger logger = LoggerFactory.getLogger(ValidatePassword.class);
-
-
     /**
      * Password validation method.
      */
     public boolean passwordNotValid(String password) {
-        logger.debug("Checking if password: " + password + " is valid");
+        log.debug("Checking if password: {} is valid", password);
         if (password == null) {
             return true;
         }

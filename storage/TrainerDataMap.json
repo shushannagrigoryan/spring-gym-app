@@ -70,5 +70,77 @@
     "password" : "myPassword",
     "specialization" : "boxing",
     "active" : false
+  },
+  "8" : {
+    "userId" : 8,
+    "firstName" : "A",
+    "lastName" : "B",
+    "username" : "A.B3",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "9" : {
+    "userId" : 9,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith8",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "10" : {
+    "userId" : 10,
+    "firstName" : "A",
+    "lastName" : "B",
+    "username" : "A.B4",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "11" : {
+    "userId" : 11,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith10",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "12" : {
+    "userId" : 12,
+    "firstName" : "A",
+    "lastName" : "B",
+    "username" : "A.B5",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "13" : {
+    "userId" : 13,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith12",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "14" : {
+    "userId" : 14,
+    "firstName" : "A",
+    "lastName" : "B",
+    "username" : "A.B6",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "15" : {
+    "userId" : 15,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith14",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
   }
 }

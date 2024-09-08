@@ -8,7 +8,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
-import org.example.ValidatePassword;
 import org.example.dao.TrainerDao;
 import org.example.dao.UserDao;
 import org.example.dto.TrainerDto;
@@ -17,6 +16,7 @@ import org.example.exceptions.GymIllegalIdException;
 import org.example.exceptions.GymIllegalPasswordException;
 import org.example.mapper.TrainerMapper;
 import org.example.services.TrainerService;
+import org.example.services.ValidatePassword;
 import org.example.storage.SaveDataToFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

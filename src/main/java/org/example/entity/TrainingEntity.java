@@ -23,12 +23,12 @@ public class TrainingEntity {
     /**
      * Constructs a new instance of {@code TrainingEntity}.
      *
-     * @param traineeId        The id of the Trainee.
-     * @param trainerId        The id of the Trainer.
-     * @param trainingName     The name of the Training.
-     * @param trainingType     The type of the Training.
-     * @param trainingDate     The date of the Training.
-     * @param trainingDuration The duration of the Training.
+     * @param traineeId        The id of the trainee.
+     * @param trainerId        The id of the trainer.
+     * @param trainingName     The name of the training.
+     * @param trainingType     The type of the training.
+     * @param trainingDate     The date of the training.
+     * @param trainingDuration The duration of the training.
      */
     public TrainingEntity(Long traineeId, Long trainerId,
                           String trainingName, TrainingType trainingType,

@@ -13,10 +13,10 @@ public class TrainerEntity extends UserEntity {
     /**
      * Constructs a new instance of {@code TrainerEntity}.
      *
-     * @param firstName      The firstname of the Trainer.
-     * @param lastName       The lastname of the Trainer.
-     * @param password       The password of the Trainer.
-     * @param specialization The specialization of the Trainer.
+     * @param firstName      The firstname of the trainer.
+     * @param lastName       The lastname of the trainer.
+     * @param password       The password of the trainer.
+     * @param specialization The specialization of the trainer.
      */
     public TrainerEntity(String firstName, String lastName,
                          String password, String specialization) {

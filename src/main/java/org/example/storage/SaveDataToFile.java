@@ -5,15 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.example.exceptions.GymIllegalEntityTypeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class SaveDataToFile {
-    private static final Logger logger = LoggerFactory.getLogger(SaveDataToFile.class);
     @Autowired
     private DataStorage dataStorage;
 
@@ -47,16 +47,16 @@ public class SaveDataToFile {
                 storageMap = dataStorage.getTrainingStorage();
                 yield trainingStorageFile;
             }
-            default -> throw new IllegalArgumentException("Illegal storage name: " + dataType);
+            default -> throw new GymIllegalEntityTypeException(dataType);
         };
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
         ObjectWriter writer = objectMapper.writer(new DefaultPrettyPrinter());
         try (FileWriter fileWriter = new FileWriter(fileName)) {
             fileWriter.write(writer.writeValueAsString(storageMap));
-            logger.debug("Writing map storage for " + dataType + " entity to file.");
+            log.debug("Writing map storage for {} entity to file.", dataType);
         } catch (IOException e) {
-            logger.debug("Failed to write map data to file: {}. Exception: {}",
+            log.debug("Failed to write map data to file: {}. Exception: {}",
                     storageMap, e.getMessage());
         }
     }

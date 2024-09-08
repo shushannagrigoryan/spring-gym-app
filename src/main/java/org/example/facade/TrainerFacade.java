@@ -22,6 +22,8 @@ public class TrainerFacade {
 
     /**
      * Creates a new Trainer in the facade layer.
+     *
+     * @param trainerDto {@code TrainerDto} to create the {@code TrainerEntity}
      */
     public void createTrainer(TrainerDto trainerDto) {
         log.info("Request to create trainer");
@@ -34,42 +36,20 @@ public class TrainerFacade {
         }
     }
 
-    //    /**
-    //     * Gets the trainer by username.
-    //     * If no there is no trainer with the given username, throws an IllegalUsernameException.
-    //     *
-    //     * @param username username to get the trainer by
-    //     * @return returns the TrainerDto
-    //     */
-    //    public TrainerDto getTrainerByUsername(String username) {
-    //        log.info("Request to retrieve trainer by username");
-    //        TrainerDto trainerDto;
-    //        try {
-    //            trainerDto = trainerService.getTrainerByUsername(username);
-    //            log.info("Successfully retrieved trainer by username");
-    //        } catch (GymIllegalUsernameException exception) {
-    //            log.error(exception.getMessage());
-    //            throw exception;
-    //        }
-    //        return trainerDto;
-    //    }
-
     /**
      * Gets the trainer by id.
-     * If there is no trainer with the given id, throws an IllegalIdException.
      *
      * @param id the id of the trainer
      * @return the TrainerDto
      */
     public TrainerDto getTrainerById(Long id) {
         log.info("Request to retrieve trainer by id");
-        TrainerDto trainerDto;
+        TrainerDto trainerDto = null;
         try {
             trainerDto = trainerService.getTrainerById(id);
             log.info("Successfully retrieved trainer by id");
         } catch (GymIllegalIdException exception) {
             log.error(exception.getMessage());
-            throw exception;
         }
         return trainerDto;
     }

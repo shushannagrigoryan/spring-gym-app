@@ -17,7 +17,9 @@ public class TrainingDao {
     }
 
     /**
-     * Generates an id for Training entity and adds the entity to the storage map.
+     * Generates id for the training entity and adds that entity to the storage map.
+     *
+     * @param trainingEntity {@code TrainingEntity} to be added to storage
      */
     public void createTraining(TrainingEntity trainingEntity) {
         Long id = generateId();
@@ -26,7 +28,7 @@ public class TrainingDao {
     }
 
     /**
-     * Generates a unique id for the Training entity.
+     * Generates a unique id for the training entity.
      */
     public Long generateId() {
         OptionalLong lastId = dataStorage.getTrainingStorage().values().stream()
@@ -39,6 +41,12 @@ public class TrainingDao {
         }
     }
 
+    /**
+     * Gets training by id.
+     *
+     * @param id id of the training
+     * @return {@code Optional<TrainingEntity>}
+     */
     public Optional<TrainingEntity> getTrainingById(Long id) {
         return Optional.ofNullable(dataStorage.getTrainingStorage().get(id));
     }

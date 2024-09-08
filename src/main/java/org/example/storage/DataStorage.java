@@ -33,6 +33,9 @@ public class DataStorage {
     @Value("${training.storage}")
     private String trainingStorageFile;
 
+    /**
+     * Initializes the storage bean from external files.
+     */
     @PostConstruct
     private void init() {
         ObjectMapper objectMapper = new ObjectMapper();
