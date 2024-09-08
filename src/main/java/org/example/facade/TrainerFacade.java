@@ -47,9 +47,9 @@ public class TrainerFacade {
         TrainerDto trainerDto = null;
         try {
             trainerDto = trainerService.getTrainerById(id);
-            log.info("Successfully retrieved trainer by id");
+            log.info("Successfully retrieved trainer by id {}", id);
         } catch (GymIllegalIdException exception) {
-            log.error(exception.getMessage());
+            log.error("No trainer with id: {}", id, exception);
         }
         return trainerDto;
     }

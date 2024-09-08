@@ -49,7 +49,7 @@ public class TrainingFacade {
             trainingDto = trainingService.getTrainingById(id);
             log.info("Successfully retrieved training by id");
         } catch (GymIllegalIdException exception) {
-            log.error(exception.getMessage());
+            log.error("No training with id: {}", id, exception);
         }
         return trainingDto;
     }

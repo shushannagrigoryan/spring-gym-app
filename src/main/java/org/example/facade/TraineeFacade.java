@@ -49,7 +49,7 @@ public class TraineeFacade {
             traineeDto = traineeService.getTraineeById(id);
             log.info("Successfully retrieved trainee by id");
         } catch (GymIllegalIdException exception) {
-            log.error(exception.getMessage());
+            log.error("No trainee with id: {}", id, exception);
         }
         return traineeDto;
     }

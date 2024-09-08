@@ -142,5 +142,41 @@
     "password" : "myPassword",
     "specialization" : "boxing",
     "active" : false
+  },
+  "16" : {
+    "userId" : 16,
+    "firstName" : "A",
+    "lastName" : "B",
+    "username" : "A.B7",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "17" : {
+    "userId" : 17,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith16",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "18" : {
+    "userId" : 18,
+    "firstName" : "A",
+    "lastName" : "B",
+    "username" : "A.B8",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "19" : {
+    "userId" : 19,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith18",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
   }
 }
