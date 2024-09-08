@@ -1,16 +1,12 @@
 package facadetest;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import javax.xml.crypto.Data;
-import org.example.dao.TraineeDao;
 import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
 import org.example.exceptions.GymIllegalIdException;
@@ -18,7 +14,6 @@ import org.example.exceptions.GymIllegalPasswordException;
 import org.example.facade.TraineeFacade;
 import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
-import org.example.storage.DataStorage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,11 +26,6 @@ public class TraineeFacadeTest {
     private TraineeService traineeService;
     @Mock
     private TraineeMapper traineeMapper;
-
-    @Mock
-    private TraineeDao traineeDao;
-    @Mock
-    private DataStorage dataStorage;
     @InjectMocks
     private TraineeFacade traineeFacade;
 
@@ -117,6 +107,7 @@ public class TraineeFacadeTest {
         //then
         verify(traineeService).deleteTraineeById(id);
     }
+
     @Test
     public void testDeleteTraineeByIdFailure() {
         //given
@@ -152,17 +143,6 @@ public class TraineeFacadeTest {
 
     @Test
     public void testUpdateTraineeByIdInvalidPassword() {
-        //        public void updateTraineeById(Long id, TraineeDto traineeDto) {
-//            log.info("Request to update trainee by id");
-//            try {
-//                traineeService.updateTraineeById(id, traineeMapper.dtoToEntity(traineeDto));
-//                log.info("Successfully updated trainee by id");
-//            } catch (GymIllegalPasswordException | GymIllegalIdException exception) {
-//                log.error(exception.getMessage(), exception);
-//            }
-//
-//        }
-
         //given
         Long id = 1L;
         TraineeDto traineeDto = new TraineeDto();
@@ -201,10 +181,6 @@ public class TraineeFacadeTest {
         GymIllegalIdException exception = assertThrows(GymIllegalIdException.class,
                 () -> traineeService.updateTraineeById(id, traineeEntity));
         assertEquals("No trainee with id: " + id, exception.getMessage());
-
     }
-
-
-
 
 }
