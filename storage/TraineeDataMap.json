@@ -13,7 +13,7 @@
     "userId" : 1,
     "firstName" : "Jack",
     "lastName" : "Smith",
-    "username" : "Jack.Smith0",
+    "username" : "Jack.Smith",
     "password" : "myPassword",
     "dateOfBirth" : [ 2024, 9, 8 ],
     "address" : "myAddress",
@@ -455,6 +455,46 @@
     "lastName" : "S",
     "username" : "J.S4",
     "password" : "myPass\\ord",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "47" : {
+    "userId" : 47,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith43",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "48" : {
+    "userId" : 48,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith44",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "49" : {
+    "userId" : 49,
+    "firstName" : "Sam",
+    "lastName" : "Smith",
+    "username" : "Sam.Smith8",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "50" : {
+    "userId" : 50,
+    "firstName" : "Ann",
+    "lastName" : "Thompson",
+    "username" : "Ann.Thompson8",
+    "password" : "my8$ssword",
     "dateOfBirth" : [ 2024, 9, 8 ],
     "address" : "myAddress",
     "active" : false

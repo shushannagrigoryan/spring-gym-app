@@ -286,5 +286,32 @@
     "password" : "myPassword",
     "specialization" : "boxing",
     "active" : false
+  },
+  "32" : {
+    "userId" : 32,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith45",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "33" : {
+    "userId" : 33,
+    "firstName" : "A",
+    "lastName" : "B",
+    "username" : "A.B9",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
+  },
+  "34" : {
+    "userId" : 34,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith46",
+    "password" : "myPassword",
+    "specialization" : "boxing",
+    "active" : false
   }
 }
