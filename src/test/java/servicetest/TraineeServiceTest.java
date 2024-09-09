@@ -115,28 +115,29 @@ public class TraineeServiceTest {
         verify(traineeDao).getTraineeByUsername(username);
     }
 
-    //        @Test
-    //        public void testGetTraineeByIdSuccess() {
-    //            //given
-    //            String firstName = "traineeF1";
-    //            String lastName = "traineeF2";
-    //            String password = "myPassword";
-    //            String address = "myAddress";
-    //            Long id = 1L;
-    //            String username = firstName.concat(".").concat(lastName);
-    //            TraineeDto traineeDto = new TraineeDto(firstName, lastName, password,LocalDate.now(),address);
-    //
-    //            TraineeEntity traineeEntity =
-    //            new TraineeEntity(firstName, lastName, password, LocalDate.now(), address);
-    //            when(traineeMapper.entityToDto(traineeEntity)).thenReturn(traineeDto);
-    //            when(traineeDao.getTraineeById(id)).thenReturn(Optional.of(traineeEntity));
-    //
-    //            //when
-    //            TraineeDto result = traineeService.getTraineeById(id);
-    //
-    //            //then
-    //            verify(traineeDao).getTraineeById(id);
-    //        }
+    @Test
+    public void testGetTraineeByIdSuccess() {
+        //given
+        String firstName = "traineeF1";
+        String lastName = "traineeF2";
+        String password = "myPassword";
+        String address = "myAddress";
+        Long id = 1L;
+        TraineeDto traineeDto =
+                new TraineeDto(firstName, lastName, password, LocalDate.now(), address);
+
+        TraineeEntity traineeEntity =
+            new TraineeEntity(firstName, lastName, password, LocalDate.now(), address);
+        when(traineeMapper.entityToDto(traineeEntity)).thenReturn(traineeDto);
+        when(traineeDao.getTraineeById(id)).thenReturn(Optional.of(traineeEntity));
+
+        //when
+        TraineeDto result = traineeService.getTraineeById(id);
+
+        //then
+        verify(traineeDao).getTraineeById(id);
+        assertEquals(traineeDto, result);
+    }
 
     @Test
     public void testGetTraineeByIdFailure() {
