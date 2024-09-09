@@ -13,6 +13,7 @@ import org.example.exceptions.GymIllegalIdException;
 import org.example.facade.TrainingFacade;
 import org.example.mapper.TrainingMapper;
 import org.example.services.TrainingService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,6 +31,11 @@ public class TrainingFacadeTest {
 
     @InjectMocks
     private TrainingFacade trainingFacade;
+
+    @BeforeEach
+    public void setUp() {
+        trainingFacade.setDependencies(trainingMapper);
+    }
 
     @Test
     public void testCreateTrainingInvalidTraineeId() {

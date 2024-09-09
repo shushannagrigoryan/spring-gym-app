@@ -14,6 +14,7 @@ import org.example.exceptions.GymIllegalPasswordException;
 import org.example.facade.TraineeFacade;
 import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,6 +29,11 @@ public class TraineeFacadeTest {
     private TraineeMapper traineeMapper;
     @InjectMocks
     private TraineeFacade traineeFacade;
+
+    @BeforeEach
+    public void setUp() {
+        traineeFacade.setDependencies(traineeMapper);
+    }
 
     @Test
     public void testCreateTraineeSuccess() {

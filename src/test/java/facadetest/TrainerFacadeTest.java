@@ -14,6 +14,7 @@ import org.example.exceptions.GymIllegalPasswordException;
 import org.example.facade.TrainerFacade;
 import org.example.mapper.TrainerMapper;
 import org.example.services.TrainerService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,6 +29,11 @@ public class TrainerFacadeTest {
     private TrainerMapper trainerMapper;
     @InjectMocks
     private TrainerFacade trainerFacade;
+
+    @BeforeEach
+    public void setUp() {
+        trainerFacade.setDependencies(trainerMapper);
+    }
 
     @Test
     public void testCreateTrainerSuccess() {

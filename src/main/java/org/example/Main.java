@@ -23,7 +23,9 @@ public class Main {
         ApplicationContext context = new AnnotationConfigApplicationContext(DataStorage.class);
         TraineeFacade traineeFacade = context.getBean(TraineeFacade.class);
 
-        traineeFacade.createTrainee(new TraineeDto("John", "Smith",
+        //        traineeFacade.createTrainee(new TraineeDto("John", "Smith",
+        //                "myPassword", LocalDate.now(), "myAddress"));
+        traineeFacade.updateTraineeById(5L, new TraineeDto("A", "A",
                 "myPassword", LocalDate.now(), "myAddress"));
 
         //        traineeFacade.createTrainee(new TraineeDto("John", "Smith",

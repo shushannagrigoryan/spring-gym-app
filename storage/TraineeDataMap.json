@@ -41,11 +41,11 @@
   },
   "5" : {
     "userId" : 5,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith3",
+    "firstName" : "A",
+    "lastName" : "A",
+    "username" : "A.A",
     "password" : "myPassword",
-    "dateOfBirth" : [ 2024, 9, 8 ],
+    "dateOfBirth" : [ 2024, 9, 9 ],
     "address" : "myAddress",
     "active" : false
   },
@@ -516,6 +516,16 @@
     "username" : "John.Smith48",
     "password" : "myPassword",
     "dateOfBirth" : [ 2024, 9, 8 ],
+    "address" : "myAddress",
+    "active" : false
+  },
+  "53" : {
+    "userId" : 53,
+    "firstName" : "John",
+    "lastName" : "Smith",
+    "username" : "John.Smith49",
+    "password" : "myPassword",
+    "dateOfBirth" : [ 2024, 9, 9 ],
     "address" : "myAddress",
     "active" : false
   }

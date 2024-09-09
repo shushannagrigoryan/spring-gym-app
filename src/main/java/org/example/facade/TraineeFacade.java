@@ -22,6 +22,7 @@ public class TraineeFacade {
 
     @Autowired
     public void setDependencies(TraineeMapper traineeMapper) {
+        log.debug("injecting trainee mapper");
         this.traineeMapper = traineeMapper;
     }
 
