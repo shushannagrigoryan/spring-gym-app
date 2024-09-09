@@ -1,9 +1,11 @@
 package org.example.mapper;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TrainingDto;
 import org.example.entity.TrainingEntity;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class TrainingMapper {
 
@@ -11,6 +13,7 @@ public class TrainingMapper {
      * Maps a {@code TrainingEntity} to a {@code TrainingDto}.
      */
     public TrainingDto entityToDto(TrainingEntity trainingEntity) {
+        log.info("Mapping TrainingEntity {} to TrainingDto", trainingEntity);
         if (trainingEntity == null) {
             return null;
         }
@@ -24,6 +27,7 @@ public class TrainingMapper {
      * Maps a {@code TrainingDto} to a {@code TrainingEntity}.
      */
     public TrainingEntity dtoToEntity(TrainingDto trainingDto) {
+        log.info("Mapping TrainingDto {} to TrainingEntity", trainingDto);
         if (trainingDto == null) {
             return null;
         }

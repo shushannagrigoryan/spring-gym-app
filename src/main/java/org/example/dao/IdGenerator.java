@@ -2,11 +2,13 @@ package org.example.dao;
 
 import java.util.Optional;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import org.example.exceptions.GymIllegalEntityTypeException;
 import org.example.storage.DataStorage;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class IdGenerator {
     private final DataStorage dataStorage;
 
@@ -21,6 +23,7 @@ public class IdGenerator {
      * @return the id.
      */
     public Long generateId(String entityType) {
+        log.debug("Generating id for {}", entityType);
         Set<Long> longList = switch (entityType) {
             case "Trainee" -> dataStorage.getTraineeStorage()
                     .keySet();

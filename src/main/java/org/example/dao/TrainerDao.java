@@ -1,11 +1,13 @@
 package org.example.dao;
 
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.storage.DataStorage;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class TrainerDao {
     private final DataStorage dataStorage;
@@ -24,6 +26,7 @@ public class TrainerDao {
     public void createTrainer(TrainerEntity trainerEntity) {
         Long id = idGenerator.generateId("Trainer");
         trainerEntity.setUserId(id);
+        log.debug("Saving trainer: {} to storage", trainerEntity);
         dataStorage.getTrainerStorage().put(id, trainerEntity);
         dataStorage.getTrainerStorageUsernameKey().put(trainerEntity.getUsername(), trainerEntity);
     }
@@ -36,6 +39,7 @@ public class TrainerDao {
      * @return {@code Optional<TrainerEntity>}
      */
     public Optional<TrainerEntity> getTrainerByUsername(String username) {
+        log.debug("Getting trainer with username: {}", username);
         return Optional.ofNullable(dataStorage.getTrainerStorageUsernameKey().get(username));
     }
 
@@ -46,6 +50,7 @@ public class TrainerDao {
      * @return {@code Optional<TrainerEntity>}
      */
     public Optional<TrainerEntity> getTrainerById(Long id) {
+        log.debug("Getting trainer with id: {}", id);
         return Optional.ofNullable(dataStorage.getTrainerStorage().get(id));
     }
 
@@ -58,8 +63,10 @@ public class TrainerDao {
      */
     public void updateTrainerById(Long id, TrainerEntity trainerEntity) {
         if (!dataStorage.getTrainerStorage().containsKey(id)) {
+            log.debug("No trainer with id: {}", id);
             throw new GymIllegalIdException(String.format("No trainer with id: %d", id));
         }
+        log.debug("Updating trainer with id: {} with {}", id, trainerEntity);
         dataStorage.getTrainerStorage().put(id, trainerEntity);
         dataStorage.getTrainerStorageUsernameKey().put(trainerEntity.getUsername(), trainerEntity);
     }

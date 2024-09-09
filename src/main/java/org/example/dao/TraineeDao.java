@@ -1,12 +1,14 @@
 package org.example.dao;
 
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TraineeEntity;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.storage.DataStorage;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class TraineeDao {
     private final DataStorage dataStorage;
     private final IdGenerator idGenerator;
@@ -24,6 +26,7 @@ public class TraineeDao {
     public void createTrainee(TraineeEntity traineeEntity) {
         Long id = idGenerator.generateId("Trainee");
         traineeEntity.setUserId(id);
+        log.debug("Saving trainee: {} to storage", traineeEntity);
         dataStorage.getTraineeStorage().put(id, traineeEntity);
         dataStorage.getTraineeStorageUsernameKey().put(traineeEntity.getUsername(), traineeEntity);
     }
@@ -35,6 +38,7 @@ public class TraineeDao {
      * @return {@code Optional<TraineeEntity>}
      */
     public Optional<TraineeEntity> getTraineeByUsername(String username) {
+        log.debug("Getting trainee with username: {}", username);
         return Optional.ofNullable(dataStorage.getTraineeStorageUsernameKey().get(username));
     }
 
@@ -45,6 +49,7 @@ public class TraineeDao {
      * @return {@code Optional<TraineeEntity>}
      */
     public Optional<TraineeEntity> getTraineeById(Long id) {
+        log.debug("Getting trainee with id: {}", id);
         return Optional.ofNullable(dataStorage.getTraineeStorage().get(id));
     }
 
@@ -56,8 +61,10 @@ public class TraineeDao {
      */
     public void deleteTraineeById(Long id) {
         if (dataStorage.getTraineeStorage().containsKey(id)) {
+            log.debug("Deleting trainee with id: {} from storage", id);
             dataStorage.getTraineeStorage().remove(id);
         } else {
+            log.debug("No trainee with id: {}", id);
             throw new GymIllegalIdException(String.format("No trainee with id: %d", id));
         }
     }
@@ -71,8 +78,10 @@ public class TraineeDao {
      */
     public void updateTraineeById(Long id, TraineeEntity traineeEntity) {
         if (!dataStorage.getTraineeStorage().containsKey(id)) {
+            log.debug("No trainee with id: {}", id);
             throw new GymIllegalIdException(String.format("No trainee with id: %d", id));
         }
+        log.debug("Updating trainee with id: {} with {}", id, traineeEntity);
         dataStorage.getTraineeStorage().put(id, traineeEntity);
         dataStorage.getTraineeStorageUsernameKey().put(traineeEntity.getUsername(), traineeEntity);
     }

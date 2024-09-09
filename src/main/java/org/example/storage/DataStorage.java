@@ -41,6 +41,7 @@ public class DataStorage {
      */
     @PostConstruct
     public void init() {
+        log.debug("Initializing storage bean from files.");
         System.out.println(1);
         ObjectMapper objectMapper = new ObjectMapper();
         System.out.println(2);
