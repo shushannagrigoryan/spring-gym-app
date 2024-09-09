@@ -16,10 +16,10 @@ import org.springframework.stereotype.Component;
 public class UserDao {
     @Autowired
     private DataStorage dataStorage;
-
     private TraineeService traineeService;
     private TrainerService trainerService;
 
+    /** Injection dependencies for USerDao via setter. */
     @Autowired
     public void setDependencies(TraineeService traineeService, TrainerService trainerService) {
         this.traineeService = traineeService;

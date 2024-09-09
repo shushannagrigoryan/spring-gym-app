@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class TrainingService {
-    @Autowired
     private TrainingDao trainingDao;
     private TraineeService traineeService;
     private TrainerService trainerService;
@@ -27,8 +26,12 @@ public class TrainingService {
      * Setting dependencies for TrainingService.
      */
     @Autowired
-    public void setDependencies(TraineeService traineeService, TrainerService trainerService,
-                                SaveDataToFile saveDataToFile, TrainingMapper trainingMapper) {
+    public void setDependencies(TrainingDao trainingDao,
+                                TraineeService traineeService,
+                                TrainerService trainerService,
+                                SaveDataToFile saveDataToFile,
+                                TrainingMapper trainingMapper) {
+        this.trainingDao = trainingDao;
         this.traineeService = traineeService;
         this.trainerService = trainerService;
         this.saveDataToFile = saveDataToFile;

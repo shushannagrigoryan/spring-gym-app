@@ -5,16 +5,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TraineeEntity;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.storage.DataStorage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class TraineeDao {
-    private final DataStorage dataStorage;
-    private final IdGenerator idGenerator;
+    @Autowired
+    private DataStorage dataStorage;
+    private IdGenerator idGenerator;
 
-    public TraineeDao(DataStorage dataStorage, IdGenerator idGenerator) {
-        this.dataStorage = dataStorage;
+    @Autowired
+    public void setDependencies(IdGenerator idGenerator) {
         this.idGenerator = idGenerator;
     }
 

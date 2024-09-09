@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class TrainerService {
-    @Autowired
     private TrainerDao trainerDao;
-    @Autowired
     private UserDao userDao;
     private SaveDataToFile saveDataToFile;
     private TrainerMapper trainerMapper;
@@ -28,8 +26,13 @@ public class TrainerService {
      * Setting dependencies for TrainerService.
      */
     @Autowired
-    public void setDependencies(SaveDataToFile saveDataToFile,
-                                TrainerMapper trainerMapper, ValidatePassword validatePassword) {
+    public void setDependencies(TrainerDao trainerDao,
+                                UserDao userDao,
+                                SaveDataToFile saveDataToFile,
+                                TrainerMapper trainerMapper,
+                                ValidatePassword validatePassword) {
+        this.trainerDao = trainerDao;
+        this.userDao = userDao;
         this.saveDataToFile = saveDataToFile;
         this.trainerMapper = trainerMapper;
         this.validatePassword = validatePassword;

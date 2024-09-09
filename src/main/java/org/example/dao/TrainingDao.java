@@ -4,18 +4,18 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainingEntity;
 import org.example.storage.DataStorage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class TrainingDao {
-    private final DataStorage dataStorage;
+    @Autowired
+    private DataStorage dataStorage;
+    private IdGenerator idGenerator;
 
-    private final IdGenerator idGenerator;
-
-
-    public TrainingDao(DataStorage dataStorage, IdGenerator idGenerator) {
-        this.dataStorage = dataStorage;
+    @Autowired
+    public void setDependencies(IdGenerator idGenerator) {
         this.idGenerator = idGenerator;
     }
 

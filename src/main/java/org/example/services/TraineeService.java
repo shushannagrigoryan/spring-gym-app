@@ -16,11 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class TraineeService {
-
-    @Autowired
     private TraineeDao traineeDao;
-
-    @Autowired
     private UserDao userDao;
     private SaveDataToFile saveDataToFile;
     private TraineeMapper traineeMapper;
@@ -30,8 +26,12 @@ public class TraineeService {
      * Setting the dependencies for the TraineeService bean.
      */
     @Autowired
-    public void setDependencies(SaveDataToFile saveDataToFile,
-                                TraineeMapper traineeMapper, ValidatePassword validatePassword) {
+    public void setDependencies(UserDao userDao, TraineeDao traineeDao,
+                                SaveDataToFile saveDataToFile,
+                                TraineeMapper traineeMapper,
+                                ValidatePassword validatePassword) {
+        this.userDao = userDao;
+        this.traineeDao = traineeDao;
         this.saveDataToFile = saveDataToFile;
         this.traineeMapper = traineeMapper;
         this.validatePassword = validatePassword;

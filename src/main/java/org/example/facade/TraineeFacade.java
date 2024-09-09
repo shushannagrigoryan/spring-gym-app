@@ -7,16 +7,21 @@ import org.example.exceptions.GymIllegalIdException;
 import org.example.exceptions.GymIllegalPasswordException;
 import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class TraineeFacade {
     private final TraineeService traineeService;
-    private final TraineeMapper traineeMapper;
+    private TraineeMapper traineeMapper;
 
-    public TraineeFacade(TraineeService traineeService, TraineeMapper traineeMapper) {
+    public TraineeFacade(TraineeService traineeService) {
         this.traineeService = traineeService;
+    }
+
+    @Autowired
+    public void setDependencies(TraineeMapper traineeMapper) {
         this.traineeMapper = traineeMapper;
     }
 
