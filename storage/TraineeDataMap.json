@@ -88,5 +88,35 @@
     "dateOfBirth" : [ 1999, 6, 20 ],
     "address" : "newAddress1",
     "active" : false
+  },
+  "11" : {
+    "userId" : 11,
+    "firstName" : "A",
+    "lastName" : "C",
+    "username" : "A.C3",
+    "password" : "*u-`f<Yqb,",
+    "dateOfBirth" : [ 2024, 9, 10 ],
+    "address" : "sfsdfsdf",
+    "active" : false
+  },
+  "12" : {
+    "userId" : 12,
+    "firstName" : "A",
+    "lastName" : "C",
+    "username" : "A.C4",
+    "password" : "+s5P9C<kDi",
+    "dateOfBirth" : [ 2024, 9, 10 ],
+    "address" : "sfsdfsdf",
+    "active" : false
+  },
+  "13" : {
+    "userId" : 13,
+    "firstName" : "A",
+    "lastName" : "C",
+    "username" : "A.C5",
+    "password" : "|@'E/_z}SH",
+    "dateOfBirth" : [ 2024, 9, 10 ],
+    "address" : "sfsdfsdf",
+    "active" : false
   }
 }
