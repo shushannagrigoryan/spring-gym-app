@@ -15,14 +15,12 @@ public class TrainerEntity extends UserEntity {
      *
      * @param firstName      The firstname of the trainer.
      * @param lastName       The lastname of the trainer.
-     * @param password       The password of the trainer.
      * @param specialization The specialization of the trainer.
      */
     public TrainerEntity(String firstName, String lastName,
-                         String password, String specialization) {
+                         String specialization) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.password = password;
         this.specialization = specialization;
     }
 

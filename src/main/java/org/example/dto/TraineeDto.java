@@ -15,7 +15,6 @@ import lombok.ToString;
 public class TraineeDto {
     private String firstName;
     private String lastName;
-    private String password;
     private LocalDate dateOfBirth;
     private String address;
 

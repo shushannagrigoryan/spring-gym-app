@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.GymIllegalIdException;
-import org.example.exceptions.GymIllegalPasswordException;
 import org.example.mapper.TrainerMapper;
 import org.example.services.TrainerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +32,9 @@ public class TrainerFacade {
     public void createTrainer(TrainerDto trainerDto) {
         log.info("Request to create trainer");
         TrainerEntity trainerEntity = trainerMapper.dtoToEntity(trainerDto);
-        try {
-            trainerService.createTrainer(trainerEntity);
-            log.info("Successfully created trainer");
-        } catch (GymIllegalPasswordException exception) {
-            log.error(exception.getMessage(), exception);
-        }
+        trainerService.createTrainer(trainerEntity);
+        log.info("Successfully created trainer");
+
     }
 
     /**
@@ -70,7 +66,7 @@ public class TrainerFacade {
         try {
             trainerService.updateTrainerById(id, trainerMapper.dtoToEntity(trainerDto));
             log.info("Successfully updated trainer by id");
-        } catch (GymIllegalPasswordException | GymIllegalIdException exception) {
+        } catch (GymIllegalIdException exception) {
             log.error(exception.getMessage(), exception);
         }
 

@@ -83,6 +83,7 @@ public class TraineeDao {
             log.debug("No trainee with id: {}", id);
             throw new GymIllegalIdException(String.format("No trainee with id: %d", id));
         }
+
         log.debug("Updating trainee with id: {} with {}", id, traineeEntity);
         dataStorage.getTraineeStorage().put(id, traineeEntity);
         dataStorage.getTraineeStorageUsernameKey().put(traineeEntity.getUsername(), traineeEntity);

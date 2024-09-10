@@ -1,5 +1,6 @@
 package org.example.dao;
 
+import java.security.SecureRandom;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TraineeDto;
 import org.example.dto.TrainerDto;
@@ -50,6 +51,7 @@ public class UserDao {
         return username;
     }
 
+
     /**
      * Generates suffix for the given username which is not present both in trainee and trainer maps.
      *
@@ -79,5 +81,16 @@ public class UserDao {
         long suffix = maxTraineeSuffix > maxTrainerSuffix ? maxTraineeSuffix : maxTrainerSuffix;
 
         return suffix + 1;
+    }
+
+    /** Generating random 10 length password. */
+    public String generatePassword() {
+        log.debug("Generating a random password.");
+        StringBuilder stringBuilder = new StringBuilder();
+        SecureRandom secureRandom = new SecureRandom();
+        for (int i = 0; i < 10; i++) {
+            stringBuilder.append((char) secureRandom.nextInt(32, 127));
+        }
+        return stringBuilder.toString();
     }
 }

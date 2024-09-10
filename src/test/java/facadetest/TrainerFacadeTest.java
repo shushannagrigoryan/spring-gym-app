@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.GymIllegalIdException;
-import org.example.exceptions.GymIllegalPasswordException;
 import org.example.facade.TrainerFacade;
 import org.example.mapper.TrainerMapper;
 import org.example.services.TrainerService;
@@ -48,26 +47,6 @@ public class TrainerFacadeTest {
 
         //then
         verify(trainerService).createTrainer(trainerEntity);
-    }
-
-    @Test
-    void testCreateTrainerInvalidPassword() {
-        //given
-        TrainerDto trainerDto = new TrainerDto();
-        String password = "illegalPassword";
-        trainerDto.setPassword(password);
-        TrainerEntity trainerEntity = new TrainerEntity();
-        when(trainerMapper.dtoToEntity(trainerDto)).thenReturn(trainerEntity);
-        doThrow(new GymIllegalPasswordException(password))
-                .when(trainerService).createTrainer(trainerEntity);
-
-        //when
-        trainerFacade.createTrainer(trainerDto);
-
-        //then
-        GymIllegalPasswordException exception = assertThrows(GymIllegalPasswordException.class,
-                () -> trainerService.createTrainer(trainerEntity));
-        assertEquals("Illegal password: " + password, exception.getMessage());
     }
 
     @Test
@@ -118,28 +97,6 @@ public class TrainerFacadeTest {
 
         //then
         verify(trainerService).updateTrainerById(id, trainerEntity);
-    }
-
-    @Test
-    public void testUpdateTrainerByIdInvalidPassword() {
-        //given
-        Long id = 1L;
-        TrainerDto trainerDto = new TrainerDto();
-        String password = "illegalPassword";
-        TrainerEntity trainerEntity = trainerMapper.dtoToEntity(trainerDto);
-        when(trainerMapper.dtoToEntity(trainerDto)).thenReturn(trainerEntity);
-        doThrow(new GymIllegalPasswordException(password))
-                .when(trainerService).updateTrainerById(id, trainerEntity);
-
-        //when
-        trainerFacade.updateTrainerById(id, trainerDto);
-
-        //then
-        verify(trainerService).updateTrainerById(id, trainerEntity);
-        GymIllegalPasswordException exception = assertThrows(GymIllegalPasswordException.class,
-                () -> trainerService.updateTrainerById(id, trainerEntity));
-        assertEquals("Illegal password: " + password, exception.getMessage());
-
     }
 
     @Test

@@ -26,8 +26,7 @@ public class TrainerMapperTest {
     public void testEntityToDto() {
         //given
         TrainerEntity trainerEntity =
-                new TrainerEntity("Jack", "Smith",
-                        "myPassword", "boxing");
+                new TrainerEntity("Jack", "Smith", "boxing");
 
         //when
         TrainerDto trainerDto = trainerMapper.entityToDto(trainerEntity);
@@ -36,7 +35,6 @@ public class TrainerMapperTest {
         assertNotNull(trainerDto);
         assertEquals(trainerEntity.getFirstName(), trainerDto.getFirstName());
         assertEquals(trainerEntity.getLastName(), trainerDto.getLastName());
-        assertEquals(trainerEntity.getPassword(), trainerDto.getPassword());
         assertEquals(trainerEntity.getSpecialization(), trainerDto.getSpecialization());
     }
 
@@ -49,8 +47,7 @@ public class TrainerMapperTest {
     public void testDtoToEntity() {
         //given
         TrainerDto trainerDto =
-                new TrainerDto("Jack", "Smith",
-                        "myPassword", "boxing");
+                new TrainerDto("Jack", "Smith", "boxing");
 
         //when
         TrainerEntity trainerEntity = trainerMapper.dtoToEntity(trainerDto);
@@ -59,7 +56,6 @@ public class TrainerMapperTest {
         assertNotNull(trainerEntity);
         assertEquals(trainerDto.getFirstName(), trainerEntity.getFirstName());
         assertEquals(trainerDto.getLastName(), trainerEntity.getLastName());
-        assertEquals(trainerDto.getPassword(), trainerEntity.getPassword());
         assertEquals(trainerDto.getSpecialization(), trainerEntity.getSpecialization());
     }
 }

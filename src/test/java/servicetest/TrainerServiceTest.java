@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -14,10 +13,8 @@ import org.example.dao.UserDao;
 import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.GymIllegalIdException;
-import org.example.exceptions.GymIllegalPasswordException;
 import org.example.mapper.TrainerMapper;
 import org.example.services.TrainerService;
-import org.example.services.ValidatePassword;
 import org.example.storage.SaveDataToFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,8 +33,6 @@ public class TrainerServiceTest {
 
     @Mock
     private SaveDataToFile saveDataToFile;
-    @Mock
-    private ValidatePassword validatePassword;
 
     @Mock
     private TrainerMapper trainerMapper;
@@ -51,7 +46,6 @@ public class TrainerServiceTest {
         String password = "myPassword";
         TrainerEntity trainerEntity = new TrainerEntity();
         trainerEntity.setPassword(password);
-        when(validatePassword.passwordNotValid(trainerEntity.getPassword())).thenReturn(false);
         when(userDao.generateUsername(trainerEntity.getFirstName(), trainerEntity.getLastName()))
                 .thenReturn("Jack.Jones");
         doNothing().when(trainerDao).createTrainer(trainerEntity);
@@ -61,35 +55,18 @@ public class TrainerServiceTest {
         trainerService.createTrainer(trainerEntity);
 
         //then
-        verify(validatePassword).passwordNotValid(trainerEntity.getPassword());
+        verify(userDao).generateUsername(trainerEntity.getFirstName(), trainerEntity.getLastName());
+        verify(userDao).generatePassword();
     }
-
-    @Test
-    public void testCreateTrainerInvalidPassword() {
-        //given
-        String password = "myPassword";
-        TrainerEntity trainerEntity = new TrainerEntity();
-        trainerEntity.setPassword(password);
-        when(validatePassword.passwordNotValid(trainerEntity.getPassword())).thenReturn(true);
-
-        //then
-        GymIllegalPasswordException exception =
-                assertThrows(GymIllegalPasswordException.class,
-                        () -> trainerService.createTrainer(trainerEntity));
-        assertEquals("Illegal password: " + password, exception.getMessage());
-
-    }
-
 
     @Test
     public void testGetTrainerByUsernameSuccess() {
         //given
         String firstName = "trainerF1";
         String lastName = "trainerF2";
-        String password = "myPassword";
         String specialization = "boxing";
         String username = firstName.concat(".").concat(lastName);
-        TrainerEntity trainerEntity = new TrainerEntity(firstName, lastName, password, specialization);
+        TrainerEntity trainerEntity = new TrainerEntity(firstName, lastName, specialization);
         when(trainerDao.getTrainerByUsername(username)).thenReturn(Optional.of(trainerEntity));
 
         //when
@@ -121,14 +98,13 @@ public class TrainerServiceTest {
         //given
         String firstName = "trainerF1";
         String lastName = "trainerF2";
-        String password = "myPassword";
         String specialization = "boxing";
         Long id = 1L;
         TrainerDto trainerDto =
-                new TrainerDto(firstName, lastName, password, specialization);
+                new TrainerDto(firstName, lastName, specialization);
 
         TrainerEntity trainerEntity =
-                new TrainerEntity(firstName, lastName, password, specialization);
+                new TrainerEntity(firstName, lastName, specialization);
         when(trainerMapper.entityToDto(trainerEntity)).thenReturn(trainerDto);
         when(trainerDao.getTrainerById(id)).thenReturn(Optional.of(trainerEntity));
 
@@ -155,69 +131,41 @@ public class TrainerServiceTest {
     }
 
     @Test
-    public void testUpdateTrainerByIdInvalidPassword() {
-        //given
-        TrainerEntity trainer = new TrainerEntity();
-        String password = "myPassword";
-        Long id = 1L;
-        trainer.setPassword(password);
-        when(validatePassword.passwordNotValid(password)).thenReturn(true);
-
-        //then
-        GymIllegalPasswordException exception =
-                assertThrows(GymIllegalPasswordException.class,
-                        () -> trainerService.updateTrainerById(id, trainer));
-        assertEquals("Illegal password: " + password, exception.getMessage());
-        verify(validatePassword).passwordNotValid(password);
-
-    }
-
-    @Test
     public void testUpdateTrainerByIdInvalidId() {
         //given
         TrainerEntity trainer = new TrainerEntity();
         String password = "myPassword";
         trainer.setPassword(password);
         Long id = 1L;
-        when(validatePassword.passwordNotValid(trainer.getPassword())).thenReturn(false);
-        doThrow(new GymIllegalIdException("No trainer with id: " + id))
-                .when(trainerDao).updateTrainerById(id, trainer);
+
+        when(trainerDao.getTrainerById(id)).thenReturn(Optional.empty());
 
         //then
         GymIllegalIdException exception =
                 assertThrows(GymIllegalIdException.class,
                         () -> trainerService.updateTrainerById(id, trainer));
         assertEquals("No trainer with id: " + id, exception.getMessage());
-
-        verify(trainerDao).updateTrainerById(id, trainer);
-
     }
 
     @Test
     public void testUpdateTrainerSuccess() {
+        //given
         String firstName = "trainerF1";
         String lastName = "trainerF2";
-        String password = "myPassword";
-        String username = firstName.concat(".").concat(lastName);
         String specialization = "boxing";
         TrainerEntity trainerEntity = new TrainerEntity(firstName, lastName,
-                password, specialization);
+                specialization);
         Long id = 1L;
 
-        when(validatePassword.passwordNotValid(trainerEntity.getPassword())).thenReturn(false);
-        when(userDao.generateUsername(trainerEntity.getFirstName(), trainerEntity.getLastName()))
-                .thenReturn(username);
+        when(trainerDao.getTrainerById(id)).thenReturn(Optional.of(trainerEntity));
 
-
+        //when
         trainerService.updateTrainerById(id, trainerEntity);
 
-        assertEquals(username, trainerEntity.getUsername());
-        verify(validatePassword).passwordNotValid(trainerEntity.getPassword());
-        verify(userDao).generateUsername(trainerEntity.getFirstName(), trainerEntity.getLastName());
+        //then
         verify(trainerDao).updateTrainerById(id, trainerEntity);
         verify(saveDataToFile).writeMapToFile("Trainer");
-        assertEquals(username, trainerEntity.getUsername());
-        assertEquals(id, trainerEntity.getUserId());
+
 
     }
 

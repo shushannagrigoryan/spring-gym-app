@@ -68,6 +68,7 @@ public class TrainerDao {
             log.debug("No trainer with id: {}", id);
             throw new GymIllegalIdException(String.format("No trainer with id: %d", id));
         }
+
         log.debug("Updating trainer with id: {} with {}", id, trainerEntity);
         dataStorage.getTrainerStorage().put(id, trainerEntity);
         dataStorage.getTrainerStorageUsernameKey().put(trainerEntity.getUsername(), trainerEntity);

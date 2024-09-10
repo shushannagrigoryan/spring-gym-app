@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
 import org.example.exceptions.GymIllegalIdException;
-import org.example.exceptions.GymIllegalPasswordException;
 import org.example.facade.TraineeFacade;
 import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
@@ -48,26 +47,6 @@ public class TraineeFacadeTest {
 
         //then
         verify(traineeService).createTrainee(traineeEntity);
-    }
-
-    @Test
-    void testCreateTraineeInvalidPassword() {
-        //given
-        TraineeDto traineeDto = new TraineeDto();
-        String password = "illegalPassword";
-        traineeDto.setPassword(password);
-        TraineeEntity traineeEntity = new TraineeEntity();
-        when(traineeMapper.dtoToEntity(traineeDto)).thenReturn(traineeEntity);
-        doThrow(new GymIllegalPasswordException(password))
-                .when(traineeService).createTrainee(traineeEntity);
-
-        //when
-        traineeFacade.createTrainee(traineeDto);
-
-        //then
-        GymIllegalPasswordException exception = assertThrows(GymIllegalPasswordException.class,
-                () -> traineeService.createTrainee(traineeEntity));
-        assertEquals("Illegal password: " + password, exception.getMessage());
     }
 
     @Test
@@ -145,28 +124,6 @@ public class TraineeFacadeTest {
 
         //then
         verify(traineeService).updateTraineeById(id, traineeEntity);
-    }
-
-    @Test
-    public void testUpdateTraineeByIdInvalidPassword() {
-        //given
-        Long id = 1L;
-        TraineeDto traineeDto = new TraineeDto();
-        String password = "illegalPassword";
-        TraineeEntity traineeEntity = traineeMapper.dtoToEntity(traineeDto);
-        when(traineeMapper.dtoToEntity(traineeDto)).thenReturn(traineeEntity);
-        doThrow(new GymIllegalPasswordException(password))
-                .when(traineeService).updateTraineeById(id, traineeEntity);
-
-        //when
-        traineeFacade.updateTraineeById(id, traineeDto);
-
-        //then
-        verify(traineeService).updateTraineeById(id, traineeEntity);
-        GymIllegalPasswordException exception = assertThrows(GymIllegalPasswordException.class,
-                () -> traineeService.updateTraineeById(id, traineeEntity));
-        assertEquals("Illegal password: " + password, exception.getMessage());
-
     }
 
     @Test
