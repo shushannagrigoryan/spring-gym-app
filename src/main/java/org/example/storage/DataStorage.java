@@ -42,18 +42,14 @@ public class DataStorage {
     @PostConstruct
     public void init() {
         log.debug("Initializing storage bean from files.");
-        System.out.println(1);
         ObjectMapper objectMapper = new ObjectMapper();
-        System.out.println(2);
         objectMapper.findAndRegisterModules();
-        System.out.println(3);
         try {
             System.out.println(traineeStorageFile);
             File traineeFile = new File(traineeStorageFile);
             File trainerFile = new File(trainerStorageFile);
             File trainingFile = new File(trainingStorageFile);
 
-            System.out.println(4);
             if (traineeFile.length() > 0) {
                 initTrainee(objectMapper, traineeFile);
             }
