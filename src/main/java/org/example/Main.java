@@ -21,7 +21,5 @@ public class Main {
 
         TrainingFacade trainingFacade = context.getBean(TrainingFacade.class);
 
-
-
     }
 }

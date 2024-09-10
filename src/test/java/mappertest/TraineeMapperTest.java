@@ -28,7 +28,7 @@ public class TraineeMapperTest {
         //given
         TraineeEntity traineeEntity =
                 new TraineeEntity("Jack", "Smith",
-                        "myPassword", LocalDate.now(), "myAddress");
+                        LocalDate.now(), "myAddress");
 
         //when
         TraineeDto traineeDto = traineeMapper.entityToDto(traineeEntity);
@@ -37,7 +37,6 @@ public class TraineeMapperTest {
         assertNotNull(traineeDto);
         assertEquals(traineeEntity.getFirstName(), traineeDto.getFirstName());
         assertEquals(traineeEntity.getLastName(), traineeDto.getLastName());
-        assertEquals(traineeEntity.getPassword(), traineeDto.getPassword());
         assertEquals(traineeEntity.getAddress(), traineeDto.getAddress());
         assertEquals(traineeEntity.getDateOfBirth(), traineeDto.getDateOfBirth());
     }
@@ -52,7 +51,7 @@ public class TraineeMapperTest {
         //given
         TraineeDto traineeDto =
                 new TraineeDto("Jack", "Smith",
-                        "myPassword", LocalDate.now(), "myAddress");
+                        LocalDate.now(), "myAddress");
 
         //when
         TraineeEntity traineeEntity = traineeMapper.dtoToEntity(traineeDto);
@@ -61,7 +60,6 @@ public class TraineeMapperTest {
         assertNotNull(traineeEntity);
         assertEquals(traineeDto.getFirstName(), traineeEntity.getFirstName());
         assertEquals(traineeDto.getLastName(), traineeEntity.getLastName());
-        assertEquals(traineeDto.getPassword(), traineeEntity.getPassword());
         assertEquals(traineeDto.getAddress(), traineeEntity.getAddress());
         assertEquals(traineeDto.getDateOfBirth(), traineeEntity.getDateOfBirth());
     }

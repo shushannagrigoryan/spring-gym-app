@@ -1,325 +1,118 @@
 {
   "0" : {
     "userId" : 0,
-    "firstName" : "A",
-    "lastName" : "B",
-    "username" : "A.B",
-    "password" : "myPassword",
+    "firstName" : "Sam",
+    "lastName" : "Smith",
+    "username" : "Sam.Smith",
+    "password" : "HRu)e2~\"G7",
     "specialization" : "boxing",
     "active" : false
   },
   "1" : {
     "userId" : 1,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith0",
-    "password" : "myPassword",
+    "firstName" : "A",
+    "lastName" : "B",
+    "username" : "A.B",
+    "password" : null,
     "specialization" : "boxing",
     "active" : false
   },
   "2" : {
     "userId" : 2,
-    "firstName" : "A",
-    "lastName" : "B",
-    "username" : "A.B0",
-    "password" : "myPassword",
-    "specialization" : "boxing",
+    "firstName" : "newFN",
+    "lastName" : "newLN",
+    "username" : "newFN.newLN",
+    "password" : "2+wz)\\Di%I",
+    "specialization" : "newSpecialization",
     "active" : false
   },
   "3" : {
     "userId" : 3,
-    "firstName" : "John",
+    "firstName" : "Sam",
     "lastName" : "Smith",
-    "username" : "John.Smith2",
-    "password" : "myPassword",
+    "username" : "Sam.Smith1",
+    "password" : "t[?.gihD.2",
     "specialization" : "boxing",
     "active" : false
   },
   "4" : {
     "userId" : 4,
-    "firstName" : "A",
-    "lastName" : "B",
-    "username" : "A.B1",
-    "password" : "myPassword",
+    "firstName" : "Jack",
+    "lastName" : "Jones",
+    "username" : "Jack.Jones0",
+    "password" : "$Cj+>>Eu~K",
     "specialization" : "boxing",
     "active" : false
   },
   "5" : {
     "userId" : 5,
-    "firstName" : "John",
+    "firstName" : "Sam",
     "lastName" : "Smith",
-    "username" : "John.Smith4",
-    "password" : "myPassword",
+    "username" : "Sam.Smith2",
+    "password" : "`x7py7p_9 ",
     "specialization" : "boxing",
     "active" : false
   },
   "6" : {
     "userId" : 6,
-    "firstName" : "A",
-    "lastName" : "B",
-    "username" : "A.B2",
-    "password" : "myPassword",
+    "firstName" : "Jack",
+    "lastName" : "Smith",
+    "username" : "Jack.Smith2",
+    "password" : "64)gYF;x6K",
     "specialization" : "boxing",
     "active" : false
   },
   "7" : {
     "userId" : 7,
-    "firstName" : "John",
+    "firstName" : "Sam",
     "lastName" : "Smith",
-    "username" : "John.Smith6",
-    "password" : "myPassword",
+    "username" : "Sam.Smith3",
+    "password" : ":,2<O'{(07",
     "specialization" : "boxing",
     "active" : false
   },
   "8" : {
     "userId" : 8,
-    "firstName" : "A",
-    "lastName" : "B",
-    "username" : "A.B3",
-    "password" : "myPassword",
+    "firstName" : "Jack",
+    "lastName" : "Jones",
+    "username" : "Jack.Jones1",
+    "password" : "0'F?YI^lYp",
     "specialization" : "boxing",
     "active" : false
   },
   "9" : {
     "userId" : 9,
-    "firstName" : "John",
+    "firstName" : "Sam",
     "lastName" : "Smith",
-    "username" : "John.Smith8",
-    "password" : "myPassword",
+    "username" : "Sam.Smith4",
+    "password" : "nHH#+mK95;",
     "specialization" : "boxing",
     "active" : false
   },
   "10" : {
     "userId" : 10,
     "firstName" : "A",
-    "lastName" : "B",
-    "username" : "A.B4",
-    "password" : "myPassword",
+    "lastName" : "D",
+    "username" : "A.D7",
+    "password" : "Qm5!jQ)q+k",
     "specialization" : "boxing",
     "active" : false
   },
   "11" : {
     "userId" : 11,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith10",
-    "password" : "myPassword",
+    "firstName" : "A",
+    "lastName" : "D",
+    "username" : "A.D4",
+    "password" : "[@uRkVd(Y4",
     "specialization" : "boxing",
     "active" : false
   },
   "12" : {
     "userId" : 12,
     "firstName" : "A",
-    "lastName" : "B",
-    "username" : "A.B5",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "13" : {
-    "userId" : 13,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith12",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "14" : {
-    "userId" : 14,
-    "firstName" : "A",
-    "lastName" : "B",
-    "username" : "A.B6",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "15" : {
-    "userId" : 15,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith14",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "16" : {
-    "userId" : 16,
-    "firstName" : "A",
-    "lastName" : "B",
-    "username" : "A.B7",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "17" : {
-    "userId" : 17,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith16",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "18" : {
-    "userId" : 18,
-    "firstName" : "A",
-    "lastName" : "B",
-    "username" : "A.B8",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "19" : {
-    "userId" : 19,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith18",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "20" : {
-    "userId" : 20,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith20",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "21" : {
-    "userId" : 21,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith22",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "22" : {
-    "userId" : 22,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith24",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "23" : {
-    "userId" : 23,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith26",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "24" : {
-    "userId" : 24,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith28",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "25" : {
-    "userId" : 25,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith30",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "26" : {
-    "userId" : 26,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith32",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "27" : {
-    "userId" : 27,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith34",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "28" : {
-    "userId" : 28,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith36",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "29" : {
-    "userId" : 29,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith38",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "30" : {
-    "userId" : 30,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith40",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "31" : {
-    "userId" : 31,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith42",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "32" : {
-    "userId" : 32,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith45",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "33" : {
-    "userId" : 33,
-    "firstName" : "A",
-    "lastName" : "B",
-    "username" : "A.B9",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "34" : {
-    "userId" : 34,
-    "firstName" : "John",
-    "lastName" : "Smith",
-    "username" : "John.Smith46",
-    "password" : "myPassword",
-    "specialization" : "boxing",
-    "active" : false
-  },
-  "35" : {
-    "userId" : 35,
-    "firstName" : "A",
-    "lastName" : "C",
-    "username" : "A.C0",
-    "password" : "myPassword",
+    "lastName" : "D",
+    "username" : "A.D6",
+    "password" : "]9Kl?FAa]C",
     "specialization" : "boxing",
     "active" : false
   }

@@ -15,10 +15,8 @@ import org.example.dao.UserDao;
 import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
 import org.example.exceptions.GymIllegalIdException;
-import org.example.exceptions.GymIllegalPasswordException;
 import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
-import org.example.services.ValidatePassword;
 import org.example.storage.SaveDataToFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,9 +39,6 @@ public class TraineeServiceTest {
     @Mock
     private TraineeMapper traineeMapper;
 
-    @Mock
-    private ValidatePassword validatePassword;
-
     @InjectMocks
     private TraineeService traineeService;
 
@@ -53,7 +48,6 @@ public class TraineeServiceTest {
         String password = "myPassword";
         TraineeEntity traineeEntity = new TraineeEntity();
         traineeEntity.setPassword(password);
-        when(validatePassword.passwordNotValid(traineeEntity.getPassword())).thenReturn(false);
         when(userDao.generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName()))
                 .thenReturn("Jack.Jones");
         doNothing().when(traineeDao).createTrainee(traineeEntity);
@@ -63,33 +57,19 @@ public class TraineeServiceTest {
         traineeService.createTrainee(traineeEntity);
 
         //then
-        verify(validatePassword).passwordNotValid(traineeEntity.getPassword());
+        verify(userDao).generatePassword();
+        verify(userDao).generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName());
     }
 
-    @Test
-    public void testCreateTraineeInvalidPassword() {
-        //given
-        String password = "myPassword";
-        TraineeEntity traineeEntity = new TraineeEntity();
-        traineeEntity.setPassword(password);
-        when(validatePassword.passwordNotValid(traineeEntity.getPassword())).thenReturn(true);
-
-        //then
-        GymIllegalPasswordException exception =
-                assertThrows(GymIllegalPasswordException.class,
-                        () -> traineeService.createTrainee(traineeEntity));
-        assertEquals("Illegal password: " + password, exception.getMessage());
-    }
 
     @Test
     public void testGetTraineeByUsernameSuccess() {
         //given
         String firstName = "traineeF1";
         String lastName = "traineeF2";
-        String password = "myPassword";
         String address = "myAddress";
         String username = firstName.concat(".").concat(lastName);
-        TraineeEntity traineeEntity = new TraineeEntity(firstName, lastName, password, LocalDate.now(), address);
+        TraineeEntity traineeEntity = new TraineeEntity(firstName, lastName, LocalDate.now(), address);
         when(traineeDao.getTraineeByUsername(username)).thenReturn(Optional.of(traineeEntity));
 
         //when
@@ -120,14 +100,13 @@ public class TraineeServiceTest {
         //given
         String firstName = "traineeF1";
         String lastName = "traineeF2";
-        String password = "myPassword";
         String address = "myAddress";
         Long id = 1L;
         TraineeDto traineeDto =
-                new TraineeDto(firstName, lastName, password, LocalDate.now(), address);
+                new TraineeDto(firstName, lastName, LocalDate.now(), address);
 
         TraineeEntity traineeEntity =
-            new TraineeEntity(firstName, lastName, password, LocalDate.now(), address);
+            new TraineeEntity(firstName, lastName, LocalDate.now(), address);
         when(traineeMapper.entityToDto(traineeEntity)).thenReturn(traineeDto);
         when(traineeDao.getTraineeById(id)).thenReturn(Optional.of(traineeEntity));
 
@@ -185,70 +164,39 @@ public class TraineeServiceTest {
     }
 
     @Test
-    public void testUpdateTraineeByIdInvalidPassword() {
-        //given
-        TraineeEntity trainee = new TraineeEntity();
-        String password = "myPassword";
-        Long id = 1L;
-        trainee.setPassword(password);
-        when(validatePassword.passwordNotValid(password)).thenReturn(true);
-
-        //then
-        GymIllegalPasswordException exception =
-                assertThrows(GymIllegalPasswordException.class,
-                        () -> traineeService.updateTraineeById(id, trainee));
-        assertEquals("Illegal password: " + password, exception.getMessage());
-        verify(validatePassword).passwordNotValid(password);
-
-    }
-
-    @Test
     public void testUpdateTraineeByIdInvalidId() {
         //given
         TraineeEntity trainee = new TraineeEntity();
         String password = "myPassword";
         trainee.setPassword(password);
         Long id = 1L;
-        when(validatePassword.passwordNotValid(trainee.getPassword())).thenReturn(false);
-        doThrow(new GymIllegalIdException("No trainee with id: " + id))
-        .when(traineeDao).updateTraineeById(id, trainee);
 
         //then
         GymIllegalIdException exception =
                 assertThrows(GymIllegalIdException.class,
                         () -> traineeService.updateTraineeById(id, trainee));
         assertEquals("No trainee with id: " + id, exception.getMessage());
-
-        verify(traineeDao).updateTraineeById(id, trainee);
     }
 
     @Test
     public void testUpdateTraineeSuccess() {
+        //given
         String firstName = "traineeF1";
         String lastName = "traineeF2";
-        String password = "myPassword";
-        String username = firstName.concat(".").concat(lastName);
         String address = "myAddress";
         LocalDate dateOfBirth = LocalDate.of(2024, 9, 3);
         TraineeEntity traineeEntity = new TraineeEntity(firstName, lastName,
-                password, dateOfBirth, address);
+                dateOfBirth, address);
         Long id = 1L;
 
-        when(validatePassword.passwordNotValid(traineeEntity.getPassword())).thenReturn(false);
-        when(userDao.generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName()))
-                .thenReturn(username);
+        when(traineeDao.getTraineeById(id)).thenReturn(Optional.of(traineeEntity));
 
-
+        //when
         traineeService.updateTraineeById(id, traineeEntity);
 
-        assertEquals(username, traineeEntity.getUsername());
-        verify(validatePassword).passwordNotValid(traineeEntity.getPassword());
-        verify(userDao).generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName());
+        //then
         verify(traineeDao).updateTraineeById(id, traineeEntity);
         verify(saveDataToFile).writeMapToFile("Trainee");
-        assertEquals(username, traineeEntity.getUsername());
-        assertEquals(id, traineeEntity.getUserId());
-
     }
 
 

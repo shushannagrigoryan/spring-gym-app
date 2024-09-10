@@ -29,14 +29,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class TraineeDaoTest {
     @Mock
     private DataStorage dataStorage;
-
     @Spy
     private Map<Long, TraineeEntity> traineeEntityMap = new HashMap<>();
     @Spy
     private Map<String, TraineeEntity> traineeEntityMapUsernameKey = new HashMap<>();
     @Mock
     private IdGenerator idGenerator;
-
     @InjectMocks
     private TraineeDao traineeDao;
 
@@ -123,7 +121,7 @@ public class TraineeDaoTest {
         //given
         Long id = 1L;
         TraineeEntity traineeEntity = new TraineeEntity("A", "B",
-                "myPassword", LocalDate.now(), "myAddress");
+                LocalDate.now(), "myAddress");
         traineeEntity.setUserId(id);
 
         when(traineeEntityMap.containsKey(id)).thenReturn(true);
@@ -143,7 +141,7 @@ public class TraineeDaoTest {
         //given
         Long id = 1L;
         TraineeEntity traineeEntity = new TraineeEntity("A", "B",
-                "myPassword", LocalDate.now(), "myAddress");
+                LocalDate.now(), "myAddress");
         traineeEntity.setUserId(id);
         when(traineeEntityMap.containsKey(id)).thenReturn(false);
 

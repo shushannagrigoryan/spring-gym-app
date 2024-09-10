@@ -18,7 +18,7 @@ public class TraineeMapper {
         }
 
         return new TraineeDto(traineeEntity.getFirstName(), traineeEntity.getLastName(),
-                traineeEntity.getPassword(), traineeEntity.getDateOfBirth(), traineeEntity.getAddress());
+                traineeEntity.getDateOfBirth(), traineeEntity.getAddress());
     }
 
     /**
@@ -35,7 +35,6 @@ public class TraineeMapper {
         traineeEntity.setLastName(traineeDto.getLastName());
         traineeEntity.setDateOfBirth(traineeDto.getDateOfBirth());
         traineeEntity.setAddress(traineeDto.getAddress());
-        traineeEntity.setPassword(traineeDto.getPassword());
 
         return traineeEntity;
     }

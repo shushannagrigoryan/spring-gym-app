@@ -35,7 +35,6 @@ public class TrainerDaoTest {
     private Map<String, TrainerEntity> trainerEntityMapUsernameKey = new HashMap<>();
     @Mock
     private IdGenerator idGenerator;
-
     @InjectMocks
     private TrainerDao trainerDao;
 
@@ -98,10 +97,8 @@ public class TrainerDaoTest {
     void testUpdateTrainerByIdSuccess() {
         //given
         Long id = 1L;
-        TrainerEntity trainerEntity = new TrainerEntity("A", "B",
-                "myPassword", "boxing");
+        TrainerEntity trainerEntity = new TrainerEntity("A", "B", "boxing");
         trainerEntity.setUserId(id);
-
         when(trainerEntityMap.containsKey(id)).thenReturn(true);
 
         //when
@@ -118,8 +115,7 @@ public class TrainerDaoTest {
     void testUpdateTrainerByIdThrowsException() {
         //given
         Long id = 1L;
-        TrainerEntity trainerEntity = new TrainerEntity("A", "B",
-                "myPassword", "boxing");
+        TrainerEntity trainerEntity = new TrainerEntity("A", "B", "boxing");
         trainerEntity.setUserId(id);
         when(trainerEntityMap.containsKey(id)).thenReturn(false);
 

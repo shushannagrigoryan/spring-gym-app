@@ -7,7 +7,6 @@ import org.example.dao.UserDao;
 import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.GymIllegalIdException;
-import org.example.exceptions.GymIllegalPasswordException;
 import org.example.mapper.TrainerMapper;
 import org.example.storage.SaveDataToFile;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ public class TrainerService {
     private UserDao userDao;
     private SaveDataToFile saveDataToFile;
     private TrainerMapper trainerMapper;
-    private ValidatePassword validatePassword;
 
     /**
      * Setting dependencies for TrainerService.
@@ -29,13 +27,11 @@ public class TrainerService {
     public void setDependencies(TrainerDao trainerDao,
                                 UserDao userDao,
                                 SaveDataToFile saveDataToFile,
-                                TrainerMapper trainerMapper,
-                                ValidatePassword validatePassword) {
+                                TrainerMapper trainerMapper) {
         this.trainerDao = trainerDao;
         this.userDao = userDao;
         this.saveDataToFile = saveDataToFile;
         this.trainerMapper = trainerMapper;
-        this.validatePassword = validatePassword;
     }
 
     /**
@@ -45,16 +41,10 @@ public class TrainerService {
      */
     public void createTrainer(TrainerEntity trainerEntity) {
         log.debug("Creating trainer: {}", trainerEntity);
-
-        if (validatePassword.passwordNotValid(trainerEntity.getPassword())) {
-            log.debug("Failed to created trainer: {} .Invalid password for trainer: {}",
-                    trainerEntity, trainerEntity.getPassword());
-            throw new GymIllegalPasswordException(trainerEntity.getPassword());
-        }
-
         String username = userDao.generateUsername(trainerEntity.getFirstName(),
                 trainerEntity.getLastName());
         trainerEntity.setUsername(username);
+        trainerEntity.setPassword(userDao.generatePassword());
         trainerDao.createTrainer(trainerEntity);
         log.debug("Successfully created a new trainer with username: {}", username);
         saveDataToFile.writeMapToFile("Trainer");
@@ -97,23 +87,37 @@ public class TrainerService {
 
     /**
      * Updates trainer by id.
-     * If new password is not valid throws {@code GymIllegalPasswordException}.
      *
      * @param id            of the trainer
      * @param trainerEntity to update with
      */
     public void updateTrainerById(Long id, TrainerEntity trainerEntity) {
         log.debug("Updating trainer by id: {}", id);
-        if (validatePassword.passwordNotValid(trainerEntity.getPassword())) {
-            log.debug("Invalid password for trainer");
-            throw new GymIllegalPasswordException(trainerEntity.getPassword());
+        Optional<TrainerEntity> trainer = trainerDao.getTrainerById(id);
+
+        if (trainer.isEmpty()) {
+            log.debug("No trainer with id: {}", id);
+            throw new GymIllegalIdException(String.format("No trainer with id: %d", id));
         }
 
-        String username = userDao.generateUsername(trainerEntity.getFirstName(),
-                trainerEntity.getLastName());
-        trainerEntity.setUsername(username);
-        trainerEntity.setUserId(id);
-        trainerDao.updateTrainerById(id, trainerEntity);
+        TrainerEntity trainerToUpdate = trainer.get();
+        String updatedFirstName = trainerEntity.getFirstName();
+        String updatedLastName = trainerEntity.getLastName();
+        String firstName = trainerToUpdate.getFirstName();
+        String lastName = trainerToUpdate.getLastName();
+
+        if (!((firstName.equals(updatedFirstName)) && (lastName.equals(updatedLastName)))) {
+            String username = userDao
+                    .generateUsername(updatedFirstName, updatedLastName);
+            trainerToUpdate.setUsername(username);
+        }
+
+        trainerToUpdate.setFirstName(updatedFirstName);
+        trainerToUpdate.setLastName(updatedLastName);
+        trainerToUpdate.setSpecialization(trainerEntity.getSpecialization());
+        trainerToUpdate.setActive(trainerEntity.isActive());
+
+        trainerDao.updateTrainerById(id, trainerToUpdate);
         log.debug("Successfully updated trainer with id: {}", id);
         saveDataToFile.writeMapToFile("Trainer");
     }
