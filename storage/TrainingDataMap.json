@@ -142,5 +142,14 @@
     "trainingType" : "CARDIO",
     "trainingDate" : [ 2024, 9, 9, 14, 48, 33, 773854800 ],
     "trainingDuration" : 3600.000000000
+  },
+  "16" : {
+    "trainingId" : 16,
+    "trainerId" : 1,
+    "traineeId" : 1,
+    "trainingName" : "ffew",
+    "trainingType" : "CARDIO",
+    "trainingDate" : [ 2024, 9, 9, 19, 16, 2, 320688100 ],
+    "trainingDuration" : 3600.000000000
   }
 }

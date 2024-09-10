@@ -101,14 +101,9 @@ public class TraineeService {
      */
     public void deleteTraineeById(Long id) {
         log.debug("Deleting trainee by id: {}", id);
-        try {
-            traineeDao.deleteTraineeById(id);
-            saveDataToFile.writeMapToFile("Trainee");
-            log.debug("Successfully deleted trainee by id: {}", id);
-        } catch (GymIllegalIdException exception) {
-            log.debug("Failed to delete trainee by id: {}", id);
-            throw exception;
-        }
+        traineeDao.deleteTraineeById(id);
+        saveDataToFile.writeMapToFile("Trainee");
+        log.debug("Successfully deleted trainee by id: {}", id);
     }
 
     /**
