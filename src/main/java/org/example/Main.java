@@ -1,6 +1,7 @@
 package org.example;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.dao.PasswordGenerator;
 import org.example.facade.TraineeFacade;
 import org.example.facade.TrainerFacade;
 import org.example.facade.TrainingFacade;
@@ -20,8 +21,6 @@ public class Main {
         TrainerFacade trainerFacade = context.getBean(TrainerFacade.class);
 
         TrainingFacade trainingFacade = context.getBean(TrainingFacade.class);
-
-
 
     }
 }
