@@ -10,7 +10,7 @@ java{
 
 group = 'org.example'
 version = '1.0-SNAPSHOT'
-description = 'spring-core-task'
+description = 'spring-gym-task'
 
 
 repositories {
