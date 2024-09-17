@@ -1,5 +1,14 @@
 package org.example.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,32 +16,18 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
+@Entity
+@Table(name = "trainers")
 public class TrainerEntity extends UserEntity {
-    private String specialization;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long ID;
+    @OneToOne
+    private TrainingType specialization;
+    @OneToOne
+    private UserEntity user;
 
-    /**
-     * Constructs a new instance of {@code TrainerEntity}.
-     *
-     * @param firstName      The firstname of the trainer.
-     * @param lastName       The lastname of the trainer.
-     * @param specialization The specialization of the trainer.
-     */
-    public TrainerEntity(String firstName, String lastName,
-                         String specialization) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.specialization = specialization;
-    }
+    @OneToMany(mappedBy = "trainer")
+    private List<TrainingEntity> trainings = new ArrayList<>();
 
-    @Override
-    public String toString() {
-        return "TrainerEntity{"
-                + "specialization='" + specialization + '\''
-                + ", userId=" + userId
-                + ", firstName='" + firstName + '\''
-                + ", lastName='" + lastName + '\''
-                + ", username='" + username + '\''
-                + ", password='" + password + '\''
-                + ", isActive=" + isActive + '}';
-    }
 }

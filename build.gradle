@@ -33,6 +33,11 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.13.0'
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.13.0'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.26.3'
+    implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.0.Final'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
+
+
+
 
 }
 
