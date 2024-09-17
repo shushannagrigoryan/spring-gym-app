@@ -19,9 +19,9 @@ public class UserDao {
 
     public void createUser(UserEntity userEntity) {
         System.out.println("userEntity = " + userEntity);
-        Session session = sessionFactory.openSession();
+
         Transaction transaction = null;
-        try {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.persist(userEntity);
             transaction.commit();
@@ -30,8 +30,6 @@ public class UserDao {
                 transaction.rollback();
             }
             log.debug("hibernate exception");
-        } finally {
-            session.close();
         }
 
         log.debug("Saving user: {} to storage", userEntity);

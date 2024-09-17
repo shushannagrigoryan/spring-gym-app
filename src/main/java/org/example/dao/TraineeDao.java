@@ -24,12 +24,11 @@ public class TraineeDao {
 
 
     /**
-     * Generates id for the trainee entity and adds that entity to the storage map.
+     * Adding trainee to database.
      *
      * @param traineeEntity {@code TraineeEntity} to be added to storage
      */
     public void createTrainee(TraineeEntity traineeEntity) {
-        System.out.println("traineeEntity = " + traineeEntity);
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -52,7 +51,7 @@ public class TraineeDao {
      * Gets trainee by username.
      *
      * @param username username of the trainee
-     * @return {@code Optional<TraineeEntity>}
+     * @return {@code TraineeEntity}
      */
     public TraineeEntity getTraineeByUsername(String username) {
         log.debug("Getting trainee with username: {}", username);
@@ -79,14 +78,14 @@ public class TraineeDao {
      * Gets trainee by id.
      *
      * @param id id of the trainee
-     * @return {@code Optional<TraineeEntity>}
+     * @return {@code TraineeEntity}
      */
     public TraineeEntity getTraineeById(Long id) {
         log.debug("Getting trainee with id: {}", id);
-        Session session = sessionFactory.openSession();
+
         TraineeEntity trainee = null;
         Transaction transaction = null;
-        try {
+        try (Session session = sessionFactory.openSession();){
             transaction = session.beginTransaction();
             trainee = session.get(TraineeEntity.class, id);
             transaction.commit();
@@ -95,8 +94,6 @@ public class TraineeDao {
                 transaction.rollback();
             }
             log.debug("hibernate exception");
-        } finally {
-            session.close();
         }
 
         log.debug("Getting trainee with id: {}", id);
