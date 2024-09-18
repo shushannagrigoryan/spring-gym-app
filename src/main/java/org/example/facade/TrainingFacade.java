@@ -6,21 +6,17 @@ import org.example.entity.TrainingEntity;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.mapper.TrainingMapper;
 import org.example.services.TrainingService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class TrainingFacade {
     private final TrainingService trainingService;
-    private TrainingMapper trainingMapper;
+    private final TrainingMapper trainingMapper;
 
-    public TrainingFacade(TrainingService trainingService) {
+    public TrainingFacade(TrainingService trainingService,
+                          TrainingMapper trainingMapper) {
         this.trainingService = trainingService;
-    }
-
-    @Autowired
-    public void setDependencies(TrainingMapper trainingMapper) {
         this.trainingMapper = trainingMapper;
     }
 
@@ -40,21 +36,21 @@ public class TrainingFacade {
         }
     }
 
-    /**
-     * Gets the training by id in the facade layer.
-     *
-     * @param id id of the training
-     * @return returns the {@code TrainingDto}
-     */
-    public TrainingDto getTrainingById(Long id) {
-        log.info("Request to retrieve training by id");
-        TrainingDto trainingDto = null;
-        try {
-            trainingDto = trainingService.getTrainingById(id);
-            log.info("Successfully retrieved training by id");
-        } catch (GymIllegalIdException exception) {
-            log.error("No training with id: {}", id, exception);
-        }
-        return trainingDto;
-    }
+    //    /**
+    //     * Gets the training by id in the facade layer.
+    //     *
+    //     * @param id id of the training
+    //     * @return returns the {@code TrainingDto}
+    //     */
+    //    public TrainingDto getTrainingById(Long id) {
+    //        log.info("Request to retrieve training by id");
+    //        TrainingDto trainingDto = null;
+    //        try {
+    //            trainingDto = trainingService.getTrainingById(id);
+    //            log.info("Successfully retrieved training by id");
+    //        } catch (GymIllegalIdException exception) {
+    //            log.error("No training with id: {}", id, exception);
+    //        }
+    //        return trainingDto;
+    //    }
 }

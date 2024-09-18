@@ -3,43 +3,50 @@ package org.example.dao;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainingEntity;
-import org.example.storage.DataStorage;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class TrainingDao {
-    @Autowired
-    private DataStorage dataStorage;
-    private IdGenerator idGenerator;
+    private final SessionFactory sessionFactory;
 
-    @Autowired
-    public void setDependencies(IdGenerator idGenerator) {
-        this.idGenerator = idGenerator;
+    public TrainingDao(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
-
     /**
      * Generates id for the training entity and adds that entity to the storage map.
      *
      * @param trainingEntity {@code TrainingEntity} to be added to storage
      */
     public void createTraining(TrainingEntity trainingEntity) {
-        Long id = idGenerator.generateId("Training");
         log.debug("Saving training: {} to storage", trainingEntity);
-        trainingEntity.setTrainingId(id);
-        dataStorage.getTrainingStorage().put(id, trainingEntity);
+        Transaction transaction = null;
+        try(Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.persist(trainingEntity);
+            transaction.commit();
+        }catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.debug("hibernate exception");
+            throw e;
+        }
     }
 
 
-    /**
-     * Gets training by id.
-     *
-     * @param id id of the training
-     * @return {@code Optional<TrainingEntity>}
-     */
-    public Optional<TrainingEntity> getTrainingById(Long id) {
-        log.debug("Getting training with id: {}", id);
-        return Optional.ofNullable(dataStorage.getTrainingStorage().get(id));
-    }
+    //    /**
+    //     * Gets training by id.
+    //     *
+    //     * @param id id of the training
+    //     * @return {@code Optional<TrainingEntity>}
+    //     */
+    //    public Optional<TrainingEntity> getTrainingById(Long id) {
+    //        log.debug("Getting training with id: {}", id);
+    //        return Optional.ofNullable(dataStorage.getTrainingStorage().get(id));
+    //    }
 }

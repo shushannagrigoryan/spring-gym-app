@@ -15,6 +15,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
@@ -26,14 +27,14 @@ public class TrainerEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "specialization_id", nullable = false)
     private TrainingTypeEntity specialization;
 
     @OneToOne
     private UserEntity user;
 
-    @OneToMany(mappedBy = "trainer")
+    @OneToMany(mappedBy = "trainer", fetch = FetchType.EAGER)
     private List<TrainingEntity> trainings = new ArrayList<>();
 
 }

@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -17,7 +18,6 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @Entity
 @Table(name = "trainings")
@@ -49,25 +49,30 @@ public class TrainingEntity {
     @JoinColumn(name = "trainer_id", nullable = false)
     private TrainerEntity trainer;
 
-    //    /**
-    //     * Constructs a new instance of {@code TrainingEntity}.
-    //     *
-    //     * @param traineeId        The id of the trainee.
-    //     * @param trainerId        The id of the trainer.
-    //     * @param trainingName     The name of the training.
-    //     * @param trainingType     The type of the training.
-    //     * @param trainingDate     The date of the training.
-    //     * @param trainingDuration The duration of the training.
-    //     */
-    //    public TrainingEntity(Long traineeId, Long trainerId,
-    //                          String trainingName, TrainingType trainingType,
-    //                          LocalDateTime trainingDate, Duration trainingDuration) {
-    //        this.traineeId = traineeId;
-    //        this.trainerId = trainerId;
-    //        this.trainingName = trainingName;
-    //        this.trainingType = trainingType;
-    //        this.trainingDate = trainingDate;
-    //        this.trainingDuration = trainingDuration;
-    //    }
+    @Transient
+    private Long traineeId;
+    @Transient
+    private Long trainerId;
+
+    /**
+     * Constructs a new instance of {@code TrainingEntity}.
+     *
+     * @param traineeId        The id of the trainee.
+     * @param trainerId        The id of the trainer.
+     * @param trainingName     The name of the training.
+     * @param trainingType     The type of the training.
+     * @param trainingDate     The date of the training.
+     * @param trainingDuration The duration of the training.
+     */
+    public TrainingEntity(Long traineeId, Long trainerId,
+                          String trainingName, Long trainingType,
+                          LocalDateTime trainingDate, Duration trainingDuration) {
+        this.traineeId = traineeId;
+        this.trainerId = trainerId;
+        this.trainingName = trainingName;
+        this.trainingType = trainingType;
+        this.trainingDate = trainingDate;
+        this.trainingDuration = trainingDuration;
+    }
 
 }

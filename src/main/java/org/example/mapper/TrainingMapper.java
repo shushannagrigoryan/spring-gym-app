@@ -18,8 +18,10 @@ public class TrainingMapper {
             return null;
         }
 
-        return new TrainingDto(trainingEntity.getTrainerId(), trainingEntity.getTraineeId(),
-                trainingEntity.getTrainingName(), trainingEntity.getTrainingType(),
+        return new TrainingDto(trainingEntity.getTrainer().getId(),
+                trainingEntity.getTrainee().getId(),
+                trainingEntity.getTrainingName(),
+                trainingEntity.getTrainingType(),
                 trainingEntity.getTrainingDate(), trainingEntity.getTrainingDuration());
     }
 
