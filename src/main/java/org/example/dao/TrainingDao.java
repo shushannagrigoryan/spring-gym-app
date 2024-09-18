@@ -1,6 +1,5 @@
 package org.example.dao;
 
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainingEntity;
 import org.hibernate.HibernateException;
@@ -17,6 +16,7 @@ public class TrainingDao {
     public TrainingDao(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
+
     /**
      * Generates id for the training entity and adds that entity to the storage map.
      *
@@ -25,11 +25,11 @@ public class TrainingDao {
     public void createTraining(TrainingEntity trainingEntity) {
         log.debug("Saving training: {} to storage", trainingEntity);
         Transaction transaction = null;
-        try(Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.persist(trainingEntity);
             transaction.commit();
-        }catch (HibernateException e) {
+        } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }

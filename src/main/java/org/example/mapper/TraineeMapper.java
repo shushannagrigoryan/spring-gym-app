@@ -1,7 +1,6 @@
 package org.example.mapper;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.dao.UserDao;
 import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.UserEntity;

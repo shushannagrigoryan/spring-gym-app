@@ -1,10 +1,8 @@
 package org.example.facade;
 
-import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
-import org.example.entity.UserEntity;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
@@ -15,18 +13,12 @@ import org.springframework.stereotype.Component;
 public class TraineeFacade {
     private final TraineeService traineeService;
     private final TraineeMapper traineeMapper;
-    //private TraineeMapper traineeMapper;
 
     public TraineeFacade(TraineeService traineeService, TraineeMapper traineeMapper) {
         this.traineeService = traineeService;
         this.traineeMapper = traineeMapper;
     }
 
-    //    @Autowired
-    //    public void setDependencies(TraineeMapper traineeMapper) {
-    //        log.debug("injecting trainee mapper");
-    //        this.traineeMapper = traineeMapper;
-    //    }
 
     /**
      * Creates a trainee in the facade layer.

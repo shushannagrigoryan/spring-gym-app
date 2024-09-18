@@ -18,6 +18,7 @@ public class TrainerService {
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
 
+    /** Injecting dependencies using constructor. */
     public TrainerService(TrainerMapper trainerMapper,
                           TrainerDao trainerDao,
                           UsernameGenerator usernameGenerator,

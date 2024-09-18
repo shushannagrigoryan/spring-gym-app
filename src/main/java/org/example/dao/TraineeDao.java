@@ -29,7 +29,7 @@ public class TraineeDao {
      */
     public void createTrainee(TraineeEntity traineeEntity) {
         Transaction transaction = null;
-        try(Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             UserEntity user = traineeEntity.getUser();
             userDao.createUser(user);
@@ -55,14 +55,14 @@ public class TraineeDao {
 
         TraineeEntity trainee = null;
         Transaction transaction = null;
-        try(Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             String hql = "FROM TraineeEntity t WHERE t.user.username = :username";
             Query<TraineeEntity> query = session.createQuery(hql, TraineeEntity.class);
             query.setParameter("username", username);
             trainee = query.uniqueResult();
             System.out.println("trainee = " + trainee);
-        }catch (HibernateException e) {
+        } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -82,7 +82,7 @@ public class TraineeDao {
 
         TraineeEntity trainee = null;
         Transaction transaction = null;
-        try (Session session = sessionFactory.openSession();){
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             trainee = session.get(TraineeEntity.class, id);
             transaction.commit();

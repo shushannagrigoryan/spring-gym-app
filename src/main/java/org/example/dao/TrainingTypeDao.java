@@ -1,7 +1,6 @@
 package org.example.dao;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.entity.TraineeEntity;
 import org.example.entity.TrainingTypeEntity;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -27,7 +26,7 @@ public class TrainingTypeDao {
      */
     public void createTrainingType(TrainingTypeEntity trainingTypeEntity) {
         Transaction transaction = null;
-        try(Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.persist(trainingTypeEntity);
             transaction.commit();
@@ -40,19 +39,19 @@ public class TrainingTypeDao {
         log.debug("Saving training type: {} to storage", trainingTypeEntity);
     }
 
-    /**  Get trainingTypebyname.*/
-    public TrainingTypeEntity getTrainingTypeByName(String name){
+    /**  Get training type by name.*/
+    public TrainingTypeEntity getTrainingTypeByName(String name) {
         log.debug("Getting trainingType with name: {}", name);
 
         TrainingTypeEntity trainingType = null;
         Transaction transaction = null;
-        try(Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             String hql = "FROM TrainingTypeEntity t WHERE t.trainingTypeName = :name";
             Query<TrainingTypeEntity> query = session.createQuery(hql, TrainingTypeEntity.class);
             query.setParameter("name", name);
             trainingType = query.uniqueResult();
-        }catch (HibernateException e) {
+        } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }

@@ -1,14 +1,10 @@
 package org.example;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.example.config.HibernateConfig;
-import org.example.dto.TraineeDto;
-import org.example.dto.TrainerDto;
 import org.example.dto.TrainingDto;
-import org.example.dto.TrainingTypeDto;
 import org.example.facade.TraineeFacade;
 import org.example.facade.TrainerFacade;
 import org.example.facade.TrainingFacade;
@@ -34,8 +30,11 @@ public class Main {
         //System.out.println(traineeFacade.getTraineeById(4L));
         //System.out.println(traineeFacade.getTraineeById(50L));
 
+        //        trainerFacade.createTrainer(new TrainerDto("fname", "lname",
+        //                new TrainingTypeDto("boxing")));
+
         trainingFacade.createTraining(new TrainingDto(1L, 4L,
-                "yoga", 1L, LocalDateTime.now(), Duration.ofHours(1)));
+                "trainingName1", 2L, LocalDateTime.now(), Duration.ofHours(1)));
 
     }
 }

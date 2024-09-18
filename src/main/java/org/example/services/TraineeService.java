@@ -1,6 +1,5 @@
 package org.example.services;
 
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dao.TraineeDao;
 import org.example.dto.TraineeDto;
@@ -19,10 +18,11 @@ public class TraineeService {
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
 
+    /**Injecting dependencies using constructor. */
     public TraineeService(TraineeDao traineeDao,
                           TraineeMapper traineeMapper,
                           UsernameGenerator usernameGenerator,
-                          PasswordGeneration passwordGeneration){
+                          PasswordGeneration passwordGeneration) {
         this.traineeDao = traineeDao;
         this.traineeMapper = traineeMapper;
         this.usernameGenerator = usernameGenerator;

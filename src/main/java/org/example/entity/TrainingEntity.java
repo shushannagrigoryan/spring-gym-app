@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
@@ -25,10 +24,7 @@ public class TrainingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //    @Column(name = "trainer_id")
-    //    private Long trainerId;
-    //    @Column(name = "trainee_id")
-    //    private Long traineeId;
+
     @Column(name = "training_name")
     private String trainingName;
 

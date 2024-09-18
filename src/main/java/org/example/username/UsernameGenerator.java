@@ -5,12 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dao.TraineeDao;
 import org.example.dao.TrainerDao;
 import org.example.dao.UserDao;
-import org.example.dto.TraineeDto;
-import org.example.dto.TrainerDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
-import org.example.services.TraineeService;
-import org.example.services.TrainerService;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,6 +16,7 @@ public class UsernameGenerator {
     private final TrainerDao trainerDao;
     private final UserDao userDao;
 
+    /**Injecting dependencies using constructor. */
     public UsernameGenerator(TraineeDao traineeDao,
                              TrainerDao trainerDao,
                              UserDao userDao) {
@@ -35,6 +32,7 @@ public class UsernameGenerator {
      * @param lastName lastName of the user
      * @return the username
      */
+
     public String generateUsername(String firstName, String lastName) {
         log.debug("Generating username for firstName: {}, lastName: {}", firstName, lastName);
 

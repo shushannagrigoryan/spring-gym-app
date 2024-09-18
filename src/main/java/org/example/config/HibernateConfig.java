@@ -30,14 +30,14 @@ public class HibernateConfig {
         try {
             org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration().configure();
 
-            ServiceRegistry registry = new StandardServiceRegistryBuilder()
-                    .applySettings(configuration.getProperties())
-                    .build();
             configuration.addAnnotatedClass(TraineeEntity.class);
             configuration.addAnnotatedClass(UserEntity.class);
             configuration.addAnnotatedClass(TrainerEntity.class);
             configuration.addAnnotatedClass(TrainingEntity.class);
             configuration.addAnnotatedClass(TrainingTypeEntity.class);
+
+            ServiceRegistry registry = new StandardServiceRegistryBuilder()
+                    .applySettings(configuration.getProperties()).build();
 
             return configuration.configure().buildSessionFactory(registry);
         } catch (HibernateException e) {

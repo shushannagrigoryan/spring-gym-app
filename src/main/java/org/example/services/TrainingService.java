@@ -10,7 +10,6 @@ import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.exceptions.GymIllegalIdException;
-import org.example.mapper.TrainingMapper;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +22,7 @@ public class TrainingService {
     private final TraineeDao traineeDao;
 
 
+    /** Injecting dependencies using constructor. */
     public TrainingService(TrainingDao trainingDao,
                            TraineeService traineeService,
                            TrainerService trainerService,

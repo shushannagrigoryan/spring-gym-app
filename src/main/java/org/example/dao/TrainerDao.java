@@ -1,7 +1,6 @@
 package org.example.dao;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.TrainingTypeDto;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingTypeEntity;
 import org.example.entity.UserEntity;
@@ -19,6 +18,7 @@ public class TrainerDao {
     private final UserDao userDao;
     private final TrainingTypeDao trainingTypeDao;
 
+    /**Injecting dependencies using constructor. */
     public TrainerDao(SessionFactory sessionFactory,
                       UserDao userDao,
                       TrainingTypeDao trainingTypeDao) {
@@ -40,10 +40,10 @@ public class TrainerDao {
             TrainingTypeEntity trainingTypeEntity = trainerEntity.getSpecialization();
 
             TrainingTypeEntity trainingType =
-            trainingTypeDao.getTrainingTypeByName(trainingTypeEntity.getTrainingTypeName());
-            if(trainingType == null){
+                trainingTypeDao.getTrainingTypeByName(trainingTypeEntity.getTrainingTypeName());
+            if (trainingType == null) {
                 trainingTypeDao.createTrainingType(trainingTypeEntity);
-            }else {
+            } else {
                 trainerEntity.setSpecialization(trainingType);
             }
 
@@ -72,14 +72,14 @@ public class TrainerDao {
 
         TrainerEntity trainer = null;
         Transaction transaction = null;
-        try(Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             String hql = "FROM TrainerEntity t WHERE t.user.username = :username";
             Query<TrainerEntity> query = session.createQuery(hql, TrainerEntity.class);
             query.setParameter("username", username);
             trainer = query.uniqueResult();
 
-        }catch (HibernateException e) {
+        } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -98,7 +98,7 @@ public class TrainerDao {
         log.debug("Getting trainer with id: {}", id);
         TrainerEntity trainer = null;
         Transaction transaction = null;
-        try (Session session = sessionFactory.openSession();){
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             trainer = session.get(TrainerEntity.class, id);
             transaction.commit();

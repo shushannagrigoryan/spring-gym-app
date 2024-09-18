@@ -2,7 +2,6 @@ package org.example.dao;
 
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.example.entity.TraineeEntity;
 import org.example.entity.UserEntity;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -15,13 +14,15 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class UserDao {
     private final SessionFactory sessionFactory;
+
     public UserDao(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
+    /**creates userEntity. */
     public void createUser(UserEntity userEntity) {
         Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.persist(userEntity);
             transaction.commit();
@@ -34,16 +35,17 @@ public class UserDao {
         log.debug("Saving user: {} to storage", userEntity);
     }
 
+    /** Get all usernames(both trainer and trainee). */
     public List<String> getAllUsernames() {
         List<String> allUsernames = null;
         Transaction transaction = null;
-        try(Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             String hql = "SELECT t.username FROM UserEntity t";
             Query<String> query = session.createQuery(hql, String.class);
             allUsernames = query.getResultList();
             transaction.commit();
-        }catch (HibernateException e) {
+        } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
