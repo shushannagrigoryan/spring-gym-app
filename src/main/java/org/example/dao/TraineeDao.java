@@ -1,6 +1,5 @@
 package org.example.dao;
 
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TraineeEntity;
 import org.example.entity.UserEntity;
@@ -62,7 +61,7 @@ public class TraineeDao {
             Query<TraineeEntity> query = session.createQuery(hql, TraineeEntity.class);
             query.setParameter("username", username);
             trainee = query.uniqueResult();
-
+            System.out.println("trainee = " + trainee);
         }catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();

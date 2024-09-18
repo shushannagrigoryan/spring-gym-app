@@ -38,14 +38,6 @@ public class TraineeFacade {
         TraineeEntity traineeEntity = traineeMapper.dtoToEntity(traineeDto);
         traineeService.createTrainee(traineeEntity);
         log.info("Successfully created trainee");
-
-        //        TraineeEntity traineeEntity = new TraineeEntity();
-        //        traineeEntity.setAddress("myAddress");
-        //        traineeEntity.setDateOfBirth(LocalDate.now());
-        //        traineeEntity.setUser(new UserEntity(traineeDto.getFirstName(), traineeDto.getLastName(),
-        //                "john.smith2", "password"));
-        //        //TraineeEntity traineeEntity = traineeMapper.dtoToEntity(traineeDto);
-
     }
 
     /**

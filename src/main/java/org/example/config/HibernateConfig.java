@@ -3,7 +3,7 @@ package org.example.config;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
-import org.example.entity.TrainingType;
+import org.example.entity.TrainingTypeEntity;
 import org.example.entity.UserEntity;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
@@ -37,10 +37,9 @@ public class HibernateConfig {
             configuration.addAnnotatedClass(UserEntity.class);
             configuration.addAnnotatedClass(TrainerEntity.class);
             configuration.addAnnotatedClass(TrainingEntity.class);
-            configuration.addAnnotatedClass(TrainingType.class);
-            SessionFactory sessionFactory = configuration.configure().buildSessionFactory(registry);
+            configuration.addAnnotatedClass(TrainingTypeEntity.class);
 
-            return sessionFactory;
+            return configuration.configure().buildSessionFactory(registry);
         } catch (HibernateException e) {
             throw new RuntimeException("Failed to create SessionFactory", e);
         }

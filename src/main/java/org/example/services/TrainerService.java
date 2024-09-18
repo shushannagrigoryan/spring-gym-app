@@ -2,40 +2,47 @@ package org.example.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.dao.TrainerDao;
-import org.example.dao.UserDao;
 import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.mapper.TrainerMapper;
+import org.example.password.PasswordGeneration;
+import org.example.username.UsernameGenerator;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 public class TrainerService {
-    private TrainerDao trainerDao;
-    private UserDao userDao;
-    private TrainerMapper trainerMapper;
+    private final TrainerDao trainerDao;
+    private final TrainerMapper trainerMapper;
+    private final UsernameGenerator usernameGenerator;
+    private final PasswordGeneration passwordGeneration;
 
-    public TrainerService(UserDao userDao, TrainerMapper trainerMapper) {
-        this.userDao = userDao;
+    public TrainerService(TrainerMapper trainerMapper,
+                          TrainerDao trainerDao,
+                          UsernameGenerator usernameGenerator,
+                          PasswordGeneration passwordGeneration) {
         this.trainerMapper = trainerMapper;
+        this.trainerDao = trainerDao;
+        this.usernameGenerator = usernameGenerator;
+        this.passwordGeneration = passwordGeneration;
     }
 
-//    /**
-//     * Creates Trainer in the Service layer.
-//     *
-//     * @param trainerEntity {@code TrainerEntity} to create
-//     */
-//    public void createTrainer(TrainerEntity trainerEntity) {
-//        log.debug("Creating trainer: {}", trainerEntity);
-//        String username = userDao.generateUsername(trainerEntity.getFirstName(),
-//                trainerEntity.getLastName());
-//        trainerEntity.setUsername(username);
-//        trainerEntity.setPassword(userDao.generatePassword());
-//        trainerDao.createTrainer(trainerEntity);
-//        log.debug("Successfully created a new trainer with username: {}", username);
-//        saveDataToFile.writeMapToFile("Trainer");
-//    }
+    /**
+     * Creates Trainer in the Service layer.
+     *
+     * @param trainerEntity {@code TrainerEntity} to create
+     */
+    public void createTrainer(TrainerEntity trainerEntity) {
+        log.debug("Creating trainer: {}", trainerEntity);
+        String username = usernameGenerator.generateUsername(
+                trainerEntity.getUser().getFirstName(),
+                trainerEntity.getUser().getLastName());
+        trainerEntity.getUser().setUsername(username);
+        trainerEntity.getUser().setPassword(passwordGeneration.generatePassword());
+        trainerDao.createTrainer(trainerEntity);
+        log.debug("Successfully created a new trainer with username: {}", username);
+    }
 
     /**
      * Gets trainer by username.

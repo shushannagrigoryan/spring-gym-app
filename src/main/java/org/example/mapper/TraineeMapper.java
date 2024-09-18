@@ -29,21 +29,12 @@ public class TraineeMapper {
      */
     public TraineeEntity dtoToEntity(TraineeDto traineeDto) {
         log.info("Mapping TraineeDto {} to TraineeEntity", traineeDto);
-        System.out.println("traineeDto = " + traineeDto);
         if (traineeDto == null) {
             return null;
         }
 
         TraineeEntity traineeEntity = new TraineeEntity();
-        //UserEntity user = new UserEntity();
-        //traineeEntity.setUser(user);
-        System.out.println("traineeEntity.getUser() = " + traineeEntity.getUser());
-        //        traineeEntity.setUser(new UserEntity(traineeDto.getFirstName(), traineeDto.getLastName(),
-        //                                "username", "password"));
         traineeEntity.setUser(new UserEntity(traineeDto.getFirstName(), traineeDto.getLastName()));
-        System.out.println("traineeEntity = " + traineeEntity);
-        //traineeEntity.getUser().setFirstName(traineeDto.getFirstName());
-        //traineeEntity.getUser().setLastName(traineeDto.getLastName());
         traineeEntity.setDateOfBirth(traineeDto.getDateOfBirth());
         traineeEntity.setAddress(traineeDto.getAddress());
 

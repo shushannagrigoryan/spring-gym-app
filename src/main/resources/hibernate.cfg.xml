@@ -17,6 +17,6 @@
         <mapping class="org.example.entity.UserEntity"/>
         <mapping class="org.example.entity.TrainerEntity"/>
         <mapping class="org.example.entity.TrainingEntity"/>
-        <mapping class="org.example.entity.TrainingType"/>
+        <mapping class="org.example.entity.TrainingTypeEntity"/>
     </session-factory>
 </hibernate-configuration>

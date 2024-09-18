@@ -1,7 +1,9 @@
 package org.example.dao;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.TrainingTypeDto;
 import org.example.entity.TrainerEntity;
+import org.example.entity.TrainingTypeEntity;
 import org.example.entity.UserEntity;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -15,10 +17,14 @@ import org.springframework.stereotype.Component;
 public class TrainerDao {
     private final SessionFactory sessionFactory;
     private final UserDao userDao;
+    private final TrainingTypeDao trainingTypeDao;
 
-    public TrainerDao(SessionFactory sessionFactory, UserDao userDao) {
+    public TrainerDao(SessionFactory sessionFactory,
+                      UserDao userDao,
+                      TrainingTypeDao trainingTypeDao) {
         this.sessionFactory = sessionFactory;
         this.userDao = userDao;
+        this.trainingTypeDao = trainingTypeDao;
     }
 
     /**
@@ -31,6 +37,16 @@ public class TrainerDao {
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             UserEntity user = trainerEntity.getUser();
+            TrainingTypeEntity trainingTypeEntity = trainerEntity.getSpecialization();
+
+            TrainingTypeEntity trainingType =
+            trainingTypeDao.getTrainingTypeByName(trainingTypeEntity.getTrainingTypeName());
+            if(trainingType == null){
+                trainingTypeDao.createTrainingType(trainingTypeEntity);
+            }else {
+                trainerEntity.setSpecialization(trainingType);
+            }
+
             userDao.createUser(user);
             session.persist(trainerEntity);
             transaction.commit();

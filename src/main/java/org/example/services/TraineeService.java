@@ -55,14 +55,10 @@ public class TraineeService {
         String username = usernameGenerator.generateUsername(
                         traineeEntity.getUser().getFirstName(),
                         traineeEntity.getUser().getLastName());
-        //traineeEntity.setUsername(username);
-        //traineeEntity.setPassword(userDao.generatePassword());
         traineeEntity.getUser().setUsername(username);
         traineeEntity.getUser().setPassword(passwordGeneration.generatePassword());
         traineeDao.createTrainee(traineeEntity);
         log.debug("Successfully created trainee: {}", traineeEntity);
-
-
     }
 
     /**
@@ -96,7 +92,6 @@ public class TraineeService {
         if (trainee == null) {
             throw new GymIllegalIdException(String.format("No trainee with id: %d", id));
         }
-        System.out.println("retrieved trainee = " + trainee);
         log.debug("Successfully retrieved trainee by id: {}", id);
         return traineeMapper.entityToDto(trainee);
 

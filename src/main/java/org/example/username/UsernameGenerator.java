@@ -42,6 +42,8 @@ public class UsernameGenerator {
 
         TraineeEntity trainee = traineeDao.getTraineeByUsername(username);
         TrainerEntity trainer = trainerDao.getTrainerByUsername(username);
+        System.out.println("trainee = " + trainee);
+        System.out.println("trainer = " + trainer);
 
         if ((trainee != null) || (trainer != null)) {
             log.debug("Username taken.");

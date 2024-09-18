@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.example.entity.TrainingType;
+import org.example.entity.TrainingTypeEntity;
 
 @Getter
 @Setter
@@ -18,7 +18,7 @@ public class TrainingDto {
     private Long trainerId;
     private Long traineeId;
     private String trainingName;
-    private TrainingType trainingType;
+    private TrainingTypeEntity trainingType;
     private LocalDateTime trainingDate;
     private Duration trainingDuration;
 

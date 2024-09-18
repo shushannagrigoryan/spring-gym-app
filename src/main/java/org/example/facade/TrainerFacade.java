@@ -6,21 +6,17 @@ import org.example.entity.TrainerEntity;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.mapper.TrainerMapper;
 import org.example.services.TrainerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class TrainerFacade {
     private final TrainerService trainerService;
-    private TrainerMapper trainerMapper;
+    private final TrainerMapper trainerMapper;
 
-    public TrainerFacade(TrainerService trainerService) {
+    public TrainerFacade(TrainerService trainerService,
+                         TrainerMapper trainerMapper) {
         this.trainerService = trainerService;
-    }
-
-    @Autowired
-    public void setDependencies(TrainerMapper trainerMapper) {
         this.trainerMapper = trainerMapper;
     }
 
@@ -55,20 +51,20 @@ public class TrainerFacade {
         return trainerDto;
     }
 
-    /**
-     * Updates the trainer with the given id in the facade layer.
-     *
-     * @param id         id of the trainer
-     * @param trainerDto the new trainer data to update with
-     */
-    public void updateTrainerById(Long id, TrainerDto trainerDto) {
-        log.info("Request to update trainer by id");
-        try {
-            trainerService.updateTrainerById(id, trainerMapper.dtoToEntity(trainerDto));
-            log.info("Successfully updated trainer by id");
-        } catch (GymIllegalIdException exception) {
-            log.error(exception.getMessage(), exception);
-        }
-
-    }
+    //    /**
+    //     * Updates the trainer with the given id in the facade layer.
+    //     *
+    //     * @param id         id of the trainer
+    //     * @param trainerDto the new trainer data to update with
+    //     */
+    //    public void updateTrainerById(Long id, TrainerDto trainerDto) {
+    //        log.info("Request to update trainer by id");
+    //        try {
+    //            trainerService.updateTrainerById(id, trainerMapper.dtoToEntity(trainerDto));
+    //            log.info("Successfully updated trainer by id");
+    //        } catch (GymIllegalIdException exception) {
+    //            log.error(exception.getMessage(), exception);
+    //        }
+    //
+    //    }
 }
