@@ -1,29 +1,32 @@
 package org.example.facade;
 
+import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
+import org.example.entity.UserEntity;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class TraineeFacade {
     private final TraineeService traineeService;
-    private TraineeMapper traineeMapper;
+    private final TraineeMapper traineeMapper;
+    //private TraineeMapper traineeMapper;
 
-    public TraineeFacade(TraineeService traineeService) {
+    public TraineeFacade(TraineeService traineeService, TraineeMapper traineeMapper) {
         this.traineeService = traineeService;
-    }
-
-    @Autowired
-    public void setDependencies(TraineeMapper traineeMapper) {
-        log.debug("injecting trainee mapper");
         this.traineeMapper = traineeMapper;
     }
+
+    //    @Autowired
+    //    public void setDependencies(TraineeMapper traineeMapper) {
+    //        log.debug("injecting trainee mapper");
+    //        this.traineeMapper = traineeMapper;
+    //    }
 
     /**
      * Creates a trainee in the facade layer.
@@ -35,6 +38,14 @@ public class TraineeFacade {
         TraineeEntity traineeEntity = traineeMapper.dtoToEntity(traineeDto);
         traineeService.createTrainee(traineeEntity);
         log.info("Successfully created trainee");
+
+        //        TraineeEntity traineeEntity = new TraineeEntity();
+        //        traineeEntity.setAddress("myAddress");
+        //        traineeEntity.setDateOfBirth(LocalDate.now());
+        //        traineeEntity.setUser(new UserEntity(traineeDto.getFirstName(), traineeDto.getLastName(),
+        //                "john.smith2", "password"));
+        //        //TraineeEntity traineeEntity = traineeMapper.dtoToEntity(traineeDto);
+
     }
 
     /**
@@ -54,39 +65,39 @@ public class TraineeFacade {
         }
         return traineeDto;
     }
-
-    /**
-     * Deletes trainee by id.
-     *
-     * @param id id of the trainee to delete
-     */
-    public void deleteTraineeById(Long id) {
-        log.info("Request to delete trainee by id");
-        try {
-            traineeService.deleteTraineeById(id);
-            log.info("Successfully deleted trainee by id");
-        } catch (GymIllegalIdException exception) {
-            log.error("No trainee with id: {} for deleting", id, exception);
-        }
-
-    }
-
-    /**
-     * Updates Trainee by id.
-     *
-     * @param id         id of the trainee to update
-     * @param traineeDto new trainee data to update with
-     */
-    public void updateTraineeById(Long id, TraineeDto traineeDto) {
-        log.info("Request to update trainee by id");
-        try {
-            traineeService.updateTraineeById(id, traineeMapper.dtoToEntity(traineeDto));
-            log.info("Successfully updated trainee by id");
-        } catch (GymIllegalIdException exception) {
-            log.error(exception.getMessage(), exception);
-        }
-
-    }
+    //
+    //    /**
+    //     * Deletes trainee by id.
+    //     *
+    //     * @param id id of the trainee to delete
+    //     */
+    //    public void deleteTraineeById(Long id) {
+    //        log.info("Request to delete trainee by id");
+    //        try {
+    //            traineeService.deleteTraineeById(id);
+    //            log.info("Successfully deleted trainee by id");
+    //        } catch (GymIllegalIdException exception) {
+    //            log.error("No trainee with id: {} for deleting", id, exception);
+    //        }
+    //
+    //    }
+    //
+    //    /**
+    //     * Updates Trainee by id.
+    //     *
+    //     * @param id         id of the trainee to update
+    //     * @param traineeDto new trainee data to update with
+    //     */
+    //    public void updateTraineeById(Long id, TraineeDto traineeDto) {
+    //        log.info("Request to update trainee by id");
+    //        try {
+    //            traineeService.updateTraineeById(id, traineeMapper.dtoToEntity(traineeDto));
+    //            log.info("Successfully updated trainee by id");
+    //        } catch (GymIllegalIdException exception) {
+    //            log.error(exception.getMessage(), exception);
+    //        }
+    //
+    //    }
 
 
 }

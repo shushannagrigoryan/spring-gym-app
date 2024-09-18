@@ -24,26 +24,29 @@ import lombok.ToString;
 public class TrainingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ID;
-    @Column(name = "trainer_id")
-    private Long trainerId;
-    @Column(name = "trainee_id")
-    private Long traineeId;
+    private Long id;
+    //    @Column(name = "trainer_id")
+    //    private Long trainerId;
+    //    @Column(name = "trainee_id")
+    //    private Long traineeId;
     @Column(name = "training_name")
     private String trainingName;
+
     @Column(name = "training_type_id")
     private Long  trainingType;
+
     @Column(name = "training_date")
     private LocalDateTime trainingDate;
-    @Column(name = "training_duration")
+
+    @Column(name = "training_duration", nullable = false)
     private Duration trainingDuration;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "trainee_id", nullable = false)
     private TraineeEntity trainee;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "trainer_id", nullable = false)
     private TrainerEntity trainer;
 
     //    /**

@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -14,6 +15,7 @@ import lombok.ToString;
 @Setter
 @Entity
 @ToString
+@NoArgsConstructor
 @Table(name = "users")
 public class UserEntity {
     @Id
@@ -30,10 +32,6 @@ public class UserEntity {
     @Column(name = "is_active", nullable = false)
     protected boolean isActive;
 
-    public UserEntity() {
-
-    }
-
     /**
      * constructor.
      */
@@ -44,5 +42,10 @@ public class UserEntity {
         this.username = username;
         this.password = password;
 
+    }
+
+    public UserEntity(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 }

@@ -7,6 +7,8 @@ import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.mapper.TraineeMapper;
+import org.example.password.PasswordGeneration;
+import org.example.username.UsernameGenerator;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,10 +16,17 @@ import org.springframework.stereotype.Service;
 public class TraineeService {
     private final TraineeDao traineeDao;
     private final TraineeMapper traineeMapper;
+    private final UsernameGenerator usernameGenerator;
+    private final PasswordGeneration passwordGeneration;
 
-    public TraineeService(TraineeDao traineeDao, TraineeMapper traineeMapper){
+    public TraineeService(TraineeDao traineeDao,
+                          TraineeMapper traineeMapper,
+                          UsernameGenerator usernameGenerator,
+                          PasswordGeneration passwordGeneration){
         this.traineeDao = traineeDao;
         this.traineeMapper = traineeMapper;
+        this.usernameGenerator = usernameGenerator;
+        this.passwordGeneration = passwordGeneration;
     }
     //private UserDao userDao;
 
@@ -43,10 +52,13 @@ public class TraineeService {
      */
     public void createTrainee(TraineeEntity traineeEntity) {
         log.debug("Creating trainee: {}", traineeEntity);
-        //String username = userDao.generateUsername(traineeEntity.getFirstName(), traineeEntity.getLastName());
+        String username = usernameGenerator.generateUsername(
+                        traineeEntity.getUser().getFirstName(),
+                        traineeEntity.getUser().getLastName());
         //traineeEntity.setUsername(username);
         //traineeEntity.setPassword(userDao.generatePassword());
-
+        traineeEntity.getUser().setUsername(username);
+        traineeEntity.getUser().setPassword(passwordGeneration.generatePassword());
         traineeDao.createTrainee(traineeEntity);
         log.debug("Successfully created trainee: {}", traineeEntity);
 

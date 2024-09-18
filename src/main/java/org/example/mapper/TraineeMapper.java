@@ -1,8 +1,10 @@
 package org.example.mapper;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.dao.UserDao;
 import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
+import org.example.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -17,7 +19,8 @@ public class TraineeMapper {
             return null;
         }
 
-        return new TraineeDto(traineeEntity.getFirstName(), traineeEntity.getLastName(),
+        return new TraineeDto(traineeEntity.getUser().getFirstName(),
+                traineeEntity.getUser().getLastName(),
                 traineeEntity.getDateOfBirth(), traineeEntity.getAddress());
     }
 
@@ -26,13 +29,21 @@ public class TraineeMapper {
      */
     public TraineeEntity dtoToEntity(TraineeDto traineeDto) {
         log.info("Mapping TraineeDto {} to TraineeEntity", traineeDto);
+        System.out.println("traineeDto = " + traineeDto);
         if (traineeDto == null) {
             return null;
         }
 
         TraineeEntity traineeEntity = new TraineeEntity();
-        traineeEntity.setFirstName(traineeDto.getFirstName());
-        traineeEntity.setLastName(traineeDto.getLastName());
+        //UserEntity user = new UserEntity();
+        //traineeEntity.setUser(user);
+        System.out.println("traineeEntity.getUser() = " + traineeEntity.getUser());
+        //        traineeEntity.setUser(new UserEntity(traineeDto.getFirstName(), traineeDto.getLastName(),
+        //                                "username", "password"));
+        traineeEntity.setUser(new UserEntity(traineeDto.getFirstName(), traineeDto.getLastName()));
+        System.out.println("traineeEntity = " + traineeEntity);
+        //traineeEntity.getUser().setFirstName(traineeDto.getFirstName());
+        //traineeEntity.getUser().setLastName(traineeDto.getLastName());
         traineeEntity.setDateOfBirth(traineeDto.getDateOfBirth());
         traineeEntity.setAddress(traineeDto.getAddress());
 

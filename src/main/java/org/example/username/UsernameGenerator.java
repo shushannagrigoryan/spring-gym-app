@@ -2,9 +2,13 @@ package org.example.username;
 
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.example.dao.TraineeDao;
+import org.example.dao.TrainerDao;
 import org.example.dao.UserDao;
 import org.example.dto.TraineeDto;
 import org.example.dto.TrainerDto;
+import org.example.entity.TraineeEntity;
+import org.example.entity.TrainerEntity;
 import org.example.services.TraineeService;
 import org.example.services.TrainerService;
 import org.springframework.stereotype.Component;
@@ -12,14 +16,15 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class UsernameGenerator {
-    private final TraineeService traineeService;
-    private final TrainerService trainerService;
+    private final TraineeDao traineeDao;
+    private final TrainerDao trainerDao;
     private final UserDao userDao;
 
-    public UsernameGenerator(TraineeService traineeService, TrainerService trainerService,
+    public UsernameGenerator(TraineeDao traineeDao,
+                             TrainerDao trainerDao,
                              UserDao userDao) {
-        this.traineeService = traineeService;
-        this.trainerService = trainerService;
+        this.traineeDao = traineeDao;
+        this.trainerDao = trainerDao;
         this.userDao = userDao;
     }
     /**
@@ -35,8 +40,8 @@ public class UsernameGenerator {
 
         String username = firstName.concat(".").concat(lastName);
 
-        TraineeDto trainee = traineeService.getTraineeByUsername(username);
-        TrainerDto trainer = trainerService.getTrainerByUsername(username);
+        TraineeEntity trainee = traineeDao.getTraineeByUsername(username);
+        TrainerEntity trainer = trainerDao.getTrainerByUsername(username);
 
         if ((trainee != null) || (trainer != null)) {
             log.debug("Username taken.");

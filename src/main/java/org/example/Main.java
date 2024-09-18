@@ -1,10 +1,10 @@
 package org.example;
 
+import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
+import org.example.config.HibernateConfig;
+import org.example.dto.TraineeDto;
 import org.example.facade.TraineeFacade;
-import org.example.facade.TrainerFacade;
-import org.example.facade.TrainingFacade;
-import org.example.storage.DataStorage;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -14,11 +14,12 @@ public class Main {
      * Main method.
      */
     public static void main(String[] args) {
-        ApplicationContext context = new AnnotationConfigApplicationContext(DataStorage.class);
+        ApplicationContext context = new AnnotationConfigApplicationContext(HibernateConfig.class);
         TraineeFacade traineeFacade = context.getBean(TraineeFacade.class);
 
-        TrainerFacade trainerFacade = context.getBean(TrainerFacade.class);
-
-        TrainingFacade trainingFacade = context.getBean(TrainingFacade.class);
+        traineeFacade.createTrainee(new TraineeDto("John", "Smith",
+                LocalDate.now(), "myAddress1234"));
+        //System.out.println(traineeFacade.getTraineeById(4L));
+        //System.out.println(traineeFacade.getTraineeById(50L));
     }
 }

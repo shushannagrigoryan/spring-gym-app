@@ -30,7 +30,7 @@ public class TraineeDao {
      */
     public void createTrainee(TraineeEntity traineeEntity) {
         Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
+        try(Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             UserEntity user = traineeEntity.getUser();
             userDao.createUser(user);
@@ -42,9 +42,7 @@ public class TraineeDao {
             }
             log.debug("hibernate exception");
         }
-
         log.debug("Saving trainee: {} to storage", traineeEntity);
-
     }
 
     /**

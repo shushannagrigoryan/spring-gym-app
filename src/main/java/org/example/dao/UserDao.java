@@ -20,10 +20,8 @@ public class UserDao {
     }
 
     public void createUser(UserEntity userEntity) {
-        System.out.println("userEntity = " + userEntity);
-
         Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
             session.persist(userEntity);
             transaction.commit();
@@ -33,9 +31,7 @@ public class UserDao {
             }
             log.debug("hibernate exception");
         }
-
         log.debug("Saving user: {} to storage", userEntity);
-
     }
 
     public List<String> getAllUsernames() {

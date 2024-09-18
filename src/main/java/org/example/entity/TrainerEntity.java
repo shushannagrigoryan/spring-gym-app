@@ -18,10 +18,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "trainers")
-public class TrainerEntity extends UserEntity {
+public class TrainerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long ID;
+    private Long id;
     @OneToOne
     private TrainingType specialization;
     @OneToOne
