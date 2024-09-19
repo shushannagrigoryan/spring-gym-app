@@ -27,7 +27,7 @@ public class TrainerMapper {
 
         return new TrainerDto(trainerEntity.getUser().getFirstName(),
                 trainerEntity.getUser().getLastName(),
-                 new TrainingTypeDto(trainerEntity.getSpecialization().getTrainingTypeName()));
+                trainerEntity.getSpecialization().getTrainingTypeName());
     }
 
     /**
@@ -41,7 +41,9 @@ public class TrainerMapper {
 
         TrainerEntity trainerEntity = new TrainerEntity();
         trainerEntity.setUser(new UserEntity(trainerDto.getFirstName(), trainerDto.getLastName()));
-        trainerEntity.setSpecialization(trainingTypeMapper.dtoToEntity(trainerDto.getSpecialization()));
+        trainerEntity.setSpecialization(
+                trainingTypeMapper.dtoToEntity(
+                        new TrainingTypeDto(trainerDto.getSpecialization())));
 
         return trainerEntity;
     }

@@ -1,9 +1,11 @@
 package org.example.services;
 
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dao.TrainerDao;
 import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
+import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.mapper.TrainerMapper;
 import org.example.password.PasswordGeneration;
@@ -18,7 +20,9 @@ public class TrainerService {
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
 
-    /** Injecting dependencies using constructor. */
+    /**
+     * Injecting dependencies using constructor.
+     */
     public TrainerService(TrainerMapper trainerMapper,
                           TrainerDao trainerDao,
                           UsernameGenerator usernameGenerator,
@@ -47,20 +51,20 @@ public class TrainerService {
 
     /**
      * Gets trainer by username.
-     * If no trainer is found return null.
+     * If no trainer is found returns null.
      *
      * @param username username of the trainer
      * @return the {@code TrainerDto}
      */
     public TrainerDto getTrainerByUsername(String username) {
         log.debug("Retrieving trainer by username: {}", username);
-        TrainerEntity trainer = trainerDao.getTrainerByUsername(username);
-        if (trainer == null) {
+        Optional<TrainerEntity> trainer = trainerDao.getTrainerByUsername(username);
+        if (trainer.isEmpty()) {
             log.debug("No trainer with the username: {}", username);
-            return null;
+            throw new GymEntityNotFoundException(String.format("Trainer with username %s does not exist.", username));
         }
-        log.debug("Successfully retrieved trainer with username: {}", username);
-        return trainerMapper.entityToDto(trainer);
+        log.debug("Successfully retrieved trainer by username: {}", username);
+        return trainerMapper.entityToDto(trainer.get());
     }
 
     /**

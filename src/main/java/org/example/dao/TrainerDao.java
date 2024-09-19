@@ -1,9 +1,11 @@
 package org.example.dao;
 
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingTypeEntity;
 import org.example.entity.UserEntity;
+import org.example.exceptions.GymDataAccessException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -18,7 +20,9 @@ public class TrainerDao {
     private final UserDao userDao;
     private final TrainingTypeDao trainingTypeDao;
 
-    /**Injecting dependencies using constructor. */
+    /**
+     * Injecting dependencies using constructor.
+     */
     public TrainerDao(SessionFactory sessionFactory,
                       UserDao userDao,
                       TrainingTypeDao trainingTypeDao) {
@@ -40,7 +44,7 @@ public class TrainerDao {
             TrainingTypeEntity trainingTypeEntity = trainerEntity.getSpecialization();
 
             TrainingTypeEntity trainingType =
-                trainingTypeDao.getTrainingTypeByName(trainingTypeEntity.getTrainingTypeName());
+                    trainingTypeDao.getTrainingTypeByName(trainingTypeEntity.getTrainingTypeName());
             if (trainingType == null) {
                 trainingTypeDao.createTrainingType(trainingTypeEntity);
             } else {
@@ -65,9 +69,9 @@ public class TrainerDao {
      * Gets trainer by username.
      *
      * @param username username of the trainer
-     * @return {@code TrainerEntity}
+     * @return {@code Optional<TrainerEntity>}
      */
-    public TrainerEntity getTrainerByUsername(String username) {
+    public Optional<TrainerEntity> getTrainerByUsername(String username) {
         log.debug("Getting trainer with username: {}", username);
 
         TrainerEntity trainer = null;
@@ -78,14 +82,14 @@ public class TrainerDao {
             Query<TrainerEntity> query = session.createQuery(hql, TrainerEntity.class);
             query.setParameter("username", username);
             trainer = query.uniqueResult();
-
         } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             log.debug("hibernate exception");
+            throw new GymDataAccessException(String.format("Failed to retrieve trainer with username: %s", username));
         }
-        return trainer;
+        return Optional.ofNullable(trainer);
     }
 
     /**

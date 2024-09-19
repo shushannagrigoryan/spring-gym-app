@@ -3,6 +3,7 @@ package org.example.facade;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
+import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.mapper.TrainerMapper;
 import org.example.services.TrainerService;
@@ -47,6 +48,25 @@ public class TrainerFacade {
             log.info("Successfully retrieved trainer by id {}", id);
         } catch (GymIllegalIdException exception) {
             log.error("No trainer with id: {}", id, exception);
+        }
+        return trainerDto;
+    }
+
+
+    /**
+     * Gets trainer by username.
+     *
+     * @param username username of the trainer
+     * @return {@code TrainerDto}
+     */
+    public TrainerDto getTrainerByUsername(String username) {
+        log.info("Request to retrieve trainer by username");
+        TrainerDto trainerDto = null;
+        try {
+            trainerDto = trainerService.getTrainerByUsername(username);
+            log.info("Successfully retrieved trainer by username");
+        } catch (GymEntityNotFoundException exception) {
+            log.error("No trainer with username: {}", username, exception);
         }
         return trainerDto;
     }

@@ -20,7 +20,9 @@ public class TraineeService {
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
 
-    /**Injecting dependencies using constructor. */
+    /**
+     * Injecting dependencies using constructor.
+     */
     public TraineeService(TraineeDao traineeDao,
                           TraineeMapper traineeMapper,
                           UsernameGenerator usernameGenerator,
@@ -55,8 +57,8 @@ public class TraineeService {
     public void createTrainee(TraineeEntity traineeEntity) {
         log.debug("Creating trainee: {}", traineeEntity);
         String username = usernameGenerator.generateUsername(
-                        traineeEntity.getUser().getFirstName(),
-                        traineeEntity.getUser().getLastName());
+                traineeEntity.getUser().getFirstName(),
+                traineeEntity.getUser().getLastName());
         traineeEntity.getUser().setUsername(username);
         traineeEntity.getUser().setPassword(passwordGeneration.generatePassword());
         traineeDao.createTrainee(traineeEntity);

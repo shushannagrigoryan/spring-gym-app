@@ -29,7 +29,7 @@ public class TrainingEntity {
     private String trainingName;
 
     @Column(name = "training_type_id")
-    private Long  trainingType;
+    private Long trainingType;
 
     @Column(name = "training_date")
     private LocalDateTime trainingDate;

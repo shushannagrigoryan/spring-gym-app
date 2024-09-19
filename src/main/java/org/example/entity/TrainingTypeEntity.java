@@ -27,5 +27,4 @@ public class TrainingTypeEntity {
     private String trainingTypeName;
 
 
-
 }

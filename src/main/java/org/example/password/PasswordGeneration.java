@@ -11,7 +11,9 @@ public class PasswordGeneration {
     private static final int startChar = 32;
     private static final int endChar = 127;
 
-    /** Generating random 10 length password. */
+    /**
+     * Generating random 10 length password.
+     */
     public String generatePassword() {
         log.debug("Generating a random password.");
         StringBuilder stringBuilder = new StringBuilder();

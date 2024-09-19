@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 public class UserAuth {
     private final UserDao userDao;
 
-    /** Injecting dependencies using constructor. */
+    /**
+     * Injecting dependencies using constructor.
+     */
     public UserAuth(UserDao userDao) {
         this.userDao = userDao;
     }

@@ -39,7 +39,9 @@ public class TrainingTypeDao {
         log.debug("Saving training type: {} to storage", trainingTypeEntity);
     }
 
-    /**  Get training type by name.*/
+    /**
+     * Get training type by name.
+     */
     public TrainingTypeEntity getTrainingTypeByName(String name) {
         log.debug("Getting trainingType with name: {}", name);
 
@@ -59,7 +61,6 @@ public class TrainingTypeDao {
         }
         return trainingType;
     }
-
 
 
 }

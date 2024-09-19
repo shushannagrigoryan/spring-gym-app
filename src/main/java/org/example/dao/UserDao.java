@@ -19,7 +19,9 @@ public class UserDao {
         this.sessionFactory = sessionFactory;
     }
 
-    /**creates userEntity. */
+    /**
+     * creates userEntity.
+     */
     public void createUser(UserEntity userEntity) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
@@ -35,7 +37,9 @@ public class UserDao {
         log.debug("Saving user: {} to storage", userEntity);
     }
 
-    /** Get all usernames(both trainer and trainee). */
+    /**
+     * Get all usernames(both trainer and trainee).
+     */
     public List<String> getAllUsernames() {
         List<String> allUsernames = null;
         Transaction transaction = null;

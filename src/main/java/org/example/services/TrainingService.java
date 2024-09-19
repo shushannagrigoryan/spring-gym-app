@@ -22,7 +22,9 @@ public class TrainingService {
     private final TraineeDao traineeDao;
 
 
-    /** Injecting dependencies using constructor. */
+    /**
+     * Injecting dependencies using constructor.
+     */
     public TrainingService(TrainingDao trainingDao,
                            TraineeService traineeService,
                            TrainerService trainerService,
@@ -48,7 +50,6 @@ public class TrainingService {
 
         TrainerEntity trainer = trainerDao.getTrainerById(trainingEntity.getTrainerId());
         TraineeEntity trainee = traineeDao.getTraineeById(trainingEntity.getTraineeId());
-
 
 
         System.out.println("createTraining service");

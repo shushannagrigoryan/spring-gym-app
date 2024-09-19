@@ -50,7 +50,7 @@ public class TraineeDao {
      * Gets trainee by username.
      *
      * @param username username of the trainee
-     * @return {@code TraineeEntity}
+     * @return {@code Optional<TraineeEntity>}
      */
     public Optional<TraineeEntity> getTraineeByUsername(String username) {
         log.debug("Getting trainee with username: {}", username);
@@ -63,7 +63,6 @@ public class TraineeDao {
             Query<TraineeEntity> query = session.createQuery(hql, TraineeEntity.class);
             query.setParameter("username", username);
             trainee = query.uniqueResult();
-            System.out.println("trainee = " + trainee);
         } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();

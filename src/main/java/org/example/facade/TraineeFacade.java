@@ -52,17 +52,24 @@ public class TraineeFacade {
     }
 
 
+    /**
+     * Gets trainee by username.
+     *
+     * @param username username of the trainee
+     * @return {@code TraineeDto}
+     */
     public TraineeDto getTraineeByUsername(String username) {
         log.info("Request to retrieve trainee by username");
         TraineeDto traineeDto = null;
-        try{
+        try {
             traineeDto = traineeService.getTraineeByUsername(username);
             log.info("Successfully retrieved trainee by username");
-        }catch (GymEntityNotFoundException exception){
+        } catch (GymEntityNotFoundException exception) {
             log.error("No trainee with username: {}", username, exception);
         }
         return traineeDto;
     }
+
     //
     //    /**
     //     * Deletes trainee by id.

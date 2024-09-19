@@ -17,7 +17,9 @@ public class UsernameGenerator {
     private final TrainerDao trainerDao;
     private final UserDao userDao;
 
-    /**Injecting dependencies using constructor. */
+    /**
+     * Injecting dependencies using constructor.
+     */
     public UsernameGenerator(TraineeDao traineeDao,
                              TrainerDao trainerDao,
                              UserDao userDao) {
@@ -25,12 +27,13 @@ public class UsernameGenerator {
         this.trainerDao = trainerDao;
         this.userDao = userDao;
     }
+
     /**
      * Generates username for the user (firstName.lastName)
      * Adds suffix if the username is taken either by a trainee or a trainer.
      *
      * @param firstName firstName of the user
-     * @param lastName lastName of the user
+     * @param lastName  lastName of the user
      * @return the username
      */
 
@@ -40,11 +43,11 @@ public class UsernameGenerator {
         String username = firstName.concat(".").concat(lastName);
 
         Optional<TraineeEntity> trainee = traineeDao.getTraineeByUsername(username);
-        TrainerEntity trainer = trainerDao.getTrainerByUsername(username);
+        Optional<TrainerEntity> trainer = trainerDao.getTrainerByUsername(username);
         System.out.println("trainee = " + trainee);
         System.out.println("trainer = " + trainer);
 
-        if ((trainee.isPresent()) || (trainer != null)) {
+        if ((trainee.isPresent()) || (trainer.isPresent())) {
             log.debug("Username taken.");
             return username + getSuffix(username);
         }
