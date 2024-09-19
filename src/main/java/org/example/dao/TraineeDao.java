@@ -1,10 +1,14 @@
 package org.example.dao;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaUpdate;
+import jakarta.persistence.criteria.Root;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TraineeEntity;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymDataAccessException;
+import org.example.exceptions.GymDataUpdateException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -55,7 +59,7 @@ public class TraineeDao {
     public Optional<TraineeEntity> getTraineeByUsername(String username) {
         log.debug("Getting trainee with username: {}", username);
 
-        TraineeEntity trainee = null;
+        TraineeEntity trainee;
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -99,6 +103,41 @@ public class TraineeDao {
 
         return trainee;
     }
+
+    /**
+     * Changes the password of the trainee by username.
+     *
+     * @param username username of the trainee
+     */
+    public void changeTraineePassword(String username, String password) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+
+            CriteriaUpdate<UserEntity> criteriaUpdate =
+                    criteriaBuilder.createCriteriaUpdate(UserEntity.class);
+
+            Root<UserEntity> root = criteriaUpdate.from(UserEntity.class);
+
+            criteriaUpdate.set("password", password)
+                    .where(criteriaBuilder.equal(root.get("username"), username));
+
+            session.createMutationQuery(criteriaUpdate).executeUpdate();
+
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.debug("Hibernate exception");
+            throw new GymDataUpdateException(
+                    String.format("Exception while updating password of the trainee with username %S", username));
+        }
+        log.debug("Successfully updated password of the trainee with username {}", username);
+    }
+
     //
     //    /**
     //     * Deletes the trainee entity from the storage by id.

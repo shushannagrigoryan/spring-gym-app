@@ -1,8 +1,10 @@
 package org.example.dao;
 
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
+import org.example.exceptions.GymDataAccessException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -64,23 +66,25 @@ public class UserDao {
      * @param username username of the user
      * @return {@code UserEntity} if user exists, else null.
      */
-    public UserEntity getUserByUsername(String username) {
+    public Optional<UserEntity> getUserByUsername(String username) {
         log.debug("Getting user with username: {}", username);
 
-        UserEntity user = null;
+        Optional<UserEntity> user = null;
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             String hql = "FROM UserEntity u WHERE u.username = :username";
             Query<UserEntity> query = session.createQuery(hql, UserEntity.class);
             query.setParameter("username", username);
-            user = query.uniqueResult();
+            user = Optional.ofNullable(query.uniqueResult());
 
         } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             log.debug("hibernate exception");
+            throw new GymDataAccessException(
+                    String.format("Failed to retrieve user with username: %s", username));
         }
         return user;
     }
