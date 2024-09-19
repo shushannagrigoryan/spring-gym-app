@@ -96,12 +96,12 @@ public class TraineeService {
      */
     public TraineeDto getTraineeById(Long id) {
         log.debug("Retrieving trainee by id: {}", id);
-        TraineeEntity trainee = traineeDao.getTraineeById(id);
-        if (trainee == null) {
+        Optional<TraineeEntity> trainee = traineeDao.getTraineeById(id);
+        if (trainee.isEmpty()) {
             throw new GymIllegalIdException(String.format("No trainee with id: %d", id));
         }
         log.debug("Successfully retrieved trainee by id: {}", id);
-        return traineeMapper.entityToDto(trainee);
+        return traineeMapper.entityToDto(trainee.get());
 
     }
 
@@ -115,6 +115,28 @@ public class TraineeService {
             traineeDao.changeTraineePassword(username, passwordGeneration.generatePassword());
         }
     }
+
+    /**
+     * Activates Trainee.
+     *
+     * @param id id of the trainee
+     */
+    public void activateTrainee(Long id) {
+        log.info("Request to activate trainee with id: {}", id);
+        Optional<TraineeEntity> trainee = traineeDao.getTraineeById(id);
+        if (trainee.isEmpty()) {
+            log.debug("No entity with {} exists.", id);
+            throw new GymIllegalIdException(String.format("No entity with %d exists.", id));
+        }
+
+        if (trainee.get().getUser().isActive()) {
+            log.debug("Trainee with id: {} is already active.", id);
+            return;
+
+        }
+        traineeDao.activateTrainee(trainee.get().getUser().getId());
+    }
+
     //
     //    /**
     //     * Deletes a trainee by id in the service layer.

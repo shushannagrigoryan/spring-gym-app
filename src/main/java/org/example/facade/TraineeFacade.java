@@ -87,6 +87,20 @@ public class TraineeFacade {
         }
     }
 
+    /**
+     * Activates trainee.
+     *
+     * @param id id of the Trainee
+     */
+    public void activateTrainee(Long id) {
+        try {
+            traineeService.activateTrainee(id);
+        } catch (GymIllegalIdException | GymDataUpdateException exception) {
+            log.error("Exception while activating trainee with id: {}", id, exception);
+        }
+
+    }
+
     //
     //    /**
     //     * Deletes trainee by id.

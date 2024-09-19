@@ -1,5 +1,6 @@
 package org.example.services;
 
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dao.TraineeDao;
 import org.example.dao.TrainerDao;
@@ -45,16 +46,14 @@ public class TrainingService {
      */
     public void createTraining(TrainingEntity trainingEntity) {
         log.debug("Creating training : {}", trainingEntity);
-        TraineeDto traineeDto = traineeService.getTraineeById(trainingEntity.getTraineeId());
-        TrainerDto trainerDto = trainerService.getTrainerById(trainingEntity.getTrainerId());
 
         TrainerEntity trainer = trainerDao.getTrainerById(trainingEntity.getTrainerId());
-        TraineeEntity trainee = traineeDao.getTraineeById(trainingEntity.getTraineeId());
+        Optional<TraineeEntity> trainee = traineeDao.getTraineeById(trainingEntity.getTraineeId());
 
 
         System.out.println("createTraining service");
 
-        if (trainee == null) {
+        if (trainee.isEmpty()) {
             log.debug("Invalid id for trainee: {}", trainingEntity.getTraineeId());
             throw new GymIllegalIdException(String.format("No trainee with id: %d",
                     trainingEntity.getTraineeId()));
@@ -65,7 +64,7 @@ public class TrainingService {
                     trainingEntity.getTrainerId()));
         }
 
-        trainingEntity.setTrainee(trainee);
+        trainingEntity.setTrainee(trainee.get());
         trainingEntity.setTrainer(trainer);
 
         System.out.println("trainingEntity = " + trainingEntity);

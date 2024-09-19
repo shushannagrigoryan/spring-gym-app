@@ -83,7 +83,7 @@ public class TraineeDao {
      * @param id id of the trainee
      * @return {@code TraineeEntity}
      */
-    public TraineeEntity getTraineeById(Long id) {
+    public Optional<TraineeEntity> getTraineeById(Long id) {
         log.debug("Getting trainee with id: {}", id);
 
         TraineeEntity trainee = null;
@@ -101,7 +101,7 @@ public class TraineeDao {
 
         log.debug("Getting trainee with id: {}", id);
 
-        return trainee;
+        return Optional.ofNullable(trainee);
     }
 
     /**
@@ -133,9 +133,47 @@ public class TraineeDao {
             }
             log.debug("Hibernate exception");
             throw new GymDataUpdateException(
-                    String.format("Exception while updating password of the trainee with username %S", username));
+                    String.format(
+                            "Exception while updating password of the trainee with username %s",
+                            username));
         }
         log.debug("Successfully updated password of the trainee with username {}", username);
+    }
+
+    /**
+     * Activates trainee by id.
+     *
+     * @param id id of the trainee to activate
+     */
+    public void activateTrainee(Long id) {
+        log.debug("Activating trainee with id: {}", id);
+
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+
+            CriteriaUpdate<UserEntity> criteriaUpdate =
+                    criteriaBuilder.createCriteriaUpdate(UserEntity.class);
+
+            Root<UserEntity> root = criteriaUpdate.from(UserEntity.class);
+
+            criteriaUpdate.set("isActive", true)
+                    .where(criteriaBuilder.equal(root.get("id"), id));
+
+            session.createMutationQuery(criteriaUpdate).executeUpdate();
+
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.debug("Hibernate exception");
+            throw new GymDataUpdateException(
+                    String.format("Exception while activating trainee with id %d", id));
+        }
+        log.debug("Successfully activated trainee with id {}", id);
     }
 
     //
