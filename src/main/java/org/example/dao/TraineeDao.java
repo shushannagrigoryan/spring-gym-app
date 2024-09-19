@@ -1,8 +1,10 @@
 package org.example.dao;
 
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TraineeEntity;
 import org.example.entity.UserEntity;
+import org.example.exceptions.GymDataAccessException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -50,7 +52,7 @@ public class TraineeDao {
      * @param username username of the trainee
      * @return {@code TraineeEntity}
      */
-    public TraineeEntity getTraineeByUsername(String username) {
+    public Optional<TraineeEntity> getTraineeByUsername(String username) {
         log.debug("Getting trainee with username: {}", username);
 
         TraineeEntity trainee = null;
@@ -67,8 +69,9 @@ public class TraineeDao {
                 transaction.rollback();
             }
             log.debug("hibernate exception");
+            throw new GymDataAccessException(String.format("Failed to retrieve trainee with username: %s", username));
         }
-        return trainee;
+        return Optional.ofNullable(trainee);
     }
 
     /**

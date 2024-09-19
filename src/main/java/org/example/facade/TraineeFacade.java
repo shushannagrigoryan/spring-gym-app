@@ -3,6 +3,7 @@ package org.example.facade;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
+import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
@@ -46,6 +47,19 @@ public class TraineeFacade {
             log.info("Successfully retrieved trainee by id");
         } catch (GymIllegalIdException exception) {
             log.error("No trainee with id: {}", id, exception);
+        }
+        return traineeDto;
+    }
+
+
+    public TraineeDto getTraineeByUsername(String username) {
+        log.info("Request to retrieve trainee by username");
+        TraineeDto traineeDto = null;
+        try{
+            traineeDto = traineeService.getTraineeByUsername(username);
+            log.info("Successfully retrieved trainee by username");
+        }catch (GymEntityNotFoundException exception){
+            log.error("No trainee with username: {}", username, exception);
         }
         return traineeDto;
     }

@@ -1,6 +1,7 @@
 package org.example.username;
 
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dao.TraineeDao;
 import org.example.dao.TrainerDao;
@@ -38,12 +39,12 @@ public class UsernameGenerator {
 
         String username = firstName.concat(".").concat(lastName);
 
-        TraineeEntity trainee = traineeDao.getTraineeByUsername(username);
+        Optional<TraineeEntity> trainee = traineeDao.getTraineeByUsername(username);
         TrainerEntity trainer = trainerDao.getTrainerByUsername(username);
         System.out.println("trainee = " + trainee);
         System.out.println("trainer = " + trainer);
 
-        if ((trainee != null) || (trainer != null)) {
+        if ((trainee.isPresent()) || (trainer != null)) {
             log.debug("Username taken.");
             return username + getSuffix(username);
         }

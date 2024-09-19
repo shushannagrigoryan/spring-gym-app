@@ -1,9 +1,11 @@
 package org.example.services;
 
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dao.TraineeDao;
 import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
+import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.mapper.TraineeMapper;
 import org.example.password.PasswordGeneration;
@@ -70,13 +72,13 @@ public class TraineeService {
      */
     public TraineeDto getTraineeByUsername(String username) {
         log.debug("Retrieving trainee by username: {}", username);
-        TraineeEntity trainee = traineeDao.getTraineeByUsername(username);
-        if (trainee == null) {
+        Optional<TraineeEntity> trainee = traineeDao.getTraineeByUsername(username);
+        if (trainee.isEmpty()) {
             log.debug("No trainee with the username: {}", username);
-            return null;
+            throw new GymEntityNotFoundException(String.format("Trainee with username %s does not exist.", username));
         }
         log.debug("Successfully retrieved trainee by username: {}", username);
-        return traineeMapper.entityToDto(trainee);
+        return traineeMapper.entityToDto(trainee.get());
     }
 
     /**
