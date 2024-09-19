@@ -1,11 +1,15 @@
 package org.example.dao;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaUpdate;
+import jakarta.persistence.criteria.Root;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingTypeEntity;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymDataAccessException;
+import org.example.exceptions.GymDataUpdateException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -116,6 +120,40 @@ public class TrainerDao {
         log.debug("Getting trainer with id: {}", id);
 
         return trainer;
+    }
+
+    /**
+     * Changes the password of the trainer by username.
+     *
+     * @param username username of the trainer
+     */
+    public void changeTrainerPassword(String username, String password) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+
+            CriteriaUpdate<UserEntity> criteriaUpdate =
+                    criteriaBuilder.createCriteriaUpdate(UserEntity.class);
+
+            Root<UserEntity> root = criteriaUpdate.from(UserEntity.class);
+
+            criteriaUpdate.set("password", password)
+                    .where(criteriaBuilder.equal(root.get("username"), username));
+
+            session.createMutationQuery(criteriaUpdate).executeUpdate();
+
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.debug("Hibernate exception");
+            throw new GymDataUpdateException(
+                    String.format("Exception while updating password of the trainer with username %S", username));
+        }
+        log.debug("Successfully updated password of the trainer with username {}", username);
     }
 
     //    /**

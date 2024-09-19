@@ -3,7 +3,9 @@ package org.example.facade;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
+import org.example.exceptions.GymDataUpdateException;
 import org.example.exceptions.GymEntityNotFoundException;
+import org.example.exceptions.GymIllegalArgumentException;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.mapper.TrainerMapper;
 import org.example.services.TrainerService;
@@ -69,6 +71,22 @@ public class TrainerFacade {
             log.error("No trainer with username: {}", username, exception);
         }
         return trainerDto;
+    }
+
+    /**
+     * Changes trainer password.
+     *
+     * @param username username of the trainer
+     * @param password password of the trainer
+     */
+
+    public void changeTrainerPassword(String username, String password) {
+        log.info("Request to change trainer password.");
+        try {
+            trainerService.changeTrainerPassword(username, password);
+        } catch (GymIllegalArgumentException | GymDataUpdateException e) {
+            log.error("Exception while changing password", e);
+        }
     }
 
     //    /**

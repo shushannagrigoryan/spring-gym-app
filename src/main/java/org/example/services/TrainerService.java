@@ -2,6 +2,7 @@ package org.example.services;
 
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.example.auth.TrainerAuth;
 import org.example.dao.TrainerDao;
 import org.example.dto.TrainerDto;
 import org.example.entity.TrainerEntity;
@@ -19,6 +20,7 @@ public class TrainerService {
     private final TrainerMapper trainerMapper;
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
+    private final TrainerAuth trainerAuth;
 
     /**
      * Injecting dependencies using constructor.
@@ -26,11 +28,13 @@ public class TrainerService {
     public TrainerService(TrainerMapper trainerMapper,
                           TrainerDao trainerDao,
                           UsernameGenerator usernameGenerator,
-                          PasswordGeneration passwordGeneration) {
+                          PasswordGeneration passwordGeneration,
+                          TrainerAuth trainerAuth) {
         this.trainerMapper = trainerMapper;
         this.trainerDao = trainerDao;
         this.usernameGenerator = usernameGenerator;
         this.passwordGeneration = passwordGeneration;
+        this.trainerAuth = trainerAuth;
     }
 
     /**
@@ -82,6 +86,17 @@ public class TrainerService {
         }
         log.debug("Successfully retrieved trainer with id: {}", id);
         return trainerMapper.entityToDto(trainer);
+    }
+
+    /**
+     * Changes the password of the trainer by username. Before changing authentication is performed.
+     *
+     * @param username username of the trainer
+     */
+    public void changeTrainerPassword(String username, String password) {
+        if (trainerAuth.trainerAuth(username, password)) {
+            trainerDao.changeTrainerPassword(username, passwordGeneration.generatePassword());
+        }
     }
 
     //    /**
