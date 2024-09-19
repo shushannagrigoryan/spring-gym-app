@@ -53,6 +53,34 @@ public class UserDao {
         return allUsernames;
     }
 
+
+    /**
+     * Getting user by username.
+     *
+     * @param username username of the user
+     * @return {@code UserEntity} if user exists, else null.
+     */
+    public UserEntity getUserByUsername(String username) {
+        log.debug("Getting user with username: {}", username);
+
+        UserEntity user = null;
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            String hql = "FROM UserEntity u WHERE u.username = :username";
+            Query<UserEntity> query = session.createQuery(hql, UserEntity.class);
+            query.setParameter("username", username);
+            user = query.uniqueResult();
+
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.debug("hibernate exception");
+        }
+        return user;
+    }
+
     //    /**
     //     * Generates username for the user (firstName.lastName)
     //     * Adds suffix if the username is taken either by a trainee or a trainer.
