@@ -2,7 +2,7 @@ package org.example.services;
 
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.example.auth.UserAuth;
+import org.example.auth.TraineeAuth;
 import org.example.dao.TraineeDao;
 import org.example.dto.TraineeDto;
 import org.example.entity.TraineeEntity;
@@ -20,7 +20,7 @@ public class TraineeService {
     private final TraineeMapper traineeMapper;
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
-    private final UserAuth userAuth;
+    private final TraineeAuth traineeAuth;
 
     /**
      * Injecting dependencies using constructor.
@@ -29,12 +29,12 @@ public class TraineeService {
                           TraineeMapper traineeMapper,
                           UsernameGenerator usernameGenerator,
                           PasswordGeneration passwordGeneration,
-                          UserAuth userAuth) {
+                          TraineeAuth traineeAuth) {
         this.traineeDao = traineeDao;
         this.traineeMapper = traineeMapper;
         this.usernameGenerator = usernameGenerator;
         this.passwordGeneration = passwordGeneration;
-        this.userAuth = userAuth;
+        this.traineeAuth = traineeAuth;
     }
     //private UserDao userDao;
 
@@ -111,7 +111,7 @@ public class TraineeService {
      * @param username username of the trainee
      */
     public void changeTraineePassword(String username, String password) {
-        if (userAuth.userAuth(username, password)) {
+        if (traineeAuth.traineeAuth(username, password)) {
             traineeDao.changeTraineePassword(username, passwordGeneration.generatePassword());
         }
     }
