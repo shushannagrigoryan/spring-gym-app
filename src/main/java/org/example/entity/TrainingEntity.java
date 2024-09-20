@@ -14,12 +14,10 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 @Entity
 @Table(name = "trainings")
 public class TrainingEntity {
@@ -29,9 +27,6 @@ public class TrainingEntity {
 
     @Column(name = "training_name")
     private String trainingName;
-
-    //    @Column(name = "training_type_id")
-    //    private Long trainingType;
 
     @ManyToOne
     @JoinColumn(name = "training_type_id", nullable = false)

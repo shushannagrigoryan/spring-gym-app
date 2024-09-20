@@ -1,10 +1,10 @@
 package org.example;
 
-import java.time.LocalDate;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.example.config.HibernateConfig;
-import org.example.dto.TraineeDto;
-import org.example.dto.TrainerDto;
+import org.example.dto.TrainingDto;
 import org.example.facade.TraineeFacade;
 import org.example.facade.TrainerFacade;
 import org.example.facade.TrainingFacade;
@@ -50,18 +50,23 @@ public class Main {
 
 
 
-        trainerFacade.createTrainer(new TrainerDto("A", "B", 2L));
-        traineeFacade.createTrainee(new TraineeDto(
-                "D", "D", LocalDate.now(), "myAddress"
-        ));
-        traineeFacade.createTrainee(new TraineeDto(
-                "A", "B", LocalDate.now(), "myAddress"
-        ));
+        //        trainerFacade.createTrainer(new TrainerDto("A", "B", 2L));
+        //        traineeFacade.createTrainee(new TraineeDto(
+        //                "D", "D", LocalDate.now(), "myAddress"
+        //        ));
+        //        traineeFacade.createTrainee(new TraineeDto(
+        //                "A", "B", LocalDate.now(), "myAddress"
+        //        ));
 
         //
         //        trainingFacade.createTraining(new TrainingDto(1L, 1L,
         //                "trainingname sdksnd",
         //                1L, LocalDateTime.now(), Duration.ofHours(1)));
+
+        trainingFacade.createTraining(new TrainingDto(
+                1L, 3L, "newTrainingName",
+                2L, LocalDateTime.now(), Duration.ofHours(1)
+        ));
 
 
     }
