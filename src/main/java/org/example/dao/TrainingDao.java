@@ -1,9 +1,7 @@
 package org.example.dao;
 
 import java.util.List;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.exceptions.GymDataAccessException;
 import org.hibernate.HibernateException;

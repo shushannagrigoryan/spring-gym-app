@@ -1,13 +1,7 @@
 package org.example;
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.example.config.HibernateConfig;
-import org.example.dto.TraineeDto;
-import org.example.dto.TrainerDto;
-import org.example.dto.TrainingDto;
 import org.example.facade.TraineeFacade;
 import org.example.facade.TrainerFacade;
 import org.example.facade.TrainingFacade;

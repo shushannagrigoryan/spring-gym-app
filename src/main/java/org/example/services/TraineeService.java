@@ -1,7 +1,6 @@
 package org.example.services;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -212,7 +211,7 @@ public class TraineeService {
      */
     public Set<TrainerDto> trainersNotAssignedToTrainee(String username) {
 
-        if(traineeDao.getTraineeByUsername(username).isEmpty()) {
+        if (traineeDao.getTraineeByUsername(username).isEmpty()) {
             throw new GymIllegalIdException(String.format(
                     "No trainee with username: %s", username));
         }
