@@ -1,16 +1,10 @@
 package org.example.services;
 
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dao.TraineeDao;
 import org.example.dao.TrainerDao;
 import org.example.dao.TrainingDao;
-import org.example.dto.TraineeDto;
-import org.example.dto.TrainerDto;
-import org.example.entity.TraineeEntity;
-import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
-import org.example.exceptions.GymIllegalIdException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,6 +13,7 @@ public class TrainingService {
     private final TrainingDao trainingDao;
     private final TraineeService traineeService;
     private final TrainerService trainerService;
+    private final TrainingTypeService trainingTypeService;
     private final TrainerDao trainerDao;
     private final TraineeDao traineeDao;
 
@@ -30,12 +25,14 @@ public class TrainingService {
                            TraineeService traineeService,
                            TrainerService trainerService,
                            TraineeDao traineeDao,
-                           TrainerDao trainerDao) {
+                           TrainerDao trainerDao,
+                           TrainingTypeService trainingTypeService) {
         this.trainingDao = trainingDao;
         this.traineeService = traineeService;
         this.trainerService = trainerService;
         this.traineeDao = traineeDao;
         this.trainerDao = trainerDao;
+        this.trainingTypeService = trainingTypeService;
     }
 
     /**
@@ -47,27 +44,13 @@ public class TrainingService {
     public void createTraining(TrainingEntity trainingEntity) {
         log.debug("Creating training : {}", trainingEntity);
 
-        TrainerEntity trainer = trainerDao.getTrainerById(trainingEntity.getTrainerId());
-        Optional<TraineeEntity> trainee = traineeDao.getTraineeById(trainingEntity.getTraineeId());
+        //Optional<TrainerEntity> trainer = trainerDao.getTrainerById(trainingEntity.getTrainerId());
+        //Optional<TraineeEntity> trainee = traineeDao.getTraineeById(trainingEntity.getTraineeId());
 
+        trainerService.getTrainerById(trainingEntity.getTrainerId());
+        traineeService.getTraineeById(trainingEntity.getTraineeId());
 
-        System.out.println("createTraining service");
-
-        if (trainee.isEmpty()) {
-            log.debug("Invalid id for trainee: {}", trainingEntity.getTraineeId());
-            throw new GymIllegalIdException(String.format("No trainee with id: %d",
-                    trainingEntity.getTraineeId()));
-        }
-        if (trainer == null) {
-            log.debug("Invalid id for trainer: {}", trainingEntity.getTrainerId());
-            throw new GymIllegalIdException(String.format("No trainer with id: %d",
-                    trainingEntity.getTrainerId()));
-        }
-
-        trainingEntity.setTrainee(trainee.get());
-        trainingEntity.setTrainer(trainer);
-
-        System.out.println("trainingEntity = " + trainingEntity);
+        trainingTypeService.getTrainingTypeById(trainingEntity.getTrainingTypeId());
 
         trainingDao.createTraining(trainingEntity);
         log.debug("Successfully created new training with id: {}", trainingEntity.getId());

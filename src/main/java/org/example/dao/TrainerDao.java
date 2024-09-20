@@ -6,7 +6,6 @@ import jakarta.persistence.criteria.Root;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainerEntity;
-import org.example.entity.TrainingTypeEntity;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymDataAccessException;
 import org.example.exceptions.GymDataUpdateException;
@@ -45,17 +44,12 @@ public class TrainerDao {
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             UserEntity user = trainerEntity.getUser();
-            TrainingTypeEntity trainingTypeEntity = trainerEntity.getSpecialization();
-
-            TrainingTypeEntity trainingType =
-                    trainingTypeDao.getTrainingTypeByName(trainingTypeEntity.getTrainingTypeName());
-            if (trainingType == null) {
-                trainingTypeDao.createTrainingType(trainingTypeEntity);
-            } else {
-                trainerEntity.setSpecialization(trainingType);
-            }
-
             userDao.createUser(user);
+
+            //            Optional<TrainingTypeEntity> trainingType =
+            //                    trainingTypeDao.getTrainingTypeById(trainerEntity.getSpecialization().getId());
+            //trainingType.ifPresent(trainerEntity::setSpecialization);
+
             session.persist(trainerEntity);
             transaction.commit();
         } catch (HibernateException e) {
@@ -102,7 +96,7 @@ public class TrainerDao {
      * @param id id of the trainer
      * @return {@code TrainerEntity}
      */
-    public TrainerEntity getTrainerById(Long id) {
+    public Optional<TrainerEntity> getTrainerById(Long id) {
         log.debug("Getting trainer with id: {}", id);
         TrainerEntity trainer = null;
         Transaction transaction = null;
@@ -119,7 +113,7 @@ public class TrainerDao {
 
         log.debug("Getting trainer with id: {}", id);
 
-        return trainer;
+        return Optional.ofNullable(trainer);
     }
 
     /**

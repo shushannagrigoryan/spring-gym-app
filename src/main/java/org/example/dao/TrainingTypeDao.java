@@ -1,7 +1,9 @@
 package org.example.dao;
 
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainingTypeEntity;
+import org.example.exceptions.GymDataAccessException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -18,26 +20,6 @@ public class TrainingTypeDao {
         this.sessionFactory = sessionFactory;
     }
 
-
-    /**
-     * Adding training type to database.
-     *
-     * @param trainingTypeEntity {@code TrainingTypeEntity} to be added to storage
-     */
-    public void createTrainingType(TrainingTypeEntity trainingTypeEntity) {
-        Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-            session.persist(trainingTypeEntity);
-            transaction.commit();
-        } catch (HibernateException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            log.debug("hibernate exception");
-        }
-        log.debug("Saving training type: {} to storage", trainingTypeEntity);
-    }
 
     /**
      * Get training type by name.
@@ -60,6 +42,32 @@ public class TrainingTypeDao {
             log.debug("hibernate exception");
         }
         return trainingType;
+    }
+
+
+    /**
+     * Get training type by id.
+     */
+    public Optional<TrainingTypeEntity> getTrainingTypeById(Long id) {
+        log.debug("Getting trainingType with id: {}", id);
+
+        TrainingTypeEntity trainingType = null;
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            String hql = "FROM TrainingTypeEntity t WHERE t.id = :id";
+            Query<TrainingTypeEntity> query = session.createQuery(hql, TrainingTypeEntity.class);
+            query.setParameter("id", id);
+            trainingType = query.uniqueResult();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.debug("hibernate exception");
+            throw new GymDataAccessException(String.format(
+                    "Exception while getting training type by id: %d", id));
+        }
+        return Optional.ofNullable(trainingType);
     }
 
 

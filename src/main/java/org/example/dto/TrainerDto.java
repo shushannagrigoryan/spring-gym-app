@@ -14,6 +14,6 @@ import lombok.ToString;
 public class TrainerDto {
     private String firstName;
     private String lastName;
-    private String specialization;
+    private Long specialization;
 
 }

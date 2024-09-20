@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 @Configuration
 @PropertySource("classpath:application.properties")
@@ -36,6 +37,9 @@ public class HibernateConfig {
             configuration.addAnnotatedClass(TrainingEntity.class);
             configuration.addAnnotatedClass(TrainingTypeEntity.class);
 
+            configuration.setProperty("hibernate.show_sql", "false");
+            configuration.setProperty("hibernate.format_sql", "false");
+
             ServiceRegistry registry = new StandardServiceRegistryBuilder()
                     .applySettings(configuration.getProperties()).build();
 
@@ -44,6 +48,11 @@ public class HibernateConfig {
             throw new RuntimeException("Failed to create SessionFactory", e);
         }
 
+    }
+
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyConfig() {
+        return new PropertySourcesPlaceholderConfigurer();
     }
 
 

@@ -10,15 +10,18 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "trainers")
 public class TrainerEntity {
@@ -35,5 +38,8 @@ public class TrainerEntity {
 
     @OneToMany(mappedBy = "trainer", fetch = FetchType.EAGER)
     private List<TrainingEntity> trainings = new ArrayList<>();
+
+    @Transient
+    private Long specializationId;
 
 }

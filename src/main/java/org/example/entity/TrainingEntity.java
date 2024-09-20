@@ -14,10 +14,12 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "trainings")
 public class TrainingEntity {
@@ -28,8 +30,12 @@ public class TrainingEntity {
     @Column(name = "training_name")
     private String trainingName;
 
-    @Column(name = "training_type_id")
-    private Long trainingType;
+    //    @Column(name = "training_type_id")
+    //    private Long trainingType;
+
+    @ManyToOne
+    @JoinColumn(name = "training_type_id", nullable = false)
+    private TrainingTypeEntity trainingType;
 
     @Column(name = "training_date")
     private LocalDateTime trainingDate;
@@ -49,6 +55,8 @@ public class TrainingEntity {
     private Long traineeId;
     @Transient
     private Long trainerId;
+    @Transient
+    private Long trainingTypeId;
 
     /**
      * Constructs a new instance of {@code TrainingEntity}.
@@ -56,17 +64,17 @@ public class TrainingEntity {
      * @param traineeId        The id of the trainee.
      * @param trainerId        The id of the trainer.
      * @param trainingName     The name of the training.
-     * @param trainingType     The type of the training.
+     * @param trainingTypeId     The type of the training.
      * @param trainingDate     The date of the training.
      * @param trainingDuration The duration of the training.
      */
     public TrainingEntity(Long traineeId, Long trainerId,
-                          String trainingName, Long trainingType,
+                          String trainingName, Long trainingTypeId,
                           LocalDateTime trainingDate, Duration trainingDuration) {
         this.traineeId = traineeId;
         this.trainerId = trainerId;
         this.trainingName = trainingName;
-        this.trainingType = trainingType;
+        this.trainingTypeId = trainingTypeId;
         this.trainingDate = trainingDate;
         this.trainingDuration = trainingDuration;
     }

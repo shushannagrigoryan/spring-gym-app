@@ -38,4 +38,5 @@ public class TraineeEntity {
     @OneToMany(mappedBy = "trainee", fetch = FetchType.EAGER)
     private List<TrainingEntity> trainings = new ArrayList<>();
 
+
 }

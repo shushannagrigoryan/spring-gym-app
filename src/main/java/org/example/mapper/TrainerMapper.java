@@ -2,7 +2,6 @@ package org.example.mapper;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TrainerDto;
-import org.example.dto.TrainingTypeDto;
 import org.example.entity.TrainerEntity;
 import org.example.entity.UserEntity;
 import org.springframework.stereotype.Component;
@@ -27,7 +26,7 @@ public class TrainerMapper {
 
         return new TrainerDto(trainerEntity.getUser().getFirstName(),
                 trainerEntity.getUser().getLastName(),
-                trainerEntity.getSpecialization().getTrainingTypeName());
+                trainerEntity.getSpecialization().getId());
     }
 
     /**
@@ -41,9 +40,8 @@ public class TrainerMapper {
 
         TrainerEntity trainerEntity = new TrainerEntity();
         trainerEntity.setUser(new UserEntity(trainerDto.getFirstName(), trainerDto.getLastName()));
-        trainerEntity.setSpecialization(
-                trainingTypeMapper.dtoToEntity(
-                        new TrainingTypeDto(trainerDto.getSpecialization())));
+
+        trainerEntity.setSpecializationId(trainerDto.getSpecialization());
 
         return trainerEntity;
     }

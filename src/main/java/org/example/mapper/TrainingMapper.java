@@ -21,7 +21,7 @@ public class TrainingMapper {
         return new TrainingDto(trainingEntity.getTrainer().getId(),
                 trainingEntity.getTrainee().getId(),
                 trainingEntity.getTrainingName(),
-                trainingEntity.getTrainingType(),
+                trainingEntity.getTrainingType().getId(),
                 trainingEntity.getTrainingDate(), trainingEntity.getTrainingDuration());
     }
 
@@ -38,7 +38,7 @@ public class TrainingMapper {
         trainingEntity.setTraineeId(trainingDto.getTraineeId());
         trainingEntity.setTrainerId(trainingDto.getTrainerId());
         trainingEntity.setTrainingName(trainingDto.getTrainingName());
-        trainingEntity.setTrainingType(trainingDto.getTrainingType());
+        trainingEntity.setTrainingTypeId(trainingDto.getTrainingType());
         trainingEntity.setTrainingDate(trainingDto.getTrainingDate());
         trainingEntity.setTrainingDuration(trainingDto.getTrainingDuration());
 

@@ -8,6 +8,7 @@ import org.example.dao.TrainerDao;
 import org.example.dao.UserDao;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
+import org.example.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -44,10 +45,10 @@ public class UsernameGenerator {
 
         Optional<TraineeEntity> trainee = traineeDao.getTraineeByUsername(username);
         Optional<TrainerEntity> trainer = trainerDao.getTrainerByUsername(username);
-        System.out.println("trainee = " + trainee);
-        System.out.println("trainer = " + trainer);
 
-        if ((trainee.isPresent()) || (trainer.isPresent())) {
+        Optional<UserEntity> user = userDao.getUserByUsername(username);
+
+        if (user.isPresent()) {
             log.debug("Username taken.");
             return username + getSuffix(username);
         }

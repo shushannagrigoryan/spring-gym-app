@@ -31,9 +31,13 @@ public class TrainerFacade {
     public void createTrainer(TrainerDto trainerDto) {
         log.info("Request to create trainer");
         TrainerEntity trainerEntity = trainerMapper.dtoToEntity(trainerDto);
-        trainerService.createTrainer(trainerEntity);
-        log.info("Successfully created trainer");
+        try {
+            trainerService.createTrainer(trainerEntity);
+        } catch (GymIllegalIdException e) {
+            log.error("Error while creating trainer: {}", trainerEntity, e);
+        }
 
+        log.info("Successfully created trainer");
     }
 
     /**
