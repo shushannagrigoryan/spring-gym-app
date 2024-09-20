@@ -213,7 +213,7 @@ public class TraineeDao {
             }
 
             UserEntity user = session.get(UserEntity.class, traineeEntity.getUser().getId());
-            if(user != null) {
+            if (user != null) {
                 user.setFirstName(traineeEntity.getUser().getFirstName());
                 user.setLastName(traineeEntity.getUser().getLastName());
                 user.setUsername(traineeEntity.getUser().getUsername());

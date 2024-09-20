@@ -93,20 +93,20 @@ public class TrainerFacade {
         }
     }
 
-    //    /**
-    //     * Updates the trainer with the given id in the facade layer.
-    //     *
-    //     * @param id         id of the trainer
-    //     * @param trainerDto the new trainer data to update with
-    //     */
-    //    public void updateTrainerById(Long id, TrainerDto trainerDto) {
-    //        log.info("Request to update trainer by id");
-    //        try {
-    //            trainerService.updateTrainerById(id, trainerMapper.dtoToEntity(trainerDto));
-    //            log.info("Successfully updated trainer by id");
-    //        } catch (GymIllegalIdException exception) {
-    //            log.error(exception.getMessage(), exception);
-    //        }
-    //
-    //    }
+    /**
+     * Updates Trainer by id.
+     *
+     * @param id         id of the trainer to update
+     * @param trainerDto new trainer data to update with
+     */
+    public void updateTrainerById(Long id, TrainerDto trainerDto) {
+        log.info("Request to update trainer by id");
+        try {
+            trainerService.updateTrainerById(id, trainerMapper.dtoToEntity(trainerDto));
+            log.info("Successfully updated trainer by id");
+        } catch (GymIllegalIdException | GymDataUpdateException exception) {
+            log.error(exception.getMessage(), exception);
+        }
+
+    }
 }

@@ -123,40 +123,47 @@ public class TrainerService {
         }
     }
 
-    //    /**
-    //     * Updates trainer by id.
-    //     *
-    //     * @param id            of the trainer
-    //     * @param trainerEntity to update with
-    //     */
-    //    public void updateTrainerById(Long id, TrainerEntity trainerEntity) {
-    //        log.debug("Updating trainer by id: {}", id);
-    //        Optional<TrainerEntity> trainer = trainerDao.getTrainerById(id);
-    //
-    //        if (trainer.isEmpty()) {
-    //            log.debug("No trainer with id: {}", id);
-    //            throw new GymIllegalIdException(String.format("No trainer with id: %d", id));
-    //        }
-    //
-    //        TrainerEntity trainerToUpdate = trainer.get();
-    //        String updatedFirstName = trainerEntity.getFirstName();
-    //        String updatedLastName = trainerEntity.getLastName();
-    //        String firstName = trainerToUpdate.getFirstName();
-    //        String lastName = trainerToUpdate.getLastName();
-    //
-    //        if (!((firstName.equals(updatedFirstName)) && (lastName.equals(updatedLastName)))) {
-    //            String username = userDao
-    //                    .generateUsername(updatedFirstName, updatedLastName);
-    //            trainerToUpdate.setUsername(username);
-    //        }
-    //
-    //        trainerToUpdate.setFirstName(updatedFirstName);
-    //        trainerToUpdate.setLastName(updatedLastName);
-    //        trainerToUpdate.setSpecialization(trainerEntity.getSpecialization());
-    //        trainerToUpdate.setActive(trainerEntity.isActive());
-    //
-    //        trainerDao.updateTrainerById(id, trainerToUpdate);
-    //        log.debug("Successfully updated trainer with id: {}", id);
-    //        saveDataToFile.writeMapToFile("Trainer");
-    //    }
+    /**
+     * Updates trainer by id.
+     *
+     * @param id            id of the trainer
+     * @param trainerEntity {@code TrainerEntity} to update with
+     */
+    public void updateTrainerById(Long id, TrainerEntity trainerEntity) {
+        log.debug("Updating trainer by id: {}", id);
+        Optional<TrainerEntity> trainer = trainerDao.getTrainerById(id);
+
+        if (trainer.isEmpty()) {
+            log.debug("No trainer with id: {}", id);
+            throw new GymIllegalIdException(String.format("No trainer with id: %d", id));
+        }
+
+        TrainerEntity trainerToUpdate = trainer.get();
+
+        String updatedFirstName = trainerEntity.getUser().getFirstName();
+        String updatedLastName = trainerEntity.getUser().getLastName();
+        String firstName = trainerToUpdate.getUser().getFirstName();
+        String lastName = trainerToUpdate.getUser().getLastName();
+
+        if (!((firstName.equals(updatedFirstName)) && (lastName.equals(updatedLastName)))) {
+            String username = usernameGenerator
+                    .generateUsername(updatedFirstName, updatedLastName);
+            trainerToUpdate.getUser().setUsername(username);
+        }
+
+        trainerToUpdate.getUser().setFirstName(updatedFirstName);
+        trainerToUpdate.getUser().setLastName(updatedLastName);
+
+        Optional<TrainingTypeEntity> trainingType =
+                trainingTypeDao.getTrainingTypeById(trainerEntity.getSpecializationId());
+        trainingType.ifPresentOrElse(trainerEntity::setSpecialization, () -> {
+            throw new GymIllegalIdException(
+                    String.format("Training Type with id %d does not exist.",
+                            trainerEntity.getSpecializationId()));
+        });
+        trainerToUpdate.setSpecialization(trainerEntity.getSpecialization());
+
+        trainerDao.updateTrainerById(id, trainerToUpdate);
+        log.debug("Successfully updated trainer with id: {}", id);
+    }
 }
