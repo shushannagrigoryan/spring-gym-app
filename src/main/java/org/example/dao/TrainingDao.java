@@ -1,11 +1,16 @@
 package org.example.dao;
 
+import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
+import org.example.exceptions.GymDataAccessException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -49,4 +54,32 @@ public class TrainingDao {
     //        log.debug("Getting training with id: {}", id);
     //        return Optional.ofNullable(dataStorage.getTrainingStorage().get(id));
     //    }
+
+
+
+    /**
+     * Gets all trainings.
+     *
+     * @return {@code Optional<TrainingEntity>}
+     */
+    public List<TrainingEntity> getAllTrainings() {
+        log.debug("Getting all trainings.");
+
+        List<TrainingEntity> trainings = null;
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            String hql = "FROM TrainingEntity";
+            Query<TrainingEntity> query = session.createQuery(hql, TrainingEntity.class);
+            trainings = query.getResultList();
+
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.debug("hibernate exception");
+            throw new GymDataAccessException("Failed to retrieve all trainings");
+        }
+        return trainings;
+    }
 }

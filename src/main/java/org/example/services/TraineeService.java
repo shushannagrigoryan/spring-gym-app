@@ -1,14 +1,23 @@
 package org.example.services;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.auth.TraineeAuth;
 import org.example.dao.TraineeDao;
+import org.example.dao.TrainingDao;
 import org.example.dto.TraineeDto;
+import org.example.dto.TrainerDto;
 import org.example.entity.TraineeEntity;
+import org.example.entity.TrainerEntity;
+import org.example.entity.TrainingEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.mapper.TraineeMapper;
+import org.example.mapper.TrainerMapper;
 import org.example.password.PasswordGeneration;
 import org.example.username.UsernameGenerator;
 import org.springframework.stereotype.Service;
@@ -21,6 +30,8 @@ public class TraineeService {
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
     private final TraineeAuth traineeAuth;
+    private final TrainingDao trainingDao;
+    private final TrainerMapper trainerMapper;
 
     /**
      * Injecting dependencies using constructor.
@@ -29,12 +40,16 @@ public class TraineeService {
                           TraineeMapper traineeMapper,
                           UsernameGenerator usernameGenerator,
                           PasswordGeneration passwordGeneration,
-                          TraineeAuth traineeAuth) {
+                          TraineeAuth traineeAuth,
+                          TrainingDao trainingDao,
+                          TrainerMapper trainerMapper) {
         this.traineeDao = traineeDao;
         this.traineeMapper = traineeMapper;
         this.usernameGenerator = usernameGenerator;
         this.passwordGeneration = passwordGeneration;
         this.traineeAuth = traineeAuth;
+        this.trainingDao = trainingDao;
+        this.trainerMapper = trainerMapper;
     }
     //private UserDao userDao;
 
@@ -186,5 +201,30 @@ public class TraineeService {
 
         traineeDao.updateTraineeById(id, traineeToUpdate);
         log.debug("Successfully updated trainee with id: {}", id);
+    }
+
+    /**
+     * Returns trainers not assigned to trainee by trainee username.
+     * Throws GymIllegalIdException if the username is not valid.
+     *
+     * @param username of the trainee.
+     * @return {@code List<TrainerDto>}
+     */
+    public Set<TrainerDto> trainersNotAssignedToTrainee(String username) {
+
+        if(traineeDao.getTraineeByUsername(username).isEmpty()) {
+            throw new GymIllegalIdException(String.format(
+                    "No trainee with username: %s", username));
+        }
+
+        Set<TrainerEntity> trainerEntities = trainingDao.getAllTrainings().stream()
+                .filter(x -> !x.getTrainee().getUser().getUsername().equals(username))
+                .map(TrainingEntity::getTrainer).collect(Collectors.toSet());
+
+        Set<TrainerDto> trainerDtoSet = new HashSet<>();
+        for (TrainerEntity t : trainerEntities) {
+            trainerDtoSet.add(trainerMapper.entityToDto(t));
+        }
+        return trainerDtoSet;
     }
 }
