@@ -193,21 +193,41 @@ public class TraineeDao {
     //        }
     //    }
     //
-    //    /**
-    //     * Updates trainee entity in storage by id.
-    //     * If no trainee is found throws an {@code IllegalIdException}
-    //     *
-    //     * @param id id of the trainee to be updated
-    //     * @param traineeEntity new {@code TraineeEntity} to update with
-    //     */
-    //    public void updateTraineeById(Long id, TraineeEntity traineeEntity) {
-    //        if (!dataStorage.getTraineeStorage().containsKey(id)) {
-    //            log.debug("No trainee with id: {}", id);
-    //            throw new GymIllegalIdException(String.format("No trainee with id: %d", id));
-    //        }
-    //
-    //        log.debug("Updating trainee with id: {} with {}", id, traineeEntity);
-    //        dataStorage.getTraineeStorage().put(id, traineeEntity);
-    //        dataStorage.getTraineeStorageUsernameKey().put(traineeEntity.getUsername(), traineeEntity);
-    //    }
+    /**
+     * Updates trainee entity in storage by id.
+     * If no trainee is found throws an {@code IllegalIdException}
+     *
+     * @param id id of the trainee to be updated
+     * @param traineeEntity new {@code TraineeEntity} to update with
+     */
+    public void updateTraineeById(Long id, TraineeEntity traineeEntity) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            TraineeEntity trainee = session.get(TraineeEntity.class, id);
+
+            if (trainee != null) {
+                trainee.setAddress(traineeEntity.getAddress());
+                trainee.setDateOfBirth(traineeEntity.getDateOfBirth());
+            }
+
+            UserEntity user = session.get(UserEntity.class, traineeEntity.getUser().getId());
+            if(user != null) {
+                user.setFirstName(traineeEntity.getUser().getFirstName());
+                user.setLastName(traineeEntity.getUser().getLastName());
+                user.setUsername(traineeEntity.getUser().getUsername());
+                user.setPassword(traineeEntity.getUser().getPassword());
+            }
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.debug("hibernate exception");
+            throw new GymDataUpdateException(String.format(
+                    "Exception while updating trainee with id: %d", id));
+        }
+        log.debug("Updating trainee with id: {} with {}", id, traineeEntity);
+    }
 }

@@ -1,10 +1,9 @@
 package org.example;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
 import org.example.config.HibernateConfig;
-import org.example.dto.TrainingDto;
+import org.example.dto.TraineeDto;
 import org.example.facade.TraineeFacade;
 import org.example.facade.TrainerFacade;
 import org.example.facade.TrainingFacade;
@@ -63,9 +62,13 @@ public class Main {
         //                "trainingname sdksnd",
         //                1L, LocalDateTime.now(), Duration.ofHours(1)));
 
-        trainingFacade.createTraining(new TrainingDto(
-                1L, 3L, "newTrainingName",
-                2L, LocalDateTime.now(), Duration.ofHours(1)
+        //        trainingFacade.createTraining(new TrainingDto(
+        //                1L, 3L, "newTrainingName",
+        //                2L, LocalDateTime.now(), Duration.ofHours(1)
+        //        ));
+
+        traineeFacade.updateTraineeById(1L, new TraineeDto(
+                "T", "T", LocalDate.now(), "myNewAddress"
         ));
 
 

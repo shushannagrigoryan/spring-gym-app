@@ -118,22 +118,22 @@ public class TraineeFacade {
     //
     //    }
     //
-    //    /**
-    //     * Updates Trainee by id.
-    //     *
-    //     * @param id         id of the trainee to update
-    //     * @param traineeDto new trainee data to update with
-    //     */
-    //    public void updateTraineeById(Long id, TraineeDto traineeDto) {
-    //        log.info("Request to update trainee by id");
-    //        try {
-    //            traineeService.updateTraineeById(id, traineeMapper.dtoToEntity(traineeDto));
-    //            log.info("Successfully updated trainee by id");
-    //        } catch (GymIllegalIdException exception) {
-    //            log.error(exception.getMessage(), exception);
-    //        }
-    //
-    //    }
+    /**
+     * Updates Trainee by id.
+     *
+     * @param id         id of the trainee to update
+     * @param traineeDto new trainee data to update with
+     */
+    public void updateTraineeById(Long id, TraineeDto traineeDto) {
+        log.info("Request to update trainee by id");
+        try {
+            traineeService.updateTraineeById(id, traineeMapper.dtoToEntity(traineeDto));
+            log.info("Successfully updated trainee by id");
+        } catch (GymIllegalIdException | GymDataUpdateException exception) {
+            log.error(exception.getMessage(), exception);
+        }
+
+    }
 
 
 }

@@ -151,42 +151,40 @@ public class TraineeService {
     //        log.debug("Successfully deleted trainee by id: {}", id);
     //    }
     //
-    //    /**
-    //     * Updates trainee by id.
-    //     *
-    //     * @param id            id of the trainee
-    //     * @param traineeEntity {@code TraineeEntity} to update with
-    //     */
-    //    public void updateTraineeById(Long id, TraineeEntity traineeEntity) {
-    //        log.debug("Updating trainee by id: {}", id);
-    //        Optional<TraineeEntity> trainee = traineeDao.getTraineeById(id);
-    //
-    //        if (trainee.isEmpty()) {
-    //            log.debug("No trainee with id: {}", id);
-    //            throw new GymIllegalIdException(String.format("No trainee with id: %d", id));
-    //        }
-    //
-    //        TraineeEntity traineeToUpdate = trainee.get();
-    //
-    //        String updatedFirstName = traineeEntity.getFirstName();
-    //        String updatedLastName = traineeEntity.getLastName();
-    //        String firstName = traineeToUpdate.getFirstName();
-    //        String lastName = traineeToUpdate.getLastName();
-    //
-    //        if (!((firstName.equals(updatedFirstName)) && (lastName.equals(updatedLastName)))) {
-    //            String username = userDao
-    //                    .generateUsername(updatedFirstName, updatedLastName);
-    //            traineeToUpdate.setUsername(username);
-    //        }
-    //
-    //        traineeToUpdate.setFirstName(updatedFirstName);
-    //        traineeToUpdate.setLastName(updatedLastName);
-    //        traineeToUpdate.setDateOfBirth(traineeEntity.getDateOfBirth());
-    //        traineeToUpdate.setAddress(traineeEntity.getAddress());
-    //        traineeToUpdate.setActive(traineeEntity.isActive());
-    //
-    //        traineeDao.updateTraineeById(id, traineeToUpdate);
-    //        log.debug("Successfully updated trainee with id: {}", id);
-    //        saveDataToFile.writeMapToFile("Trainee");
-    //    }
+    /**
+     * Updates trainee by id.
+     *
+     * @param id            id of the trainee
+     * @param traineeEntity {@code TraineeEntity} to update with
+     */
+    public void updateTraineeById(Long id, TraineeEntity traineeEntity) {
+        log.debug("Updating trainee by id: {}", id);
+        Optional<TraineeEntity> trainee = traineeDao.getTraineeById(id);
+
+        if (trainee.isEmpty()) {
+            log.debug("No trainee with id: {}", id);
+            throw new GymIllegalIdException(String.format("No trainee with id: %d", id));
+        }
+
+        TraineeEntity traineeToUpdate = trainee.get();
+
+        String updatedFirstName = traineeEntity.getUser().getFirstName();
+        String updatedLastName = traineeEntity.getUser().getLastName();
+        String firstName = traineeToUpdate.getUser().getFirstName();
+        String lastName = traineeToUpdate.getUser().getLastName();
+
+        if (!((firstName.equals(updatedFirstName)) && (lastName.equals(updatedLastName)))) {
+            String username = usernameGenerator
+                    .generateUsername(updatedFirstName, updatedLastName);
+            traineeToUpdate.getUser().setUsername(username);
+        }
+
+        traineeToUpdate.getUser().setFirstName(updatedFirstName);
+        traineeToUpdate.getUser().setLastName(updatedLastName);
+        traineeToUpdate.setDateOfBirth(traineeEntity.getDateOfBirth());
+        traineeToUpdate.setAddress(traineeEntity.getAddress());
+
+        traineeDao.updateTraineeById(id, traineeToUpdate);
+        log.debug("Successfully updated trainee with id: {}", id);
+    }
 }
