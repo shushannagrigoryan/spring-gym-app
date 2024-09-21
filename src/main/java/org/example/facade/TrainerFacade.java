@@ -7,6 +7,7 @@ import org.example.exceptions.GymDataUpdateException;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalArgumentException;
 import org.example.exceptions.GymIllegalIdException;
+import org.example.exceptions.GymIllegalStateException;
 import org.example.mapper.TrainerMapper;
 import org.example.services.TrainerService;
 import org.springframework.stereotype.Component;
@@ -108,5 +109,31 @@ public class TrainerFacade {
             log.error(exception.getMessage(), exception);
         }
 
+    }
+
+    /**
+     * Activates trainer.
+     *
+     * @param id id of the Trainer
+     */
+    public void activateTrainer(Long id) {
+        try {
+            trainerService.activateTrainer(id);
+        } catch (GymIllegalIdException | GymDataUpdateException | GymIllegalStateException exception) {
+            log.error("Exception while activating trainer with id: {}", id, exception);
+        }
+    }
+
+    /**
+     * Deactivates trainer.
+     *
+     * @param id id of the Trainer
+     */
+    public void deactivateTrainer(Long id) {
+        try {
+            trainerService.deactivateTrainer(id);
+        } catch (GymIllegalIdException | GymDataUpdateException | GymIllegalStateException exception) {
+            log.error("Exception while deactivating trainer with id: {}", id, exception);
+        }
     }
 }

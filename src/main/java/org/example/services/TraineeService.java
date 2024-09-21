@@ -1,6 +1,5 @@
 package org.example.services;
 
-import jakarta.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -141,7 +140,6 @@ public class TraineeService {
      *
      * @param id id of the trainee
      */
-    @Transactional
     public void activateTrainee(Long id) {
         log.info("Request to activate trainee with id: {}", id);
         Optional<TraineeEntity> trainee = traineeDao.getTraineeById(id);
@@ -165,7 +163,6 @@ public class TraineeService {
      *
      * @param id id of the trainee
      */
-    @Transactional
     public void deactivateTrainee(Long id) {
         log.info("Request to deactivate trainee with id: {}", id);
         Optional<TraineeEntity> trainee = traineeDao.getTraineeById(id);

@@ -10,6 +10,7 @@ import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingTypeEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalIdException;
+import org.example.exceptions.GymIllegalStateException;
 import org.example.mapper.TrainerMapper;
 import org.example.mapper.TrainingTypeMapper;
 import org.example.password.PasswordGeneration;
@@ -165,5 +166,51 @@ public class TrainerService {
 
         trainerDao.updateTrainerById(id, trainerToUpdate);
         log.debug("Successfully updated trainer with id: {}", id);
+    }
+
+    /**
+     * Activates Trainer.
+     *
+     * @param id id of the trainer
+     */
+    public void activateTrainer(Long id) {
+        log.info("Request to activate trainer with id: {}", id);
+        Optional<TrainerEntity> trainer = trainerDao.getTrainerById(id);
+
+        if (trainer.isEmpty()) {
+            log.debug("No entity with {} exists.", id);
+            throw new GymIllegalIdException(String.format("No entity with %d exists.", id));
+        }
+
+        if (trainer.get().getUser().isActive()) {
+            log.debug("Trainer with id: {} is already active.", id);
+            throw new GymIllegalStateException(String.format("Trainer with id: %d is already active", id));
+        }
+
+        trainerDao.activateTrainer(trainer.get().getUser().getId());
+
+    }
+
+    /**
+     * Deactivates Trainer.
+     *
+     * @param id id of the trainer
+     */
+    public void deactivateTrainer(Long id) {
+        log.info("Request to deactivate trainer with id: {}", id);
+        Optional<TrainerEntity> trainer = trainerDao.getTrainerById(id);
+
+        if (trainer.isEmpty()) {
+            log.debug("No entity with {} exists.", id);
+            throw new GymIllegalIdException(String.format("No entity with %d exists.", id));
+        }
+
+        if (!trainer.get().getUser().isActive()) {
+            log.debug("Trainer with id: {} is already inactive.", id);
+            throw new GymIllegalStateException(String.format("Trainer with id: %d is already inactive", id));
+        }
+
+        trainerDao.deactivateTrainer(trainer.get().getUser().getId());
+
     }
 }

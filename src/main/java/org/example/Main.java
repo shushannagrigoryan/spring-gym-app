@@ -75,7 +75,10 @@ public class Main {
         //System.out.println(traineeFacade.trainersNotAssignedToTrainee("T.T"));
 
         //traineeFacade.activateTrainee(3L);
-        traineeFacade.deactivateTrainee(3L);
+        //traineeFacade.deactivateTrainee(3L);
+
+        //trainerFacade.activateTrainer(3L);
+        trainerFacade.deactivateTrainer(3L);
 
 
 

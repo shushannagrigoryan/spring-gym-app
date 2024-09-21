@@ -187,4 +187,78 @@ public class TrainerDao {
         log.debug("Updating trainer with id: {} with {}", id, trainerEntity);
     }
 
+    /**
+     * Activates trainer by id.
+     *
+     * @param id id of the trainer to activate
+     */
+    public void activateTrainer(Long id) {
+        log.debug("Activating trainer with id: {}", id);
+
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+
+            CriteriaUpdate<UserEntity> criteriaUpdate =
+                    criteriaBuilder.createCriteriaUpdate(UserEntity.class);
+
+            Root<UserEntity> root = criteriaUpdate.from(UserEntity.class);
+
+            criteriaUpdate.set("isActive", true)
+                    .where(criteriaBuilder.equal(root.get("id"), id));
+
+            session.createMutationQuery(criteriaUpdate).executeUpdate();
+
+            transaction.commit();
+        } catch (HibernateException exception) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.debug("Hibernate exception");
+            log.error("Exception while activating trainer", exception);
+            throw new GymDataUpdateException(
+                    String.format("Exception while activating trainer with id %d", id));
+        }
+
+        log.debug("Successfully activated trainer with id {}", id);
+    }
+
+    /**
+     * Deactivates trainer by id.
+     *
+     * @param id id of the trainer to deactivate
+     */
+    public void deactivateTrainer(Long id) {
+        log.debug("Deactivating trainer with id: {}", id);
+
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+
+            CriteriaUpdate<UserEntity> criteriaUpdate =
+                    criteriaBuilder.createCriteriaUpdate(UserEntity.class);
+
+            Root<UserEntity> root = criteriaUpdate.from(UserEntity.class);
+
+            criteriaUpdate.set("isActive", false)
+                    .where(criteriaBuilder.equal(root.get("id"), id));
+
+            session.createMutationQuery(criteriaUpdate).executeUpdate();
+
+            transaction.commit();
+        } catch (HibernateException exception) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.debug("Hibernate exception");
+            log.error("Exception while deactivating trainer", exception);
+            throw new GymDataUpdateException(
+                    String.format("Exception while deactivating trainer with id %d", id));
+        }
+
+        log.debug("Successfully deactivated trainer with id {}", id);
+    }
+
 }
