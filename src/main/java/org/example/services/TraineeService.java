@@ -14,7 +14,6 @@ import org.example.dto.TrainerDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
-import org.example.exceptions.GymDataUpdateException;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.exceptions.GymIllegalStateException;
@@ -22,10 +21,7 @@ import org.example.mapper.TraineeMapper;
 import org.example.mapper.TrainerMapper;
 import org.example.password.PasswordGeneration;
 import org.example.username.UsernameGenerator;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -161,6 +157,30 @@ public class TraineeService {
         }
 
         traineeDao.activateTrainee(trainee.get().getUser().getId());
+
+    }
+
+    /**
+     * Deactivates Trainee.
+     *
+     * @param id id of the trainee
+     */
+    @Transactional
+    public void deactivateTrainee(Long id) {
+        log.info("Request to deactivate trainee with id: {}", id);
+        Optional<TraineeEntity> trainee = traineeDao.getTraineeById(id);
+
+        if (trainee.isEmpty()) {
+            log.debug("No entity with {} exists.", id);
+            throw new GymIllegalIdException(String.format("No entity with %d exists.", id));
+        }
+
+        if (!trainee.get().getUser().isActive()) {
+            log.debug("Trainee with id: {} is already inactive.", id);
+            throw new GymIllegalStateException(String.format("Trainee with id: %d is already inactive", id));
+        }
+
+        traineeDao.deactivateTrainee(trainee.get().getUser().getId());
 
     }
 

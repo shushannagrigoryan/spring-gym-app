@@ -149,7 +149,7 @@ public class TraineeDao {
         log.debug("Activating trainee with id: {}", id);
 
         Transaction transaction = null;
-        try(Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
 
@@ -175,6 +175,43 @@ public class TraineeDao {
         }
 
         log.debug("Successfully activated trainee with id {}", id);
+    }
+
+    /**
+     * Deactivates trainee by id.
+     *
+     * @param id id of the trainee to deactivate
+     */
+    public void deactivateTrainee(Long id) {
+        log.debug("Deactivating trainee with id: {}", id);
+
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+
+            CriteriaUpdate<UserEntity> criteriaUpdate =
+                    criteriaBuilder.createCriteriaUpdate(UserEntity.class);
+
+            Root<UserEntity> root = criteriaUpdate.from(UserEntity.class);
+
+            criteriaUpdate.set("isActive", false)
+                    .where(criteriaBuilder.equal(root.get("id"), id));
+
+            session.createMutationQuery(criteriaUpdate).executeUpdate();
+
+            transaction.commit();
+        } catch (HibernateException exception) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.debug("Hibernate exception");
+            log.error("Exception while deactivating trainee", exception);
+            throw new GymDataUpdateException(
+                    String.format("Exception while deactivating trainee with id %d", id));
+        }
+
+        log.debug("Successfully deactivated trainee with id {}", id);
     }
 
     //

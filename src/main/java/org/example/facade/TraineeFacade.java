@@ -103,6 +103,19 @@ public class TraineeFacade {
         }
     }
 
+    /**
+     * Deactivates trainee.
+     *
+     * @param id id of the Trainee
+     */
+    public void deactivateTrainee(Long id) {
+        try {
+            traineeService.deactivateTrainee(id);
+        } catch (GymIllegalIdException | GymDataUpdateException | GymIllegalStateException exception) {
+            log.error("Exception while deactivating trainee with id: {}", id, exception);
+        }
+    }
+
     //
     //    /**
     //     * Deletes trainee by id.
