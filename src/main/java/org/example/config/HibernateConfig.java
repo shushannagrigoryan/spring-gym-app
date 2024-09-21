@@ -29,7 +29,14 @@ public class HibernateConfig {
     public SessionFactory sessionFactory() {
 
         try {
-            org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration().configure();
+            org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration()
+                    .configure();
+
+            configuration.setProperty("hibernate.connection.driver_class", "org.postgresql.Driver");
+            configuration.setProperty("hibernate.connection.url", "jdbc:postgresql://localhost:5432/gymdb");
+            configuration.setProperty("hibernate.connection.username", "postgres");
+            configuration.setProperty("hibernate.connection.password", "postgres");
+
 
             configuration.addAnnotatedClass(TraineeEntity.class);
             configuration.addAnnotatedClass(UserEntity.class);
@@ -47,13 +54,11 @@ public class HibernateConfig {
         } catch (HibernateException e) {
             throw new RuntimeException("Failed to create SessionFactory", e);
         }
-
     }
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfig() {
         return new PropertySourcesPlaceholderConfigurer();
     }
-
 
 }

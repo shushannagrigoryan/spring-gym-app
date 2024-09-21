@@ -9,6 +9,7 @@ import org.example.exceptions.GymDataUpdateException;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalArgumentException;
 import org.example.exceptions.GymIllegalIdException;
+import org.example.exceptions.GymIllegalStateException;
 import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
 import org.springframework.stereotype.Component;
@@ -97,10 +98,9 @@ public class TraineeFacade {
     public void activateTrainee(Long id) {
         try {
             traineeService.activateTrainee(id);
-        } catch (GymIllegalIdException | GymDataUpdateException exception) {
+        } catch (GymIllegalIdException | GymDataUpdateException | GymIllegalStateException exception) {
             log.error("Exception while activating trainee with id: {}", id, exception);
         }
-
     }
 
     //

@@ -149,9 +149,8 @@ public class TraineeDao {
         log.debug("Activating trainee with id: {}", id);
 
         Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
+        try(Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
 
             CriteriaUpdate<UserEntity> criteriaUpdate =
@@ -165,14 +164,16 @@ public class TraineeDao {
             session.createMutationQuery(criteriaUpdate).executeUpdate();
 
             transaction.commit();
-        } catch (HibernateException e) {
+        } catch (HibernateException exception) {
             if (transaction != null) {
                 transaction.rollback();
             }
             log.debug("Hibernate exception");
+            log.error("Exception while activating trainee", exception);
             throw new GymDataUpdateException(
                     String.format("Exception while activating trainee with id %d", id));
         }
+
         log.debug("Successfully activated trainee with id {}", id);
     }
 

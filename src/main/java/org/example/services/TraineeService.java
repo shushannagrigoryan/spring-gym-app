@@ -1,5 +1,6 @@
 package org.example.services;
 
+import jakarta.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -13,12 +14,18 @@ import org.example.dto.TrainerDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
+import org.example.exceptions.GymDataUpdateException;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalIdException;
+import org.example.exceptions.GymIllegalStateException;
 import org.example.mapper.TraineeMapper;
 import org.example.mapper.TrainerMapper;
 import org.example.password.PasswordGeneration;
 import org.example.username.UsernameGenerator;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,6 +38,7 @@ public class TraineeService {
     private final TraineeAuth traineeAuth;
     private final TrainingDao trainingDao;
     private final TrainerMapper trainerMapper;
+    private final SessionFactory sessionFactory;
 
     /**
      * Injecting dependencies using constructor.
@@ -41,7 +49,8 @@ public class TraineeService {
                           PasswordGeneration passwordGeneration,
                           TraineeAuth traineeAuth,
                           TrainingDao trainingDao,
-                          TrainerMapper trainerMapper) {
+                          TrainerMapper trainerMapper,
+                          SessionFactory sessionFactory) {
         this.traineeDao = traineeDao;
         this.traineeMapper = traineeMapper;
         this.usernameGenerator = usernameGenerator;
@@ -49,6 +58,7 @@ public class TraineeService {
         this.traineeAuth = traineeAuth;
         this.trainingDao = trainingDao;
         this.trainerMapper = trainerMapper;
+        this.sessionFactory = sessionFactory;
     }
     //private UserDao userDao;
 
@@ -135,9 +145,11 @@ public class TraineeService {
      *
      * @param id id of the trainee
      */
+    @Transactional
     public void activateTrainee(Long id) {
         log.info("Request to activate trainee with id: {}", id);
         Optional<TraineeEntity> trainee = traineeDao.getTraineeById(id);
+
         if (trainee.isEmpty()) {
             log.debug("No entity with {} exists.", id);
             throw new GymIllegalIdException(String.format("No entity with %d exists.", id));
@@ -145,10 +157,11 @@ public class TraineeService {
 
         if (trainee.get().getUser().isActive()) {
             log.debug("Trainee with id: {} is already active.", id);
-            return;
-
+            throw new GymIllegalStateException(String.format("Trainee with id: %d is already active", id));
         }
+
         traineeDao.activateTrainee(trainee.get().getUser().getId());
+
     }
 
     //
