@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +27,7 @@ public class TrainingTypeEntity {
     @OneToMany(mappedBy = "specialization")
     private List<TrainerEntity> trainers;
 
-    @OneToMany(mappedBy = "trainingType", fetch = FetchType.EAGER)
-    private List<TrainingEntity> trainings = new ArrayList<>();
+    @OneToMany(mappedBy = "trainingType", fetch = FetchType.LAZY)
+    private List<TrainingEntity> trainings;
 
 }

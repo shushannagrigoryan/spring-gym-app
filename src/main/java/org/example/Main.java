@@ -1,10 +1,17 @@
 package org.example;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.example.config.HibernateConfig;
+import org.example.dto.TraineeDto;
+import org.example.dto.TrainerDto;
+import org.example.dto.TrainingDto;
 import org.example.facade.TraineeFacade;
 import org.example.facade.TrainerFacade;
 import org.example.facade.TrainingFacade;
+import org.springframework.cglib.core.Local;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -78,7 +85,24 @@ public class Main {
         //traineeFacade.deactivateTrainee(3L);
 
         //trainerFacade.activateTrainer(3L);
-        trainerFacade.deactivateTrainer(3L);
+        //trainerFacade.deactivateTrainer(3L);
+
+
+
+
+        //        traineeFacade.
+        //                createTrainee(new TraineeDto("A", "B",
+        //                        LocalDate.now(), "myAddress"));
+        //
+        //        trainerFacade.createTrainer(new TrainerDto("C", "D", 2L));
+        //
+        //        trainingFacade.createTraining(new TrainingDto(
+        //                1L, 1L, "trainingName",
+        //                2L, LocalDateTime.now(),
+        //                Duration.ofHours(1)
+        //        ));
+
+        traineeFacade.deleteTraineeByUsername("A.B");
 
 
 

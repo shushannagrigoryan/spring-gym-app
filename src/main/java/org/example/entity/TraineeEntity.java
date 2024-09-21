@@ -1,5 +1,6 @@
 package org.example.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -9,7 +10,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +25,6 @@ import lombok.Setter;
 public class TraineeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
 
     private LocalDate dateOfBirth;
@@ -35,8 +34,9 @@ public class TraineeEntity {
     @OneToOne
     private UserEntity user;
 
-    @OneToMany(mappedBy = "trainee", fetch = FetchType.EAGER)
-    private List<TrainingEntity> trainings = new ArrayList<>();
+    @OneToMany(mappedBy = "trainee", fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<TrainingEntity> trainings;
 
 
 }

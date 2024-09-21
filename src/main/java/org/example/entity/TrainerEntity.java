@@ -11,7 +11,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,15 +26,15 @@ public class TrainerEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "specialization_id", nullable = false)
     private TrainingTypeEntity specialization;
 
     @OneToOne
     private UserEntity user;
 
-    @OneToMany(mappedBy = "trainer", fetch = FetchType.EAGER)
-    private List<TrainingEntity> trainings = new ArrayList<>();
+    @OneToMany(mappedBy = "trainer", fetch = FetchType.LAZY)
+    private List<TrainingEntity> trainings;
 
     @Transient
     private Long specializationId;

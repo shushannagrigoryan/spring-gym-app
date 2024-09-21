@@ -10,6 +10,7 @@ import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalArgumentException;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.exceptions.GymIllegalStateException;
+import org.example.exceptions.GymIllegalUsernameException;
 import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
 import org.springframework.stereotype.Component;
@@ -149,6 +150,24 @@ public class TraineeFacade {
         }
 
     }
+
+
+    /**
+     * Deletes trainee by username.
+     *
+     * @param username username of the trainee to delete
+     */
+    public void deleteTraineeByUsername(String username) {
+        log.info("Request to delete trainee by username");
+        try {
+            traineeService.deleteTraineeByUsername(username);
+            log.info("Successfully deleted trainee by username");
+        } catch (GymIllegalUsernameException exception) {
+            log.error("No trainee with username: {} for deleting", username, exception);
+        }
+
+    }
+
 
     /**
      * Returns the list of trainers which are not assigned to trainee, by trainee username.

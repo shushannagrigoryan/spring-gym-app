@@ -268,4 +268,40 @@ public class TraineeDao {
         }
         log.debug("Updating trainee with id: {} with {}", id, traineeEntity);
     }
+
+
+    /**
+     * Deletes the trainee by username.
+     * If no trainee is found throws an {@code GymIllegalUsernameException}.
+     *
+     * @param username username of the trainee to be deleted
+     */
+    public void deleteTraineeByUsername(String username) {
+        //        if (dataStorage.getTraineeStorage().containsKey(id)) {
+        //            log.debug("Deleting trainee with id: {} from storage", id);
+        //            dataStorage.getTraineeStorage().remove(id);
+        //        } else {
+        //            log.debug("No trainee with id: {}", id);
+        //            throw new GymIllegalIdException(String.format("No trainee with id: %d", id));
+        //        }
+
+        log.debug("Deleting trainee with username: {}", username);
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            String hql = "DELETE from TraineeEntity t WHERE t.user.username = :username";
+            session.createMutationQuery(hql)
+                    .setParameter("username", username)
+                    .executeUpdate();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.debug("hibernate exception");
+            throw new GymDataAccessException(String.format("Failed to retrieve trainee with username: %s", username));
+        }
+
+        log.debug("Successfully deleted trainee with username: {}", username);
+    }
+
 }

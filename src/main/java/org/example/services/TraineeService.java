@@ -16,6 +16,7 @@ import org.example.entity.TrainingEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.exceptions.GymIllegalStateException;
+import org.example.exceptions.GymIllegalUsernameException;
 import org.example.mapper.TraineeMapper;
 import org.example.mapper.TrainerMapper;
 import org.example.password.PasswordGeneration;
@@ -256,4 +257,23 @@ public class TraineeService {
         }
         return trainerDtoSet;
     }
+
+
+    /**
+     * Deletes a trainee by username in the service layer.
+     * If there is no trainee with the given username throws an {@code GymIllegalUsernameException}.
+     *
+     * @param username the username of the trainee
+     */
+    public void deleteTraineeByUsername(String username) {
+        log.debug("Deleting trainee by username: {}", username);
+        Optional<TraineeEntity> trainee = traineeDao.getTraineeByUsername(username);
+        if (trainee.isEmpty()) {
+            throw new GymIllegalUsernameException(
+                    String.format("Illegal username for trainee: %s.", username));
+        }
+        traineeDao.deleteTraineeByUsername(username);
+        log.debug("Successfully deleted trainee by username: {}", username);
+    }
+
 }
