@@ -167,4 +167,21 @@ public class TrainerFacade {
         return trainingList;
 
     }
+
+    /**
+     * Returns trainers not assigned to trainee by trainee username.
+     * Throws GymIllegalUsernameException if the username is not valid.
+     *
+     * @param traineeUsername of the trainee.
+     * @return {@code List<TrainerDto>}
+     */
+    public List<TrainerDto> getTrainersNotAssignedToTrainee(String traineeUsername) {
+        List<TrainerDto> trainers = null;
+        try {
+            trainers = trainerService.getTrainersNotAssignedToTrainee(traineeUsername);
+        } catch (GymIllegalUsernameException | GymDataAccessException exception) {
+            log.error(exception.getMessage(), exception);
+        }
+        return trainers;
+    }
 }

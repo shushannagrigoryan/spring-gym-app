@@ -287,14 +287,6 @@ public class TraineeDao {
      * @param username username of the trainee to be deleted
      */
     public void deleteTraineeByUsername(String username) {
-        //        if (dataStorage.getTraineeStorage().containsKey(id)) {
-        //            log.debug("Deleting trainee with id: {} from storage", id);
-        //            dataStorage.getTraineeStorage().remove(id);
-        //        } else {
-        //            log.debug("No trainee with id: {}", id);
-        //            throw new GymIllegalIdException(String.format("No trainee with id: %d", id));
-        //        }
-
         log.debug("Deleting trainee with username: {}", username);
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {

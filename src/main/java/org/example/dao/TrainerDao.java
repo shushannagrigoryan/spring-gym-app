@@ -7,11 +7,13 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.entity.UserEntity;
@@ -333,6 +335,58 @@ public class TrainerDao {
         log.debug("Successfully retrieved trainer's trainings by given criteria");
 
         return trainings;
+    }
+
+    /**
+     * Getting trainers list that are not assigned to the given trainee.
+     *
+     * @param traineeUsername trainee username.
+     *
+     * @return {@code List<TrainerEntity>}
+     */
+    public List<TrainerEntity> getTrainersNotAssignedToTrainee(String traineeUsername) {
+        Session session = null;
+        Transaction transaction = null;
+        List<TrainerEntity> trainers;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<TrainerEntity> criteriaQuery = criteriaBuilder.createQuery(TrainerEntity.class);
+
+            Root<TrainerEntity> trainerRoot = criteriaQuery.from(TrainerEntity.class);
+
+            Subquery<Long> subquery = criteriaQuery.subquery(Long.class);
+            Root<TrainingEntity> trainingRoot = subquery.from(TrainingEntity.class);
+
+            Join<TrainingEntity, TraineeEntity> traineeJoin = trainingRoot.join("trainee", JoinType.INNER)
+                    .join("user", JoinType.INNER);
+
+            subquery.select(trainingRoot.get("trainer").get("id"))
+                    .where(criteriaBuilder.equal(traineeJoin.get("username"), traineeUsername));
+
+            criteriaQuery.select(trainerRoot)
+                    .where(criteriaBuilder.not(trainerRoot.get("id").in(subquery)));
+
+            trainers = session.createQuery(criteriaQuery).getResultList();
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.debug("hibernate exception");
+            throw new GymDataAccessException(String
+                    .format("Failed to retrieve trainers not assigned to trainee: %s",
+                            traineeUsername));
+        } finally {
+            assert session != null;
+            session.close();
+        }
+
+        log.debug("Successfully retrieved trainers not assigned to trainee: {}", traineeUsername);
+
+        return trainers;
     }
 
 }

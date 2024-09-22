@@ -2,10 +2,8 @@ package org.example.facade;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TraineeDto;
-import org.example.dto.TrainerDto;
 import org.example.dto.TrainingDto;
 import org.example.entity.TraineeEntity;
 import org.example.exceptions.GymDataAccessException;
@@ -171,29 +169,6 @@ public class TraineeFacade {
         }
 
     }
-
-
-    /**
-     * Returns the list of trainers which are not assigned to trainee, by trainee username.
-     *
-     * @param username username of the trainee
-     * @return {@code List<TrainerList>}
-     */
-    public Set<TrainerDto> trainersNotAssignedToTrainee(String username) {
-        log.debug("Request to get trainers which are not assigned to the trainee with username: {}", username);
-
-        Set<TrainerDto> trainers = null;
-        try {
-            trainers = traineeService.trainersNotAssignedToTrainee(username);
-        } catch (GymIllegalIdException exception) {
-            log.error(exception.getMessage(), exception);
-        }
-
-        log.debug("Successfully retrieved trainers which are not assigned to the trainee with username: {}", username);
-        return trainers;
-
-    }
-
 
     /**
      * Returns trainees trainings list by trainee username and given criteria.

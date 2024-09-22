@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.auth.TrainerAuth;
+import org.example.dao.TraineeDao;
 import org.example.dao.TrainerDao;
 import org.example.dao.TrainingTypeDao;
 import org.example.dto.TrainerDto;
@@ -36,6 +37,7 @@ public class TrainerService {
     private final TrainingTypeMapper trainingTypeMapper;
     private final TrainingTypeDao trainingTypeDao;
     private final TrainingMapper trainingMapper;
+    private final TraineeDao traineeDao;
 
     /**
      * Injecting dependencies using constructor.
@@ -48,7 +50,8 @@ public class TrainerService {
                           TrainingTypeService trainingTypeService,
                           TrainingTypeMapper trainingTypeMapper,
                           TrainingTypeDao trainingTypeDao,
-                          TrainingMapper trainingMapper) {
+                          TrainingMapper trainingMapper,
+                          TraineeDao traineeDao) {
         this.trainerMapper = trainerMapper;
         this.trainerDao = trainerDao;
         this.usernameGenerator = usernameGenerator;
@@ -58,6 +61,7 @@ public class TrainerService {
         this.trainingTypeMapper = trainingTypeMapper;
         this.trainingTypeDao = trainingTypeDao;
         this.trainingMapper = trainingMapper;
+        this.traineeDao = traineeDao;
     }
 
     /**
@@ -250,4 +254,24 @@ public class TrainerService {
 
         return trainingEntities.stream().map(trainingMapper::entityToDto).collect(Collectors.toList());
     }
+
+    /**
+     * Returns trainers not assigned to trainee by trainee username.
+     * Throws GymIllegalUsernameException if the username is not valid.
+     *
+     * @param traineeUsername of the trainee.
+     * @return {@code List<TrainerDto>}
+     */
+    public List<TrainerDto> getTrainersNotAssignedToTrainee(String traineeUsername) {
+        List<TrainerEntity> trainers;
+
+        if (traineeDao.getTraineeByUsername(traineeUsername).isEmpty()) {
+            throw new GymIllegalUsernameException(String.format(
+                    "No trainee with username: %s", traineeUsername));
+        }
+        trainers = trainerDao.getTrainersNotAssignedToTrainee(traineeUsername);
+
+        return trainers.stream().map(trainerMapper::entityToDto).collect(Collectors.toList());
+    }
+
 }
