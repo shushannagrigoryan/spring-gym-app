@@ -1,10 +1,14 @@
 package org.example.facade;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TraineeDto;
 import org.example.dto.TrainerDto;
+import org.example.dto.TrainingDto;
 import org.example.entity.TraineeEntity;
+import org.example.exceptions.GymDataAccessException;
 import org.example.exceptions.GymDataUpdateException;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalArgumentException;
@@ -187,6 +191,34 @@ public class TraineeFacade {
 
         log.debug("Successfully retrieved trainers which are not assigned to the trainee with username: {}", username);
         return trainers;
+
+    }
+
+
+    /**
+     * Returns trainees trainings list by trainee username and given criteria.
+     *
+     * @param traineeUsername username of the trainee
+     * @param fromDate training fromDate
+     * @param toDate training toDate
+     * @param trainingTypeId training type
+     * @param trainerUsername trainer username
+     * @return {@code List<TrainingDto>}
+     */
+    public List<TrainingDto> getTraineeTrainingsByFilter(String traineeUsername, LocalDate fromDate,
+                                                            LocalDate toDate, Long trainingTypeId,
+                                                            String trainerUsername) {
+        log.debug("Request to get trainees trainings by trainee username: {} "
+                        + "and criteria: fromDate:{} toDate:{} trainingType: {} trainerUsername: {}",
+                traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername);
+        List<TrainingDto> trainingList = null;
+        try {
+            trainingList = traineeService
+                    .getTraineeTrainingsByFilter(traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername);
+        } catch (GymIllegalUsernameException | GymDataAccessException e) {
+            log.error(e.getMessage(), e);
+        }
+        return trainingList;
 
     }
 

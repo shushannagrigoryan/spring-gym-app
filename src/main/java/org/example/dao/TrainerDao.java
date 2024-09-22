@@ -154,7 +154,7 @@ public class TrainerDao {
      * Updates trainer entity in storage by id.
      * If no trainer is found throws an {@code IllegalIdException}
      *
-     * @param id id of the trainer to be updated
+     * @param id            id of the trainer to be updated
      * @param trainerEntity new {@code TrainerEntity} to update with
      */
     public void updateTrainerById(Long id, TrainerEntity trainerEntity) {

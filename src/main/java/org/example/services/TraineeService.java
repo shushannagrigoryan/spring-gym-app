@@ -1,6 +1,8 @@
 package org.example.services;
 
+import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -10,6 +12,7 @@ import org.example.dao.TraineeDao;
 import org.example.dao.TrainingDao;
 import org.example.dto.TraineeDto;
 import org.example.dto.TrainerDto;
+import org.example.dto.TrainingDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
@@ -19,6 +22,7 @@ import org.example.exceptions.GymIllegalStateException;
 import org.example.exceptions.GymIllegalUsernameException;
 import org.example.mapper.TraineeMapper;
 import org.example.mapper.TrainerMapper;
+import org.example.mapper.TrainingMapper;
 import org.example.password.PasswordGeneration;
 import org.example.username.UsernameGenerator;
 import org.hibernate.SessionFactory;
@@ -35,6 +39,7 @@ public class TraineeService {
     private final TrainingDao trainingDao;
     private final TrainerMapper trainerMapper;
     private final SessionFactory sessionFactory;
+    private final TrainingMapper trainingMapper;
 
     /**
      * Injecting dependencies using constructor.
@@ -46,7 +51,8 @@ public class TraineeService {
                           TraineeAuth traineeAuth,
                           TrainingDao trainingDao,
                           TrainerMapper trainerMapper,
-                          SessionFactory sessionFactory) {
+                          SessionFactory sessionFactory,
+                          TrainingMapper trainingMapper) {
         this.traineeDao = traineeDao;
         this.traineeMapper = traineeMapper;
         this.usernameGenerator = usernameGenerator;
@@ -55,6 +61,7 @@ public class TraineeService {
         this.trainingDao = trainingDao;
         this.trainerMapper = trainerMapper;
         this.sessionFactory = sessionFactory;
+        this.trainingMapper = trainingMapper;
     }
     //private UserDao userDao;
 
@@ -278,4 +285,32 @@ public class TraineeService {
         log.debug("Successfully deleted trainee by username: {}", username);
     }
 
+    /**
+     * Returns trainees trainings list by trainee username and given criteria.
+     *
+     * @param traineeUsername username of the trainee
+     * @param fromDate training fromDate
+     * @param toDate training toDate
+     * @param trainingTypeId training type
+     * @param trainerUsername trainer username
+     * @return {@code List<TrainingDto>}
+     */
+
+    public List<TrainingDto> getTraineeTrainingsByFilter(String traineeUsername, LocalDate fromDate,
+                                                            LocalDate toDate, Long trainingTypeId,
+                                                            String trainerUsername) {
+
+        Optional<TraineeEntity> trainee = traineeDao.getTraineeByUsername(traineeUsername);
+        if (trainee.isEmpty()) {
+            throw new GymIllegalUsernameException(
+                    String.format("No trainee with username: %s", traineeUsername)
+            );
+        }
+
+        List<TrainingEntity> trainingEntities =
+                traineeDao.getTraineeTrainingsByFilter(traineeUsername, fromDate,
+                        toDate, trainingTypeId, trainerUsername);
+
+        return trainingEntities.stream().map(trainingMapper::entityToDto).collect(Collectors.toList());
+    }
 }

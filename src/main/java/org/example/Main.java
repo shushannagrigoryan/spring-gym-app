@@ -1,5 +1,6 @@
 package org.example;
 
+import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
 import org.example.config.HibernateConfig;
 import org.example.facade.TraineeFacade;
@@ -91,12 +92,17 @@ public class Main {
         //        trainerFacade.createTrainer(new TrainerDto("C", "D", 2L));
         //
         //        trainingFacade.createTraining(new TrainingDto(
-        //                5L, 5L, "trainingName",
-        //                2L, LocalDateTime.now(),
-        //                Duration.ofHours(1)
+        //                2L, 5L, "trainingName",
+        //                2L, LocalDate.of(2024, 2, 5),
+        //                BigDecimal.valueOf(40)
         //        ));
 
-        traineeFacade.deleteTraineeByUsername("A.B10");
+        System.out.println(traineeFacade.getTraineeTrainingsByFilter("A.B1",
+                LocalDate.of(2024, 2, 5),
+                LocalDate.of(2024, 9, 22), 2L, "C.D2"));
+
+
+        //traineeFacade.deleteTraineeByUsername("A.B10");
 
 
 

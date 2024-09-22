@@ -54,7 +54,6 @@ public class TrainingDao {
     //    }
 
 
-
     /**
      * Gets all trainings.
      *

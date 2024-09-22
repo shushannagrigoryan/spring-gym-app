@@ -9,8 +9,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import java.time.Duration;
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,10 +33,10 @@ public class TrainingEntity {
     private TrainingTypeEntity trainingType;
 
     @Column(name = "training_date")
-    private LocalDateTime trainingDate;
+    private LocalDate trainingDate;
 
     @Column(name = "training_duration", nullable = false)
-    private Duration trainingDuration;
+    private BigDecimal trainingDuration;
 
     @ManyToOne
     @JoinColumn(name = "trainee_id", nullable = false)
@@ -65,7 +65,7 @@ public class TrainingEntity {
      */
     public TrainingEntity(Long traineeId, Long trainerId,
                           String trainingName, Long trainingTypeId,
-                          LocalDateTime trainingDate, Duration trainingDuration) {
+                          LocalDate trainingDate, BigDecimal trainingDuration) {
         this.traineeId = traineeId;
         this.trainerId = trainerId;
         this.trainingName = trainingName;
@@ -73,5 +73,4 @@ public class TrainingEntity {
         this.trainingDate = trainingDate;
         this.trainingDuration = trainingDuration;
     }
-
 }

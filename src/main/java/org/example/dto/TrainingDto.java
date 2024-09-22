@@ -1,7 +1,7 @@
 package org.example.dto;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,15 +10,16 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class TrainingDto {
     private Long traineeId;
     private Long trainerId;
     private String trainingName;
     private Long trainingType;
-    private LocalDateTime trainingDate;
-    private Duration trainingDuration;
+    private LocalDate trainingDate;
+    private BigDecimal trainingDuration;
+
 
 }
