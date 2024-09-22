@@ -1,13 +1,18 @@
 package org.example.facade;
 
+import java.time.LocalDate;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TrainerDto;
+import org.example.dto.TrainingDto;
 import org.example.entity.TrainerEntity;
+import org.example.exceptions.GymDataAccessException;
 import org.example.exceptions.GymDataUpdateException;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalArgumentException;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.exceptions.GymIllegalStateException;
+import org.example.exceptions.GymIllegalUsernameException;
 import org.example.mapper.TrainerMapper;
 import org.example.services.TrainerService;
 import org.springframework.stereotype.Component;
@@ -135,5 +140,31 @@ public class TrainerFacade {
         } catch (GymIllegalIdException | GymDataUpdateException | GymIllegalStateException exception) {
             log.error("Exception while deactivating trainer with id: {}", id, exception);
         }
+    }
+
+
+    /**
+     * Returns trainers trainings list by trainer username and given criteria.
+     *
+     * @param trainerUsername username of the trainer
+     * @param fromDate training fromDate
+     * @param toDate training toDate
+     * @param traineeUsername trainee username
+     * @return {@code List<TrainingDto>}
+     */
+    public List<TrainingDto> getTrainerTrainingsByFilter(String trainerUsername, LocalDate fromDate,
+                                                         LocalDate toDate, String traineeUsername) {
+        log.debug("Request to get trainers trainings by trainer username: {} "
+                        + "and criteria: fromDate:{} toDate:{} traineeUsername: {}",
+                trainerUsername, fromDate, toDate, traineeUsername);
+        List<TrainingDto> trainingList = null;
+        try {
+            trainingList = trainerService
+                    .getTrainerTrainingsByFilter(trainerUsername, fromDate, toDate, traineeUsername);
+        } catch (GymIllegalUsernameException | GymDataAccessException e) {
+            log.error(e.getMessage(), e);
+        }
+        return trainingList;
+
     }
 }

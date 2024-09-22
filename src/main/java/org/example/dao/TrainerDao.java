@@ -1,11 +1,19 @@
 package org.example.dao;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.CriteriaUpdate;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainerEntity;
+import org.example.entity.TrainingEntity;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymDataAccessException;
 import org.example.exceptions.GymDataUpdateException;
@@ -259,6 +267,72 @@ public class TrainerDao {
         }
 
         log.debug("Successfully deactivated trainer with id {}", id);
+    }
+
+    /**
+     * Returns trainer trainings list by trainer username and given criteria.
+     *
+     * @param trainerUsername trainer username
+     * @param fromDate training fromDate
+     * @param toDate training toDate
+     * @param traineeUsername trainee username
+     * @return {@code List<TrainingEntity>}
+     */
+
+    public List<TrainingEntity> getTrainerTrainingsByFilter(String trainerUsername, LocalDate fromDate,
+                                                            LocalDate toDate, String traineeUsername) {
+
+        Session session = null;
+        Transaction transaction = null;
+        List<TrainingEntity> trainings;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<TrainingEntity> criteriaQuery = criteriaBuilder.createQuery(TrainingEntity.class);
+
+            Root<TrainingEntity> trainingRoot = criteriaQuery.from(TrainingEntity.class);
+
+            Join<TrainingEntity, TrainerEntity> trainerJoin = trainingRoot
+                    .join("trainer", JoinType.INNER)
+                    .join("user", JoinType.INNER);
+
+            Join<TrainingEntity, TrainerEntity> traineeJoin = trainingRoot
+                    .join("trainee", JoinType.INNER)
+                    .join("user", JoinType.INNER);
+
+
+            List<Predicate> predicates = new ArrayList<>();
+
+            predicates.add(criteriaBuilder.equal(trainerJoin.get("username"), trainerUsername));
+
+            if (fromDate != null && toDate != null) {
+                predicates.add(criteriaBuilder.between(trainingRoot.get("trainingDate"), fromDate, toDate));
+            }
+
+            if (traineeUsername != null) {
+                predicates.add(criteriaBuilder.equal(traineeJoin.get("username"), traineeUsername));
+            }
+
+            criteriaQuery.select(trainingRoot)
+                    .where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
+
+            trainings = session.createQuery(criteriaQuery).getResultList();
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.debug("hibernate exception");
+            throw new GymDataAccessException("Failed to retrieve trainer's trainings by given criteria.");
+        } finally {
+            assert session != null;
+            session.close();
+        }
+
+        log.debug("Successfully retrieved trainer's trainings by given criteria");
+
+        return trainings;
     }
 
 }

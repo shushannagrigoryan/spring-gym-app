@@ -1,17 +1,24 @@
 package org.example.services;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.auth.TrainerAuth;
 import org.example.dao.TrainerDao;
 import org.example.dao.TrainingTypeDao;
 import org.example.dto.TrainerDto;
+import org.example.dto.TrainingDto;
 import org.example.entity.TrainerEntity;
+import org.example.entity.TrainingEntity;
 import org.example.entity.TrainingTypeEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.exceptions.GymIllegalStateException;
+import org.example.exceptions.GymIllegalUsernameException;
 import org.example.mapper.TrainerMapper;
+import org.example.mapper.TrainingMapper;
 import org.example.mapper.TrainingTypeMapper;
 import org.example.password.PasswordGeneration;
 import org.example.username.UsernameGenerator;
@@ -28,6 +35,7 @@ public class TrainerService {
     private final TrainingTypeService trainingTypeService;
     private final TrainingTypeMapper trainingTypeMapper;
     private final TrainingTypeDao trainingTypeDao;
+    private final TrainingMapper trainingMapper;
 
     /**
      * Injecting dependencies using constructor.
@@ -39,7 +47,8 @@ public class TrainerService {
                           TrainerAuth trainerAuth,
                           TrainingTypeService trainingTypeService,
                           TrainingTypeMapper trainingTypeMapper,
-                          TrainingTypeDao trainingTypeDao) {
+                          TrainingTypeDao trainingTypeDao,
+                          TrainingMapper trainingMapper) {
         this.trainerMapper = trainerMapper;
         this.trainerDao = trainerDao;
         this.usernameGenerator = usernameGenerator;
@@ -48,6 +57,7 @@ public class TrainerService {
         this.trainingTypeService = trainingTypeService;
         this.trainingTypeMapper = trainingTypeMapper;
         this.trainingTypeDao = trainingTypeDao;
+        this.trainingMapper = trainingMapper;
     }
 
     /**
@@ -212,5 +222,32 @@ public class TrainerService {
 
         trainerDao.deactivateTrainer(trainer.get().getUser().getId());
 
+    }
+
+    /**
+     * Returns trainers trainings list by trainer username and given criteria.
+     *
+     * @param trainerUsername username of the trainer
+     * @param fromDate training fromDate
+     * @param toDate training toDate
+     * @param traineeUsername trainee username
+     * @return {@code List<TrainingDto>}
+     */
+
+    public List<TrainingDto> getTrainerTrainingsByFilter(String trainerUsername, LocalDate fromDate,
+                                                         LocalDate toDate, String traineeUsername) {
+
+        Optional<TrainerEntity> trainer = trainerDao.getTrainerByUsername(trainerUsername);
+        if (trainer.isEmpty()) {
+            throw new GymIllegalUsernameException(
+                    String.format("No trainer with username: %s", trainerUsername)
+            );
+        }
+
+        List<TrainingEntity> trainingEntities =
+                trainerDao.getTrainerTrainingsByFilter(trainerUsername, fromDate,
+                        toDate, traineeUsername);
+
+        return trainingEntities.stream().map(trainingMapper::entityToDto).collect(Collectors.toList());
     }
 }

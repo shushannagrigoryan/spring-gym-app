@@ -101,6 +101,10 @@ public class Main {
                 LocalDate.of(2024, 2, 5),
                 LocalDate.of(2024, 9, 22), 2L, "C.D2"));
 
+        System.out.println(trainerFacade.getTrainerTrainingsByFilter("C.D2",
+                LocalDate.of(2024, 2, 5),
+                LocalDate.of(2024, 9, 22), "A.B11"));
+
 
         //traineeFacade.deleteTraineeByUsername("A.B10");
 
