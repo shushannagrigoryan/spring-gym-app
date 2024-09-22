@@ -289,10 +289,19 @@ public class TraineeDao {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            String hql = "DELETE from TraineeEntity t WHERE t.user.username = :username";
-            session.createMutationQuery(hql)
+
+            //delete trainee
+            String hqlDeleteTrainee = "DELETE from TraineeEntity t WHERE t.user.username = :username";
+            session.createMutationQuery(hqlDeleteTrainee)
                     .setParameter("username", username)
                     .executeUpdate();
+
+            //delete corresponding user
+            String hqlDeleteUser = "DELETE from UserEntity u WHERE u.username = :username";
+            session.createMutationQuery(hqlDeleteUser)
+                    .setParameter("username", username)
+                    .executeUpdate();
+
         } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();

@@ -80,11 +80,13 @@ public class TraineeService {
      */
     public void createTrainee(TraineeEntity traineeEntity) {
         log.debug("Creating trainee: {}", traineeEntity);
+
         String username = usernameGenerator.generateUsername(
                 traineeEntity.getUser().getFirstName(),
                 traineeEntity.getUser().getLastName());
         traineeEntity.getUser().setUsername(username);
         traineeEntity.getUser().setPassword(passwordGeneration.generatePassword());
+
         traineeDao.createTrainee(traineeEntity);
         log.debug("Successfully created trainee: {}", traineeEntity);
     }
