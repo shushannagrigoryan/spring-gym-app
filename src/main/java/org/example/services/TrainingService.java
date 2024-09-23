@@ -6,11 +6,13 @@ import org.example.dao.TraineeDao;
 import org.example.dao.TrainerDao;
 import org.example.dao.TrainingDao;
 import org.example.dao.TrainingTypeDao;
+import org.example.dto.TrainingDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.entity.TrainingTypeEntity;
 import org.example.exceptions.GymIllegalIdException;
+import org.example.mapper.TrainingMapper;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +22,7 @@ public class TrainingService {
     private final TraineeService traineeService;
     private final TrainerService trainerService;
     private final TrainingTypeService trainingTypeService;
+    private final TrainingMapper trainingMapper;
     private final TrainerDao trainerDao;
     private final TraineeDao traineeDao;
     private final TrainingTypeDao trainingTypeDao;
@@ -34,7 +37,8 @@ public class TrainingService {
                            TraineeDao traineeDao,
                            TrainerDao trainerDao,
                            TrainingTypeService trainingTypeService,
-                           TrainingTypeDao trainingTypeDao) {
+                           TrainingTypeDao trainingTypeDao,
+                           TrainingMapper trainingMapper) {
         this.trainingDao = trainingDao;
         this.traineeService = traineeService;
         this.trainerService = trainerService;
@@ -42,6 +46,7 @@ public class TrainingService {
         this.trainerDao = trainerDao;
         this.trainingTypeService = trainingTypeService;
         this.trainingTypeDao = trainingTypeDao;
+        this.trainingMapper = trainingMapper;
     }
 
     /**
@@ -81,22 +86,22 @@ public class TrainingService {
 
     }
 
-    //    /**
-    //     * Gets training by id.
-    //     *
-    //     * @param id of the training
-    //     * @return the {@code TrainingDto}
-    //     */
-    //    public TrainingDto getTrainingById(Long id) {
-    //        log.debug("Retrieving training by id: {}", id);
-    //        Optional<TrainingEntity> training = trainingDao.getTrainingById(id);
-    //        if (training.isEmpty()) {
-    //            log.debug("Invalid id for training: {}", id);
-    //            throw new GymIllegalIdException(String.format("No training with id: %d", id));
-    //        }
-    //        log.debug("Getting training with id: {}", id);
-    //        return trainingMapper.entityToDto(training.get());
-    //    }
+    /**
+     * Gets training by id.
+     *
+     * @param id of the training
+     * @return the {@code TrainingDto}
+     */
+    public TrainingDto getTrainingById(Long id) {
+        log.debug("Retrieving training by id: {}", id);
+        Optional<TrainingEntity> training = trainingDao.getTrainingById(id);
+        if (training.isEmpty()) {
+            log.debug("Invalid id for training: {}", id);
+            throw new GymIllegalIdException(String.format("No training with id: %d", id));
+        }
+        log.debug("Getting training with id: {}", id);
+        return trainingMapper.entityToDto(training.get());
+    }
 
 
 }

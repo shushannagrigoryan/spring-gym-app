@@ -108,6 +108,10 @@ public class Main {
                 .getTrainersNotAssignedToTrainee("A.B13"));
         //traineeFacade.deleteTraineeByUsername("A.B10");
 
+        System.out.println("training = " + trainingFacade.getTrainingById(2L));
+        System.out.println("training = " + trainingFacade.getTrainingById(1L));
+        System.out.println("training = " + trainingFacade.getTrainingById(100L));
+
 
 
     }

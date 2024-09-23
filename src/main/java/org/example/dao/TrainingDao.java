@@ -1,6 +1,7 @@
 package org.example.dao;
 
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainingEntity;
 import org.example.exceptions.GymDataAccessException;
@@ -42,16 +43,32 @@ public class TrainingDao {
     }
 
 
-    //    /**
-    //     * Gets training by id.
-    //     *
-    //     * @param id id of the training
-    //     * @return {@code Optional<TrainingEntity>}
-    //     */
-    //    public Optional<TrainingEntity> getTrainingById(Long id) {
-    //        log.debug("Getting training with id: {}", id);
-    //        return Optional.ofNullable(dataStorage.getTrainingStorage().get(id));
-    //    }
+    /**
+     * Gets training by id.
+     *
+     * @param id id of the training
+     * @return {@code Optional<TrainingEntity>}
+     */
+    public Optional<TrainingEntity> getTrainingById(Long id) {
+        log.debug("Getting training with id: {}", id);
+
+        TrainingEntity training;
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            training = session.get(TrainingEntity.class, id);
+            transaction.commit();
+
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.debug("hibernate exception");
+            throw new GymDataAccessException(String.format(
+                    "Failed to retrieve training with id: %d", id));
+        }
+        return Optional.ofNullable(training);
+    }
 
 
     /**
@@ -62,7 +79,7 @@ public class TrainingDao {
     public List<TrainingEntity> getAllTrainings() {
         log.debug("Getting all trainings.");
 
-        List<TrainingEntity> trainings = null;
+        List<TrainingEntity> trainings;
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();

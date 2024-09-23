@@ -76,6 +76,7 @@ public class TraineeDao {
             Query<TraineeEntity> query = session.createQuery(hql, TraineeEntity.class);
             query.setParameter("username", username);
             trainee = query.uniqueResult();
+            transaction.commit();
         } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();

@@ -59,22 +59,6 @@ public class TraineeService {
         this.sessionFactory = sessionFactory;
         this.trainingMapper = trainingMapper;
     }
-    //private UserDao userDao;
-
-    //private TraineeMapper traineeMapper;
-
-    //    /**
-    //     * Setting the dependencies for the TraineeService bean.
-    //     */
-    //    @Autowired
-    //    public void setDependencies(UserDao userDao, TraineeDao traineeDao,
-    //                                SaveDataToFile saveDataToFile,
-    //                                TraineeMapper traineeMapper) {
-    //        this.userDao = userDao;
-    //        this.traineeDao = traineeDao;
-    //        //this.saveDataToFile = saveDataToFile;
-    //        this.traineeMapper = traineeMapper;
-    //    }
 
     /**
      * Creates a new trainee in the service layer.
