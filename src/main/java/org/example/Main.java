@@ -1,7 +1,5 @@
 package org.example;
 
-import java.util.HashMap;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.example.config.HibernateConfig;
 import org.example.facade.TraineeFacade;
@@ -114,15 +112,21 @@ public class Main {
         //        System.out.println("training = " + trainingFacade.getTrainingById(1L));
         //        System.out.println("training = " + trainingFacade.getTrainingById(100L));
 
-        String traineeUsername = "A.B1";
-        Map<Long, Long> updatedTrainersForTrainings = new HashMap<>();
-        updatedTrainersForTrainings.put(5L, 8L);
-        updatedTrainersForTrainings.put(10L, 1L);
-        updatedTrainersForTrainings.put(11L, 4L);
+        //        String traineeUsername = "A.B1";
+        //        Map<Long, Long> updatedTrainersForTrainings = new HashMap<>();
+        //        updatedTrainersForTrainings.put(5L, 8L);
+        //        updatedTrainersForTrainings.put(10L, 1L);
+        //        updatedTrainersForTrainings.put(11L, 4L);
+        //
+        //
+        //        traineeFacade.updateTraineesTrainersList(traineeUsername, updatedTrainersForTrainings);
 
 
-        traineeFacade.updateTraineesTrainersList(traineeUsername, updatedTrainersForTrainings);
+        //traineeFacade.getTraineeByUsername("A.B1");
 
+        //trainingFacade.getTrainingById(2L);
+        //        trainerFacade.createTrainer(new TrainerDto(
+        //                "T", "T", 1L));
 
 
     }
