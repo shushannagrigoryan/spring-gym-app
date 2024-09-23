@@ -53,16 +53,9 @@ public class TrainingDao {
         log.debug("Getting training with id: {}", id);
 
         TrainingEntity training;
-        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
             training = session.get(TrainingEntity.class, id);
-            transaction.commit();
-
         } catch (HibernateException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             log.debug("hibernate exception");
             throw new GymDataAccessException(String.format(
                     "Failed to retrieve training with id: %d", id));
@@ -80,17 +73,12 @@ public class TrainingDao {
         log.debug("Getting all trainings.");
 
         List<TrainingEntity> trainings;
-        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
             String hql = "FROM TrainingEntity";
             Query<TrainingEntity> query = session.createQuery(hql, TrainingEntity.class);
             trainings = query.getResultList();
 
         } catch (HibernateException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             log.debug("hibernate exception");
             throw new GymDataAccessException("Failed to retrieve all trainings");
         }
