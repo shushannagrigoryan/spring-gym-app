@@ -10,6 +10,7 @@ import jakarta.persistence.criteria.Root;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TraineeEntity;
@@ -387,6 +388,72 @@ public class TraineeDao {
         log.debug("Successfully retrieved trainee's trainings by given criteria");
 
         return trainings;
+    }
+
+    /**
+     * Returns trainees trainings.
+     *
+     * @param traineeUsername trainee username
+     * @return {@code List<TrainingEntity>}
+     */
+    public List<TrainingEntity> getTraineeTrainingsList(String traineeUsername) {
+        log.debug("Getting trainings by trainee username: {}", traineeUsername);
+
+        List<TrainingEntity> trainings;
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            String hql = "from TrainingEntity t where t.trainee.user.username = :traineeUsername";
+            trainings = session.createQuery(hql, TrainingEntity.class)
+                    .setParameter("traineeUsername", traineeUsername)
+                    .getResultList();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.debug("hibernate exception");
+            throw new GymDataAccessException(String.format(
+                    "Failed to retrieve trainings by trainee username: %s", traineeUsername));
+        }
+        log.debug("Successfully retrieved trainings by trainee username: {}", traineeUsername);
+        return trainings;
+    }
+
+    /**
+     * Updates trainee's training list.
+     *
+     * @param traineeUsername trainee username
+     * @param trainingsUpdatedTrainers map with key: training id to update, value: the new trainer
+     */
+    public void updateTraineesTrainersList(String traineeUsername, Map<Long, TrainerEntity> trainingsUpdatedTrainers) {
+        List<TrainingEntity> traineeTrainings = getTraineeTrainingsList(traineeUsername);
+
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            for (TrainingEntity training : traineeTrainings) {
+                Long trainingId = training.getId();
+
+                if (trainingsUpdatedTrainers.containsKey(trainingId)) {
+                    TrainingEntity trainingToUpdate = session.get(TrainingEntity.class, trainingId);
+
+                    trainingToUpdate.setTrainer(trainingsUpdatedTrainers.get(trainingId));
+                    session.merge(trainingToUpdate);
+                }
+            }
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            log.debug("hibernate exception");
+            throw new GymDataUpdateException(String.format(
+                    "Failed to update trainersList by trainee username: %s", traineeUsername));
+        }
+        log.debug("Successfully updated trainersList by trainee username: {}", traineeUsername);
     }
 
 }

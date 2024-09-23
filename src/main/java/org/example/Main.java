@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.example.config.HibernateConfig;
 import org.example.facade.TraineeFacade;
@@ -104,13 +106,22 @@ public class Main {
         //                LocalDate.of(2024, 2, 5),
         //                LocalDate.of(2024, 9, 22), "A.B11"));
 
-        System.out.println(trainerFacade
-                .getTrainersNotAssignedToTrainee("A.B13"));
-        //traineeFacade.deleteTraineeByUsername("A.B10");
+        //        System.out.println(trainerFacade
+        //                .getTrainersNotAssignedToTrainee("A.B13"));
+        //        //traineeFacade.deleteTraineeByUsername("A.B10");
+        //
+        //        System.out.println("training = " + trainingFacade.getTrainingById(2L));
+        //        System.out.println("training = " + trainingFacade.getTrainingById(1L));
+        //        System.out.println("training = " + trainingFacade.getTrainingById(100L));
 
-        System.out.println("training = " + trainingFacade.getTrainingById(2L));
-        System.out.println("training = " + trainingFacade.getTrainingById(1L));
-        System.out.println("training = " + trainingFacade.getTrainingById(100L));
+        String traineeUsername = "A.B1";
+        Map<Long, Long> updatedTrainersForTrainings = new HashMap<>();
+        updatedTrainersForTrainings.put(5L, 8L);
+        updatedTrainersForTrainings.put(10L, 1L);
+        updatedTrainersForTrainings.put(11L, 4L);
+
+
+        traineeFacade.updateTraineesTrainersList(traineeUsername, updatedTrainersForTrainings);
 
 
 

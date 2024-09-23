@@ -2,6 +2,7 @@ package org.example.facade;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TraineeDto;
 import org.example.dto.TrainingDto;
@@ -195,6 +196,22 @@ public class TraineeFacade {
         }
         return trainingList;
 
+    }
+
+    /**
+     * Updates trainee's trainer list.
+     *
+     * @param traineeUsername trainee username
+     * @param trainingsUpdatedTrainers map with key: training id to update, value: new trainer id
+     */
+    public void updateTraineesTrainersList(String traineeUsername, Map<Long, Long> trainingsUpdatedTrainers) {
+        log.info("Request to update trainers list of trainee: {}", traineeUsername);
+
+        try {
+            traineeService.updateTraineesTrainersList(traineeUsername, trainingsUpdatedTrainers);
+        } catch (GymIllegalUsernameException | GymDataUpdateException exception) {
+            log.error(exception.getMessage(), exception);
+        }
     }
 
 }

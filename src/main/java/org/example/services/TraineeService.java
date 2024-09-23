@@ -1,16 +1,20 @@
 package org.example.services;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.auth.TraineeAuth;
 import org.example.dao.TraineeDao;
+import org.example.dao.TrainerDao;
 import org.example.dao.TrainingDao;
 import org.example.dto.TraineeDto;
 import org.example.dto.TrainingDto;
 import org.example.entity.TraineeEntity;
+import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalIdException;
@@ -36,6 +40,7 @@ public class TraineeService {
     private final TrainerMapper trainerMapper;
     private final SessionFactory sessionFactory;
     private final TrainingMapper trainingMapper;
+    private final TrainerDao trainerDao;
 
     /**
      * Injecting dependencies using constructor.
@@ -48,7 +53,8 @@ public class TraineeService {
                           TrainingDao trainingDao,
                           TrainerMapper trainerMapper,
                           SessionFactory sessionFactory,
-                          TrainingMapper trainingMapper) {
+                          TrainingMapper trainingMapper,
+                          TrainerDao trainerDao) {
         this.traineeDao = traineeDao;
         this.traineeMapper = traineeMapper;
         this.usernameGenerator = usernameGenerator;
@@ -58,6 +64,7 @@ public class TraineeService {
         this.trainerMapper = trainerMapper;
         this.sessionFactory = sessionFactory;
         this.trainingMapper = trainingMapper;
+        this.trainerDao = trainerDao;
     }
 
     /**
@@ -253,6 +260,7 @@ public class TraineeService {
     public List<TrainingDto> getTraineeTrainingsByFilter(String traineeUsername, LocalDate fromDate,
                                                             LocalDate toDate, Long trainingTypeId,
                                                             String trainerUsername) {
+        log.debug("Getting trainee trainings by filter");
 
         Optional<TraineeEntity> trainee = traineeDao.getTraineeByUsername(traineeUsername);
         if (trainee.isEmpty()) {
@@ -266,5 +274,39 @@ public class TraineeService {
                         toDate, trainingTypeId, trainerUsername);
 
         return trainingEntities.stream().map(trainingMapper::entityToDto).collect(Collectors.toList());
+    }
+
+
+    /**
+     * Updates trainee's trainer list.
+     *
+     * @param traineeUsername trainee username
+     * @param trainingsUpdatedTrainers map with key: trainingId to update, value: new trainer id
+     */
+    public void updateTraineesTrainersList(String traineeUsername, Map<Long, Long> trainingsUpdatedTrainers) {
+        log.debug("Updating trainee's trainers list.");
+
+        Map<Long, TrainerEntity> updatedTrainers = new HashMap<>();
+        if (traineeDao.getTraineeByUsername(traineeUsername).isEmpty()) {
+            log.debug("No trainee with username");
+            throw new GymIllegalUsernameException(String.format(
+                    "No trainee with username: %s", traineeUsername));
+        }
+
+        for (Map.Entry<Long, Long> entry : trainingsUpdatedTrainers.entrySet()) {
+            Long trainingId = entry.getKey();
+            Long trainerId = entry.getValue();
+
+            Optional<TrainerEntity> trainer = trainerDao.getTrainerById(trainerId);
+            if (trainer.isEmpty()) {
+                log.error("No trainer with id: {}, skipping update for training: {}", trainerId, trainingId);
+                continue;
+            }
+            updatedTrainers.put(trainingId, trainer.get());
+        }
+
+        traineeDao.updateTraineesTrainersList(traineeUsername, updatedTrainers);
+        log.debug("Successfully updated trainee: {} trainers list", traineeUsername);
+
     }
 }
