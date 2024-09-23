@@ -4,9 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TrainingDto;
 import org.example.entity.TrainingEntity;
 import org.example.exceptions.GymDataAccessException;
+import org.example.exceptions.GymIllegalArgumentException;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.mapper.TrainingMapper;
 import org.example.services.TrainingService;
+import org.example.validation.TrainingValidation;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,11 +16,15 @@ import org.springframework.stereotype.Component;
 public class TrainingFacade {
     private final TrainingService trainingService;
     private final TrainingMapper trainingMapper;
+    private final TrainingValidation trainingValidation;
 
+    /** Injecting {@code TrainingFacade} dependencies. */
     public TrainingFacade(TrainingService trainingService,
-                          TrainingMapper trainingMapper) {
+                          TrainingMapper trainingMapper,
+                          TrainingValidation trainingValidation) {
         this.trainingService = trainingService;
         this.trainingMapper = trainingMapper;
+        this.trainingValidation = trainingValidation;
     }
 
     /**
@@ -30,9 +36,10 @@ public class TrainingFacade {
         log.info("Request to create training");
         TrainingEntity trainingEntity = trainingMapper.dtoToEntity(trainingDto);
         try {
+            trainingValidation.validateTraining(trainingDto);
             trainingService.createTraining(trainingEntity);
             log.info("Successfully created training");
-        } catch (GymIllegalIdException exception) {
+        } catch (GymIllegalIdException | GymIllegalArgumentException exception) {
             log.error(exception.getMessage(), exception);
         }
     }

@@ -1,7 +1,9 @@
 package org.example;
 
+import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
 import org.example.config.HibernateConfig;
+import org.example.dto.TraineeDto;
 import org.example.facade.TraineeFacade;
 import org.example.facade.TrainerFacade;
 import org.example.facade.TrainingFacade;
@@ -127,6 +129,9 @@ public class Main {
         //trainingFacade.getTrainingById(2L);
         //        trainerFacade.createTrainer(new TrainerDto(
         //                "T", "T", 1L));
+
+        traineeFacade.createTrainee(
+                new TraineeDto("A", "   ", LocalDate.now(), ""));
 
 
     }

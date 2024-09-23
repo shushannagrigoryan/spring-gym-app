@@ -15,6 +15,7 @@ import org.example.exceptions.GymIllegalStateException;
 import org.example.exceptions.GymIllegalUsernameException;
 import org.example.mapper.TrainerMapper;
 import org.example.services.TrainerService;
+import org.example.validation.TrainerValidation;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,11 +23,15 @@ import org.springframework.stereotype.Component;
 public class TrainerFacade {
     private final TrainerService trainerService;
     private final TrainerMapper trainerMapper;
+    private final TrainerValidation trainerValidation;
 
+    /** Injecting {@code TrainerFacade} dependencies. */
     public TrainerFacade(TrainerService trainerService,
-                         TrainerMapper trainerMapper) {
+                         TrainerMapper trainerMapper,
+                         TrainerValidation trainerValidation) {
         this.trainerService = trainerService;
         this.trainerMapper = trainerMapper;
+        this.trainerValidation = trainerValidation;
     }
 
     /**
@@ -38,8 +43,9 @@ public class TrainerFacade {
         log.info("Request to create trainer");
         TrainerEntity trainerEntity = trainerMapper.dtoToEntity(trainerDto);
         try {
+            trainerValidation.validateTrainer(trainerDto);
             trainerService.createTrainer(trainerEntity);
-        } catch (GymIllegalIdException e) {
+        } catch (GymIllegalIdException | GymIllegalArgumentException e) {
             log.error("Error while creating trainer: {}", trainerEntity, e);
         }
 
@@ -93,6 +99,10 @@ public class TrainerFacade {
     public void changeTrainerPassword(String username, String password) {
         log.info("Request to change trainer password.");
         try {
+            if (password == null || password.isEmpty()) {
+                log.error("Password is required.");
+                return;
+            }
             trainerService.changeTrainerPassword(username, password);
         } catch (GymIllegalArgumentException | GymDataUpdateException e) {
             log.error("Exception while changing password", e);
@@ -108,9 +118,10 @@ public class TrainerFacade {
     public void updateTrainerById(Long id, TrainerDto trainerDto) {
         log.info("Request to update trainer by id");
         try {
+            trainerValidation.validateTrainer(trainerDto);
             trainerService.updateTrainerById(id, trainerMapper.dtoToEntity(trainerDto));
             log.info("Successfully updated trainer by id");
-        } catch (GymIllegalIdException | GymDataUpdateException exception) {
+        } catch (GymIllegalIdException | GymDataUpdateException | GymIllegalArgumentException exception) {
             log.error(exception.getMessage(), exception);
         }
 

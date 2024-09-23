@@ -16,6 +16,7 @@ import org.example.exceptions.GymIllegalStateException;
 import org.example.exceptions.GymIllegalUsernameException;
 import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
+import org.example.validation.TraineeValidation;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,10 +24,15 @@ import org.springframework.stereotype.Component;
 public class TraineeFacade {
     private final TraineeService traineeService;
     private final TraineeMapper traineeMapper;
+    private final TraineeValidation traineeValidation;
 
-    public TraineeFacade(TraineeService traineeService, TraineeMapper traineeMapper) {
+    /** Injecting {@code TraineeFacade} dependencies. */
+    public TraineeFacade(TraineeService traineeService,
+                         TraineeMapper traineeMapper,
+                         TraineeValidation traineeValidation) {
         this.traineeService = traineeService;
         this.traineeMapper = traineeMapper;
+        this.traineeValidation = traineeValidation;
     }
 
 
@@ -37,6 +43,12 @@ public class TraineeFacade {
      */
     public void createTrainee(TraineeDto traineeDto) {
         log.info("Request to create trainee");
+        try {
+            traineeValidation.validateTrainee(traineeDto);
+        } catch (GymIllegalArgumentException exception) {
+            log.error(exception.getMessage(), exception);
+            return;
+        }
         TraineeEntity traineeEntity = traineeMapper.dtoToEntity(traineeDto);
         traineeService.createTrainee(traineeEntity);
         log.info("Successfully created trainee");
@@ -88,6 +100,10 @@ public class TraineeFacade {
     public void changeTraineePassword(String username, String password) {
         log.info("Request to change trainee password.");
         try {
+            if (password == null || password.isEmpty()) {
+                log.error("Password is required.");
+                return;
+            }
             traineeService.changeTraineePassword(username, password);
         } catch (GymIllegalArgumentException | GymDataUpdateException e) {
             log.error("Exception while changing password", e);
@@ -146,9 +162,10 @@ public class TraineeFacade {
     public void updateTraineeById(Long id, TraineeDto traineeDto) {
         log.info("Request to update trainee by id");
         try {
+            traineeValidation.validateTrainee(traineeDto);
             traineeService.updateTraineeById(id, traineeMapper.dtoToEntity(traineeDto));
             log.info("Successfully updated trainee by id");
-        } catch (GymIllegalIdException | GymDataUpdateException exception) {
+        } catch (GymIllegalIdException | GymDataUpdateException | GymIllegalArgumentException exception) {
             log.error(exception.getMessage(), exception);
         }
 
