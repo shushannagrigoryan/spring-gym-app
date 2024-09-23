@@ -68,20 +68,13 @@ public class TraineeDao {
      */
     public Optional<TraineeEntity> getTraineeByUsername(String username) {
         log.debug("Getting trainee with username: {}", username);
-
         TraineeEntity trainee;
-        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
             String hql = "FROM TraineeEntity t WHERE t.user.username = :username";
             Query<TraineeEntity> query = session.createQuery(hql, TraineeEntity.class);
             query.setParameter("username", username);
             trainee = query.uniqueResult();
-            transaction.commit();
         } catch (HibernateException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             log.debug("hibernate exception");
             throw new GymDataAccessException(String.format("Failed to retrieve trainee with username: %s", username));
         }
@@ -98,15 +91,9 @@ public class TraineeDao {
         log.debug("Getting trainee with id: {}", id);
 
         TraineeEntity trainee = null;
-        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
             trainee = session.get(TraineeEntity.class, id);
-            transaction.commit();
         } catch (HibernateException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             log.debug("hibernate exception");
         }
 
@@ -334,11 +321,9 @@ public class TraineeDao {
                                                             String trainerUsername) {
 
         Session session = null;
-        Transaction transaction = null;
         List<TrainingEntity> trainings;
         try {
             session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
             CriteriaQuery<TrainingEntity> criteriaQuery = criteriaBuilder.createQuery(TrainingEntity.class);
 
@@ -373,11 +358,7 @@ public class TraineeDao {
                     .where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
 
             trainings = session.createQuery(criteriaQuery).getResultList();
-            transaction.commit();
         } catch (HibernateException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             log.debug("hibernate exception");
             throw new GymDataAccessException("Failed to retrieve trainee's trainings by given criteria.");
         } finally {
@@ -400,18 +381,12 @@ public class TraineeDao {
         log.debug("Getting trainings by trainee username: {}", traineeUsername);
 
         List<TrainingEntity> trainings;
-        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
             String hql = "from TrainingEntity t where t.trainee.user.username = :traineeUsername";
             trainings = session.createQuery(hql, TrainingEntity.class)
                     .setParameter("traineeUsername", traineeUsername)
                     .getResultList();
-            transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             log.debug("hibernate exception");
             throw new GymDataAccessException(String.format(
                     "Failed to retrieve trainings by trainee username: %s", traineeUsername));

@@ -133,6 +133,8 @@ public class Main {
         traineeFacade.createTrainee(
                 new TraineeDto("A", "   ", LocalDate.now(), ""));
 
+        System.out.println(traineeFacade.getTraineeByUsername("A.B1"));
+
 
     }
 }
