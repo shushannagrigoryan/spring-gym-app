@@ -31,17 +31,13 @@ import org.springframework.stereotype.Component;
 public class TrainerDao {
     private final SessionFactory sessionFactory;
     private final UserDao userDao;
-    private final TrainingTypeDao trainingTypeDao;
-
     /**
      * Injecting dependencies using constructor.
      */
     public TrainerDao(SessionFactory sessionFactory,
-                      UserDao userDao,
-                      TrainingTypeDao trainingTypeDao) {
+                      UserDao userDao) {
         this.sessionFactory = sessionFactory;
         this.userDao = userDao;
-        this.trainingTypeDao = trainingTypeDao;
     }
 
     /**
@@ -55,11 +51,6 @@ public class TrainerDao {
             transaction = session.beginTransaction();
             UserEntity user = trainerEntity.getUser();
             userDao.createUser(user);
-
-            //            Optional<TrainingTypeEntity> trainingType =
-            //                    trainingTypeDao.getTrainingTypeById(trainerEntity.getSpecialization().getId());
-            //trainingType.ifPresent(trainerEntity::setSpecialization);
-
             session.persist(trainerEntity);
             transaction.commit();
         } catch (HibernateException e) {
@@ -82,18 +73,13 @@ public class TrainerDao {
     public Optional<TrainerEntity> getTrainerByUsername(String username) {
         log.debug("Getting trainer with username: {}", username);
 
-        TrainerEntity trainer = null;
-        Transaction transaction = null;
+        TrainerEntity trainer;
         try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
             String hql = "FROM TrainerEntity t WHERE t.user.username = :username";
             Query<TrainerEntity> query = session.createQuery(hql, TrainerEntity.class);
             query.setParameter("username", username);
             trainer = query.uniqueResult();
         } catch (HibernateException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             log.debug("hibernate exception");
             throw new GymDataAccessException(String.format("Failed to retrieve trainer with username: %s", username));
         }
@@ -109,15 +95,9 @@ public class TrainerDao {
     public Optional<TrainerEntity> getTrainerById(Long id) {
         log.debug("Getting trainer with id: {}", id);
         TrainerEntity trainer = null;
-        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
             trainer = session.get(TrainerEntity.class, id);
-            transaction.commit();
         } catch (HibernateException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             log.debug("hibernate exception");
         }
 
@@ -285,11 +265,9 @@ public class TrainerDao {
                                                             LocalDate toDate, String traineeUsername) {
 
         Session session = null;
-        Transaction transaction = null;
         List<TrainingEntity> trainings;
         try {
             session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
             CriteriaQuery<TrainingEntity> criteriaQuery = criteriaBuilder.createQuery(TrainingEntity.class);
 
@@ -320,11 +298,7 @@ public class TrainerDao {
                     .where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
 
             trainings = session.createQuery(criteriaQuery).getResultList();
-            transaction.commit();
         } catch (HibernateException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             log.debug("hibernate exception");
             throw new GymDataAccessException("Failed to retrieve trainer's trainings by given criteria.");
         } finally {
@@ -346,11 +320,9 @@ public class TrainerDao {
      */
     public List<TrainerEntity> getTrainersNotAssignedToTrainee(String traineeUsername) {
         Session session = null;
-        Transaction transaction = null;
         List<TrainerEntity> trainers;
         try {
             session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
 
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
             CriteriaQuery<TrainerEntity> criteriaQuery = criteriaBuilder.createQuery(TrainerEntity.class);
@@ -370,11 +342,7 @@ public class TrainerDao {
                     .where(criteriaBuilder.not(trainerRoot.get("id").in(subquery)));
 
             trainers = session.createQuery(criteriaQuery).getResultList();
-            transaction.commit();
         } catch (HibernateException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             log.debug("hibernate exception");
             throw new GymDataAccessException(String
                     .format("Failed to retrieve trainers not assigned to trainee: %s",
