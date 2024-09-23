@@ -7,7 +7,6 @@ import org.example.exceptions.GymDataAccessException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Component;
 
@@ -28,17 +27,12 @@ public class TrainingTypeDao {
         log.debug("Getting trainingType with name: {}", name);
 
         TrainingTypeEntity trainingType = null;
-        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
             String hql = "FROM TrainingTypeEntity t WHERE t.trainingTypeName = :name";
             Query<TrainingTypeEntity> query = session.createQuery(hql, TrainingTypeEntity.class);
             query.setParameter("name", name);
             trainingType = query.uniqueResult();
         } catch (HibernateException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             log.debug("hibernate exception");
         }
         return trainingType;
@@ -51,18 +45,13 @@ public class TrainingTypeDao {
     public Optional<TrainingTypeEntity> getTrainingTypeById(Long id) {
         log.debug("Getting trainingType with id: {}", id);
 
-        TrainingTypeEntity trainingType = null;
-        Transaction transaction = null;
+        TrainingTypeEntity trainingType;
         try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
             String hql = "FROM TrainingTypeEntity t WHERE t.id = :id";
             Query<TrainingTypeEntity> query = session.createQuery(hql, TrainingTypeEntity.class);
             query.setParameter("id", id);
             trainingType = query.uniqueResult();
         } catch (HibernateException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             log.debug("hibernate exception");
             throw new GymDataAccessException(String.format(
                     "Exception while getting training type by id: %d", id));
