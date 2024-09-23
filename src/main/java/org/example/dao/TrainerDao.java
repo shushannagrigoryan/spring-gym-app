@@ -24,10 +24,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 @Slf4j
-@Component
+@Repository
 public class TrainerDao {
     private final SessionFactory sessionFactory;
     private final UserDao userDao;

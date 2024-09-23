@@ -23,9 +23,9 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 public class HibernateConfig {
 
     /**
-     * create sessionfactory object.
+     * create sessionFactory object.
      *
-     * @return sessionfactory
+     * @return sessionFactory
      */
     @Bean
     public SessionFactory sessionFactory() {

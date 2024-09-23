@@ -19,9 +19,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class TrainingService {
     private final TrainingDao trainingDao;
-    private final TraineeService traineeService;
-    private final TrainerService trainerService;
-    private final TrainingTypeService trainingTypeService;
     private final TrainingMapper trainingMapper;
     private final TrainerDao trainerDao;
     private final TraineeDao traineeDao;
@@ -32,19 +29,13 @@ public class TrainingService {
      * Injecting dependencies using constructor.
      */
     public TrainingService(TrainingDao trainingDao,
-                           TraineeService traineeService,
-                           TrainerService trainerService,
                            TraineeDao traineeDao,
                            TrainerDao trainerDao,
-                           TrainingTypeService trainingTypeService,
                            TrainingTypeDao trainingTypeDao,
                            TrainingMapper trainingMapper) {
         this.trainingDao = trainingDao;
-        this.traineeService = traineeService;
-        this.trainerService = trainerService;
         this.traineeDao = traineeDao;
         this.trainerDao = trainerDao;
-        this.trainingTypeService = trainingTypeService;
         this.trainingTypeDao = trainingTypeDao;
         this.trainingMapper = trainingMapper;
     }

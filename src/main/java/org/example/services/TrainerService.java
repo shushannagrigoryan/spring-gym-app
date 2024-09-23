@@ -20,7 +20,6 @@ import org.example.exceptions.GymIllegalStateException;
 import org.example.exceptions.GymIllegalUsernameException;
 import org.example.mapper.TrainerMapper;
 import org.example.mapper.TrainingMapper;
-import org.example.mapper.TrainingTypeMapper;
 import org.example.password.PasswordGeneration;
 import org.example.username.UsernameGenerator;
 import org.springframework.stereotype.Service;
@@ -33,8 +32,6 @@ public class TrainerService {
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
     private final TrainerAuth trainerAuth;
-    private final TrainingTypeService trainingTypeService;
-    private final TrainingTypeMapper trainingTypeMapper;
     private final TrainingTypeDao trainingTypeDao;
     private final TrainingMapper trainingMapper;
     private final TraineeDao traineeDao;
@@ -47,8 +44,6 @@ public class TrainerService {
                           UsernameGenerator usernameGenerator,
                           PasswordGeneration passwordGeneration,
                           TrainerAuth trainerAuth,
-                          TrainingTypeService trainingTypeService,
-                          TrainingTypeMapper trainingTypeMapper,
                           TrainingTypeDao trainingTypeDao,
                           TrainingMapper trainingMapper,
                           TraineeDao traineeDao) {
@@ -57,8 +52,6 @@ public class TrainerService {
         this.usernameGenerator = usernameGenerator;
         this.passwordGeneration = passwordGeneration;
         this.trainerAuth = trainerAuth;
-        this.trainingTypeService = trainingTypeService;
-        this.trainingTypeMapper = trainingTypeMapper;
         this.trainingTypeDao = trainingTypeDao;
         this.trainingMapper = trainingMapper;
         this.traineeDao = traineeDao;

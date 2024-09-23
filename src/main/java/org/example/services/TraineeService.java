@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.auth.TraineeAuth;
 import org.example.dao.TraineeDao;
 import org.example.dao.TrainerDao;
-import org.example.dao.TrainingDao;
 import org.example.dto.TraineeDto;
 import org.example.dto.TrainingDto;
 import org.example.entity.TraineeEntity;
@@ -21,11 +20,9 @@ import org.example.exceptions.GymIllegalIdException;
 import org.example.exceptions.GymIllegalStateException;
 import org.example.exceptions.GymIllegalUsernameException;
 import org.example.mapper.TraineeMapper;
-import org.example.mapper.TrainerMapper;
 import org.example.mapper.TrainingMapper;
 import org.example.password.PasswordGeneration;
 import org.example.username.UsernameGenerator;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,9 +33,6 @@ public class TraineeService {
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
     private final TraineeAuth traineeAuth;
-    private final TrainingDao trainingDao;
-    private final TrainerMapper trainerMapper;
-    private final SessionFactory sessionFactory;
     private final TrainingMapper trainingMapper;
     private final TrainerDao trainerDao;
 
@@ -50,9 +44,6 @@ public class TraineeService {
                           UsernameGenerator usernameGenerator,
                           PasswordGeneration passwordGeneration,
                           TraineeAuth traineeAuth,
-                          TrainingDao trainingDao,
-                          TrainerMapper trainerMapper,
-                          SessionFactory sessionFactory,
                           TrainingMapper trainingMapper,
                           TrainerDao trainerDao) {
         this.traineeDao = traineeDao;
@@ -60,9 +51,6 @@ public class TraineeService {
         this.usernameGenerator = usernameGenerator;
         this.passwordGeneration = passwordGeneration;
         this.traineeAuth = traineeAuth;
-        this.trainingDao = trainingDao;
-        this.trainerMapper = trainerMapper;
-        this.sessionFactory = sessionFactory;
         this.trainingMapper = trainingMapper;
         this.trainerDao = trainerDao;
     }
@@ -178,20 +166,6 @@ public class TraineeService {
 
     }
 
-    //
-    //    /**
-    //     * Deletes a trainee by id in the service layer.
-    //     * If there is no trainee with the given id throws an {@code GymIllegalIdException}.
-    //     *
-    //     * @param id the id of the trainee
-    //     */
-    //    public void deleteTraineeById(Long id) {
-    //        log.debug("Deleting trainee by id: {}", id);
-    //        traineeDao.deleteTraineeById(id);
-    //        saveDataToFile.writeMapToFile("Trainee");
-    //        log.debug("Successfully deleted trainee by id: {}", id);
-    //    }
-    //
     /**
      * Updates trainee by id.
      *

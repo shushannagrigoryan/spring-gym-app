@@ -136,23 +136,7 @@ public class TraineeFacade {
         }
     }
 
-    //
-    //    /**
-    //     * Deletes trainee by id.
-    //     *
-    //     * @param id id of the trainee to delete
-    //     */
-    //    public void deleteTraineeById(Long id) {
-    //        log.info("Request to delete trainee by id");
-    //        try {
-    //            traineeService.deleteTraineeById(id);
-    //            log.info("Successfully deleted trainee by id");
-    //        } catch (GymIllegalIdException exception) {
-    //            log.error("No trainee with id: {} for deleting", id, exception);
-    //        }
-    //
-    //    }
-    //
+
     /**
      * Updates Trainee by id.
      *

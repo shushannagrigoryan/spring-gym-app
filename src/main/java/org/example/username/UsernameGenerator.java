@@ -3,29 +3,19 @@ package org.example.username;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dao.TraineeDao;
-import org.example.dao.TrainerDao;
 import org.example.dao.UserDao;
-import org.example.entity.TraineeEntity;
-import org.example.entity.TrainerEntity;
 import org.example.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class UsernameGenerator {
-    private final TraineeDao traineeDao;
-    private final TrainerDao trainerDao;
     private final UserDao userDao;
 
     /**
      * Injecting dependencies using constructor.
      */
-    public UsernameGenerator(TraineeDao traineeDao,
-                             TrainerDao trainerDao,
-                             UserDao userDao) {
-        this.traineeDao = traineeDao;
-        this.trainerDao = trainerDao;
+    public UsernameGenerator(UserDao userDao) {
         this.userDao = userDao;
     }
 
@@ -42,9 +32,6 @@ public class UsernameGenerator {
         log.debug("Generating username for firstName: {}, lastName: {}", firstName, lastName);
 
         String username = firstName.concat(".").concat(lastName);
-
-        Optional<TraineeEntity> trainee = traineeDao.getTraineeByUsername(username);
-        Optional<TrainerEntity> trainer = trainerDao.getTrainerByUsername(username);
 
         Optional<UserEntity> user = userDao.getUserByUsername(username);
 

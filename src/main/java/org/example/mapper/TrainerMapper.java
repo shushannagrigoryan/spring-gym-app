@@ -9,12 +9,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class TrainerMapper {
-    private final TrainingTypeMapper trainingTypeMapper;
-
-    public TrainerMapper(TrainingTypeMapper trainingTypeMapper) {
-        this.trainingTypeMapper = trainingTypeMapper;
-    }
-
     /**
      * Maps a {@code TrainerEntity} to a {@code TrainerDto}.
      */

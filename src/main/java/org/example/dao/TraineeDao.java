@@ -24,9 +24,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 @Slf4j
 public class TraineeDao {
     private final SessionFactory sessionFactory;
@@ -211,24 +211,6 @@ public class TraineeDao {
 
         log.debug("Successfully deactivated trainee with id {}", id);
     }
-
-    //
-    //    /**
-    //     * Deletes the trainee entity from the storage by id.
-    //     * If no trainee is found throws an {@code IllegalIdException}.
-    //     *
-    //     * @param id id of the trainee to be deleted
-    //     */
-    //    public void deleteTraineeById(Long id) {
-    //        if (dataStorage.getTraineeStorage().containsKey(id)) {
-    //            log.debug("Deleting trainee with id: {} from storage", id);
-    //            dataStorage.getTraineeStorage().remove(id);
-    //        } else {
-    //            log.debug("No trainee with id: {}", id);
-    //            throw new GymIllegalIdException(String.format("No trainee with id: %d", id));
-    //        }
-    //    }
-    //
 
     /**
      * Updates trainee entity in storage by id.
