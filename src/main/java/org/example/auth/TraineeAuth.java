@@ -2,21 +2,21 @@ package org.example.auth;
 
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dao.TraineeDao;
 import org.example.entity.TraineeEntity;
 import org.example.exceptions.GymIllegalArgumentException;
+import org.example.repository.TraineeRepository;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class TraineeAuth {
-    private final TraineeDao traineeDao;
+    private final TraineeRepository traineeRepository;
 
     /**
      * Injecting dependencies using constructor.
      */
-    public TraineeAuth(TraineeDao traineeDao) {
-        this.traineeDao = traineeDao;
+    public TraineeAuth(TraineeRepository traineeRepository) {
+        this.traineeRepository = traineeRepository;
     }
 
     /**
@@ -27,7 +27,7 @@ public class TraineeAuth {
      * @return true if trainee exists, else false.
      */
     public boolean traineeAuth(String username, String password) {
-        Optional<TraineeEntity> trainee = traineeDao.getTraineeByUsername(username);
+        Optional<TraineeEntity> trainee = traineeRepository.getTraineeByUsername(username);
         if (trainee.isEmpty()) {
             log.debug("No trainee with username: {}", username);
             throw new GymIllegalArgumentException(

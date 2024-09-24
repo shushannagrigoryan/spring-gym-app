@@ -21,11 +21,13 @@ public class TrainerAuthAspect {
         this.trainerAuth = trainerAuth;
     }
 
-    /** Before the specified methods perform trainer authentication. */
-    @Before("execution(* org.example.facade.TrainerFacade.*(..)) "
-            + "&& !execution(* org.example.facade.TrainerFacade.createTrainer(..))"
-            + "|| execution(* org.example.facade.TrainingFacade.*(..))"
-            + "|| execution(* org.example.facade.TrainingTypeFacade.*(..))")
+    /**
+     * Before the specified methods perform trainer authentication.
+     */
+    //    @Before("execution(* org.example.facade.TrainerFacade.*(..)) "
+    //            + "&& !execution(* org.example.facade.TrainerFacade.createTrainer(..))"
+    //            + "|| execution(* org.example.facade.TrainingFacade.*(..))"
+    //            + "|| execution(* org.example.facade.TrainingTypeFacade.*(..))")
     public void trainerAuthentication() {
         log.info("Authenticating trainer: username: {} password: {}",
                 username, password);

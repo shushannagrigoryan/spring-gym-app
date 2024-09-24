@@ -1,4 +1,4 @@
-package org.example.dao;
+package org.example.repository;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -28,16 +28,17 @@ import org.springframework.stereotype.Repository;
 
 @Slf4j
 @Repository
-public class TrainerDao {
+public class TrainerRepository {
     private final SessionFactory sessionFactory;
-    private final UserDao userDao;
+    private final UserRepository userRepository;
+
     /**
      * Injecting dependencies using constructor.
      */
-    public TrainerDao(SessionFactory sessionFactory,
-                      UserDao userDao) {
+    public TrainerRepository(SessionFactory sessionFactory,
+                             UserRepository userRepository) {
         this.sessionFactory = sessionFactory;
-        this.userDao = userDao;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -50,7 +51,7 @@ public class TrainerDao {
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             UserEntity user = trainerEntity.getUser();
-            userDao.createUser(user);
+            session.persist(user);
             session.persist(trainerEntity);
             transaction.commit();
         } catch (HibernateException e) {
@@ -58,9 +59,8 @@ public class TrainerDao {
                 transaction.rollback();
             }
             log.debug("hibernate exception");
+            throw e;
         }
-
-        log.debug("Saving trainer: {} to storage", trainerEntity);
     }
 
 
@@ -255,8 +255,8 @@ public class TrainerDao {
      * Returns trainer trainings list by trainer username and given criteria.
      *
      * @param trainerUsername trainer username
-     * @param fromDate training fromDate
-     * @param toDate training toDate
+     * @param fromDate        training fromDate
+     * @param toDate          training toDate
      * @param traineeUsername trainee username
      * @return {@code List<TrainingEntity>}
      */
@@ -315,7 +315,6 @@ public class TrainerDao {
      * Getting trainers list that are not assigned to the given trainee.
      *
      * @param traineeUsername trainee username.
-     *
      * @return {@code List<TrainerEntity>}
      */
     public List<TrainerEntity> getTrainersNotAssignedToTrainee(String traineeUsername) {

@@ -59,7 +59,7 @@ public class TrainingEntity {
      * @param traineeId        The id of the trainee.
      * @param trainerId        The id of the trainer.
      * @param trainingName     The name of the training.
-     * @param trainingTypeId     The type of the training.
+     * @param trainingTypeId   The type of the training.
      * @param trainingDate     The date of the training.
      * @param trainingDuration The duration of the training.
      */

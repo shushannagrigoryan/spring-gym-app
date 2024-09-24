@@ -1,4 +1,4 @@
-package org.example.dao;
+package org.example.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,10 +14,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Slf4j
-public class UserDao {
+public class UserRepository {
     private final SessionFactory sessionFactory;
 
-    public UserDao(SessionFactory sessionFactory) {
+    public UserRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

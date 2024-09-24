@@ -1,4 +1,4 @@
-package org.example.dao;
+package org.example.repository;
 
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Slf4j
-public class TrainingTypeDao {
+public class TrainingTypeRepository {
     private final SessionFactory sessionFactory;
 
-    public TrainingTypeDao(SessionFactory sessionFactory) {
+    public TrainingTypeRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

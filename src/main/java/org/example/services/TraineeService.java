@@ -5,13 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.auth.TraineeAuth;
-import org.example.dao.TraineeDao;
-import org.example.dao.TrainerDao;
-import org.example.dto.TraineeDto;
-import org.example.dto.TrainingDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
@@ -19,40 +14,32 @@ import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.exceptions.GymIllegalStateException;
 import org.example.exceptions.GymIllegalUsernameException;
-import org.example.mapper.TraineeMapper;
-import org.example.mapper.TrainingMapper;
 import org.example.password.PasswordGeneration;
+import org.example.repository.TraineeRepository;
 import org.example.username.UsernameGenerator;
 import org.springframework.stereotype.Service;
+
 
 @Service
 @Slf4j
 public class TraineeService {
-    private final TraineeDao traineeDao;
-    private final TraineeMapper traineeMapper;
+    private final TraineeRepository traineeRepository;
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
     private final TraineeAuth traineeAuth;
-    private final TrainingMapper trainingMapper;
-    private final TrainerDao trainerDao;
+
 
     /**
      * Injecting dependencies using constructor.
      */
-    public TraineeService(TraineeDao traineeDao,
-                          TraineeMapper traineeMapper,
+    public TraineeService(TraineeRepository traineeRepository,
                           UsernameGenerator usernameGenerator,
                           PasswordGeneration passwordGeneration,
-                          TraineeAuth traineeAuth,
-                          TrainingMapper trainingMapper,
-                          TrainerDao trainerDao) {
-        this.traineeDao = traineeDao;
-        this.traineeMapper = traineeMapper;
+                          TraineeAuth traineeAuth) {
+        this.traineeRepository = traineeRepository;
         this.usernameGenerator = usernameGenerator;
         this.passwordGeneration = passwordGeneration;
         this.traineeAuth = traineeAuth;
-        this.trainingMapper = trainingMapper;
-        this.trainerDao = trainerDao;
     }
 
     /**
@@ -69,7 +56,7 @@ public class TraineeService {
         traineeEntity.getUser().setUsername(username);
         traineeEntity.getUser().setPassword(passwordGeneration.generatePassword());
 
-        traineeDao.createTrainee(traineeEntity);
+        traineeRepository.createTrainee(traineeEntity);
         log.debug("Successfully created trainee: {}", traineeEntity);
     }
 
@@ -78,17 +65,17 @@ public class TraineeService {
      * If no trainee is found returns null.
      *
      * @param username username of the trainee
-     * @return the {@code TraineeDto}
+     * @return the {@code TraineeEntity}
      */
-    public TraineeDto getTraineeByUsername(String username) {
+    public TraineeEntity getTraineeByUsername(String username) {
         log.debug("Retrieving trainee by username: {}", username);
-        Optional<TraineeEntity> trainee = traineeDao.getTraineeByUsername(username);
+        Optional<TraineeEntity> trainee = traineeRepository.getTraineeByUsername(username);
         if (trainee.isEmpty()) {
             log.debug("No trainee with the username: {}", username);
             throw new GymEntityNotFoundException(String.format("Trainee with username %s does not exist.", username));
         }
         log.debug("Successfully retrieved trainee by username: {}", username);
-        return traineeMapper.entityToDto(trainee.get());
+        return trainee.get();
     }
 
     /**
@@ -96,16 +83,16 @@ public class TraineeService {
      * If no trainee was found throws an {@code GymIllegalIdException}
      *
      * @param id id of the trainee to get
-     * @return the {@code TraineeDto}
+     * @return the {@code TraineeEntity}
      */
-    public TraineeDto getTraineeById(Long id) {
+    public TraineeEntity getTraineeById(Long id) {
         log.debug("Retrieving trainee by id: {}", id);
-        Optional<TraineeEntity> trainee = traineeDao.getTraineeById(id);
+        Optional<TraineeEntity> trainee = traineeRepository.getTraineeById(id);
         if (trainee.isEmpty()) {
             throw new GymIllegalIdException(String.format("No trainee with id: %d", id));
         }
         log.debug("Successfully retrieved trainee by id: {}", id);
-        return traineeMapper.entityToDto(trainee.get());
+        return trainee.get();
 
     }
 
@@ -116,7 +103,7 @@ public class TraineeService {
      */
     public void changeTraineePassword(String username, String password) {
         if (traineeAuth.traineeAuth(username, password)) {
-            traineeDao.changeTraineePassword(username, passwordGeneration.generatePassword());
+            traineeRepository.changeTraineePassword(username, passwordGeneration.generatePassword());
         }
     }
 
@@ -127,7 +114,7 @@ public class TraineeService {
      */
     public void activateTrainee(Long id) {
         log.info("Request to activate trainee with id: {}", id);
-        Optional<TraineeEntity> trainee = traineeDao.getTraineeById(id);
+        Optional<TraineeEntity> trainee = traineeRepository.getTraineeById(id);
 
         if (trainee.isEmpty()) {
             log.debug("No entity with {} exists.", id);
@@ -139,7 +126,7 @@ public class TraineeService {
             throw new GymIllegalStateException(String.format("Trainee with id: %d is already active", id));
         }
 
-        traineeDao.activateTrainee(trainee.get().getUser().getId());
+        traineeRepository.activateTrainee(trainee.get().getUser().getId());
 
     }
 
@@ -150,7 +137,7 @@ public class TraineeService {
      */
     public void deactivateTrainee(Long id) {
         log.info("Request to deactivate trainee with id: {}", id);
-        Optional<TraineeEntity> trainee = traineeDao.getTraineeById(id);
+        Optional<TraineeEntity> trainee = traineeRepository.getTraineeById(id);
 
         if (trainee.isEmpty()) {
             log.debug("No entity with {} exists.", id);
@@ -162,7 +149,7 @@ public class TraineeService {
             throw new GymIllegalStateException(String.format("Trainee with id: %d is already inactive", id));
         }
 
-        traineeDao.deactivateTrainee(trainee.get().getUser().getId());
+        traineeRepository.deactivateTrainee(trainee.get().getUser().getId());
 
     }
 
@@ -174,7 +161,7 @@ public class TraineeService {
      */
     public void updateTraineeById(Long id, TraineeEntity traineeEntity) {
         log.debug("Updating trainee by id: {}", id);
-        Optional<TraineeEntity> trainee = traineeDao.getTraineeById(id);
+        Optional<TraineeEntity> trainee = traineeRepository.getTraineeById(id);
 
         if (trainee.isEmpty()) {
             log.debug("No trainee with id: {}", id);
@@ -199,7 +186,7 @@ public class TraineeService {
         traineeToUpdate.setDateOfBirth(traineeEntity.getDateOfBirth());
         traineeToUpdate.setAddress(traineeEntity.getAddress());
 
-        traineeDao.updateTraineeById(id, traineeToUpdate);
+        traineeRepository.updateTraineeById(id, traineeToUpdate);
         log.debug("Successfully updated trainee with id: {}", id);
     }
 
@@ -211,12 +198,12 @@ public class TraineeService {
      */
     public void deleteTraineeByUsername(String username) {
         log.debug("Deleting trainee by username: {}", username);
-        Optional<TraineeEntity> trainee = traineeDao.getTraineeByUsername(username);
+        Optional<TraineeEntity> trainee = traineeRepository.getTraineeByUsername(username);
         if (trainee.isEmpty()) {
             throw new GymIllegalUsernameException(
                     String.format("Illegal username for trainee: %s.", username));
         }
-        traineeDao.deleteTraineeByUsername(username);
+        traineeRepository.deleteTraineeByUsername(username);
         log.debug("Successfully deleted trainee by username: {}", username);
     }
 
@@ -224,63 +211,60 @@ public class TraineeService {
      * Returns trainees trainings list by trainee username and given criteria.
      *
      * @param traineeUsername username of the trainee
-     * @param fromDate training fromDate
-     * @param toDate training toDate
-     * @param trainingTypeId training type
+     * @param fromDate        training fromDate
+     * @param toDate          training toDate
+     * @param trainingTypeId  training type
      * @param trainerUsername trainer username
-     * @return {@code List<TrainingDto>}
+     * @return {@code List<TrainingEntity>}
      */
 
-    public List<TrainingDto> getTraineeTrainingsByFilter(String traineeUsername, LocalDate fromDate,
-                                                            LocalDate toDate, Long trainingTypeId,
-                                                            String trainerUsername) {
+    public List<TrainingEntity> getTraineeTrainingsByFilter(String traineeUsername, LocalDate fromDate,
+                                                         LocalDate toDate, Long trainingTypeId,
+                                                         String trainerUsername) {
         log.debug("Getting trainee trainings by filter");
 
-        Optional<TraineeEntity> trainee = traineeDao.getTraineeByUsername(traineeUsername);
+        Optional<TraineeEntity> trainee = traineeRepository.getTraineeByUsername(traineeUsername);
         if (trainee.isEmpty()) {
             throw new GymIllegalUsernameException(
                     String.format("No trainee with username: %s", traineeUsername)
             );
         }
 
-        List<TrainingEntity> trainingEntities =
-                traineeDao.getTraineeTrainingsByFilter(traineeUsername, fromDate,
+        return traineeRepository.getTraineeTrainingsByFilter(traineeUsername, fromDate,
                         toDate, trainingTypeId, trainerUsername);
-
-        return trainingEntities.stream().map(trainingMapper::entityToDto).collect(Collectors.toList());
     }
 
 
     /**
      * Updates trainee's trainer list.
      *
-     * @param traineeUsername trainee username
+     * @param traineeUsername          trainee username
      * @param trainingsUpdatedTrainers map with key: trainingId to update, value: new trainer id
      */
-    public void updateTraineesTrainersList(String traineeUsername, Map<Long, Long> trainingsUpdatedTrainers) {
-        log.debug("Updating trainee's trainers list.");
-
-        Map<Long, TrainerEntity> updatedTrainers = new HashMap<>();
-        if (traineeDao.getTraineeByUsername(traineeUsername).isEmpty()) {
-            log.debug("No trainee with username");
-            throw new GymIllegalUsernameException(String.format(
-                    "No trainee with username: %s", traineeUsername));
-        }
-
-        for (Map.Entry<Long, Long> entry : trainingsUpdatedTrainers.entrySet()) {
-            Long trainingId = entry.getKey();
-            Long trainerId = entry.getValue();
-
-            Optional<TrainerEntity> trainer = trainerDao.getTrainerById(trainerId);
-            if (trainer.isEmpty()) {
-                log.error("No trainer with id: {}, skipping update for training: {}", trainerId, trainingId);
-                continue;
-            }
-            updatedTrainers.put(trainingId, trainer.get());
-        }
-
-        traineeDao.updateTraineesTrainersList(traineeUsername, updatedTrainers);
-        log.debug("Successfully updated trainee: {} trainers list", traineeUsername);
-
-    }
+    //    public void updateTraineesTrainersList(String traineeUsername, Map<Long, Long> trainingsUpdatedTrainers) {
+    //        log.debug("Updating trainee's trainers list.");
+    //
+    //        Map<Long, TrainerEntity> updatedTrainers = new HashMap<>();
+    //        if (traineeRepository.getTraineeByUsername(traineeUsername).isEmpty()) {
+    //            log.debug("No trainee with username");
+    //            throw new GymIllegalUsernameException(String.format(
+    //                    "No trainee with username: %s", traineeUsername));
+    //        }
+    //
+    //        for (Map.Entry<Long, Long> entry : trainingsUpdatedTrainers.entrySet()) {
+    //            Long trainingId = entry.getKey();
+    //            Long trainerId = entry.getValue();
+    //
+    //            TrainerEntity trainer = trainerService.getTrainerById(trainerId);
+    //            if (trainer == null) {
+    //                log.error("No trainer with id: {}, skipping update for training: {}", trainerId, trainingId);
+    //                continue;
+    //            }
+    //            updatedTrainers.put(trainingId, trainer);
+    //        }
+    //
+    //        traineeRepository.updateTraineesTrainersList(traineeUsername, updatedTrainers);
+    //        log.debug("Successfully updated trainee: {} trainers list", traineeUsername);
+    //
+    //    }
 }

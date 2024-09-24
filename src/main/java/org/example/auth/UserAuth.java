@@ -2,21 +2,21 @@ package org.example.auth;
 
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dao.UserDao;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymIllegalArgumentException;
+import org.example.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class UserAuth {
-    private final UserDao userDao;
+    private final UserRepository userRepository;
 
     /**
      * Injecting dependencies using constructor.
      */
-    public UserAuth(UserDao userDao) {
-        this.userDao = userDao;
+    public UserAuth(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     /**
@@ -27,7 +27,7 @@ public class UserAuth {
      * @return true if user exists, else false.
      */
     public boolean userAuth(String username, String password) {
-        Optional<UserEntity> user = userDao.getUserByUsername(username);
+        Optional<UserEntity> user = userRepository.getUserByUsername(username);
         if (user.isEmpty()) {
             log.debug("No user with username: {}", username);
             throw new GymIllegalArgumentException(

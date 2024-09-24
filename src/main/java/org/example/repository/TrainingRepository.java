@@ -1,4 +1,4 @@
-package org.example.dao;
+package org.example.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,10 +14,10 @@ import org.springframework.stereotype.Repository;
 
 @Slf4j
 @Repository
-public class TrainingDao {
+public class TrainingRepository {
     private final SessionFactory sessionFactory;
 
-    public TrainingDao(SessionFactory sessionFactory) {
+    public TrainingRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -33,7 +33,7 @@ public class TrainingDao {
             transaction = session.beginTransaction();
             session.persist(trainingEntity);
             transaction.commit();
-        } catch (HibernateException e) {
+        } catch (RuntimeException e) {
             if (transaction != null) {
                 transaction.rollback();
             }

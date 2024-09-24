@@ -2,18 +2,14 @@ package org.example.facade;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TrainerDto;
 import org.example.dto.TrainingDto;
 import org.example.entity.TrainerEntity;
-import org.example.exceptions.GymDataAccessException;
-import org.example.exceptions.GymDataUpdateException;
-import org.example.exceptions.GymEntityNotFoundException;
-import org.example.exceptions.GymIllegalArgumentException;
-import org.example.exceptions.GymIllegalIdException;
-import org.example.exceptions.GymIllegalStateException;
-import org.example.exceptions.GymIllegalUsernameException;
+import org.example.entity.TrainingEntity;
 import org.example.mapper.TrainerMapper;
+import org.example.mapper.TrainingMapper;
 import org.example.services.TrainerService;
 import org.example.validation.TrainerValidation;
 import org.springframework.stereotype.Component;
@@ -24,14 +20,19 @@ public class TrainerFacade {
     private final TrainerService trainerService;
     private final TrainerMapper trainerMapper;
     private final TrainerValidation trainerValidation;
+    private final TrainingMapper trainingMapper;
 
-    /** Injecting {@code TrainerFacade} dependencies. */
+    /**
+     * Injecting {@code TrainerFacade} dependencies.
+     */
     public TrainerFacade(TrainerService trainerService,
                          TrainerMapper trainerMapper,
-                         TrainerValidation trainerValidation) {
+                         TrainerValidation trainerValidation,
+                         TrainingMapper trainingMapper) {
         this.trainerService = trainerService;
         this.trainerMapper = trainerMapper;
         this.trainerValidation = trainerValidation;
+        this.trainingMapper = trainingMapper;
     }
 
     /**
@@ -42,14 +43,8 @@ public class TrainerFacade {
     public void createTrainer(TrainerDto trainerDto) {
         log.info("Request to create trainer");
         TrainerEntity trainerEntity = trainerMapper.dtoToEntity(trainerDto);
-        try {
-            trainerValidation.validateTrainer(trainerDto);
-            trainerService.createTrainer(trainerEntity);
-        } catch (GymIllegalIdException | GymIllegalArgumentException e) {
-            log.error("Error while creating trainer: {}", trainerEntity, e);
-        }
-
-        log.info("Successfully created trainer");
+        trainerValidation.validateTrainer(trainerDto);
+        trainerService.createTrainer(trainerEntity);
     }
 
     /**
@@ -60,14 +55,9 @@ public class TrainerFacade {
      */
     public TrainerDto getTrainerById(Long id) {
         log.info("Request to retrieve trainer by id");
-        TrainerDto trainerDto = null;
-        try {
-            trainerDto = trainerService.getTrainerById(id);
-            log.info("Successfully retrieved trainer by id {}", id);
-        } catch (GymIllegalIdException exception) {
-            log.error("No trainer with id: {}", id, exception);
-        }
-        return trainerDto;
+        TrainerEntity trainer;
+        trainer = trainerService.getTrainerById(id);
+        return trainerMapper.entityToDto(trainer);
     }
 
 
@@ -79,14 +69,9 @@ public class TrainerFacade {
      */
     public TrainerDto getTrainerByUsername(String username) {
         log.info("Request to retrieve trainer by username");
-        TrainerDto trainerDto = null;
-        try {
-            trainerDto = trainerService.getTrainerByUsername(username);
-            log.info("Successfully retrieved trainer by username");
-        } catch (GymEntityNotFoundException exception) {
-            log.error("No trainer with username: {}", username, exception);
-        }
-        return trainerDto;
+        TrainerEntity trainer;
+        trainer = trainerService.getTrainerByUsername(username);
+        return trainerMapper.entityToDto(trainer);
     }
 
     /**
@@ -98,15 +83,13 @@ public class TrainerFacade {
 
     public void changeTrainerPassword(String username, String password) {
         log.info("Request to change trainer password.");
-        try {
-            if (password == null || password.isEmpty()) {
-                log.error("Password is required.");
-                return;
-            }
-            trainerService.changeTrainerPassword(username, password);
-        } catch (GymIllegalArgumentException | GymDataUpdateException e) {
-            log.error("Exception while changing password", e);
+
+        if (password == null || password.isEmpty()) {
+            log.error("Password is required.");
+            return;
         }
+        trainerService.changeTrainerPassword(username, password);
+
     }
 
     /**
@@ -117,14 +100,8 @@ public class TrainerFacade {
      */
     public void updateTrainerById(Long id, TrainerDto trainerDto) {
         log.info("Request to update trainer by id");
-        try {
-            trainerValidation.validateTrainer(trainerDto);
-            trainerService.updateTrainerById(id, trainerMapper.dtoToEntity(trainerDto));
-            log.info("Successfully updated trainer by id");
-        } catch (GymIllegalIdException | GymDataUpdateException | GymIllegalArgumentException exception) {
-            log.error(exception.getMessage(), exception);
-        }
-
+        trainerValidation.validateTrainer(trainerDto);
+        trainerService.updateTrainerById(id, trainerMapper.dtoToEntity(trainerDto));
     }
 
     /**
@@ -133,11 +110,8 @@ public class TrainerFacade {
      * @param id id of the Trainer
      */
     public void activateTrainer(Long id) {
-        try {
-            trainerService.activateTrainer(id);
-        } catch (GymIllegalIdException | GymDataUpdateException | GymIllegalStateException exception) {
-            log.error("Exception while activating trainer with id: {}", id, exception);
-        }
+        log.info("Request to activate trainer with id: {}", id);
+        trainerService.activateTrainer(id);
     }
 
     /**
@@ -146,11 +120,8 @@ public class TrainerFacade {
      * @param id id of the Trainer
      */
     public void deactivateTrainer(Long id) {
-        try {
-            trainerService.deactivateTrainer(id);
-        } catch (GymIllegalIdException | GymDataUpdateException | GymIllegalStateException exception) {
-            log.error("Exception while deactivating trainer with id: {}", id, exception);
-        }
+        log.info("Request to deactivate trainer with id: {}", id);
+        trainerService.deactivateTrainer(id);
     }
 
 
@@ -158,8 +129,8 @@ public class TrainerFacade {
      * Returns trainers trainings list by trainer username and given criteria.
      *
      * @param trainerUsername username of the trainer
-     * @param fromDate training fromDate
-     * @param toDate training toDate
+     * @param fromDate        training fromDate
+     * @param toDate          training toDate
      * @param traineeUsername trainee username
      * @return {@code List<TrainingDto>}
      */
@@ -168,31 +139,27 @@ public class TrainerFacade {
         log.debug("Request to get trainers trainings by trainer username: {} "
                         + "and criteria: fromDate:{} toDate:{} traineeUsername: {}",
                 trainerUsername, fromDate, toDate, traineeUsername);
-        List<TrainingDto> trainingList = null;
-        try {
-            trainingList = trainerService
-                    .getTrainerTrainingsByFilter(trainerUsername, fromDate, toDate, traineeUsername);
-        } catch (GymIllegalUsernameException | GymDataAccessException e) {
-            log.error(e.getMessage(), e);
-        }
-        return trainingList;
+
+        List<TrainingEntity> trainingList;
+        trainingList = trainerService
+                .getTrainerTrainingsByFilter(trainerUsername, fromDate, toDate, traineeUsername);
+
+        assert trainingList != null;
+        return trainingList.stream().map(trainingMapper::entityToDto).collect(Collectors.toList());
 
     }
 
     /**
      * Returns trainers not assigned to trainee by trainee username.
-     * Throws GymIllegalUsernameException if the username is not valid.
      *
      * @param traineeUsername of the trainee.
      * @return {@code List<TrainerDto>}
      */
     public List<TrainerDto> getTrainersNotAssignedToTrainee(String traineeUsername) {
-        List<TrainerDto> trainers = null;
-        try {
-            trainers = trainerService.getTrainersNotAssignedToTrainee(traineeUsername);
-        } catch (GymIllegalUsernameException | GymDataAccessException exception) {
-            log.error(exception.getMessage(), exception);
-        }
-        return trainers;
+        log.info("Request to get trainers not assigned to trainee with username: {}", traineeUsername);
+        List<TrainerEntity> trainers;
+        trainers = trainerService.getTrainersNotAssignedToTrainee(traineeUsername);
+        assert trainers != null;
+        return trainers.stream().map(trainerMapper::entityToDto).collect(Collectors.toList());
     }
 }

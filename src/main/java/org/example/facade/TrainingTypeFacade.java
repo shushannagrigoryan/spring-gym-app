@@ -2,7 +2,8 @@ package org.example.facade;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TrainingTypeDto;
-import org.example.exceptions.GymIllegalIdException;
+import org.example.entity.TrainingTypeEntity;
+import org.example.mapper.TrainingTypeMapper;
 import org.example.services.TrainingTypeService;
 import org.springframework.stereotype.Component;
 
@@ -10,9 +11,12 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class TrainingTypeFacade {
     private final TrainingTypeService trainingTypeService;
+    private final TrainingTypeMapper trainingTypeMapper;
 
-    public TrainingTypeFacade(TrainingTypeService trainingTypeService) {
+    public TrainingTypeFacade(TrainingTypeService trainingTypeService,
+                              TrainingTypeMapper trainingTypeMapper) {
         this.trainingTypeService = trainingTypeService;
+        this.trainingTypeMapper = trainingTypeMapper;
     }
 
     /**
@@ -23,13 +27,8 @@ public class TrainingTypeFacade {
      */
     public TrainingTypeDto getTrainingTypeById(Long id) {
         log.info("Request to retrieve training type by id");
-        TrainingTypeDto trainingTypeDto = null;
-        try {
-            trainingTypeDto = trainingTypeService.getTrainingTypeById(id);
-            log.info("Successfully retrieved trainingType by id");
-        } catch (GymIllegalIdException exception) {
-            log.error("No trainingType with id: {}", id, exception);
-        }
-        return trainingTypeDto;
+        TrainingTypeEntity trainingType;
+        trainingType = trainingTypeService.getTrainingTypeById(id);
+        return trainingTypeMapper.entityToDto(trainingType);
     }
 }

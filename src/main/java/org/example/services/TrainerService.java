@@ -3,14 +3,8 @@ package org.example.services;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.auth.TrainerAuth;
-import org.example.dao.TraineeDao;
-import org.example.dao.TrainerDao;
-import org.example.dao.TrainingTypeDao;
-import org.example.dto.TrainerDto;
-import org.example.dto.TrainingDto;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.entity.TrainingTypeEntity;
@@ -18,43 +12,39 @@ import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.exceptions.GymIllegalStateException;
 import org.example.exceptions.GymIllegalUsernameException;
-import org.example.mapper.TrainerMapper;
-import org.example.mapper.TrainingMapper;
 import org.example.password.PasswordGeneration;
+import org.example.repository.TrainerRepository;
 import org.example.username.UsernameGenerator;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 public class TrainerService {
-    private final TrainerDao trainerDao;
-    private final TrainerMapper trainerMapper;
+    private final TrainerRepository trainerRepository;
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
     private final TrainerAuth trainerAuth;
-    private final TrainingTypeDao trainingTypeDao;
-    private final TrainingMapper trainingMapper;
-    private final TraineeDao traineeDao;
+    private final TrainingTypeService trainingTypeService;
+    private final TraineeService traineeService;
+    private final TrainingService trainingService;
 
     /**
      * Injecting dependencies using constructor.
      */
-    public TrainerService(TrainerMapper trainerMapper,
-                          TrainerDao trainerDao,
+    public TrainerService(TrainerRepository trainerRepository,
                           UsernameGenerator usernameGenerator,
                           PasswordGeneration passwordGeneration,
                           TrainerAuth trainerAuth,
-                          TrainingTypeDao trainingTypeDao,
-                          TrainingMapper trainingMapper,
-                          TraineeDao traineeDao) {
-        this.trainerMapper = trainerMapper;
-        this.trainerDao = trainerDao;
+                          TrainingTypeService trainingTypeService,
+                          TraineeService traineeService,
+                          TrainingService trainingService) {
+        this.trainerRepository = trainerRepository;
         this.usernameGenerator = usernameGenerator;
         this.passwordGeneration = passwordGeneration;
         this.trainerAuth = trainerAuth;
-        this.trainingTypeDao = trainingTypeDao;
-        this.trainingMapper = trainingMapper;
-        this.traineeDao = traineeDao;
+        this.trainingTypeService = trainingTypeService;
+        this.traineeService = traineeService;
+        this.trainingService = trainingService;
     }
 
     /**
@@ -64,24 +54,16 @@ public class TrainerService {
      */
     public void createTrainer(TrainerEntity trainerEntity) {
         log.debug("Creating trainer: {}", trainerEntity);
-
+        TrainingTypeEntity trainingType =
+                trainingTypeService.getTrainingTypeById(trainerEntity.getSpecializationId());
+        trainerEntity.setSpecialization(trainingType);
         String username = usernameGenerator.generateUsername(
                 trainerEntity.getUser().getFirstName(),
                 trainerEntity.getUser().getLastName());
         trainerEntity.getUser().setUsername(username);
         trainerEntity.getUser().setPassword(passwordGeneration.generatePassword());
 
-        Optional<TrainingTypeEntity> trainingType =
-                trainingTypeDao.getTrainingTypeById(trainerEntity.getSpecializationId());
-
-        trainingType.ifPresentOrElse(trainerEntity::setSpecialization,
-                () -> {
-                    throw new GymIllegalIdException(
-                            String.format("TrainingType with id %d does not exist",
-                                    trainerEntity.getSpecializationId()));
-                });
-
-        trainerDao.createTrainer(trainerEntity);
+        trainerRepository.createTrainer(trainerEntity);
         log.debug("Successfully created a new trainer with username: {}", username);
     }
 
@@ -90,17 +72,17 @@ public class TrainerService {
      * If no trainer is found returns null.
      *
      * @param username username of the trainer
-     * @return the {@code TrainerDto}
+     * @return the {@code TrainerEntity}
      */
-    public TrainerDto getTrainerByUsername(String username) {
+    public TrainerEntity getTrainerByUsername(String username) {
         log.debug("Retrieving trainer by username: {}", username);
-        Optional<TrainerEntity> trainer = trainerDao.getTrainerByUsername(username);
+        Optional<TrainerEntity> trainer = trainerRepository.getTrainerByUsername(username);
         if (trainer.isEmpty()) {
             log.debug("No trainer with the username: {}", username);
             throw new GymEntityNotFoundException(String.format("Trainer with username %s does not exist.", username));
         }
         log.debug("Successfully retrieved trainer by username: {}", username);
-        return trainerMapper.entityToDto(trainer.get());
+        return trainer.get();
     }
 
     /**
@@ -110,14 +92,14 @@ public class TrainerService {
      * @param id of the trainer
      * @return the TrainerDao
      */
-    public TrainerDto getTrainerById(Long id) {
+    public TrainerEntity getTrainerById(Long id) {
         log.debug("Retrieving trainer by id: {}", id);
-        Optional<TrainerEntity> trainer = trainerDao.getTrainerById(id);
+        Optional<TrainerEntity> trainer = trainerRepository.getTrainerById(id);
         if (trainer.isEmpty()) {
             throw new GymIllegalIdException(String.format("No trainer with id: %d", id));
         }
         log.debug("Successfully retrieved trainer with id: {}", id);
-        return trainerMapper.entityToDto(trainer.get());
+        return trainer.get();
     }
 
     /**
@@ -127,7 +109,7 @@ public class TrainerService {
      */
     public void changeTrainerPassword(String username, String password) {
         if (trainerAuth.trainerAuth(username, password)) {
-            trainerDao.changeTrainerPassword(username, passwordGeneration.generatePassword());
+            trainerRepository.changeTrainerPassword(username, passwordGeneration.generatePassword());
         }
     }
 
@@ -139,7 +121,7 @@ public class TrainerService {
      */
     public void updateTrainerById(Long id, TrainerEntity trainerEntity) {
         log.debug("Updating trainer by id: {}", id);
-        Optional<TrainerEntity> trainer = trainerDao.getTrainerById(id);
+        Optional<TrainerEntity> trainer = trainerRepository.getTrainerById(id);
 
         if (trainer.isEmpty()) {
             log.debug("No trainer with id: {}", id);
@@ -162,16 +144,16 @@ public class TrainerService {
         trainerToUpdate.getUser().setFirstName(updatedFirstName);
         trainerToUpdate.getUser().setLastName(updatedLastName);
 
-        Optional<TrainingTypeEntity> trainingType =
-                trainingTypeDao.getTrainingTypeById(trainerEntity.getSpecializationId());
-        trainingType.ifPresentOrElse(trainerEntity::setSpecialization, () -> {
-            throw new GymIllegalIdException(
-                    String.format("Training Type with id %d does not exist.",
-                            trainerEntity.getSpecializationId()));
-        });
-        trainerToUpdate.setSpecialization(trainerEntity.getSpecialization());
+        //        Optional<TrainingTypeEntity> trainingType =
+        //                trainingTypeService.getTrainingTypeById(trainerEntity.getSpecializationId());
+        //        trainingType.ifPresentOrElse(trainerEntity::setSpecialization, () -> {
+        //            throw new GymIllegalIdException(
+        //                    String.format("Training Type with id %d does not exist.",
+        //                            trainerEntity.getSpecializationId()));
+        //        });
+        //        trainerToUpdate.setSpecialization(trainerEntity.getSpecialization());
 
-        trainerDao.updateTrainerById(id, trainerToUpdate);
+        trainerRepository.updateTrainerById(id, trainerToUpdate);
         log.debug("Successfully updated trainer with id: {}", id);
     }
 
@@ -182,7 +164,7 @@ public class TrainerService {
      */
     public void activateTrainer(Long id) {
         log.info("Request to activate trainer with id: {}", id);
-        Optional<TrainerEntity> trainer = trainerDao.getTrainerById(id);
+        Optional<TrainerEntity> trainer = trainerRepository.getTrainerById(id);
 
         if (trainer.isEmpty()) {
             log.debug("No entity with {} exists.", id);
@@ -194,7 +176,7 @@ public class TrainerService {
             throw new GymIllegalStateException(String.format("Trainer with id: %d is already active", id));
         }
 
-        trainerDao.activateTrainer(trainer.get().getUser().getId());
+        trainerRepository.activateTrainer(trainer.get().getUser().getId());
 
     }
 
@@ -205,7 +187,7 @@ public class TrainerService {
      */
     public void deactivateTrainer(Long id) {
         log.info("Request to deactivate trainer with id: {}", id);
-        Optional<TrainerEntity> trainer = trainerDao.getTrainerById(id);
+        Optional<TrainerEntity> trainer = trainerRepository.getTrainerById(id);
 
         if (trainer.isEmpty()) {
             log.debug("No entity with {} exists.", id);
@@ -217,7 +199,7 @@ public class TrainerService {
             throw new GymIllegalStateException(String.format("Trainer with id: %d is already inactive", id));
         }
 
-        trainerDao.deactivateTrainer(trainer.get().getUser().getId());
+        trainerRepository.deactivateTrainer(trainer.get().getUser().getId());
 
     }
 
@@ -225,27 +207,24 @@ public class TrainerService {
      * Returns trainers trainings list by trainer username and given criteria.
      *
      * @param trainerUsername username of the trainer
-     * @param fromDate training fromDate
-     * @param toDate training toDate
+     * @param fromDate        training fromDate
+     * @param toDate          training toDate
      * @param traineeUsername trainee username
-     * @return {@code List<TrainingDto>}
+     * @return {@code List<TrainingEntity>}
      */
 
-    public List<TrainingDto> getTrainerTrainingsByFilter(String trainerUsername, LocalDate fromDate,
+    public List<TrainingEntity> getTrainerTrainingsByFilter(String trainerUsername, LocalDate fromDate,
                                                          LocalDate toDate, String traineeUsername) {
 
-        Optional<TrainerEntity> trainer = trainerDao.getTrainerByUsername(trainerUsername);
+        Optional<TrainerEntity> trainer = trainerRepository.getTrainerByUsername(trainerUsername);
         if (trainer.isEmpty()) {
             throw new GymIllegalUsernameException(
                     String.format("No trainer with username: %s", trainerUsername)
             );
         }
 
-        List<TrainingEntity> trainingEntities =
-                trainerDao.getTrainerTrainingsByFilter(trainerUsername, fromDate,
+        return trainerRepository.getTrainerTrainingsByFilter(trainerUsername, fromDate,
                         toDate, traineeUsername);
-
-        return trainingEntities.stream().map(trainingMapper::entityToDto).collect(Collectors.toList());
     }
 
     /**
@@ -253,18 +232,16 @@ public class TrainerService {
      * Throws GymIllegalUsernameException if the username is not valid.
      *
      * @param traineeUsername of the trainee.
-     * @return {@code List<TrainerDto>}
+     * @return {@code List<TrainerEntity>}
      */
-    public List<TrainerDto> getTrainersNotAssignedToTrainee(String traineeUsername) {
-        List<TrainerEntity> trainers;
+    public List<TrainerEntity> getTrainersNotAssignedToTrainee(String traineeUsername) {
 
-        if (traineeDao.getTraineeByUsername(traineeUsername).isEmpty()) {
+        if (traineeService.getTraineeByUsername(traineeUsername) == null) {
             throw new GymIllegalUsernameException(String.format(
                     "No trainee with username: %s", traineeUsername));
         }
-        trainers = trainerDao.getTrainersNotAssignedToTrainee(traineeUsername);
 
-        return trainers.stream().map(trainerMapper::entityToDto).collect(Collectors.toList());
+        return trainerRepository.getTrainersNotAssignedToTrainee(traineeUsername);
     }
 
 }

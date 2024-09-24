@@ -21,11 +21,13 @@ public class TraineeAuthAspect {
         this.traineeAuth = traineeAuth;
     }
 
-    /** Before the specified methods perform trainee authentication. */
-    @Before("execution(* org.example.facade.TraineeFacade.*(..)) "
-            + "&& !execution(* org.example.facade.TraineeFacade.createTrainee(..))"
-            + "|| execution(* org.example.facade.TrainingFacade.*(..))"
-            + "|| execution(* org.example.facade.TrainingTypeFacade.*(..))")
+    /**
+     * Before the specified methods perform trainee authentication.
+     */
+    //    @Before("execution(* org.example.facade.TraineeFacade.*(..)) "
+    //            + "&& !execution(* org.example.facade.TraineeFacade.createTrainee(..))"
+    //            + "|| execution(* org.example.facade.TrainingFacade.*(..))"
+    //            + "|| execution(* org.example.facade.TrainingTypeFacade.*(..))")
     public void traineeAuthentication() {
         log.info("Authenticating trainee: username: {} password: {}",
                 username, password);

@@ -22,6 +22,11 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 @EnableAspectJAutoProxy
 public class HibernateConfig {
 
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyConfig() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
+
     /**
      * create sessionFactory object.
      *
@@ -56,11 +61,6 @@ public class HibernateConfig {
         } catch (HibernateException e) {
             throw new RuntimeException("Failed to create SessionFactory", e);
         }
-    }
-
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertyConfig() {
-        return new PropertySourcesPlaceholderConfigurer();
     }
 
 }

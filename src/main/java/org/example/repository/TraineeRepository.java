@@ -1,4 +1,4 @@
-package org.example.dao;
+package org.example.repository;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -28,13 +28,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Slf4j
-public class TraineeDao {
+public class TraineeRepository {
     private final SessionFactory sessionFactory;
-    private final UserDao userDao;
 
-    public TraineeDao(SessionFactory sessionFactory, UserDao userDao) {
+    public TraineeRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
-        this.userDao = userDao;
     }
 
 
@@ -48,7 +46,7 @@ public class TraineeDao {
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             UserEntity user = traineeEntity.getUser();
-            userDao.createUser(user);
+            session.persist(user);
             session.persist(traineeEntity);
             transaction.commit();
         } catch (HibernateException e) {
@@ -56,8 +54,8 @@ public class TraineeDao {
                 transaction.rollback();
             }
             log.debug("hibernate exception");
+            throw e;
         }
-        log.debug("Saving trainee: {} to storage", traineeEntity);
     }
 
     /**
@@ -291,9 +289,9 @@ public class TraineeDao {
      * Returns trainees trainings list by trainee username and given criteria.
      *
      * @param traineeUsername username of the trainee
-     * @param fromDate training fromDate
-     * @param toDate training toDate
-     * @param trainingTypeId training type
+     * @param fromDate        training fromDate
+     * @param toDate          training toDate
+     * @param trainingTypeId  training type
      * @param trainerUsername trainer username
      * @return {@code List<TrainingEntity>}
      */
@@ -380,7 +378,7 @@ public class TraineeDao {
     /**
      * Updates trainee's training list.
      *
-     * @param traineeUsername trainee username
+     * @param traineeUsername          trainee username
      * @param trainingsUpdatedTrainers map with key: training id to update, value: the new trainer
      */
     public void updateTraineesTrainersList(String traineeUsername, Map<Long, TrainerEntity> trainingsUpdatedTrainers) {

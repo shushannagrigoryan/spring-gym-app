@@ -6,7 +6,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TraineeValidation {
-    /** Validates {@code TraineeDto} for required fields. */
+    /**
+     * Validates {@code TraineeDto} for required fields.
+     */
     public void validateTrainee(TraineeDto traineeDto) {
         if (traineeDto.getFirstName() == null || traineeDto.getFirstName().trim().isEmpty()) {
             throw new GymIllegalArgumentException("Trainee firstName is required.");
