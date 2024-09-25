@@ -11,7 +11,6 @@ import org.example.exceptions.GymIllegalStateException;
 import org.example.password.PasswordGeneration;
 import org.example.repository.TraineeRepository;
 import org.example.username.UsernameGenerator;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,20 +21,16 @@ public class TraineeService {
     private final TraineeRepository traineeRepository;
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
-    private final SessionFactory sessionFactory;
-
 
     /**
      * Injecting dependencies using constructor.
      */
     public TraineeService(TraineeRepository traineeRepository,
                           UsernameGenerator usernameGenerator,
-                          PasswordGeneration passwordGeneration,
-                          SessionFactory sessionFactory) {
+                          PasswordGeneration passwordGeneration) {
         this.traineeRepository = traineeRepository;
         this.usernameGenerator = usernameGenerator;
         this.passwordGeneration = passwordGeneration;
-        this.sessionFactory = sessionFactory;
     }
 
     /**
@@ -102,9 +97,7 @@ public class TraineeService {
     @Transactional
     public void changeTraineePassword(String username) {
         log.debug("Changing the password of the trainee: {} ", username);
-        traineeRepository.changeTraineePassword(username,
-                passwordGeneration.generatePassword());
-
+        traineeRepository.changeTraineePassword(username, passwordGeneration.generatePassword());
     }
 
     /**

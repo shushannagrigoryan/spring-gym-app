@@ -1,32 +1,25 @@
 package facadetest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.example.auth.TraineeAuth;
 import org.example.dto.TraineeDto;
 import org.example.dto.TrainingDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainingEntity;
-import org.example.exceptions.GymIllegalArgumentException;
-import org.example.exceptions.GymIllegalIdException;
 import org.example.facade.TraineeFacade;
 import org.example.mapper.TraineeMapper;
 import org.example.mapper.TrainingMapper;
 import org.example.services.TraineeService;
 import org.example.validation.TraineeValidation;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -47,12 +40,6 @@ public class TraineeFacadeTest {
     private TrainingMapper trainingMapper;
     @InjectMocks
     private TraineeFacade traineeFacade;
-
-
-    //    @BeforeEach
-    //    public void setUp() {
-    //        traineeFacade.setDependencies(traineeMapper);
-    //    }
 
     @Test
     public void testCreateTraineeSuccess() {
@@ -83,6 +70,7 @@ public class TraineeFacadeTest {
         //then
         verify(traineeService).getTraineeById(id);
     }
+
     @Test
     public void testGetTraineeByUsernameSuccess() {
         //given
@@ -137,6 +125,7 @@ public class TraineeFacadeTest {
         //then
         verify(traineeService).activateTrainee(id);
     }
+
     @Test
     public void testDeactivateTrainee() {
         //given
@@ -162,23 +151,6 @@ public class TraineeFacadeTest {
         //then
         verify(traineeService).deleteTraineeByUsername(username);
     }
-
-    //    @Test
-    //    public void testDeleteTraineeByIdFailure() {
-    //        //given
-    //        Long id = 1L;
-    //        doThrow(new GymIllegalIdException("No trainee with id: " + id))
-    //                .when(traineeService).deleteTraineeById(id);
-    //
-    //        //when
-    //        traineeFacade.deleteTraineeById(id);
-    //
-    //        //then
-    //        verify(traineeService).deleteTraineeById(id);
-    //        GymIllegalIdException exception = assertThrows(GymIllegalIdException.class,
-    //                () -> traineeService.deleteTraineeById(id));
-    //        assertEquals("No trainee with id: " + id, exception.getMessage());
-    //    }
 
     @Test
     public void testUpdateTraineeByIdSuccess() {
@@ -207,7 +179,8 @@ public class TraineeFacadeTest {
         String trainerUsername = "O.O";
 
         List<TrainingEntity> trainingList = Arrays.asList(new TrainingEntity(), new TrainingEntity());
-        when(traineeService.getTraineeTrainingsByFilter(traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername))
+        when(traineeService.getTraineeTrainingsByFilter(
+                traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername))
                 .thenReturn(trainingList);
 
         List<TrainingDto> expectedDtoList = Arrays.asList(new TrainingDto(), new TrainingDto());
@@ -219,29 +192,11 @@ public class TraineeFacadeTest {
                 traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername);
 
         // Then
-        verify(traineeService).getTraineeTrainingsByFilter(traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername);
+        verify(traineeService)
+                .getTraineeTrainingsByFilter(traineeUsername, fromDate, toDate,
+                        trainingTypeId, trainerUsername);
         verify(trainingMapper, times(2)).entityToDto(any(TrainingEntity.class));
         assertEquals(expectedDtoList, actualDtoList);
     }
-
-    //    @Test
-    //    public void testUpdateTraineeByIdIllegalId() {
-    //        //given
-    //        Long id = 1L;
-    //        TraineeDto traineeDto = new TraineeDto();
-    //        TraineeEntity traineeEntity = traineeMapper.dtoToEntity(traineeDto);
-    //        when(traineeMapper.dtoToEntity(traineeDto)).thenReturn(traineeEntity);
-    //        doThrow(new GymIllegalIdException("No trainee with id: " + id))
-    //                .when(traineeService).updateTraineeById(id, traineeEntity);
-    //
-    //        //when
-    //        traineeFacade.updateTraineeById(id, traineeDto);
-    //
-    //        //then
-    //        verify(traineeService).updateTraineeById(id, traineeEntity);
-    //        GymIllegalIdException exception = assertThrows(GymIllegalIdException.class,
-    //                () -> traineeService.updateTraineeById(id, traineeEntity));
-    //        assertEquals("No trainee with id: " + id, exception.getMessage());
-    //    }
 
 }

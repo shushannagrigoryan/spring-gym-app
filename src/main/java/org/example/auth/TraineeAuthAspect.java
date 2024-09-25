@@ -29,9 +29,7 @@ public class TraineeAuthAspect {
             + "|| execution(* org.example.facade.TrainingFacade.*(..))"
             + "|| execution(* org.example.facade.TrainingTypeFacade.*(..))")
     public void traineeAuthentication() {
-        log.info("Authenticating trainee: username: {} password: {}",
-                username, password);
-
+        log.info("Authenticating trainee: username: {} password: {}", username, password);
         try {
             traineeAuth.traineeAuth(username, password);
         } catch (GymIllegalArgumentException exception) {

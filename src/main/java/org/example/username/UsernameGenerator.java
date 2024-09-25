@@ -49,7 +49,7 @@ public class UsernameGenerator {
      * @param username username for which suffix is generated
      * @return the suffix
      */
-    private Long getSuffix(String username) {
+    public Long getSuffix(String username) {
         log.debug("Generating suffix for username: {}", username);
         List<String> allUsernames = userRepository.getAllUsernames();
 

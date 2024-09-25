@@ -153,6 +153,7 @@ public class TrainerFacadeTest {
         //then
         verify(trainerService).activateTrainer(id);
     }
+
     @Test
     public void testDeactivateTrainer() {
         //given

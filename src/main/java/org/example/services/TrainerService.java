@@ -22,7 +22,6 @@ public class TrainerService {
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
     private final TrainingTypeService trainingTypeService;
-    private final TraineeService traineeService;
 
     /**
      * Injecting dependencies using constructor.
@@ -30,13 +29,11 @@ public class TrainerService {
     public TrainerService(TrainerRepository trainerRepository,
                           UsernameGenerator usernameGenerator,
                           PasswordGeneration passwordGeneration,
-                          TrainingTypeService trainingTypeService,
-                          TraineeService traineeService) {
+                          TrainingTypeService trainingTypeService) {
         this.trainerRepository = trainerRepository;
         this.usernameGenerator = usernameGenerator;
         this.passwordGeneration = passwordGeneration;
         this.trainingTypeService = trainingTypeService;
-        this.traineeService = traineeService;
     }
 
     /**
