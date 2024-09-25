@@ -38,11 +38,6 @@ dependencies {
     implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.0.Final'
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
     implementation group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.22.1'
-
-
-
-
-
 }
 
 
