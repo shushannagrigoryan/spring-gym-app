@@ -2,7 +2,6 @@ package org.example.services;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.auth.TrainerAuth;
 import org.example.entity.TrainerEntity;
@@ -76,13 +75,13 @@ public class TrainerService {
      */
     public TrainerEntity getTrainerByUsername(String username) {
         log.debug("Retrieving trainer by username: {}", username);
-        Optional<TrainerEntity> trainer = trainerRepository.getTrainerByUsername(username);
-        if (trainer.isEmpty()) {
+        TrainerEntity trainer = trainerRepository.getTrainerByUsername(username);
+        if (trainer == null) {
             log.debug("No trainer with the username: {}", username);
             throw new GymEntityNotFoundException(String.format("Trainer with username %s does not exist.", username));
         }
         log.debug("Successfully retrieved trainer by username: {}", username);
-        return trainer.get();
+        return trainer;
     }
 
     /**
@@ -94,12 +93,12 @@ public class TrainerService {
      */
     public TrainerEntity getTrainerById(Long id) {
         log.debug("Retrieving trainer by id: {}", id);
-        Optional<TrainerEntity> trainer = trainerRepository.getTrainerById(id);
-        if (trainer.isEmpty()) {
+        TrainerEntity trainer = trainerRepository.getTrainerById(id);
+        if (trainer == null) {
             throw new GymIllegalIdException(String.format("No trainer with id: %d", id));
         }
         log.debug("Successfully retrieved trainer with id: {}", id);
-        return trainer.get();
+        return trainer;
     }
 
     /**
@@ -107,10 +106,10 @@ public class TrainerService {
      *
      * @param username username of the trainer
      */
-    public void changeTrainerPassword(String username, String password) {
-        if (trainerAuth.trainerAuth(username, password)) {
-            trainerRepository.changeTrainerPassword(username, passwordGeneration.generatePassword());
-        }
+    public void changeTrainerPassword(String username) {
+        log.debug("Changing the password of the trainee: {}", username);
+        trainerRepository.changeTrainerPassword(username,
+                passwordGeneration.generatePassword());
     }
 
     /**
@@ -121,28 +120,26 @@ public class TrainerService {
      */
     public void updateTrainerById(Long id, TrainerEntity trainerEntity) {
         log.debug("Updating trainer by id: {}", id);
-        Optional<TrainerEntity> trainer = trainerRepository.getTrainerById(id);
+        TrainerEntity trainer = trainerRepository.getTrainerById(id);
 
-        if (trainer.isEmpty()) {
+        if (trainer == null) {
             log.debug("No trainer with id: {}", id);
             throw new GymIllegalIdException(String.format("No trainer with id: %d", id));
         }
 
-        TrainerEntity trainerToUpdate = trainer.get();
-
         String updatedFirstName = trainerEntity.getUser().getFirstName();
         String updatedLastName = trainerEntity.getUser().getLastName();
-        String firstName = trainerToUpdate.getUser().getFirstName();
-        String lastName = trainerToUpdate.getUser().getLastName();
+        String firstName = trainer.getUser().getFirstName();
+        String lastName = trainer.getUser().getLastName();
 
         if (!((firstName.equals(updatedFirstName)) && (lastName.equals(updatedLastName)))) {
             String username = usernameGenerator
                     .generateUsername(updatedFirstName, updatedLastName);
-            trainerToUpdate.getUser().setUsername(username);
+            trainer.getUser().setUsername(username);
         }
 
-        trainerToUpdate.getUser().setFirstName(updatedFirstName);
-        trainerToUpdate.getUser().setLastName(updatedLastName);
+        trainer.getUser().setFirstName(updatedFirstName);
+        trainer.getUser().setLastName(updatedLastName);
 
         //        Optional<TrainingTypeEntity> trainingType =
         //                trainingTypeService.getTrainingTypeById(trainerEntity.getSpecializationId());
@@ -153,7 +150,7 @@ public class TrainerService {
         //        });
         //        trainerToUpdate.setSpecialization(trainerEntity.getSpecialization());
 
-        trainerRepository.updateTrainerById(id, trainerToUpdate);
+        trainerRepository.updateTrainerById(id, trainer);
         log.debug("Successfully updated trainer with id: {}", id);
     }
 
@@ -164,19 +161,19 @@ public class TrainerService {
      */
     public void activateTrainer(Long id) {
         log.info("Request to activate trainer with id: {}", id);
-        Optional<TrainerEntity> trainer = trainerRepository.getTrainerById(id);
+        TrainerEntity trainer = trainerRepository.getTrainerById(id);
 
-        if (trainer.isEmpty()) {
+        if (trainer == null) {
             log.debug("No entity with {} exists.", id);
             throw new GymIllegalIdException(String.format("No entity with %d exists.", id));
         }
 
-        if (trainer.get().getUser().isActive()) {
+        if (trainer.getUser().isActive()) {
             log.debug("Trainer with id: {} is already active.", id);
             throw new GymIllegalStateException(String.format("Trainer with id: %d is already active", id));
         }
 
-        trainerRepository.activateTrainer(trainer.get().getUser().getId());
+        trainerRepository.activateTrainer(trainer.getUser().getId());
 
     }
 
@@ -187,19 +184,19 @@ public class TrainerService {
      */
     public void deactivateTrainer(Long id) {
         log.info("Request to deactivate trainer with id: {}", id);
-        Optional<TrainerEntity> trainer = trainerRepository.getTrainerById(id);
+        TrainerEntity trainer = trainerRepository.getTrainerById(id);
 
-        if (trainer.isEmpty()) {
+        if (trainer == null) {
             log.debug("No entity with {} exists.", id);
             throw new GymIllegalIdException(String.format("No entity with %d exists.", id));
         }
 
-        if (!trainer.get().getUser().isActive()) {
+        if (!trainer.getUser().isActive()) {
             log.debug("Trainer with id: {} is already inactive.", id);
             throw new GymIllegalStateException(String.format("Trainer with id: %d is already inactive", id));
         }
 
-        trainerRepository.deactivateTrainer(trainer.get().getUser().getId());
+        trainerRepository.deactivateTrainer(trainer.getUser().getId());
 
     }
 
@@ -214,17 +211,17 @@ public class TrainerService {
      */
 
     public List<TrainingEntity> getTrainerTrainingsByFilter(String trainerUsername, LocalDate fromDate,
-                                                         LocalDate toDate, String traineeUsername) {
+                                                            LocalDate toDate, String traineeUsername) {
 
-        Optional<TrainerEntity> trainer = trainerRepository.getTrainerByUsername(trainerUsername);
-        if (trainer.isEmpty()) {
+        TrainerEntity trainer = trainerRepository.getTrainerByUsername(trainerUsername);
+        if (trainer == null) {
             throw new GymIllegalUsernameException(
                     String.format("No trainer with username: %s", trainerUsername)
             );
         }
 
         return trainerRepository.getTrainerTrainingsByFilter(trainerUsername, fromDate,
-                        toDate, traineeUsername);
+                toDate, traineeUsername);
     }
 
     /**

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.example.auth.TrainerAuth;
 import org.example.dto.TrainerDto;
 import org.example.dto.TrainingDto;
 import org.example.entity.TrainerEntity;
@@ -21,6 +22,7 @@ public class TrainerFacade {
     private final TrainerMapper trainerMapper;
     private final TrainerValidation trainerValidation;
     private final TrainingMapper trainingMapper;
+    private final TrainerAuth trainerAuth;
 
     /**
      * Injecting {@code TrainerFacade} dependencies.
@@ -28,11 +30,13 @@ public class TrainerFacade {
     public TrainerFacade(TrainerService trainerService,
                          TrainerMapper trainerMapper,
                          TrainerValidation trainerValidation,
-                         TrainingMapper trainingMapper) {
+                         TrainingMapper trainingMapper,
+                         TrainerAuth trainerAuth) {
         this.trainerService = trainerService;
         this.trainerMapper = trainerMapper;
         this.trainerValidation = trainerValidation;
         this.trainingMapper = trainingMapper;
+        this.trainerAuth = trainerAuth;
     }
 
     /**
@@ -55,8 +59,7 @@ public class TrainerFacade {
      */
     public TrainerDto getTrainerById(Long id) {
         log.info("Request to retrieve trainer by id");
-        TrainerEntity trainer;
-        trainer = trainerService.getTrainerById(id);
+        TrainerEntity trainer = trainerService.getTrainerById(id);
         return trainerMapper.entityToDto(trainer);
     }
 
@@ -69,8 +72,7 @@ public class TrainerFacade {
      */
     public TrainerDto getTrainerByUsername(String username) {
         log.info("Request to retrieve trainer by username");
-        TrainerEntity trainer;
-        trainer = trainerService.getTrainerByUsername(username);
+        TrainerEntity trainer = trainerService.getTrainerByUsername(username);
         return trainerMapper.entityToDto(trainer);
     }
 
@@ -83,13 +85,9 @@ public class TrainerFacade {
 
     public void changeTrainerPassword(String username, String password) {
         log.info("Request to change trainer password.");
-
-        if (password == null || password.isEmpty()) {
-            log.error("Password is required.");
-            return;
+        if (trainerAuth.trainerAuth(username, password)) {
+            trainerService.changeTrainerPassword(username);
         }
-        trainerService.changeTrainerPassword(username, password);
-
     }
 
     /**

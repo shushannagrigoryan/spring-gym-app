@@ -2,7 +2,6 @@ package org.example.auth;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.example.exceptions.GymIllegalArgumentException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

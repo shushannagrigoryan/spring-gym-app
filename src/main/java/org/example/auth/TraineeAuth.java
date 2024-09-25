@@ -1,6 +1,5 @@
 package org.example.auth;
 
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TraineeEntity;
 import org.example.exceptions.GymIllegalArgumentException;
@@ -27,14 +26,14 @@ public class TraineeAuth {
      * @return true if trainee exists, else false.
      */
     public boolean traineeAuth(String username, String password) {
-        Optional<TraineeEntity> trainee = traineeRepository.getTraineeByUsername(username);
-        if (trainee.isEmpty()) {
+        TraineeEntity trainee = traineeRepository.getTraineeByUsername(username);
+        if (trainee == null) {
             log.debug("No trainee with username: {}", username);
             throw new GymIllegalArgumentException(
                     String.format("No trainee with username: %s", username));
         }
 
-        if (!trainee.get().getUser().getPassword().equals(password)) {
+        if (!trainee.getUser().getPassword().equals(password)) {
             log.debug("Incorrect password for trainee with username: {}", username);
             throw new GymIllegalArgumentException(
                     String.format("Incorrect password for trainee with username: %s", username));

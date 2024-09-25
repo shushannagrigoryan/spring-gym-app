@@ -18,9 +18,9 @@ public class TrainingCreationService {
      * Injecting dependencies using constructor.
      */
     public TrainingCreationService(TrainingRepository trainingRepository,
-                           TraineeService traineeService,
-                           TrainerService trainerService,
-                           TrainingTypeService trainingTypeService) {
+                                   TraineeService traineeService,
+                                   TrainerService trainerService,
+                                   TrainingTypeService trainingTypeService) {
         this.trainingRepository = trainingRepository;
         this.traineeService = traineeService;
         this.trainerService = trainerService;

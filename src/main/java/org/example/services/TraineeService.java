@@ -1,14 +1,10 @@
 package org.example.services;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.auth.TraineeAuth;
 import org.example.entity.TraineeEntity;
-import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalIdException;
@@ -17,7 +13,9 @@ import org.example.exceptions.GymIllegalUsernameException;
 import org.example.password.PasswordGeneration;
 import org.example.repository.TraineeRepository;
 import org.example.username.UsernameGenerator;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -27,6 +25,7 @@ public class TraineeService {
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
     private final TraineeAuth traineeAuth;
+    private final SessionFactory sessionFactory;
 
 
     /**
@@ -35,11 +34,13 @@ public class TraineeService {
     public TraineeService(TraineeRepository traineeRepository,
                           UsernameGenerator usernameGenerator,
                           PasswordGeneration passwordGeneration,
-                          TraineeAuth traineeAuth) {
+                          TraineeAuth traineeAuth,
+                          SessionFactory sessionFactory) {
         this.traineeRepository = traineeRepository;
         this.usernameGenerator = usernameGenerator;
         this.passwordGeneration = passwordGeneration;
         this.traineeAuth = traineeAuth;
+        this.sessionFactory = sessionFactory;
     }
 
     /**
@@ -47,6 +48,7 @@ public class TraineeService {
      *
      * @param traineeEntity the new {@code TraineeEntity}
      */
+    @Transactional
     public void createTrainee(TraineeEntity traineeEntity) {
         log.debug("Creating trainee: {}", traineeEntity);
 
@@ -69,13 +71,13 @@ public class TraineeService {
      */
     public TraineeEntity getTraineeByUsername(String username) {
         log.debug("Retrieving trainee by username: {}", username);
-        Optional<TraineeEntity> trainee = traineeRepository.getTraineeByUsername(username);
-        if (trainee.isEmpty()) {
+        TraineeEntity trainee = traineeRepository.getTraineeByUsername(username);
+        if (trainee == null) {
             log.debug("No trainee with the username: {}", username);
             throw new GymEntityNotFoundException(String.format("Trainee with username %s does not exist.", username));
         }
         log.debug("Successfully retrieved trainee by username: {}", username);
-        return trainee.get();
+        return trainee;
     }
 
     /**
@@ -87,12 +89,12 @@ public class TraineeService {
      */
     public TraineeEntity getTraineeById(Long id) {
         log.debug("Retrieving trainee by id: {}", id);
-        Optional<TraineeEntity> trainee = traineeRepository.getTraineeById(id);
-        if (trainee.isEmpty()) {
+        TraineeEntity trainee = traineeRepository.getTraineeById(id);
+        if (trainee == null) {
             throw new GymIllegalIdException(String.format("No trainee with id: %d", id));
         }
         log.debug("Successfully retrieved trainee by id: {}", id);
-        return trainee.get();
+        return trainee;
 
     }
 
@@ -101,10 +103,11 @@ public class TraineeService {
      *
      * @param username username of the trainee
      */
-    public void changeTraineePassword(String username, String password) {
-        if (traineeAuth.traineeAuth(username, password)) {
-            traineeRepository.changeTraineePassword(username, passwordGeneration.generatePassword());
-        }
+    public void changeTraineePassword(String username) {
+        log.debug("Changing the password of the trainee: {} ", username);
+        traineeRepository.changeTraineePassword(username,
+                passwordGeneration.generatePassword());
+
     }
 
     /**
@@ -112,22 +115,22 @@ public class TraineeService {
      *
      * @param id id of the trainee
      */
+    @Transactional
     public void activateTrainee(Long id) {
         log.info("Request to activate trainee with id: {}", id);
-        Optional<TraineeEntity> trainee = traineeRepository.getTraineeById(id);
+        TraineeEntity trainee = traineeRepository.getTraineeById(id);
 
-        if (trainee.isEmpty()) {
+        if (trainee == null) {
             log.debug("No entity with {} exists.", id);
             throw new GymIllegalIdException(String.format("No entity with %d exists.", id));
         }
 
-        if (trainee.get().getUser().isActive()) {
+        if (trainee.getUser().isActive()) {
             log.debug("Trainee with id: {} is already active.", id);
             throw new GymIllegalStateException(String.format("Trainee with id: %d is already active", id));
         }
 
-        traineeRepository.activateTrainee(trainee.get().getUser().getId());
-
+        traineeRepository.activateTrainee(trainee);
     }
 
     /**
@@ -137,19 +140,19 @@ public class TraineeService {
      */
     public void deactivateTrainee(Long id) {
         log.info("Request to deactivate trainee with id: {}", id);
-        Optional<TraineeEntity> trainee = traineeRepository.getTraineeById(id);
+        TraineeEntity trainee = traineeRepository.getTraineeById(id);
 
-        if (trainee.isEmpty()) {
+        if (trainee == null) {
             log.debug("No entity with {} exists.", id);
             throw new GymIllegalIdException(String.format("No entity with %d exists.", id));
         }
 
-        if (!trainee.get().getUser().isActive()) {
+        if (!trainee.getUser().isActive()) {
             log.debug("Trainee with id: {} is already inactive.", id);
             throw new GymIllegalStateException(String.format("Trainee with id: %d is already inactive", id));
         }
 
-        traineeRepository.deactivateTrainee(trainee.get().getUser().getId());
+        traineeRepository.deactivateTrainee(trainee.getUser().getId());
 
     }
 
@@ -161,32 +164,30 @@ public class TraineeService {
      */
     public void updateTraineeById(Long id, TraineeEntity traineeEntity) {
         log.debug("Updating trainee by id: {}", id);
-        Optional<TraineeEntity> trainee = traineeRepository.getTraineeById(id);
+        TraineeEntity trainee = traineeRepository.getTraineeById(id);
 
-        if (trainee.isEmpty()) {
+        if (trainee == null) {
             log.debug("No trainee with id: {}", id);
             throw new GymIllegalIdException(String.format("No trainee with id: %d", id));
         }
 
-        TraineeEntity traineeToUpdate = trainee.get();
-
         String updatedFirstName = traineeEntity.getUser().getFirstName();
         String updatedLastName = traineeEntity.getUser().getLastName();
-        String firstName = traineeToUpdate.getUser().getFirstName();
-        String lastName = traineeToUpdate.getUser().getLastName();
+        String firstName = trainee.getUser().getFirstName();
+        String lastName = trainee.getUser().getLastName();
 
         if (!((firstName.equals(updatedFirstName)) && (lastName.equals(updatedLastName)))) {
             String username = usernameGenerator
                     .generateUsername(updatedFirstName, updatedLastName);
-            traineeToUpdate.getUser().setUsername(username);
+            trainee.getUser().setUsername(username);
         }
 
-        traineeToUpdate.getUser().setFirstName(updatedFirstName);
-        traineeToUpdate.getUser().setLastName(updatedLastName);
-        traineeToUpdate.setDateOfBirth(traineeEntity.getDateOfBirth());
-        traineeToUpdate.setAddress(traineeEntity.getAddress());
+        trainee.getUser().setFirstName(updatedFirstName);
+        trainee.getUser().setLastName(updatedLastName);
+        trainee.setDateOfBirth(traineeEntity.getDateOfBirth());
+        trainee.setAddress(traineeEntity.getAddress());
 
-        traineeRepository.updateTraineeById(id, traineeToUpdate);
+        traineeRepository.updateTraineeById(id, trainee);
         log.debug("Successfully updated trainee with id: {}", id);
     }
 
@@ -198,8 +199,8 @@ public class TraineeService {
      */
     public void deleteTraineeByUsername(String username) {
         log.debug("Deleting trainee by username: {}", username);
-        Optional<TraineeEntity> trainee = traineeRepository.getTraineeByUsername(username);
-        if (trainee.isEmpty()) {
+        TraineeEntity trainee = traineeRepository.getTraineeByUsername(username);
+        if (trainee == null) {
             throw new GymIllegalUsernameException(
                     String.format("Illegal username for trainee: %s.", username));
         }
@@ -219,28 +220,28 @@ public class TraineeService {
      */
 
     public List<TrainingEntity> getTraineeTrainingsByFilter(String traineeUsername, LocalDate fromDate,
-                                                         LocalDate toDate, Long trainingTypeId,
-                                                         String trainerUsername) {
+                                                            LocalDate toDate, Long trainingTypeId,
+                                                            String trainerUsername) {
         log.debug("Getting trainee trainings by filter");
 
-        Optional<TraineeEntity> trainee = traineeRepository.getTraineeByUsername(traineeUsername);
-        if (trainee.isEmpty()) {
+        TraineeEntity trainee = traineeRepository.getTraineeByUsername(traineeUsername);
+        if (trainee == null) {
             throw new GymIllegalUsernameException(
                     String.format("No trainee with username: %s", traineeUsername)
             );
         }
 
         return traineeRepository.getTraineeTrainingsByFilter(traineeUsername, fromDate,
-                        toDate, trainingTypeId, trainerUsername);
+                toDate, trainingTypeId, trainerUsername);
     }
 
 
-    /**
-     * Updates trainee's trainer list.
-     *
-     * @param traineeUsername          trainee username
-     * @param trainingsUpdatedTrainers map with key: trainingId to update, value: new trainer id
-     */
+    //    /**
+    //     * Updates trainee's trainer list.
+    //     *
+    //     * @param traineeUsername          trainee username
+    //     * @param trainingsUpdatedTrainers map with key: trainingId to update, value: new trainer id
+    //     */
     //    public void updateTraineesTrainersList(String traineeUsername, Map<Long, Long> trainingsUpdatedTrainers) {
     //        log.debug("Updating trainee's trainers list.");
     //

@@ -24,7 +24,6 @@ public class TrainingTypeService {
      * Gets the training type by id in the service layer.
      * If no training type is found throws an {@code GymIllegalIdException}
      *
-     *
      * @param id id of the training type to get
      * @return the {@code Optional<TrainingTypeEntity>}
      */

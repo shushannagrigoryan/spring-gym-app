@@ -1,6 +1,5 @@
 package org.example.auth;
 
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.GymIllegalArgumentException;
@@ -27,14 +26,14 @@ public class TrainerAuth {
      * @return true if trainer exists, else false.
      */
     public boolean trainerAuth(String username, String password) {
-        Optional<TrainerEntity> trainer = trainerRepository.getTrainerByUsername(username);
-        if (trainer.isEmpty()) {
+        TrainerEntity trainer = trainerRepository.getTrainerByUsername(username);
+        if (trainer == null) {
             log.debug("No trainer with username: {}", username);
             throw new GymIllegalArgumentException(
                     String.format("No trainer with username: %s", username));
         }
 
-        if (!trainer.get().getUser().getPassword().equals(password)) {
+        if (!trainer.getUser().getPassword().equals(password)) {
             log.debug("Incorrect password for trainer with username: {}", username);
             throw new GymIllegalArgumentException(
                     String.format("Incorrect password for trainer with username: %s", username));

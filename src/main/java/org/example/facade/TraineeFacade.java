@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.example.auth.TraineeAuth;
 import org.example.dto.TraineeDto;
 import org.example.dto.TrainingDto;
 import org.example.entity.TraineeEntity;
@@ -21,6 +22,7 @@ public class TraineeFacade {
     private final TraineeMapper traineeMapper;
     private final TraineeValidation traineeValidation;
     private final TrainingMapper trainingMapper;
+    private final TraineeAuth traineeAuth;
 
     /**
      * Injecting {@code TraineeFacade} dependencies.
@@ -28,11 +30,13 @@ public class TraineeFacade {
     public TraineeFacade(TraineeService traineeService,
                          TraineeMapper traineeMapper,
                          TraineeValidation traineeValidation,
-                         TrainingMapper trainingMapper) {
+                         TrainingMapper trainingMapper,
+                         TraineeAuth traineeAuth) {
         this.traineeService = traineeService;
         this.traineeMapper = traineeMapper;
         this.traineeValidation = traineeValidation;
         this.trainingMapper = trainingMapper;
+        this.traineeAuth = traineeAuth;
     }
 
 
@@ -41,6 +45,7 @@ public class TraineeFacade {
      *
      * @param traineeDto {@code TraineeDto} to create the {@code TraineeEntity}
      */
+
     public void createTrainee(TraineeDto traineeDto) {
         log.info("Request to create trainee");
         traineeValidation.validateTrainee(traineeDto);
@@ -56,8 +61,7 @@ public class TraineeFacade {
      */
     public TraineeDto getTraineeById(Long id) {
         log.info("Request to retrieve trainee by id");
-        TraineeEntity trainee;
-        trainee = traineeService.getTraineeById(id);
+        TraineeEntity trainee = traineeService.getTraineeById(id);
         return traineeMapper.entityToDto(trainee);
     }
 
@@ -70,9 +74,7 @@ public class TraineeFacade {
      */
     public TraineeDto getTraineeByUsername(String username) {
         log.info("Request to retrieve trainee by username");
-        TraineeEntity trainee;
-        trainee = traineeService.getTraineeByUsername(username);
-        log.info("Successfully retrieved trainee by username");
+        TraineeEntity trainee = traineeService.getTraineeByUsername(username);
         return traineeMapper.entityToDto(trainee);
     }
 
@@ -84,7 +86,10 @@ public class TraineeFacade {
      */
     public void changeTraineePassword(String username, String password) {
         log.info("Request to change trainee password.");
-        traineeService.changeTraineePassword(username, password);
+        if (traineeAuth.traineeAuth(username, password)) {
+            traineeService.changeTraineePassword(username);
+        }
+
     }
 
     /**
@@ -154,7 +159,6 @@ public class TraineeFacade {
 
         assert trainingList != null;
         return trainingList.stream().map(trainingMapper::entityToDto).collect(Collectors.toList());
-
 
 
     }

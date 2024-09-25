@@ -1,25 +1,13 @@
 package org.example.repository;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.CriteriaUpdate;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import jakarta.persistence.criteria.Subquery;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymDataAccessException;
 import org.example.exceptions.GymDataUpdateException;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -54,7 +42,7 @@ public class TrainerRepository {
             session.persist(user);
             session.persist(trainerEntity);
             transaction.commit();
-        } catch (HibernateException e) {
+        } catch (RuntimeException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -70,20 +58,16 @@ public class TrainerRepository {
      * @param username username of the trainer
      * @return {@code Optional<TrainerEntity>}
      */
-    public Optional<TrainerEntity> getTrainerByUsername(String username) {
+    public TrainerEntity getTrainerByUsername(String username) {
         log.debug("Getting trainer with username: {}", username);
-
+        Session session = sessionFactory.openSession();
         TrainerEntity trainer;
-        try (Session session = sessionFactory.openSession()) {
-            String hql = "FROM TrainerEntity t WHERE t.user.username = :username";
-            Query<TrainerEntity> query = session.createQuery(hql, TrainerEntity.class);
-            query.setParameter("username", username);
-            trainer = query.uniqueResult();
-        } catch (HibernateException e) {
-            log.debug("hibernate exception");
-            throw new GymDataAccessException(String.format("Failed to retrieve trainer with username: %s", username));
-        }
-        return Optional.ofNullable(trainer);
+        String hql = "from TrainerEntity t where t.user.username = :username";
+        Query<TrainerEntity> query = session.createQuery(hql, TrainerEntity.class);
+        query.setParameter("username", username);
+        trainer = query.uniqueResult();
+
+        return trainer;
     }
 
     /**
@@ -92,18 +76,10 @@ public class TrainerRepository {
      * @param id id of the trainer
      * @return {@code TrainerEntity}
      */
-    public Optional<TrainerEntity> getTrainerById(Long id) {
+    public TrainerEntity getTrainerById(Long id) {
         log.debug("Getting trainer with id: {}", id);
-        TrainerEntity trainer = null;
-        try (Session session = sessionFactory.openSession()) {
-            trainer = session.get(TrainerEntity.class, id);
-        } catch (HibernateException e) {
-            log.debug("hibernate exception");
-        }
-
-        log.debug("Getting trainer with id: {}", id);
-
-        return Optional.ofNullable(trainer);
+        Session session = sessionFactory.openSession();
+        return session.get(TrainerEntity.class, id);
     }
 
     /**
@@ -116,26 +92,25 @@ public class TrainerRepository {
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
 
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-
-            CriteriaUpdate<UserEntity> criteriaUpdate =
-                    criteriaBuilder.createCriteriaUpdate(UserEntity.class);
-
-            Root<UserEntity> root = criteriaUpdate.from(UserEntity.class);
-
-            criteriaUpdate.set("password", password)
-                    .where(criteriaBuilder.equal(root.get("username"), username));
-
-            session.createMutationQuery(criteriaUpdate).executeUpdate();
+            //            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            //
+            //            CriteriaUpdate<UserEntity> criteriaUpdate =
+            //                    criteriaBuilder.createCriteriaUpdate(UserEntity.class);
+            //
+            //            Root<UserEntity> root = criteriaUpdate.from(UserEntity.class);
+            //
+            //            criteriaUpdate.set("password", password)
+            //                    .where(criteriaBuilder.equal(root.get("username"), username));
+            //
+            //            session.createMutationQuery(criteriaUpdate).executeUpdate();
 
             transaction.commit();
-        } catch (HibernateException e) {
+        } catch (RuntimeException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            log.debug("Hibernate exception");
-            throw new GymDataUpdateException(
-                    String.format("Exception while updating password of the trainer with username %S", username));
+            log.debug("Exception while updating the password of the trainer: {} ", username);
+            throw e;
         }
         log.debug("Successfully updated password of the trainer with username {}", username);
     }
@@ -166,7 +141,7 @@ public class TrainerRepository {
                 user.setPassword(trainerEntity.getUser().getPassword());
             }
             transaction.commit();
-        } catch (HibernateException e) {
+        } catch (RuntimeException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -188,20 +163,20 @@ public class TrainerRepository {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-
-            CriteriaUpdate<UserEntity> criteriaUpdate =
-                    criteriaBuilder.createCriteriaUpdate(UserEntity.class);
-
-            Root<UserEntity> root = criteriaUpdate.from(UserEntity.class);
-
-            criteriaUpdate.set("isActive", true)
-                    .where(criteriaBuilder.equal(root.get("id"), id));
-
-            session.createMutationQuery(criteriaUpdate).executeUpdate();
+            //            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            //
+            //            CriteriaUpdate<UserEntity> criteriaUpdate =
+            //                    criteriaBuilder.createCriteriaUpdate(UserEntity.class);
+            //
+            //            Root<UserEntity> root = criteriaUpdate.from(UserEntity.class);
+            //
+            //            criteriaUpdate.set("isActive", true)
+            //                    .where(criteriaBuilder.equal(root.get("id"), id));
+            //
+            //            session.createMutationQuery(criteriaUpdate).executeUpdate();
 
             transaction.commit();
-        } catch (HibernateException exception) {
+        } catch (RuntimeException exception) {
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -225,20 +200,20 @@ public class TrainerRepository {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-
-            CriteriaUpdate<UserEntity> criteriaUpdate =
-                    criteriaBuilder.createCriteriaUpdate(UserEntity.class);
-
-            Root<UserEntity> root = criteriaUpdate.from(UserEntity.class);
-
-            criteriaUpdate.set("isActive", false)
-                    .where(criteriaBuilder.equal(root.get("id"), id));
-
-            session.createMutationQuery(criteriaUpdate).executeUpdate();
+            //            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            //
+            //            CriteriaUpdate<UserEntity> criteriaUpdate =
+            //                    criteriaBuilder.createCriteriaUpdate(UserEntity.class);
+            //
+            //            Root<UserEntity> root = criteriaUpdate.from(UserEntity.class);
+            //
+            //            criteriaUpdate.set("isActive", false)
+            //                    .where(criteriaBuilder.equal(root.get("id"), id));
+            //
+            //            session.createMutationQuery(criteriaUpdate).executeUpdate();
 
             transaction.commit();
-        } catch (HibernateException exception) {
+        } catch (RuntimeException exception) {
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -265,40 +240,42 @@ public class TrainerRepository {
                                                             LocalDate toDate, String traineeUsername) {
 
         Session session = null;
-        List<TrainingEntity> trainings;
+        List<TrainingEntity> trainings = null;
         try {
             session = sessionFactory.openSession();
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<TrainingEntity> criteriaQuery = criteriaBuilder.createQuery(TrainingEntity.class);
-
-            Root<TrainingEntity> trainingRoot = criteriaQuery.from(TrainingEntity.class);
-
-            Join<TrainingEntity, TrainerEntity> trainerJoin = trainingRoot
-                    .join("trainer", JoinType.INNER)
-                    .join("user", JoinType.INNER);
-
-            Join<TrainingEntity, TrainerEntity> traineeJoin = trainingRoot
-                    .join("trainee", JoinType.INNER)
-                    .join("user", JoinType.INNER);
-
-
-            List<Predicate> predicates = new ArrayList<>();
-
-            predicates.add(criteriaBuilder.equal(trainerJoin.get("username"), trainerUsername));
-
-            if (fromDate != null && toDate != null) {
-                predicates.add(criteriaBuilder.between(trainingRoot.get("trainingDate"), fromDate, toDate));
-            }
-
-            if (traineeUsername != null) {
-                predicates.add(criteriaBuilder.equal(traineeJoin.get("username"), traineeUsername));
-            }
-
-            criteriaQuery.select(trainingRoot)
-                    .where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
-
-            trainings = session.createQuery(criteriaQuery).getResultList();
-        } catch (HibernateException e) {
+            //            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            //            CriteriaQuery<TrainingEntity> criteriaQuery
+            //            = criteriaBuilder.createQuery(TrainingEntity.class);
+            //
+            //            Root<TrainingEntity> trainingRoot = criteriaQuery.from(TrainingEntity.class);
+            //
+            //            Join<TrainingEntity, TrainerEntity> trainerJoin = trainingRoot
+            //                    .join("trainer", JoinType.INNER)
+            //                    .join("user", JoinType.INNER);
+            //
+            //            Join<TrainingEntity, TrainerEntity> traineeJoin = trainingRoot
+            //                    .join("trainee", JoinType.INNER)
+            //                    .join("user", JoinType.INNER);
+            //
+            //
+            //            List<Predicate> predicates = new ArrayList<>();
+            //
+            //            predicates.add(criteriaBuilder.equal(trainerJoin.get("username"), trainerUsername));
+            //
+            //            if (fromDate != null && toDate != null) {
+            //                predicates.add(criteriaBuilder
+            //                .between(trainingRoot.get("trainingDate"), fromDate, toDate));
+            //            }
+            //
+            //            if (traineeUsername != null) {
+            //                predicates.add(criteriaBuilder.equal(traineeJoin.get("username"), traineeUsername));
+            //            }
+            //
+            //            criteriaQuery.select(trainingRoot)
+            //                    .where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
+            //
+            //            trainings = session.createQuery(criteriaQuery).getResultList();
+        } catch (RuntimeException e) {
             log.debug("hibernate exception");
             throw new GymDataAccessException("Failed to retrieve trainer's trainings by given criteria.");
         } finally {
@@ -319,29 +296,29 @@ public class TrainerRepository {
      */
     public List<TrainerEntity> getTrainersNotAssignedToTrainee(String traineeUsername) {
         Session session = null;
-        List<TrainerEntity> trainers;
+        List<TrainerEntity> trainers = null;
         try {
             session = sessionFactory.openSession();
 
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<TrainerEntity> criteriaQuery = criteriaBuilder.createQuery(TrainerEntity.class);
-
-            Root<TrainerEntity> trainerRoot = criteriaQuery.from(TrainerEntity.class);
-
-            Subquery<Long> subquery = criteriaQuery.subquery(Long.class);
-            Root<TrainingEntity> trainingRoot = subquery.from(TrainingEntity.class);
-
-            Join<TrainingEntity, TraineeEntity> traineeJoin = trainingRoot.join("trainee", JoinType.INNER)
-                    .join("user", JoinType.INNER);
-
-            subquery.select(trainingRoot.get("trainer").get("id"))
-                    .where(criteriaBuilder.equal(traineeJoin.get("username"), traineeUsername));
-
-            criteriaQuery.select(trainerRoot)
-                    .where(criteriaBuilder.not(trainerRoot.get("id").in(subquery)));
-
-            trainers = session.createQuery(criteriaQuery).getResultList();
-        } catch (HibernateException e) {
+            //            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            //            CriteriaQuery<TrainerEntity> criteriaQuery = criteriaBuilder.createQuery(TrainerEntity.class);
+            //
+            //            Root<TrainerEntity> trainerRoot = criteriaQuery.from(TrainerEntity.class);
+            //
+            //            Subquery<Long> subquery = criteriaQuery.subquery(Long.class);
+            //            Root<TrainingEntity> trainingRoot = subquery.from(TrainingEntity.class);
+            //
+            //            Join<TrainingEntity, TraineeEntity> traineeJoin = trainingRoot.join("trainee", JoinType.INNER)
+            //                    .join("user", JoinType.INNER);
+            //
+            //            subquery.select(trainingRoot.get("trainer").get("id"))
+            //                    .where(criteriaBuilder.equal(traineeJoin.get("username"), traineeUsername));
+            //
+            //            criteriaQuery.select(trainerRoot)
+            //                    .where(criteriaBuilder.not(trainerRoot.get("id").in(subquery)));
+            //
+            //            trainers = session.createQuery(criteriaQuery).getResultList();
+        } catch (RuntimeException e) {
             log.debug("hibernate exception");
             throw new GymDataAccessException(String
                     .format("Failed to retrieve trainers not assigned to trainee: %s",
