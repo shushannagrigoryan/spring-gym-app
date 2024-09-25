@@ -1,14 +1,10 @@
 package org.example.repository;
 
 import java.util.List;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainingEntity;
-import org.example.exceptions.GymDataAccessException;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
@@ -28,18 +24,8 @@ public class TrainingRepository {
      */
     public void createTraining(TrainingEntity trainingEntity) {
         log.debug("Saving training: {} to storage", trainingEntity);
-        Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-            session.persist(trainingEntity);
-            transaction.commit();
-        } catch (RuntimeException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            log.debug("hibernate exception");
-            throw e;
-        }
+        Session session = sessionFactory.getCurrentSession();
+        session.persist(trainingEntity);
     }
 
 
@@ -49,18 +35,10 @@ public class TrainingRepository {
      * @param id id of the training
      * @return {@code Optional<TrainingEntity>}
      */
-    public Optional<TrainingEntity> getTrainingById(Long id) {
+    public TrainingEntity getTrainingById(Long id) {
         log.debug("Getting training with id: {}", id);
-
-        TrainingEntity training;
-        try (Session session = sessionFactory.openSession()) {
-            training = session.get(TrainingEntity.class, id);
-        } catch (HibernateException e) {
-            log.debug("hibernate exception");
-            throw new GymDataAccessException(String.format(
-                    "Failed to retrieve training with id: %d", id));
-        }
-        return Optional.ofNullable(training);
+        Session session = sessionFactory.getCurrentSession();
+        return session.get(TrainingEntity.class, id);
     }
 
 
@@ -71,18 +49,20 @@ public class TrainingRepository {
      */
     public List<TrainingEntity> getAllTrainings() {
         log.debug("Getting all trainings.");
-
-        List<TrainingEntity> trainings;
-        try (Session session = sessionFactory.openSession()) {
-            String hql = "FROM TrainingEntity";
-            Query<TrainingEntity> query = session.createQuery(hql, TrainingEntity.class);
-            trainings = query.getResultList();
-
-        } catch (HibernateException e) {
-            log.debug("hibernate exception");
-            throw new GymDataAccessException("Failed to retrieve all trainings");
-        }
-        return trainings;
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "FROM TrainingEntity";
+        Query<TrainingEntity> query = session.createQuery(hql, TrainingEntity.class);
+        return query.getResultList();
     }
 
+    /**Updating given training.
+     *
+     * @param training new training data
+     */
+
+    public void updateTraining(TrainingEntity training) {
+        log.debug("Request to update training: {}", training);
+        Session session = sessionFactory.getCurrentSession();
+        session.merge(training);
+    }
 }

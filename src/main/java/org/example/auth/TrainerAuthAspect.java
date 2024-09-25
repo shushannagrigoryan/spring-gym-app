@@ -2,6 +2,7 @@ package org.example.auth;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.example.exceptions.GymIllegalArgumentException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -23,10 +24,10 @@ public class TrainerAuthAspect {
     /**
      * Before the specified methods perform trainer authentication.
      */
-    //    @Before("execution(* org.example.facade.TrainerFacade.*(..)) "
-    //            + "&& !execution(* org.example.facade.TrainerFacade.createTrainer(..))"
-    //            + "|| execution(* org.example.facade.TrainingFacade.*(..))"
-    //            + "|| execution(* org.example.facade.TrainingTypeFacade.*(..))")
+    @Before("execution(* org.example.facade.TrainerFacade.*(..)) "
+            + "&& !execution(* org.example.facade.TrainerFacade.createTrainer(..))"
+            + "|| execution(* org.example.facade.TrainingFacade.*(..))"
+            + "|| execution(* org.example.facade.TrainingTypeFacade.*(..))")
     public void trainerAuthentication() {
         log.info("Authenticating trainer: username: {} password: {}",
                 username, password);

@@ -27,8 +27,7 @@ public class TrainingTypeFacade {
      */
     public TrainingTypeDto getTrainingTypeById(Long id) {
         log.info("Request to retrieve training type by id");
-        TrainingTypeEntity trainingType;
-        trainingType = trainingTypeService.getTrainingTypeById(id);
+        TrainingTypeEntity trainingType = trainingTypeService.getTrainingTypeById(id);
         return trainingTypeMapper.entityToDto(trainingType);
     }
 }

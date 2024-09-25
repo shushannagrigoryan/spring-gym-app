@@ -25,7 +25,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableAspectJAutoProxy
 @EnableTransactionManagement
 public class HibernateConfig {
-    /** Data Source. */
+    /**
+     * Data Source.
+     */
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -36,7 +38,9 @@ public class HibernateConfig {
         return dataSource;
     }
 
-    /** SessionFactory. */
+    /**
+     * SessionFactory.
+     */
     @Bean
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
@@ -61,7 +65,9 @@ public class HibernateConfig {
         return sessionFactory;
     }
 
-    /**Hibernate transaction manager. */
+    /**
+     * Hibernate transaction manager.
+     */
     @Bean
     public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();

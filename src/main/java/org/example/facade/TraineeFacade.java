@@ -89,7 +89,6 @@ public class TraineeFacade {
         if (traineeAuth.traineeAuth(username, password)) {
             traineeService.changeTraineePassword(username);
         }
-
     }
 
     /**
@@ -111,7 +110,6 @@ public class TraineeFacade {
         log.info("Request to deactivate trainee with id: {}", id);
         traineeService.deactivateTrainee(id);
     }
-
 
     /**
      * Updates Trainee by id.
@@ -153,30 +151,9 @@ public class TraineeFacade {
                         + "and criteria: fromDate:{} toDate:{} trainingType: {} trainerUsername: {}",
                 traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername);
 
-        List<TrainingEntity> trainingList;
-        trainingList = traineeService
+        List<TrainingEntity> trainingList = traineeService
                 .getTraineeTrainingsByFilter(traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername);
 
-        assert trainingList != null;
         return trainingList.stream().map(trainingMapper::entityToDto).collect(Collectors.toList());
-
-
     }
-
-    //    /**
-    //     * Updates trainee's trainer list.
-    //     *
-    //     * @param traineeUsername          trainee username
-    //     * @param trainingsUpdatedTrainers map with key: training id to update, value: new trainer id
-    //     */
-    //    public void updateTraineesTrainersList(String traineeUsername, Map<Long, Long> trainingsUpdatedTrainers) {
-    //        log.info("Request to update trainers list of trainee: {}", traineeUsername);
-    //
-    //        try {
-    //            traineeService.updateTraineesTrainersList(traineeUsername, trainingsUpdatedTrainers);
-    //        } catch (GymIllegalUsernameException | GymDataUpdateException exception) {
-    //            log.error(exception.getMessage(), exception);
-    //        }
-    //    }
-
 }

@@ -3,19 +3,19 @@ package org.example.auth;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TraineeEntity;
 import org.example.exceptions.GymIllegalArgumentException;
-import org.example.repository.TraineeRepository;
+import org.example.services.TraineeService;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class TraineeAuth {
-    private final TraineeRepository traineeRepository;
+    private final TraineeService traineeService;
 
     /**
      * Injecting dependencies using constructor.
      */
-    public TraineeAuth(TraineeRepository traineeRepository) {
-        this.traineeRepository = traineeRepository;
+    public TraineeAuth(TraineeService traineeService) {
+        this.traineeService = traineeService;
     }
 
     /**
@@ -26,7 +26,7 @@ public class TraineeAuth {
      * @return true if trainee exists, else false.
      */
     public boolean traineeAuth(String username, String password) {
-        TraineeEntity trainee = traineeRepository.getTraineeByUsername(username);
+        TraineeEntity trainee = traineeService.getTraineeByUsername(username);
         if (trainee == null) {
             log.debug("No trainee with username: {}", username);
             throw new GymIllegalArgumentException(

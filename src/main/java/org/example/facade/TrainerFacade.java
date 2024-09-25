@@ -138,11 +138,9 @@ public class TrainerFacade {
                         + "and criteria: fromDate:{} toDate:{} traineeUsername: {}",
                 trainerUsername, fromDate, toDate, traineeUsername);
 
-        List<TrainingEntity> trainingList;
-        trainingList = trainerService
+        List<TrainingEntity> trainingList = trainerService
                 .getTrainerTrainingsByFilter(trainerUsername, fromDate, toDate, traineeUsername);
 
-        assert trainingList != null;
         return trainingList.stream().map(trainingMapper::entityToDto).collect(Collectors.toList());
 
     }
@@ -155,9 +153,7 @@ public class TrainerFacade {
      */
     public List<TrainerDto> getTrainersNotAssignedToTrainee(String traineeUsername) {
         log.info("Request to get trainers not assigned to trainee with username: {}", traineeUsername);
-        List<TrainerEntity> trainers;
-        trainers = trainerService.getTrainersNotAssignedToTrainee(traineeUsername);
-        assert trainers != null;
+        List<TrainerEntity> trainers = trainerService.getTrainersNotAssignedToTrainee(traineeUsername);
         return trainers.stream().map(trainerMapper::entityToDto).collect(Collectors.toList());
     }
 }
