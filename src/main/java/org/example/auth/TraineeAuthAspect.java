@@ -22,7 +22,7 @@ public class TraineeAuthAspect {
     }
 
     /**
-     * Before the specified methods perform trainee authentication.
+     * Perform trainee authentication before the specified methods.
      */
     @Before("execution(* org.example.facade.TraineeFacade.*(..)) "
             + "&& !execution(* org.example.facade.TraineeFacade.createTrainee(..))"

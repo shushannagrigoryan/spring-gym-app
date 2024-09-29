@@ -22,7 +22,7 @@ public class TrainerAuthAspect {
     }
 
     /**
-     * Before the specified methods perform trainer authentication.
+     * Perform trainer authentication before the specified methods.
      */
     @Before("execution(* org.example.facade.TrainerFacade.*(..)) "
             + "&& !execution(* org.example.facade.TrainerFacade.createTrainer(..))"

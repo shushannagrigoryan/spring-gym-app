@@ -173,7 +173,7 @@ public class TraineeServiceTest {
         Long id = 1L;
 
         UserEntity resultUser = new UserEntity();
-        resultUser.setFirstName(firstName);
+        resultUser.setFirstName("B");
         resultUser.setLastName(lastName);
         TraineeEntity result = new TraineeEntity();
         result.setUser(resultUser);

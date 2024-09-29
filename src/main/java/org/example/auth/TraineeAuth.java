@@ -36,7 +36,8 @@ public class TraineeAuth {
         if (!trainee.getUser().getPassword().equals(password)) {
             log.debug("Incorrect password for trainee with username: {}", username);
             throw new GymIllegalArgumentException(
-                    String.format("Incorrect password for trainee with username: %s", username));
+                    String.format("Incorrect password for trainee with username: %s",
+                            username));
         }
 
         return true;

@@ -1,6 +1,7 @@
 package facadetest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doNothing;
@@ -65,11 +66,11 @@ public class TrainerFacadeTest {
         when(trainerMapper.entityToDto(trainerEntity)).thenReturn(trainerDto);
 
         //when
-        trainerFacade.getTrainerById(id);
+        TrainerDto result = trainerFacade.getTrainerById(id);
 
         //then
         verify(trainerService).getTrainerById(id);
-
+        assertNotNull(result);
     }
 
     @Test
@@ -82,11 +83,11 @@ public class TrainerFacadeTest {
         when(trainerMapper.entityToDto(trainerEntity)).thenReturn(trainerDto);
 
         //when
-        trainerFacade.getTrainerByUsername(username);
+        TrainerDto result = trainerFacade.getTrainerByUsername(username);
 
         //then
         verify(trainerService).getTrainerByUsername(username);
-
+        assertNotNull(result);
     }
 
     @Test

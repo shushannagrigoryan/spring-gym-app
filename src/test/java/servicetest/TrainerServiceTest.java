@@ -286,7 +286,7 @@ public class TrainerServiceTest {
 
         trainerEntity.setSpecializationId(id);
         UserEntity resultUser = new UserEntity();
-        resultUser.setFirstName(firstName);
+        resultUser.setFirstName("B");
         resultUser.setLastName(lastName);
         TrainerEntity result = new TrainerEntity();
         result.setUser(resultUser);
@@ -304,6 +304,39 @@ public class TrainerServiceTest {
         assertEquals(firstName, updatedTrainer.getUser().getFirstName());
         assertEquals(lastName, updatedTrainer.getUser().getLastName());
         assertEquals(id, updatedTrainer.getSpecialization().getId());
+    }
+
+    @Test
+    public void testUpdateTraineeSuccessIllegalSpecialization() {
+        // given
+        String firstName = "A";
+        String lastName = "V";
+        TrainerEntity trainerEntity = new TrainerEntity();
+        UserEntity user = new UserEntity();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        trainerEntity.setUser(user);
+        Long trainingId = 1L;
+        TrainingTypeEntity specialization = new TrainingTypeEntity();
+        specialization.setId(trainingId);
+        trainerEntity.setSpecialization(specialization);
+
+        Long id = 1L;
+
+        trainerEntity.setSpecializationId(id);
+        UserEntity resultUser = new UserEntity();
+        resultUser.setFirstName("B");
+        resultUser.setLastName(lastName);
+        TrainerEntity result = new TrainerEntity();
+        result.setUser(resultUser);
+
+        when(trainerRepository.getTrainerById(id)).thenReturn(result);
+        when(trainingTypeService.getTrainingTypeById(id)).thenReturn(null);
+
+        // then
+        assertThrows(GymIllegalIdException.class,
+                () -> trainerService.updateTrainerById(id, trainerEntity),
+                String.format("Illegal id for training: %d", trainingId));
     }
 
 }

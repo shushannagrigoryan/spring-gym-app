@@ -40,7 +40,7 @@ public class TraineeRepository {
         log.debug("Getting trainee with username: {}", username);
         TraineeEntity trainee;
         Session session = sessionFactory.getCurrentSession();
-        String hql = "FROM TraineeEntity t WHERE t.user.username = :username";
+        String hql = "from TraineeEntity t where t.user.username = :username";
         Query<TraineeEntity> query = session.createQuery(hql, TraineeEntity.class);
         query.setParameter("username", username);
         trainee = query.uniqueResult();

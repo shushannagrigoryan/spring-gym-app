@@ -23,7 +23,7 @@ public class TrainingTypeRepository {
     public TrainingTypeEntity getTrainingTypeByName(String name) {
         log.debug("Getting trainingType with name: {}", name);
         Session session = sessionFactory.getCurrentSession();
-        String hql = "FROM TrainingTypeEntity t WHERE t.trainingTypeName = :name";
+        String hql = "from TrainingTypeEntity t where t.trainingTypeName = :name";
         Query<TrainingTypeEntity> query = session.createQuery(hql, TrainingTypeEntity.class);
         query.setParameter("name", name);
         return query.uniqueResult();
@@ -36,7 +36,7 @@ public class TrainingTypeRepository {
     public TrainingTypeEntity getTrainingTypeById(Long id) {
         log.debug("Getting trainingType with id: {}", id);
         Session session = sessionFactory.getCurrentSession();
-        String hql = "FROM TrainingTypeEntity t WHERE t.id = :id";
+        String hql = "from TrainingTypeEntity t where t.id = :id";
         Query<TrainingTypeEntity> query = session.createQuery(hql, TrainingTypeEntity.class);
         query.setParameter("id", id);
         return query.uniqueResult();

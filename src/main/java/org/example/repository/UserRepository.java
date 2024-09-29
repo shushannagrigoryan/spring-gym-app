@@ -22,7 +22,7 @@ public class UserRepository {
      */
     public List<String> getAllUsernames() {
         Session session = sessionFactory.getCurrentSession();
-        String hql = "SELECT t.username FROM UserEntity t";
+        String hql = "select t.username from UserEntity t";
         Query<String> query = session.createQuery(hql, String.class);
         return query.getResultList();
     }
@@ -37,7 +37,7 @@ public class UserRepository {
     public UserEntity getUserByUsername(String username) {
         log.debug("Getting user with username: {}", username);
         Session session = sessionFactory.getCurrentSession();
-        String hql = "FROM UserEntity u WHERE u.username = :username";
+        String hql = "from UserEntity u where u.username = :username";
         Query<UserEntity> query = session.createQuery(hql, UserEntity.class);
         query.setParameter("username", username);
         return query.uniqueResult();

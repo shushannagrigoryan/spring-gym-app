@@ -53,7 +53,6 @@ public class HibernateConfig {
         hibernateProperties.put("hibernate.hbm2ddl.auto", "update");
         sessionFactory.setHibernateProperties(hibernateProperties);
 
-        // Set all annotated classes at once
         sessionFactory.setAnnotatedClasses(
                 TrainerEntity.class,
                 TraineeEntity.class,

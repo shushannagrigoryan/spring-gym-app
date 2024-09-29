@@ -60,7 +60,7 @@ public class TrainingRepository {
     public List<TrainingEntity> getAllTrainings() {
         log.debug("Getting all trainings.");
         Session session = sessionFactory.getCurrentSession();
-        String hql = "FROM TrainingEntity";
+        String hql = "from TrainingEntity";
         Query<TrainingEntity> query = session.createQuery(hql, TrainingEntity.class);
         return query.getResultList();
     }

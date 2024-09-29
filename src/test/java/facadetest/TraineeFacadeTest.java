@@ -1,5 +1,6 @@
 package facadetest;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -52,13 +53,16 @@ public class TraineeFacadeTest {
         //given
         Long id = 1L;
         TraineeEntity traineeEntity = new TraineeEntity();
+        TraineeDto traineeDto = new TraineeDto();
         when(traineeService.getTraineeById(id)).thenReturn(traineeEntity);
+        when(traineeMapper.entityToDto(traineeEntity)).thenReturn(traineeDto);
 
         //when
-        traineeFacade.getTraineeById(id);
+        TraineeDto result = traineeFacade.getTraineeById(id);
 
         //then
         verify(traineeService).getTraineeById(id);
+        assertNotNull(result);
     }
 
     @Test
@@ -66,13 +70,16 @@ public class TraineeFacadeTest {
         //given
         String username = "A.B";
         TraineeEntity traineeEntity = new TraineeEntity();
+        TraineeDto traineeDto = new TraineeDto();
         when(traineeService.getTraineeByUsername(username)).thenReturn(traineeEntity);
+        when(traineeMapper.entityToDto(traineeEntity)).thenReturn(traineeDto);
 
         //when
-        traineeFacade.getTraineeByUsername(username);
+        TraineeDto result = traineeFacade.getTraineeByUsername(username);
 
         //then
         verify(traineeService).getTraineeByUsername(username);
+        assertNotNull(result);
     }
 
     @Test
