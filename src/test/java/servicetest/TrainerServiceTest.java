@@ -7,11 +7,8 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 import org.example.entity.TrainerEntity;
-import org.example.entity.TrainingEntity;
 import org.example.entity.TrainingTypeEntity;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
@@ -242,30 +239,6 @@ public class TrainerServiceTest {
                 () -> trainerService.deactivateTrainer(trainerId),
                 String.format("No trainer with %d exists.", trainerId));
     }
-
-    @Test
-    public void testGetTrainerTrainingsByFilter() {
-        // Given
-        String trainerUsername = "A.A";
-        LocalDate fromDate = LocalDate.of(2023, 1, 1);
-        LocalDate toDate = LocalDate.of(2023, 12, 31);
-        String traineeUsername = "B.B";
-
-        List<TrainingEntity> expectedTrainings = List.of(new TrainingEntity());
-        when(trainerRepository.getTrainerTrainingsByFilter(trainerUsername, fromDate,
-                toDate, traineeUsername))
-                .thenReturn(expectedTrainings);
-
-        // When
-        List<TrainingEntity> actualTrainings = trainerService.getTrainerTrainingsByFilter(
-                trainerUsername, fromDate, toDate, traineeUsername);
-
-        // Then
-        assertEquals(expectedTrainings, actualTrainings);
-        verify(trainerRepository).getTrainerTrainingsByFilter(
-                trainerUsername, fromDate, toDate, traineeUsername);
-    }
-
 
     @Test
     public void testGetTrainersNotAssignedToTrainee() {

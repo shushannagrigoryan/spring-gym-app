@@ -1,5 +1,7 @@
 package org.example.services;
 
+import java.time.LocalDate;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainingEntity;
 import org.example.exceptions.GymIllegalIdException;
@@ -85,5 +87,43 @@ public class TrainingService {
         training.setTrainer(trainerService.getTrainerById(trainingEntity.getTrainerId()));
 
         trainingRepository.updateTraining(training);
+    }
+
+    /**
+     * Returns trainers trainings list by trainer username and given criteria.
+     *
+     * @param trainerUsername username of the trainer
+     * @param fromDate        training fromDate
+     * @param toDate          training toDate
+     * @param traineeUsername trainee username
+     * @return {@code List<TrainingEntity>}
+     */
+
+    @Transactional
+    public List<TrainingEntity> getTrainerTrainingsByFilter(String trainerUsername, LocalDate fromDate,
+                                                            LocalDate toDate, String traineeUsername) {
+
+        return trainingRepository.getTrainerTrainingsByFilter(trainerUsername, fromDate,
+                toDate, traineeUsername);
+    }
+
+    /**
+     * Returns trainees trainings list by trainee username and given criteria.
+     *
+     * @param traineeUsername username of the trainee
+     * @param fromDate        training fromDate
+     * @param toDate          training toDate
+     * @param trainingTypeId  training type
+     * @param trainerUsername trainer username
+     * @return {@code List<TrainingEntity>}
+     */
+
+    @Transactional
+    public List<TrainingEntity> getTraineeTrainingsByFilter(String traineeUsername, LocalDate fromDate,
+                                                            LocalDate toDate, Long trainingTypeId,
+                                                            String trainerUsername) {
+        log.debug("Getting trainee trainings by filter");
+        return trainingRepository.getTraineeTrainingsByFilter(traineeUsername, fromDate,
+                toDate, trainingTypeId, trainerUsername);
     }
 }

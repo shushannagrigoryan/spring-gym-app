@@ -3,25 +3,20 @@ package facadetest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.example.auth.TrainerAuth;
 import org.example.dto.TrainerDto;
-import org.example.dto.TrainingDto;
 import org.example.entity.TrainerEntity;
-import org.example.entity.TrainingEntity;
 import org.example.facade.TrainerFacade;
 import org.example.mapper.TrainerMapper;
-import org.example.mapper.TrainingMapper;
 import org.example.services.TrainerService;
 import org.example.validation.TrainerValidation;
 import org.junit.jupiter.api.Test;
@@ -40,8 +35,6 @@ public class TrainerFacadeTest {
     private TrainerValidation trainerValidation;
     @Mock
     private TrainerAuth trainerAuth;
-    @Mock
-    private TrainingMapper trainingMapper;
     @InjectMocks
     private TrainerFacade trainerFacade;
 
@@ -185,31 +178,6 @@ public class TrainerFacadeTest {
         verify(trainerService).updateTrainerById(id, trainerEntity);
     }
 
-    @Test
-    public void testGetTrainerTrainingsByFilter() {
-        // Given
-        String trainerUsername = "R.R";
-        LocalDate fromDate = LocalDate.now();
-        LocalDate toDate = LocalDate.now();
-        String traineeUsername = "O.O";
-
-        List<TrainingEntity> trainingList = Arrays.asList(new TrainingEntity(), new TrainingEntity());
-        when(trainerService.getTrainerTrainingsByFilter(trainerUsername, fromDate, toDate, traineeUsername))
-                .thenReturn(trainingList);
-
-        List<TrainingDto> expectedDtoList = Arrays.asList(new TrainingDto(), new TrainingDto());
-        when(trainingMapper.entityToDto(trainingList.get(0))).thenReturn(expectedDtoList.get(0));
-        when(trainingMapper.entityToDto(trainingList.get(1))).thenReturn(expectedDtoList.get(1));
-
-        // When
-        List<TrainingDto> actualDtoList = trainerFacade.getTrainerTrainingsByFilter(
-                trainerUsername, fromDate, toDate, traineeUsername);
-
-        // Then
-        verify(trainerService).getTrainerTrainingsByFilter(trainerUsername, fromDate, toDate, traineeUsername);
-        verify(trainingMapper, times(2)).entityToDto(any(TrainingEntity.class));
-        assertEquals(expectedDtoList, actualDtoList);
-    }
 
     @Test
     public void testGetTrainersNotAssignedToTrainee_WhenTrainersFound() {

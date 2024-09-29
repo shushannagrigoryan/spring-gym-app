@@ -1,22 +1,21 @@
 package org.example.username;
 
 import java.util.List;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
-import org.example.repository.UserRepository;
+import org.example.services.UserService;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class UsernameGenerator {
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     /**
      * Injecting dependencies using constructor.
      */
-    public UsernameGenerator(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UsernameGenerator(UserService userService) {
+        this.userService = userService;
     }
 
     /**
@@ -33,9 +32,9 @@ public class UsernameGenerator {
 
         String username = firstName.concat(".").concat(lastName);
 
-        Optional<UserEntity> user = userRepository.getUserByUsername(username);
+        UserEntity user = userService.getUserByUsername(username);
 
-        if (user.isPresent()) {
+        if (user != null) {
             log.debug("Username taken.");
             return username + getSuffix(username);
         }
@@ -51,7 +50,7 @@ public class UsernameGenerator {
      */
     public Long getSuffix(String username) {
         log.debug("Generating suffix for username: {}", username);
-        List<String> allUsernames = userRepository.getAllUsernames();
+        List<String> allUsernames = userService.getAllUsernames();
 
         Long suffix = allUsernames.stream()
                 .filter(u -> u.startsWith(username))

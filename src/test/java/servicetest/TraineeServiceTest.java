@@ -8,9 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
-import java.util.List;
 import org.example.entity.TraineeEntity;
-import org.example.entity.TrainingEntity;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalIdException;
@@ -307,27 +305,5 @@ public class TraineeServiceTest {
                 String.format("No trainee with %d exists.", traineeId));
     }
 
-    @Test
-    public void testGetTraineeTrainingsByFilter() {
-        // Given
-        String traineeUsername = "A.A";
-        LocalDate fromDate = LocalDate.of(2023, 1, 1);
-        LocalDate toDate = LocalDate.of(2023, 12, 31);
-        Long trainingTypeId = 1L;
-        String trainerUsername = "B.B";
 
-        List<TrainingEntity> expectedTrainings = List.of(new TrainingEntity());
-        when(traineeRepository.getTraineeTrainingsByFilter(
-                traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername))
-                .thenReturn(expectedTrainings);
-
-        // When
-        List<TrainingEntity> actualTrainings = traineeService.getTraineeTrainingsByFilter(
-                traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername);
-
-        // Then
-        assertEquals(expectedTrainings, actualTrainings);
-        verify(traineeRepository).getTraineeTrainingsByFilter(
-                traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername);
-    }
 }

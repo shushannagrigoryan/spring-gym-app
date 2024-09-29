@@ -1,5 +1,8 @@
 package org.example.facade;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TrainingDto;
 import org.example.entity.TrainingEntity;
@@ -61,5 +64,50 @@ public class TrainingFacade {
     public void updateTraining(Long trainingId, TrainingDto trainingDto) {
         log.info("Request to update training with id: {}", trainingId);
         trainingService.updateTraining(trainingId, trainingMapper.dtoToEntity(trainingDto));
+    }
+
+    /**
+     * Returns trainees trainings list by trainee username and given criteria.
+     *
+     * @param traineeUsername username of the trainee
+     * @param fromDate        training fromDate
+     * @param toDate          training toDate
+     * @param trainingTypeId  training type
+     * @param trainerUsername trainer username
+     * @return {@code List<TrainingDto>}
+     */
+    public List<TrainingDto> getTraineeTrainingsByFilter(String traineeUsername, LocalDate fromDate,
+                                                         LocalDate toDate, Long trainingTypeId,
+                                                         String trainerUsername) {
+        log.debug("Request to get trainees trainings by trainee username: {} "
+                        + "and criteria: fromDate:{} toDate:{} trainingType: {} trainerUsername: {}",
+                traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername);
+
+        List<TrainingEntity> trainingList = trainingService
+                .getTraineeTrainingsByFilter(traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername);
+
+        return trainingList.stream().map(trainingMapper::entityToDto).collect(Collectors.toList());
+    }
+
+    /**
+     * Returns trainers trainings list by trainer username and given criteria.
+     *
+     * @param trainerUsername username of the trainer
+     * @param fromDate        training fromDate
+     * @param toDate          training toDate
+     * @param traineeUsername trainee username
+     * @return {@code List<TrainingDto>}
+     */
+    public List<TrainingDto> getTrainerTrainingsByFilter(String trainerUsername, LocalDate fromDate,
+                                                         LocalDate toDate, String traineeUsername) {
+        log.debug("Request to get trainers trainings by trainer username: {} "
+                        + "and criteria: fromDate:{} toDate:{} traineeUsername: {}",
+                trainerUsername, fromDate, toDate, traineeUsername);
+
+        List<TrainingEntity> trainingList = trainingService
+                .getTrainerTrainingsByFilter(trainerUsername, fromDate, toDate, traineeUsername);
+
+        return trainingList.stream().map(trainingMapper::entityToDto).collect(Collectors.toList());
+
     }
 }

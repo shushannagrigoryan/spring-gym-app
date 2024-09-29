@@ -1,23 +1,15 @@
 package facadetest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
 import org.example.auth.TraineeAuth;
 import org.example.dto.TraineeDto;
-import org.example.dto.TrainingDto;
 import org.example.entity.TraineeEntity;
-import org.example.entity.TrainingEntity;
 import org.example.facade.TraineeFacade;
 import org.example.mapper.TraineeMapper;
-import org.example.mapper.TrainingMapper;
 import org.example.services.TraineeService;
 import org.example.validation.TraineeValidation;
 import org.junit.jupiter.api.Test;
@@ -36,8 +28,6 @@ public class TraineeFacadeTest {
     private TraineeValidation traineeValidation;
     @Mock
     private TraineeAuth traineeAuth;
-    @Mock
-    private TrainingMapper trainingMapper;
     @InjectMocks
     private TraineeFacade traineeFacade;
 
@@ -169,34 +159,6 @@ public class TraineeFacadeTest {
         verify(traineeService).updateTraineeById(id, traineeEntity);
     }
 
-    @Test
-    public void testGetTraineeTrainingsByFilter() {
-        // Given
-        String traineeUsername = "R.R";
-        LocalDate fromDate = LocalDate.now();
-        LocalDate toDate = LocalDate.now();
-        Long trainingTypeId = 1L;
-        String trainerUsername = "O.O";
 
-        List<TrainingEntity> trainingList = Arrays.asList(new TrainingEntity(), new TrainingEntity());
-        when(traineeService.getTraineeTrainingsByFilter(
-                traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername))
-                .thenReturn(trainingList);
-
-        List<TrainingDto> expectedDtoList = Arrays.asList(new TrainingDto(), new TrainingDto());
-        when(trainingMapper.entityToDto(trainingList.get(0))).thenReturn(expectedDtoList.get(0));
-        when(trainingMapper.entityToDto(trainingList.get(1))).thenReturn(expectedDtoList.get(1));
-
-        // When
-        List<TrainingDto> actualDtoList = traineeFacade.getTraineeTrainingsByFilter(
-                traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername);
-
-        // Then
-        verify(traineeService)
-                .getTraineeTrainingsByFilter(traineeUsername, fromDate, toDate,
-                        trainingTypeId, trainerUsername);
-        verify(trainingMapper, times(2)).entityToDto(any(TrainingEntity.class));
-        assertEquals(expectedDtoList, actualDtoList);
-    }
 
 }

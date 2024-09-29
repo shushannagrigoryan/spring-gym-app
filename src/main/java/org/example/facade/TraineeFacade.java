@@ -1,16 +1,10 @@
 package org.example.facade;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.auth.TraineeAuth;
 import org.example.dto.TraineeDto;
-import org.example.dto.TrainingDto;
 import org.example.entity.TraineeEntity;
-import org.example.entity.TrainingEntity;
 import org.example.mapper.TraineeMapper;
-import org.example.mapper.TrainingMapper;
 import org.example.services.TraineeService;
 import org.example.validation.TraineeValidation;
 import org.springframework.stereotype.Component;
@@ -21,7 +15,6 @@ public class TraineeFacade {
     private final TraineeService traineeService;
     private final TraineeMapper traineeMapper;
     private final TraineeValidation traineeValidation;
-    private final TrainingMapper trainingMapper;
     private final TraineeAuth traineeAuth;
 
     /**
@@ -30,12 +23,10 @@ public class TraineeFacade {
     public TraineeFacade(TraineeService traineeService,
                          TraineeMapper traineeMapper,
                          TraineeValidation traineeValidation,
-                         TrainingMapper trainingMapper,
                          TraineeAuth traineeAuth) {
         this.traineeService = traineeService;
         this.traineeMapper = traineeMapper;
         this.traineeValidation = traineeValidation;
-        this.trainingMapper = trainingMapper;
         this.traineeAuth = traineeAuth;
     }
 
@@ -134,26 +125,4 @@ public class TraineeFacade {
         traineeService.deleteTraineeByUsername(username);
     }
 
-    /**
-     * Returns trainees trainings list by trainee username and given criteria.
-     *
-     * @param traineeUsername username of the trainee
-     * @param fromDate        training fromDate
-     * @param toDate          training toDate
-     * @param trainingTypeId  training type
-     * @param trainerUsername trainer username
-     * @return {@code List<TrainingDto>}
-     */
-    public List<TrainingDto> getTraineeTrainingsByFilter(String traineeUsername, LocalDate fromDate,
-                                                         LocalDate toDate, Long trainingTypeId,
-                                                         String trainerUsername) {
-        log.debug("Request to get trainees trainings by trainee username: {} "
-                        + "and criteria: fromDate:{} toDate:{} trainingType: {} trainerUsername: {}",
-                traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername);
-
-        List<TrainingEntity> trainingList = traineeService
-                .getTraineeTrainingsByFilter(traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername);
-
-        return trainingList.stream().map(trainingMapper::entityToDto).collect(Collectors.toList());
-    }
 }

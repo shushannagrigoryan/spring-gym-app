@@ -1,10 +1,7 @@
 package org.example.services;
 
-import java.time.LocalDate;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TraineeEntity;
-import org.example.entity.TrainingEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.exceptions.GymIllegalStateException;
@@ -194,26 +191,6 @@ public class TraineeService {
         log.debug("Deleting trainee by username: {}", username);
         traineeRepository.deleteTraineeByUsername(username);
         log.debug("Successfully deleted trainee by username: {}", username);
-    }
-
-    /**
-     * Returns trainees trainings list by trainee username and given criteria.
-     *
-     * @param traineeUsername username of the trainee
-     * @param fromDate        training fromDate
-     * @param toDate          training toDate
-     * @param trainingTypeId  training type
-     * @param trainerUsername trainer username
-     * @return {@code List<TrainingEntity>}
-     */
-
-    @Transactional
-    public List<TrainingEntity> getTraineeTrainingsByFilter(String traineeUsername, LocalDate fromDate,
-                                                            LocalDate toDate, Long trainingTypeId,
-                                                            String trainerUsername) {
-        log.debug("Getting trainee trainings by filter");
-        return traineeRepository.getTraineeTrainingsByFilter(traineeUsername, fromDate,
-                toDate, trainingTypeId, trainerUsername);
     }
 
 }

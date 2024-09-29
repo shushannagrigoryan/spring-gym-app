@@ -1,10 +1,8 @@
 package org.example.services;
 
-import java.time.LocalDate;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainerEntity;
-import org.example.entity.TrainingEntity;
 import org.example.entity.TrainingTypeEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalIdException;
@@ -190,24 +188,6 @@ public class TrainerService {
 
         trainerRepository.deactivateTrainer(trainer);
 
-    }
-
-    /**
-     * Returns trainers trainings list by trainer username and given criteria.
-     *
-     * @param trainerUsername username of the trainer
-     * @param fromDate        training fromDate
-     * @param toDate          training toDate
-     * @param traineeUsername trainee username
-     * @return {@code List<TrainingEntity>}
-     */
-
-    @Transactional
-    public List<TrainingEntity> getTrainerTrainingsByFilter(String trainerUsername, LocalDate fromDate,
-                                                            LocalDate toDate, String traineeUsername) {
-
-        return trainerRepository.getTrainerTrainingsByFilter(trainerUsername, fromDate,
-                toDate, traineeUsername);
     }
 
     /**

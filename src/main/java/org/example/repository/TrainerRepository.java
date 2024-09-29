@@ -4,11 +4,8 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TraineeEntity;
@@ -24,15 +21,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class TrainerRepository {
     private final SessionFactory sessionFactory;
-    private final UserRepository userRepository;
 
     /**
      * Injecting dependencies using constructor.
      */
-    public TrainerRepository(SessionFactory sessionFactory,
-                             UserRepository userRepository) {
+    public TrainerRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
-        this.userRepository = userRepository;
     }
 
     /**
@@ -134,57 +128,7 @@ public class TrainerRepository {
         log.debug("Successfully deactivated trainer: {}", trainer);
     }
 
-    /**
-     * Returns trainer trainings list by trainer username and given criteria.
-     *
-     * @param trainerUsername trainer username
-     * @param fromDate        training fromDate
-     * @param toDate          training toDate
-     * @param traineeUsername trainee username
-     * @return {@code List<TrainingEntity>}
-     */
 
-    public List<TrainingEntity> getTrainerTrainingsByFilter(String trainerUsername, LocalDate fromDate,
-                                                            LocalDate toDate, String traineeUsername) {
-        List<TrainingEntity> trainings;
-
-        Session session = sessionFactory.getCurrentSession();
-        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        CriteriaQuery<TrainingEntity> criteriaQuery
-                = criteriaBuilder.createQuery(TrainingEntity.class);
-
-        Root<TrainingEntity> trainingRoot = criteriaQuery.from(TrainingEntity.class);
-
-        Join<TrainingEntity, TrainerEntity> trainerJoin = trainingRoot
-                .join("trainer", JoinType.INNER)
-                .join("user", JoinType.INNER);
-
-        Join<TrainingEntity, TrainerEntity> traineeJoin = trainingRoot
-                .join("trainee", JoinType.INNER)
-                .join("user", JoinType.INNER);
-
-
-        List<Predicate> predicates = new ArrayList<>();
-
-        predicates.add(criteriaBuilder.equal(trainerJoin.get("username"), trainerUsername));
-
-        if (fromDate != null && toDate != null) {
-            predicates.add(criteriaBuilder
-                    .between(trainingRoot.get("trainingDate"), fromDate, toDate));
-        }
-
-        if (traineeUsername != null) {
-            predicates.add(criteriaBuilder.equal(traineeJoin.get("username"), traineeUsername));
-        }
-
-        criteriaQuery.select(trainingRoot)
-                .where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
-
-        trainings = session.createQuery(criteriaQuery).getResultList();
-        log.debug("Successfully retrieved trainer's trainings by given criteria");
-
-        return trainings;
-    }
 
     /**
      * Getting trainers list that are not assigned to the given trainee.

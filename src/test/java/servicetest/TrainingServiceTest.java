@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
@@ -138,5 +139,50 @@ public class TrainingServiceTest {
         assertEquals(String.format("No training with id: %d", trainingId), exception.getMessage());
     }
 
+    @Test
+    public void testGetTraineeTrainingsByFilter() {
+        // Given
+        String traineeUsername = "A.A";
+        LocalDate fromDate = LocalDate.of(2023, 1, 1);
+        LocalDate toDate = LocalDate.of(2023, 12, 31);
+        Long trainingTypeId = 1L;
+        String trainerUsername = "B.B";
 
+        List<TrainingEntity> expectedTrainings = List.of(new TrainingEntity());
+        when(trainingRepository.getTraineeTrainingsByFilter(
+                traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername))
+                .thenReturn(expectedTrainings);
+
+        // When
+        List<TrainingEntity> actualTrainings = trainingService.getTraineeTrainingsByFilter(
+                traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername);
+
+        // Then
+        assertEquals(expectedTrainings, actualTrainings);
+        verify(trainingRepository).getTraineeTrainingsByFilter(
+                traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername);
+    }
+
+    @Test
+    public void testGetTrainerTrainingsByFilter() {
+        // Given
+        String trainerUsername = "A.A";
+        LocalDate fromDate = LocalDate.of(2023, 1, 1);
+        LocalDate toDate = LocalDate.of(2023, 12, 31);
+        String traineeUsername = "B.B";
+
+        List<TrainingEntity> expectedTrainings = List.of(new TrainingEntity());
+        when(trainingRepository.getTrainerTrainingsByFilter(trainerUsername, fromDate,
+                toDate, traineeUsername))
+                .thenReturn(expectedTrainings);
+
+        // When
+        List<TrainingEntity> actualTrainings = trainingService.getTrainerTrainingsByFilter(
+                trainerUsername, fromDate, toDate, traineeUsername);
+
+        // Then
+        assertEquals(expectedTrainings, actualTrainings);
+        verify(trainingRepository).getTrainerTrainingsByFilter(
+                trainerUsername, fromDate, toDate, traineeUsername);
+    }
 }
