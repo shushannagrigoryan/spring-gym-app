@@ -16,6 +16,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+// I think that the entity classes should also contain the toString method for proper logging.
+// I would also add equals and hashCode, because, in my opinion, they may be useful both for testing purposes
+// and in the future, when new functionality is added.
 @Getter
 @Setter
 @NoArgsConstructor

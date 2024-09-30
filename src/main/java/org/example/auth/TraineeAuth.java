@@ -6,6 +6,14 @@ import org.example.exceptions.GymIllegalArgumentException;
 import org.example.services.TraineeService;
 import org.springframework.stereotype.Component;
 
+// traineeAuth and trainerAuth methods are very similar to each other 
+// in terms of logic, which I think is problematic, because if 
+// authentication logic changes, then both TraineeAuth and 
+// TrainerAuth will need to get edited.
+// I would move the authentication method to UserService instead, 
+// since authentication relies only on
+// User Entity data, and then use that method wherever it is needed.
+
 @Component
 @Slf4j
 public class TraineeAuth {
