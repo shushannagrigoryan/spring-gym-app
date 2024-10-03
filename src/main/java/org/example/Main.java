@@ -38,6 +38,7 @@ public class Main {
                     "tName", 1L, LocalDate.now(), BigDecimal.valueOf(60)));
             trainingFacade.createTraining(new TrainingDto(1L, 2L,
                     "tName", 1L, LocalDate.now(), BigDecimal.valueOf(60)));
+
             //            trainingFacade.createTraining(new TrainingDto(1L, 6L,
             //                    "tName", 3L, LocalDate.now(), BigDecimal.valueOf(60)));
             //System.out.println(traineeFacade.getTraineeById(100L));
