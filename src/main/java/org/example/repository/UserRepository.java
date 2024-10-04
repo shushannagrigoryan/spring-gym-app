@@ -15,4 +15,11 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query("select u.username from UserEntity u")
     List<String> getAllUsernames();
 
+    //    @Modifying
+    //    @Query("update UserEntity u set u.password = :newPassword where u.username =:username")
+    //    UserEntity updatePassword(String username, String newPassword);
+    //
+    //    @Query("delete from UserEntity u where u.username = :username")
+    //    void deleteByUsername(String username);
+
 }

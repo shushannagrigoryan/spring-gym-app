@@ -1,9 +1,11 @@
 package org.example.services;
 
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TraineeEntity;
 import org.example.entity.UserEntity;
+import org.example.exceptions.GymEntityNotFoundException;
 import org.example.password.PasswordGeneration;
 import org.example.repository.TraineeRepository;
 import org.example.username.UsernameGenerator;
@@ -53,25 +55,25 @@ public class TraineeService {
     }
 
 
-    //    /**
-    //     * Gets trainee by username.
-    //     * If no trainee is found returns null.
-    //     *
-    //     * @param username username of the trainee
-    //     * @return the {@code TraineeEntity}
-    //     */
-    //    @Transactional
-    //    public TraineeEntity getTraineeByUsername(String username) {
-    //        log.debug("Retrieving trainee by username: {}", username);
-    //        TraineeEntity trainee = traineeRepository.getTraineeByUsername(username);
-    //        if (trainee == null) {
-    //            log.debug("No trainee with the username: {}", username);
-    //            throw new GymEntityNotFoundException(
-    //            String.format("Trainee with username %s does not exist.", username));
-    //        }
-    //        log.debug("Successfully retrieved trainee by username: {}", username);
-    //        return trainee;
-    //    }
+    /**
+     * Gets trainee by username.
+     * If no trainee is found returns null.
+     *
+     * @param username username of the trainee
+     * @return the {@code TraineeEntity}
+     */
+    @Transactional
+    public TraineeEntity getTraineeByUsername(String username) {
+        log.debug("Retrieving trainee by username: {}", username);
+        Optional<TraineeEntity> trainee = traineeRepository.findByUser_Username(username);
+        if (trainee.isEmpty()) {
+            log.debug("No trainee with the username: {}", username);
+            throw new GymEntityNotFoundException(
+            String.format("Trainee with username %s does not exist.", username));
+        }
+        log.debug("Successfully retrieved trainee by username: {}", username);
+        return trainee.get();
+    }
     //
     //    /**
     //     * Gets the trainee by id in the service layer.
@@ -91,15 +93,18 @@ public class TraineeService {
     //        return trainee;
     //    }
     //
+
     //    /**
     //     * Changes the password of the trainee by username. Before changing authentication is performed.
     //     *
     //     * @param username username of the trainee
+    //     * @param password password of the trainee
     //     */
     //    @Transactional
-    //    public void changeTraineePassword(String username) {
+    //    public void changeTraineePassword(String username, String password) {
     //        log.debug("Changing the password of the trainee: {} ", username);
-    //        traineeRepository.changeTraineePassword(username, passwordGeneration.generatePassword());
+    //        userService.changeUserPassword(username, passwordGeneration.generatePassword());
+    //        //traineeRepository.changeTraineePassword(username, passwordGeneration.generatePassword());
     //    }
     //
     //    /**
@@ -185,6 +190,7 @@ public class TraineeService {
     //        log.debug("Successfully updated trainee with id: {}", id);
     //    }
     //
+
     //    /**
     //     * Deletes a trainee by username in the service layer.
     //     * If there is no trainee with the given username throws an {@code GymIllegalUsernameException}.
@@ -194,7 +200,7 @@ public class TraineeService {
     //    @Transactional
     //    public void deleteTraineeByUsername(String username) {
     //        log.debug("Deleting trainee by username: {}", username);
-    //        traineeRepository.deleteTraineeByUsername(username);
+    //        //traineeRepository.deleteTraineeByUsername(username);
     //        log.debug("Successfully deleted trainee by username: {}", username);
     //    }
 

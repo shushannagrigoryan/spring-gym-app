@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TraineeCreateDto;
 import org.example.dto.TraineeResponseDto;
 import org.example.entity.TraineeEntity;
@@ -7,7 +8,6 @@ import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/trainees")
+@Slf4j
 public class TraineeController {
     private final TraineeService traineeService;
     private final TraineeMapper traineeMapper;
@@ -24,17 +25,38 @@ public class TraineeController {
         this.traineeMapper = traineeMapper;
     }
 
-    /** create trainee.*/
+    /**
+     * Registers a new trainee.
+     *
+     * @param traineeCreateDto trainee(firstName, lastName, dateOfBirth, address) to register.
+     * @return the saved trainee(username, password)
+     */
     @PostMapping
     public ResponseEntity<TraineeResponseDto> registerTrainee(@RequestBody TraineeCreateDto traineeCreateDto) {
+        log.debug("Registering new trainee: {}", traineeCreateDto);
         TraineeEntity trainee = traineeMapper.dtoToEntity(traineeCreateDto);
         TraineeEntity traineeEntity = traineeService.registerTrainee(trainee);
         return new ResponseEntity<>(traineeMapper.entityToResponseDto(traineeEntity), HttpStatus.CREATED);
     }
 
-    /** try tomcat. */
-    @GetMapping
-    public void getMethod() {
-        System.out.println("get request");
-    }
+    //    @PutMapping
+    //    public void changePassword(@RequestBody ChangePasswordDto changePasswordDto) {
+    //        log.debug("Change password of trainee with username: {} ", changePasswordDto.getUsername());
+    //
+    //    }
+
+    //    @GetMapping
+    //    public ResponseEntity<TraineeProfileDto> getTrainee(@RequestBody String username) {
+    //        log.debug("Getting trainee with username: {}", username);
+    //        TraineeEntity trainee = traineeService.getTraineeByUsername(username);
+    //        //TraineeProfileDto trainee = new TraineeProfileDto();
+    //        return new ResponseEntity<>(trainee, HttpStatus.OK);
+    //    }
+
+    //    @DeleteMapping
+    //    public void deleteTrainee(@RequestBody String username) {
+    //        log.debug("Deleting trainee with username: {}", username);
+    //
+    //    }
+
 }

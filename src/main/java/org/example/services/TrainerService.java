@@ -1,9 +1,11 @@
 package org.example.services;
 
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingTypeEntity;
+import org.example.exceptions.GymEntityNotFoundException;
 import org.example.password.PasswordGeneration;
 import org.example.repository.TrainerRepository;
 import org.example.username.UsernameGenerator;
@@ -55,25 +57,25 @@ public class TrainerService {
         return trainer;
     }
 
-    //    /**
-    //     * Gets trainer by username.
-    //     * If no trainer is found returns null.
-    //     *
-    //     * @param username username of the trainer
-    //     * @return the {@code TrainerEntity}
-    //     */
-    //    @Transactional
-    //    public TrainerEntity getTrainerByUsername(String username) {
-    //        log.debug("Retrieving trainer by username: {}", username);
-    //        TrainerEntity trainer = trainerRepository.getTrainerByUsername(username);
-    //        if (trainer == null) {
-    //            log.debug("No trainer with the username: {}", username);
-    //            throw new GymEntityNotFoundException(
-    //            String.format("Trainer with username %s does not exist.", username));
-    //        }
-    //        log.debug("Successfully retrieved trainer by username: {}", username);
-    //        return trainer;
-    //    }
+    /**
+     * Gets trainer by username.
+     * If no trainer is found returns null.
+     *
+     * @param username username of the trainer
+     * @return the {@code TrainerEntity}
+     */
+    @Transactional
+    public TrainerEntity getTrainerByUsername(String username) {
+        log.debug("Retrieving trainer by username: {}", username);
+        Optional<TrainerEntity> trainer = trainerRepository.findByUser_Username(username);
+        if (trainer.isEmpty()) {
+            log.debug("No trainer with the username: {}", username);
+            throw new GymEntityNotFoundException(
+            String.format("Trainer with username %s does not exist.", username));
+        }
+        log.debug("Successfully retrieved trainer by username: {}", username);
+        return trainer.get();
+    }
     //
     //    /**
     //     * Gets trainer by id.

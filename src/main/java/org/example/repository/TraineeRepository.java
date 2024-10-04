@@ -1,5 +1,6 @@
 package org.example.repository;
 
+import java.util.Optional;
 import org.example.entity.TraineeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -7,7 +8,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TraineeRepository extends JpaRepository<TraineeEntity, Long> {
 
+    Optional<TraineeEntity> findByUser_Username(String username);
 
+
+    //    @Modifying
+    //    @Query("update TraineeEntity t set t.user.password = :newPassword where t.user.username =:username")
+    //    TraineeEntity updatePassword(@Param("username") String username, @Param("newPassword") String newPassword);
+
+    //    @Query("delete from TraineeEntity.user u where u.username =:username")
+    //    public void deleteByUserUsername(String username);
 
     //    /**
     //     * Adding trainee to database.

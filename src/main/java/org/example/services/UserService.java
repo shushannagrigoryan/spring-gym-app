@@ -56,4 +56,11 @@ public class UserService {
         return user;
     }
 
+    //    public UserEntity changeUserPassword(String username, String newPassword) {
+    //        log.debug("Updating the password of trainee with username: {}", username);
+    //        return userRepository.updatePassword(username, newPassword);
+    //    }
+
+
+
 }
