@@ -1,6 +1,7 @@
 package org.example.username;
 
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
 import org.example.services.UserService;
@@ -32,9 +33,9 @@ public class UsernameGenerator {
 
         String username = firstName.concat(".").concat(lastName);
 
-        UserEntity user = userService.getUserByUsername(username);
+        Optional<UserEntity> user = userService.getUserByUsername(username);
 
-        if (user != null) {
+        if (user.isPresent()) {
             log.debug("Username taken.");
             return username + getSuffix(username);
         }

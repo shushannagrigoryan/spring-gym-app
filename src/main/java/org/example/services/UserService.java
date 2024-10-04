@@ -1,11 +1,12 @@
 package org.example.services;
 
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
 import org.example.repository.UserRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -14,6 +15,20 @@ public class UserService {
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    /**
+     * Creates a new user in the service layer.
+     *
+     * @param userEntity the new {@code UserEntity}
+     */
+    @Transactional
+    public UserEntity registerUser(UserEntity userEntity) {
+        log.debug("Creating user: {}", userEntity);
+
+        UserEntity user = userRepository.save(userEntity);
+        log.debug("Successfully created user: {}", user);
+        return user;
     }
 
     /**
@@ -32,10 +47,10 @@ public class UserService {
      * @return {@code UserEntity} if user exists, else null.
      */
 
-    public UserEntity getUserByUsername(String username) {
+    public Optional<UserEntity> getUserByUsername(String username) {
         log.debug("Getting user with username: {}", username);
-        UserEntity user = userRepository.getUserByUsername(username);
-        if (user == null) {
+        Optional<UserEntity> user = userRepository.findByUsername(username);
+        if (user.isEmpty()) {
             log.debug("No user with username: {}", username);
         }
         return user;

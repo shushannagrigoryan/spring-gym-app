@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'checkstyle'
+    id 'war'
 }
 
 java{
@@ -22,7 +23,11 @@ dependencies {
     implementation group: 'org.springframework', name: 'spring-context', version: '6.1.12'
     implementation group: 'org.springframework', name: 'spring-orm', version: '6.1.12'
     implementation group: 'org.springframework', name: 'spring-aop', version: '6.1.12'
+    implementation group: 'org.springframework', name: 'spring-web', version: '6.1.12'
+    implementation group: 'org.springframework', name: 'spring-webmvc', version: '6.1.12'
+    implementation group: 'org.springframework.data', name: 'spring-data-jpa', version: '3.3.4'
     implementation group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: '3.0.0'
+    implementation group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.0.0'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.2'
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.17.2'
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.16'
@@ -35,9 +40,12 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.13.0'
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.13.0'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.26.3'
-    implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.0.Final'
+    implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.1.Final'
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
     implementation group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.22.1'
+    implementation group: 'org.apache.tomcat', name: 'tomcat-servlet-api', version: '10.1.30'
+    implementation group: 'org.apache.tomcat', name: 'tomcat-jdbc', version: '10.1.30'
+
 }
 
 
