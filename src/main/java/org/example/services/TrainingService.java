@@ -1,17 +1,11 @@
-//package org.example.services;
-//
-//import java.time.LocalDate;
-//import java.util.List;
-//import lombok.extern.slf4j.Slf4j;
-//import org.example.entity.TrainingEntity;
-//import org.example.exceptions.GymIllegalIdException;
-//import org.example.repository.TrainingRepository;
-//import org.springframework.stereotype.Service;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//@Service
-//@Slf4j
-//public class TrainingService {
+package org.example.services;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Service
+@Slf4j
+public class TrainingService {
 //    private final TrainingRepository trainingRepository;
 //    private final TrainingTypeService trainingTypeService;
 //    private final TrainerService trainerService;
@@ -126,4 +120,4 @@
 //        return trainingRepository.getTraineeTrainingsByFilter(traineeUsername, fromDate,
 //                toDate, trainingTypeId, trainerUsername);
 //    }
-//}
+}
