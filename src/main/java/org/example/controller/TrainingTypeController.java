@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/training-types")
+@RequestMapping(value = "/training-types")
 @Slf4j
 public class TrainingTypeController {
     private final TrainingTypeService trainingTypeService;

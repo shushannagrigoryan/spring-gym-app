@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
+import org.example.exceptions.GymEntityNotFoundException;
 import org.example.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -60,6 +61,15 @@ public class UserService {
     //        log.debug("Updating the password of trainee with username: {}", username);
     //        return userRepository.updatePassword(username, newPassword);
     //    }
+
+    public void login(String username, String password) {
+        log.debug("Logging in user with username {} and password {}", username, password);
+        Optional<UserEntity> user = userRepository.findByUsernameAndPassword(username, password);
+        if(user.isEmpty()) {
+            throw new GymEntityNotFoundException("Invalid username and password.");
+        }
+        log.debug("Successfully logged in.");
+    }
 
 
 

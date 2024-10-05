@@ -15,6 +15,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query("select u.username from UserEntity u")
     List<String> getAllUsernames();
 
+    Optional<UserEntity> findByUsernameAndPassword(String username, String password);
+
     //    @Modifying
     //    @Query("update UserEntity u set u.password = :newPassword where u.username =:username")
     //    UserEntity updatePassword(String username, String newPassword);
