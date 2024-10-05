@@ -1,5 +1,6 @@
 package org.example.services;
 
+import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainingTypeEntity;
@@ -39,6 +40,17 @@ public class TrainingTypeService {
         log.debug("Successfully retrieved training type by id: {}", id);
         return trainingType.get();
 
+    }
+
+    /**
+     * Returns all training types.
+     *
+     * @return {@code List<TrainingTypeEntity>}
+     */
+    @Transactional
+    public List<TrainingTypeEntity> getAllTrainingTypes() {
+        log.debug("Getting all training types.");
+        return trainingTypeRepository.findAll();
     }
 
 

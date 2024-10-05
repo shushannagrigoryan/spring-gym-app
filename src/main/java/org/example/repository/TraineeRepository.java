@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface TraineeRepository extends JpaRepository<TraineeEntity, Long> {
 
     Optional<TraineeEntity> findByUser_Username(String username);
+    //TraineeEntity updateByUser_Active(boolean user_active);
 
 
     //    @Modifying

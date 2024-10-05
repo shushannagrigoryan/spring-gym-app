@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.TraineeActivateDto;
 import org.example.dto.TraineeCreateDto;
 import org.example.dto.TraineeResponseDto;
 import org.example.entity.TraineeEntity;
@@ -8,6 +9,7 @@ import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,5 +60,14 @@ public class TraineeController {
     //        log.debug("Deleting trainee with username: {}", username);
     //
     //    }
+
+    @PatchMapping
+    public void activateTrainee(@RequestBody TraineeActivateDto traineeActivateDto) {
+        log.debug("Request to activate trainee with username: {}", traineeActivateDto.getUsername());
+        //traineeService.activateTrainee(traineeActivateDto.getUsername());
+
+    }
+
+
 
 }

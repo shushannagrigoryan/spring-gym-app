@@ -2,6 +2,7 @@ package org.example.mapper;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TrainingTypeDto;
+import org.example.dto.TrainingTypeResponseDto;
 import org.example.entity.TrainingTypeEntity;
 import org.springframework.stereotype.Component;
 
@@ -34,5 +35,18 @@ public class TrainingTypeMapper {
         trainingType.setTrainingTypeName(trainingTypeDto.getName());
 
         return trainingType;
+    }
+
+    /**
+     * Maps a {@code TrainingType} to a {@code TrainingTypeResponseDto}.
+     */
+    public TrainingTypeResponseDto entityToResponseDto(TrainingTypeEntity trainingType) {
+        log.info("Mapping TrainerType {} to TrainingTypeResponseDto", trainingType);
+        if (trainingType == null) {
+            return null;
+        }
+
+        return new TrainingTypeResponseDto(trainingType.getId(),
+                trainingType.getTrainingTypeName());
     }
 }
