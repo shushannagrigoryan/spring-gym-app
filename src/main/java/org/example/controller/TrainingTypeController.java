@@ -26,6 +26,7 @@ public class TrainingTypeController {
         this.trainingTypeMapper = trainingTypeMapper;
     }
 
+    /** Gets training types. */
     @GetMapping
     public ResponseEntity<List<TrainingTypeResponseDto>> getTrainingTypes() {
         log.debug("Request to get all training types.");

@@ -6,6 +6,7 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
+import org.example.password.PasswordGeneration;
 import org.example.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +14,12 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordGeneration passwordGeneration;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,
+                       PasswordGeneration passwordGeneration) {
         this.userRepository = userRepository;
+        this.passwordGeneration = passwordGeneration;
     }
 
     /**
@@ -38,7 +42,7 @@ public class UserService {
     @Transactional
     public List<String> getAllUsernames() {
         log.debug("Getting all usernames.");
-        return userRepository.getAllUsernames();
+        return userRepository.findAllUsernames();
     }
 
     /**
@@ -57,20 +61,27 @@ public class UserService {
         return user;
     }
 
-    //    public UserEntity changeUserPassword(String username, String newPassword) {
-    //        log.debug("Updating the password of trainee with username: {}", username);
-    //        return userRepository.updatePassword(username, newPassword);
-    //    }
-
+    /** login. */
     public void login(String username, String password) {
         log.debug("Logging in user with username {} and password {}", username, password);
         Optional<UserEntity> user = userRepository.findByUsernameAndPassword(username, password);
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             throw new GymEntityNotFoundException("Invalid username and password.");
         }
         log.debug("Successfully logged in.");
     }
 
-
+    /** change password. */
+    @Transactional
+    public int changeUserPassword(String username) {
+        log.debug("Updating the password of trainee with username: {}", username);
+        Optional<UserEntity> user = userRepository.findByUsername(username);
+        log.debug("Generating new password.");
+        int result = userRepository.updatePassword(username, passwordGeneration.generatePassword()
+        );
+        log.debug("Successfully updated username for user with username: {}", username);
+        //return result;
+        return result;
+    }
 
 }

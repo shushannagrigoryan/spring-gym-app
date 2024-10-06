@@ -2,22 +2,23 @@ package org.example.repository;
 
 import java.util.Optional;
 import org.example.entity.TraineeEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TraineeRepository extends JpaRepository<TraineeEntity, Long> {
-
+public interface TraineeRepository extends CrudRepository<TraineeEntity, Long> {
     Optional<TraineeEntity> findByUser_Username(String username);
-    //TraineeEntity updateByUser_Active(boolean user_active);
 
 
-    //    @Modifying
-    //    @Query("update TraineeEntity t set t.user.password = :newPassword where t.user.username =:username")
-    //    TraineeEntity updatePassword(@Param("username") String username, @Param("newPassword") String newPassword);
+    //    @Query("from TraineeEntity t join UserEntity u on t.user = u where u.username =:username")
+    //    Optional<TraineeEntity> getByUsername(String username);
 
-    //    @Query("delete from TraineeEntity.user u where u.username =:username")
-    //    public void deleteByUserUsername(String username);
+
+
+
+
+
+
 
     //    /**
     //     * Adding trainee to database.

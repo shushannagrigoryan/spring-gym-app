@@ -1,11 +1,15 @@
 package org.example.repository;
 
+import java.util.List;
 import org.example.entity.TrainingTypeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TrainingTypeRepository extends JpaRepository<TrainingTypeEntity, Long> {
+
+    List<TrainingTypeEntity> findByIdGreaterThan(long id);
+
     //    private final SessionFactory sessionFactory;
     //
     //    public TrainingTypeRepository(SessionFactory sessionFactory) {

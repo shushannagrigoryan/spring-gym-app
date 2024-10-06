@@ -64,7 +64,6 @@ public class TrainerService {
      * @param username username of the trainer
      * @return the {@code TrainerEntity}
      */
-    @Transactional
     public TrainerEntity getTrainerByUsername(String username) {
         log.debug("Retrieving trainer by username: {}", username);
         Optional<TrainerEntity> trainer = trainerRepository.findByUser_Username(username);

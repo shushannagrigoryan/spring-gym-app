@@ -64,10 +64,10 @@ public class TraineeService {
      * @param username username of the trainee
      * @return the {@code TraineeEntity}
      */
-    @Transactional
     public TraineeEntity getTraineeByUsername(String username) {
         log.debug("Retrieving trainee by username: {}", username);
-        Optional<TraineeEntity> trainee = traineeRepository.findByUser_Username(username);
+        Optional<TraineeEntity> trainee = traineeRepository
+                .findByUser_Username(username);
         if (trainee.isEmpty()) {
             log.debug("No trainee with the username: {}", username);
             throw new GymEntityNotFoundException(
@@ -194,17 +194,17 @@ public class TraineeService {
     //    }
     //
 
-    //    /**
-    //     * Deletes a trainee by username in the service layer.
-    //     * If there is no trainee with the given username throws an {@code GymIllegalUsernameException}.
-    //     *
-    //     * @param username the username of the trainee
-    //     */
-    //    @Transactional
-    //    public void deleteTraineeByUsername(String username) {
-    //        log.debug("Deleting trainee by username: {}", username);
-    //        //traineeRepository.deleteTraineeByUsername(username);
-    //        log.debug("Successfully deleted trainee by username: {}", username);
-    //    }
+    /**
+     * Deletes a trainee by username in the service layer.
+     * If there is no trainee with the given username throws an {@code GymIllegalUsernameException}.
+     *
+     * @param username the username of the trainee
+     */
+    @Transactional
+    public void deleteTraineeByUsername(String username) {
+        log.debug("Deleting trainee by username: {}", username);
+        //traineeRepository.deleteByUserUsername(username);
+        log.debug("Successfully deleted trainee by username: {}", username);
+    }
 
 }

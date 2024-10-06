@@ -9,6 +9,7 @@ import org.example.mapper.TraineeMapper;
 import org.example.services.TraineeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,12 +56,13 @@ public class TraineeController {
     //        return new ResponseEntity<>(trainee, HttpStatus.OK);
     //    }
 
-    //    @DeleteMapping
-    //    public void deleteTrainee(@RequestBody String username) {
-    //        log.debug("Deleting trainee with username: {}", username);
-    //
-    //    }
+    @DeleteMapping
+    public void deleteTrainee(@RequestBody String username) {
+        log.debug("Request to delete trainee with username: {}", username);
 
+    }
+
+    /** activate traeinne. */
     @PatchMapping
     public void activateTrainee(@RequestBody TraineeActivateDto traineeActivateDto) {
         log.debug("Request to activate trainee with username: {}", traineeActivateDto.getUsername());
