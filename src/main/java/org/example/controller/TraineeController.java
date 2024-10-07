@@ -1,10 +1,13 @@
 package org.example.controller;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TraineeActivateDto;
 import org.example.dto.TraineeCreateDto;
+import org.example.dto.TraineeProfileDto;
 import org.example.dto.TraineeProfileResponseDto;
 import org.example.dto.TraineeResponseDto;
+import org.example.dto.TraineeUpdateRequestDto;
 import org.example.entity.TraineeEntity;
 import org.example.mapper.TraineeMapper;
 import org.example.mapper.TraineeProfileMapper;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -85,6 +89,14 @@ public class TraineeController {
         log.debug("Request to get trainee profile with username: {}", username);
         TraineeEntity trainee = traineeService.getTraineeProfile(username);
         return new ResponseEntity<>(traineeProfileMapper.entityToProfileDto(trainee), HttpStatus.OK);
+    }
+
+    @PutMapping("/update-trainee")
+    public ResponseEntity<TraineeProfileResponseDto> updateTrainee(@Valid @RequestBody TraineeUpdateRequestDto trainee) {
+        log.debug("Request to update trainee with username: {}", trainee.getUsername());
+        TraineeProfileResponseDto traineeProfile = traineeProfileMapper
+                .entityToProfileDto(traineeService.updateTrainee(trainee));
+        return new ResponseEntity<>(traineeProfile, HttpStatus.OK);
     }
 
 

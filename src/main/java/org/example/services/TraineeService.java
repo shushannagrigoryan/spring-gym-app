@@ -1,11 +1,15 @@
 package org.example.services;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.TraineeUpdateRequestDto;
 import org.example.entity.TraineeEntity;
+import org.example.entity.TrainingEntity;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
+import org.example.exceptions.GymIllegalArgumentException;
 import org.example.exceptions.GymIllegalIdException;
 import org.example.exceptions.GymIllegalStateException;
 import org.example.password.PasswordGeneration;
@@ -156,43 +160,52 @@ public class TraineeService {
     //        traineeRepository.deactivateTrainee(trainee);
     //
     //    }
-    //
-    //    /**
-    //     * Updates trainee by id.
-    //     *
-    //     * @param id            id of the trainee
-    //     * @param traineeEntity {@code TraineeEntity} to update with
-    //     */
-    //    @Transactional
-    //    public void updateTraineeById(Long id, TraineeEntity traineeEntity) {
-    //        log.debug("Updating trainee by id: {}", id);
-    //        TraineeEntity trainee = traineeRepository.getTraineeById(id);
-    //
-    //        if (trainee == null) {
-    //            log.debug("No trainee with id: {}", id);
-    //            throw new GymIllegalIdException(String.format("No trainee with id: %d", id));
-    //        }
-    //
-    //        String updatedFirstName = traineeEntity.getUser().getFirstName();
-    //        String updatedLastName = traineeEntity.getUser().getLastName();
-    //        String firstName = trainee.getUser().getFirstName();
-    //        String lastName = trainee.getUser().getLastName();
-    //
-    //        if (!((firstName.equals(updatedFirstName)) && (lastName.equals(updatedLastName)))) {
-    //            String username = usernameGenerator
-    //                    .generateUsername(updatedFirstName, updatedLastName);
-    //            trainee.getUser().setUsername(username);
-    //        }
-    //
-    //        trainee.getUser().setFirstName(updatedFirstName);
-    //        trainee.getUser().setLastName(updatedLastName);
-    //        trainee.setDateOfBirth(traineeEntity.getDateOfBirth());
-    //        trainee.setAddress(traineeEntity.getAddress());
-    //
-    //        traineeRepository.updateTraineeById(id, trainee);
-    //        log.debug("Successfully updated trainee with id: {}", id);
-    //    }
-    //
+
+    /**
+     * Updates trainee by id.
+     *
+     * @param traineeUpdateRequestDto {@code TraineeUpdateRequestDto} to update with
+     */
+    @Transactional
+    public TraineeEntity updateTrainee(TraineeUpdateRequestDto traineeUpdateRequestDto) {
+        String username = traineeUpdateRequestDto.getUsername();
+        Optional<TraineeEntity> trainee = traineeRepository.findByUser_Username(username);
+
+        if (trainee.isEmpty()) {
+            log.debug("No trainee with username: {}", username);
+            throw new GymIllegalArgumentException(String.format("No trainee with username: %s", username));
+        }
+
+        String updatedFirstName = traineeUpdateRequestDto.getFirstName();
+        String updatedLastName = traineeUpdateRequestDto.getLastName();
+        String firstName = trainee.get().getUser().getFirstName();
+        String lastName = trainee.get().getUser().getLastName();
+
+        if (!((firstName.equals(updatedFirstName)) && (lastName.equals(updatedLastName)))) {
+            String updatedUsername = usernameGenerator
+                    .generateUsername(updatedFirstName, updatedLastName);
+            trainee.get().getUser().setUsername(updatedUsername);
+        }
+
+        trainee.get().getUser().setFirstName(updatedFirstName);
+        trainee.get().getUser().setLastName(updatedLastName);
+
+        if (traineeUpdateRequestDto.getAddress() != null) {
+            trainee.get().setAddress(traineeUpdateRequestDto.getAddress());
+        }
+
+        if (traineeUpdateRequestDto.getDateOfBirth() != null) {
+            trainee.get().setDateOfBirth(traineeUpdateRequestDto.getDateOfBirth());
+        }
+
+        TraineeEntity updatedTrainee = traineeRepository.save(trainee.get());
+        List<TrainingEntity> trainings = updatedTrainee.getTrainings();
+        log.debug("Lazily initialized trainee trainings {}", trainings);
+
+        log.debug("Successfully updated trainee with username: {}", username);
+        return updatedTrainee;
+    }
+
 
     /**
      * Deletes a trainee by username in the service layer.
