@@ -68,6 +68,7 @@ public class UserService {
         if (user.isEmpty()) {
             throw new GymEntityNotFoundException("Invalid username and password.");
         }
+        System.out.println("USERNAME = " + user.get().getUsername());
         log.debug("Successfully logged in.");
     }
 

@@ -1,9 +1,11 @@
 package org.example.services;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TraineeEntity;
+import org.example.entity.TrainingEntity;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalIdException;
@@ -205,6 +207,22 @@ public class TraineeService {
         log.debug("Deleting trainee by username: {}", username);
         //traineeRepository.deleteByUserUsername(username);
         log.debug("Successfully deleted trainee by username: {}", username);
+    }
+
+    /**gets trainee profile. */
+    @Transactional
+    public TraineeEntity getTraineeProfile(String username) {
+        log.debug("Getting trainee profile by username: {}", username);
+        Optional<TraineeEntity> trainee = traineeRepository.findByUser_Username(username);
+        if (trainee.isEmpty()) {
+            log.debug("No trainee with the username: {}", username);
+            throw new GymEntityNotFoundException(
+                    String.format("Trainee with username %s does not exist.", username));
+        }
+        log.debug("Lazily initializing trainee trainings: {}", trainee.get().getTrainings());
+
+        log.debug("Successfully retrieved trainee profile by username: {}", username);
+        return trainee.get();
     }
 
 }

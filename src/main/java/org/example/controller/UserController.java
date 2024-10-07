@@ -3,7 +3,6 @@ package org.example.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.ChangePasswordDto;
 import org.example.dto.LoginRequestDto;
-import org.example.entity.UserEntity;
 import org.example.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +31,7 @@ public class UserController {
         return new ResponseEntity<>("Successfully logged in.", HttpStatus.OK);
     }
 
+    /** change user password. */
     @PutMapping("/change-password")
     public void changePassword(@RequestBody ChangePasswordDto changePasswordDto) {
         log.debug("Request to change password of user with username: {}", changePasswordDto.getUsername());

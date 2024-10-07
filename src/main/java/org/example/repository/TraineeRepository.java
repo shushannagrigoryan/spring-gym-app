@@ -9,13 +9,8 @@ import org.springframework.stereotype.Repository;
 public interface TraineeRepository extends CrudRepository<TraineeEntity, Long> {
     Optional<TraineeEntity> findByUser_Username(String username);
 
-
     //    @Query("from TraineeEntity t join UserEntity u on t.user = u where u.username =:username")
     //    Optional<TraineeEntity> getByUsername(String username);
-
-
-
-
 
 
 
