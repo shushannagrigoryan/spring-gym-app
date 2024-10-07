@@ -205,4 +205,19 @@ public class TrainerService {
     //        return trainerRepository.getTrainersNotAssignedToTrainee(traineeUsername);
     //    }
 
+    /** get trainer profile. */
+    @Transactional
+    public TrainerEntity getTrainerProfile(String username) {
+        log.debug("Getting trainer profile by username: {}", username);
+        Optional<TrainerEntity> trainer = trainerRepository.findByUser_Username(username);
+        if (trainer.isEmpty()) {
+            log.debug("No trainer with the username: {}", username);
+            throw new GymEntityNotFoundException(
+                    String.format("Trainer with username %s does not exist.", username));
+        }
+        log.debug("Lazily initializing trainer trainings: {}", trainer.get().getTrainings());
+
+        log.debug("Successfully retrieved trainer profile by username: {}", username);
+        return trainer.get();
+    }
 }

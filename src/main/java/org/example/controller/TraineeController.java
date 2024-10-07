@@ -7,6 +7,7 @@ import org.example.dto.TraineeProfileResponseDto;
 import org.example.dto.TraineeResponseDto;
 import org.example.entity.TraineeEntity;
 import org.example.mapper.TraineeMapper;
+import org.example.mapper.TraineeProfileMapper;
 import org.example.services.TraineeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +26,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class TraineeController {
     private final TraineeService traineeService;
     private final TraineeMapper traineeMapper;
+    private final TraineeProfileMapper traineeProfileMapper;
 
-    public TraineeController(TraineeService traineeService, TraineeMapper traineeMapper) {
+    /** Setting dependencies.*/
+    public TraineeController(TraineeService traineeService,
+                             TraineeMapper traineeMapper,
+                             TraineeProfileMapper traineeProfileMapper) {
         this.traineeService = traineeService;
         this.traineeMapper = traineeMapper;
+        this.traineeProfileMapper = traineeProfileMapper;
     }
 
     /**
@@ -78,7 +84,7 @@ public class TraineeController {
     public ResponseEntity<TraineeProfileResponseDto> getTrainee(@PathVariable("username") String username) {
         log.debug("Request to get trainee profile with username: {}", username);
         TraineeEntity trainee = traineeService.getTraineeProfile(username);
-        return new ResponseEntity<>(traineeMapper.entityToProfileDto(trainee), HttpStatus.OK);
+        return new ResponseEntity<>(traineeProfileMapper.entityToProfileDto(trainee), HttpStatus.OK);
     }
 
 

@@ -1,0 +1,46 @@
+package org.example.mapper;
+
+import java.util.List;
+import org.example.dto.TrainerProfileResponseDto;
+import org.example.dto.TrainerProfileTraineeResponseDto;
+import org.example.dto.TrainingTypeResponseDto;
+import org.example.entity.TrainerEntity;
+import org.example.entity.TrainingEntity;
+import org.springframework.stereotype.Component;
+
+@Component
+public class TrainerProfileMapper {
+    private final TrainingTypeMapper trainingTypeMapper;
+    private final TraineeMapper traineeMapper;
+
+    /** Setting dependencies. */
+    public TrainerProfileMapper(TrainingTypeMapper trainingTypeMapper,
+                                TraineeMapper traineeMapper) {
+        this.trainingTypeMapper = trainingTypeMapper;
+        this.traineeMapper = traineeMapper;
+    }
+
+    /** maps trainer entity to trainer profile. */
+    public TrainerProfileResponseDto entityToProfileDto(TrainerEntity trainerEntity) {
+        if (trainerEntity == null) {
+            return null;
+        }
+        TrainerProfileResponseDto trainerProfile = new TrainerProfileResponseDto();
+        trainerProfile.setFirstName(trainerEntity.getUser().getFirstName());
+        trainerProfile.setLastName(trainerEntity.getUser().getLastName());
+        TrainingTypeResponseDto trainingType = trainingTypeMapper
+                .entityToResponseDto(trainerEntity.getSpecialization());
+        trainerProfile.setSpecialization(trainingType);
+        trainerProfile.setActive(trainerEntity.getUser().isActive());
+
+
+        List<TrainingEntity> trainingEntityList = trainerEntity.getTrainings();
+        List<TrainerProfileTraineeResponseDto> trainees = trainingEntityList
+                .stream()
+                .map(x -> traineeMapper.entityToTrainerTraineeResponseDto(x.getTrainee()))
+                .toList();
+
+        trainerProfile.setTrainees(trainees);
+        return trainerProfile;
+    }
+}
