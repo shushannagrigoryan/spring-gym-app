@@ -23,5 +23,5 @@ public class TraineeUpdateRequestDto {
     private LocalDate dateOfBirth;
     private String address;
     @NotNull(message = "IsActive is required")
-    private boolean isActive;
+    private Boolean isActive;
 }
