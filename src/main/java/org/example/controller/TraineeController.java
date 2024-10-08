@@ -41,7 +41,7 @@ public class TraineeController {
     }
 
     /**
-     * Registers a new trainee.
+     * POST request to register a new trainee.
      *
      * @param traineeCreateDto request contains:
      *                         firstName(required)
@@ -94,8 +94,10 @@ public class TraineeController {
         return new ResponseEntity<>(traineeProfileMapper.entityToProfileDto(trainee), HttpStatus.OK);
     }
 
+    /** update trainee.*/
     @PutMapping("/update-trainee")
-    public ResponseEntity<TraineeProfileResponseDto> updateTrainee(@Valid @RequestBody TraineeUpdateRequestDto trainee) {
+    public ResponseEntity<TraineeProfileResponseDto> updateTrainee(
+            @Valid @RequestBody TraineeUpdateRequestDto trainee) {
         log.debug("Request to update trainee with username: {}", trainee.getUsername());
         TraineeProfileResponseDto traineeProfile = traineeProfileMapper
                 .entityToProfileDto(traineeService.updateTrainee(trainee));

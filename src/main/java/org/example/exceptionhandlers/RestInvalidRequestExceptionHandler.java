@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class RestInvalidRequestExceptionHandler {
 
+    /**handle exception.*/
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleInvalidRequestExceptions(
             MethodArgumentNotValidException exception) {

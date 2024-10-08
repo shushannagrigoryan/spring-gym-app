@@ -11,9 +11,7 @@
 //public class TraineeAuth {
 //    private final TraineeService traineeService;
 //
-//    /**
-//     * Injecting dependencies using constructor.
-//     */
+//    /** Setting dependencies.*/
 //    public TraineeAuth(TraineeService traineeService) {
 //        this.traineeService = traineeService;
 //    }
@@ -23,7 +21,7 @@
 //     *
 //     * @param username username of the trainee
 //     * @param password password of the trainee
-//     * @return true if trainee exists, else false.
+//     * @return true if trainee exists, else throws {@code GymIllegalArgumentException}.
 //     */
 //    public boolean traineeAuth(String username, String password) {
 //        TraineeEntity trainee = traineeService.getTraineeByUsername(username);

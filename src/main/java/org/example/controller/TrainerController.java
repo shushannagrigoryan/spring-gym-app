@@ -36,7 +36,7 @@ public class TrainerController {
     }
 
     /**
-     * Registers a new trainer.
+     * POST request to register a new trainer.
      *
      * @param trainerCreateDto request contains:
      *                         firstName(required)

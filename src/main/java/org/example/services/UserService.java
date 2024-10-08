@@ -61,14 +61,18 @@ public class UserService {
         return user;
     }
 
-    /** login. */
+    /**
+     * Login a user.
+     *
+     * @param username of the user
+     * @param password of the user
+     */
     public void login(String username, String password) {
         log.debug("Logging in user with username {} and password {}", username, password);
         Optional<UserEntity> user = userRepository.findByUsernameAndPassword(username, password);
         if (user.isEmpty()) {
             throw new GymEntityNotFoundException("Invalid username and password.");
         }
-        System.out.println("USERNAME = " + user.get().getUsername());
         log.debug("Successfully logged in.");
     }
 
