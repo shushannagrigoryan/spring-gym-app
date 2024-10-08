@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TraineeActivateDto;
 import org.example.dto.TraineeCreateDto;
-import org.example.dto.TraineeProfileDto;
 import org.example.dto.TraineeProfileResponseDto;
 import org.example.dto.TraineeResponseDto;
 import org.example.dto.TraineeUpdateRequestDto;
@@ -44,15 +43,19 @@ public class TraineeController {
     /**
      * Registers a new trainee.
      *
-     * @param traineeCreateDto trainee(firstName, lastName, dateOfBirth, address) to register.
-     * @return the saved trainee(username, password)
+     * @param traineeCreateDto request contains:
+     *                         firstName(required)
+     *                         lastName(required)
+     *                         dateOfBirth(optional)
+     *                         address(optional)
+     * @return generated username and password
      */
-    @PostMapping
-    public ResponseEntity<TraineeResponseDto> registerTrainee(@RequestBody TraineeCreateDto traineeCreateDto) {
-        log.debug("Registering new trainee: {}", traineeCreateDto);
+    @PostMapping("/register")
+    public ResponseEntity<TraineeResponseDto> registerTrainee(@Valid @RequestBody TraineeCreateDto traineeCreateDto) {
+        log.debug("Request to register a new trainee: {}", traineeCreateDto);
         TraineeEntity trainee = traineeMapper.dtoToEntity(traineeCreateDto);
-        TraineeEntity traineeEntity = traineeService.registerTrainee(trainee);
-        return new ResponseEntity<>(traineeMapper.entityToResponseDto(traineeEntity), HttpStatus.CREATED);
+        TraineeEntity registeredTrainee = traineeService.registerTrainee(trainee);
+        return new ResponseEntity<>(traineeMapper.entityToResponseDto(registeredTrainee), HttpStatus.CREATED);
     }
 
     //    @PutMapping

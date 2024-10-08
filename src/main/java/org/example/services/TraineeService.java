@@ -56,7 +56,7 @@ public class TraineeService {
         UserEntity user = userService.registerUser(traineeEntity.getUser());
         log.debug("Successfully registered user: {}", user);
         TraineeEntity trainee = traineeRepository.save(traineeEntity);
-        log.debug("Successfully created trainee: {}", traineeEntity);
+        log.debug("Successfully registered trainee: {}", traineeEntity);
         return trainee;
     }
 

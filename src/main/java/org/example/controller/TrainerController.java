@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TrainerCreateDto;
 import org.example.dto.TrainerProfileResponseDto;
@@ -37,15 +38,18 @@ public class TrainerController {
     /**
      * Registers a new trainer.
      *
-     * @param trainerCreateDto trainer(firstName, lastName, specialization) to register.
-     * @return the saved trainer(username, password)
+     * @param trainerCreateDto request contains:
+     *                         firstName(required)
+     *                         lastName(required)
+     *                         specialization id(required)
+     * @return generated username and password
      */
-    @PostMapping
-    public ResponseEntity<TrainerResponseDto> registerTrainer(@RequestBody TrainerCreateDto trainerCreateDto) {
-        log.debug("Registering new trainer: {}", trainerCreateDto);
+    @PostMapping("/register")
+    public ResponseEntity<TrainerResponseDto> registerTrainer(@Valid @RequestBody TrainerCreateDto trainerCreateDto) {
+        log.debug("Request to register a new trainer: {}", trainerCreateDto);
         TrainerEntity trainer = trainerMapper.dtoToEntity(trainerCreateDto);
-        TrainerEntity trainerEntity = trainerService.registerTrainer(trainer);
-        return new ResponseEntity<>(trainerMapper.entityToResponseDto(trainerEntity), HttpStatus.CREATED);
+        TrainerEntity registeredTrainer = trainerService.registerTrainer(trainer);
+        return new ResponseEntity<>(trainerMapper.entityToResponseDto(registeredTrainer), HttpStatus.CREATED);
     }
 
     /**get trainer profile. */

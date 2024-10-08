@@ -74,12 +74,11 @@ public class UserService {
 
     /** change password. */
     @Transactional
-    public int changeUserPassword(String username) {
+    public int changeUserPassword(String username, String newPassword) {
         log.debug("Updating the password of trainee with username: {}", username);
         Optional<UserEntity> user = userRepository.findByUsername(username);
         log.debug("Generating new password.");
-        int result = userRepository.updatePassword(username, passwordGeneration.generatePassword()
-        );
+        int result = userRepository.updatePassword(username, passwordGeneration.generatePassword());
         log.debug("Successfully updated username for user with username: {}", username);
         //return result;
         return result;
