@@ -76,16 +76,17 @@ public class UserService {
         log.debug("Successfully logged in.");
     }
 
-    /** change password. */
+    /**
+     * Changes password of the user.
+     *
+     * @param username username of the user
+     * @param newPassword new password of the user.
+     */
     @Transactional
-    public int changeUserPassword(String username, String newPassword) {
-        log.debug("Updating the password of trainee with username: {}", username);
-        Optional<UserEntity> user = userRepository.findByUsername(username);
-        log.debug("Generating new password.");
-        int result = userRepository.updatePassword(username, passwordGeneration.generatePassword());
-        log.debug("Successfully updated username for user with username: {}", username);
-        //return result;
-        return result;
+    public void changeUserPassword(String username, String newPassword) {
+        log.debug("Changing the password of user with username: {}", username);
+        userRepository.updatePassword(username, newPassword);
+        log.debug("Successfully changed password of user with username: {}", username);
     }
 
 }

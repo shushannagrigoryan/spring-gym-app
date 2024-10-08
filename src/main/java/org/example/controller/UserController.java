@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.example.auth.UserAuth;
 import org.example.dto.ChangePasswordDto;
@@ -45,16 +46,20 @@ public class UserController {
     }
 
     /**
-     * change user password.
+     * PUT request to change user password.
+     *
+     * @param changePasswordDto request contains:
+     *                          username(required)
+     *                          password(required)
+     *                          newPassword(required)
      */
     @PutMapping("/change-password")
-    public void changePassword(@RequestBody ChangePasswordDto changePasswordDto) {
+    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto) {
         log.debug("Request to change password of user with username: {}", changePasswordDto.getUsername());
-        //TODO validation with old password
-        int result = userService.changeUserPassword(changePasswordDto.getUsername(),
+        userAuth.userAuth(changePasswordDto.getUsername(), changePasswordDto.getPassword());
+        userService.changeUserPassword(changePasswordDto.getUsername(),
                 changePasswordDto.getNewPassword());
-
-        System.out.println(result);
+        return new ResponseEntity<>("Successfully changed user password.", HttpStatus.OK);
     }
 
 }
