@@ -220,7 +220,13 @@ public class TraineeService {
         log.debug("Successfully deleted trainee by username: {}", username);
     }
 
-    /**gets trainee profile. */
+    /**
+     * Returns trainee profile.
+     * Throws {@code GymEntityNotFoundException if trainee not found.}
+     *
+     * @param username username of the trainee
+     * @return {@code TraineeEntity}
+     */
     @Transactional
     public TraineeEntity getTraineeProfile(String username) {
         log.debug("Getting trainee profile by username: {}", username);

@@ -86,9 +86,15 @@ public class TraineeController {
 
     }
 
-    /**get trainee profile. */
+    /**
+     * GET request to get trainee profile.
+     *
+     * @param username of the trainee
+     * @return {@code TraineeProfileResponseDto}
+     */
     @GetMapping("/{username}")
-    public ResponseEntity<TraineeProfileResponseDto> getTrainee(@PathVariable("username") String username) {
+    public ResponseEntity<TraineeProfileResponseDto> getTraineeProfile(
+            @PathVariable("username") String username) {
         log.debug("Request to get trainee profile with username: {}", username);
         TraineeEntity trainee = traineeService.getTraineeProfile(username);
         return new ResponseEntity<>(traineeProfileMapper.entityToProfileDto(trainee), HttpStatus.OK);
