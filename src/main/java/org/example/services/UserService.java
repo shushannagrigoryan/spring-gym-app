@@ -6,7 +6,6 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
-import org.example.password.PasswordGeneration;
 import org.example.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +13,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
-    private final PasswordGeneration passwordGeneration;
 
-    public UserService(UserRepository userRepository,
-                       PasswordGeneration passwordGeneration) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordGeneration = passwordGeneration;
     }
 
     /**
@@ -87,6 +83,18 @@ public class UserService {
         log.debug("Changing the password of user with username: {}", username);
         userRepository.updatePassword(username, newPassword);
         log.debug("Successfully changed password of user with username: {}", username);
+    }
+
+    /**
+     * Deletes a user.
+     *
+     * @param user {@code UserEntity} to delete
+     */
+    @Transactional
+    public void deleteUser(UserEntity user) {
+        log.debug("Deleting user with username: {}", user.getUsername());
+        userRepository.deleteById(user.getId());
+        log.debug("Successfully deleted user with username: {}", user.getUsername());
     }
 
 }

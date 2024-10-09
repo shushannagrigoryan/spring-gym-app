@@ -2,7 +2,6 @@ package org.example.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.TraineeActivateDto;
 import org.example.dto.TraineeCreateDto;
 import org.example.dto.TraineeProfileResponseDto;
 import org.example.dto.TraineeResponseDto;
@@ -62,36 +61,6 @@ public class TraineeController {
         return new ResponseEntity<>(traineeMapper.entityToResponseDto(registeredTrainee), HttpStatus.CREATED);
     }
 
-    //    @PutMapping
-    //    public void changePassword(@RequestBody ChangePasswordDto changePasswordDto) {
-    //        log.debug("Change password of trainee with username: {} ", changePasswordDto.getUsername());
-    //
-    //    }
-
-    //    @GetMapping
-    //    public ResponseEntity<TraineeProfileDto> getTrainee(@RequestBody String username) {
-    //        log.debug("Getting trainee with username: {}", username);
-    //        TraineeEntity trainee = traineeService.getTraineeByUsername(username);
-    //        //TraineeProfileDto trainee = new TraineeProfileDto();
-    //        return new ResponseEntity<>(trainee, HttpStatus.OK);
-    //    }
-
-    @DeleteMapping
-    public void deleteTrainee(@RequestBody String username) {
-        log.debug("Request to delete trainee with username: {}", username);
-
-    }
-
-    /**
-     * activate traeinne.
-     */
-    @PatchMapping
-    public void activateTrainee(@RequestBody TraineeActivateDto traineeActivateDto) {
-        log.debug("Request to activate trainee with username: {}", traineeActivateDto.getUsername());
-        //traineeService.activateTrainee(traineeActivateDto.getUsername());
-
-    }
-
     /**
      * GET request to get trainee profile.
      *
@@ -143,6 +112,18 @@ public class TraineeController {
         String response = traineeService.changeActiveStatus(activeStatusRequestDto.getUsername(),
                 activeStatusRequestDto.getIsActive());
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    /**
+     * DELETE request to delete a trainee.
+     *
+     * @param username of the trainee
+     */
+    @DeleteMapping("/{username}")
+    public ResponseEntity<String> deleteTrainee(@PathVariable(value = "username") String username) {
+        log.debug("Request to delete trainee with username: {}", username);
+        traineeService.deleteTraineeByUsername(username);
+        return new ResponseEntity<>("Successfully deleted trainee", HttpStatus.OK);
     }
 
 

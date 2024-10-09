@@ -98,22 +98,6 @@ public class TrainerService {
     //    }
     //
 
-
-    //    /**
-    //     * Changes the password of the trainer by username. Before changing authentication is performed.
-    //     *
-    //     * @param username username of the trainer
-    //     */
-    //    @Transactional
-    //    public void changeTrainerPassword(String username) {
-    //        log.debug("Changing the password of the trainee: {}", username);
-    //        trainerRepository.changeTrainerPassword(username,
-    //                passwordGeneration.generatePassword());
-    //    }
-    //
-
-
-
     /**
      * Updates trainer.
      *
@@ -148,57 +132,6 @@ public class TrainerService {
         return updatedTrainer;
     }
 
-
-
-
-    //    /**
-    //     * Activates Trainer.
-    //     *
-    //     * @param id id of the trainer
-    //     */
-    //    @Transactional
-    //    public void activateTrainer(Long id) {
-    //        log.info("Request to activate trainer with id: {}", id);
-    //        TrainerEntity trainer = trainerRepository.getTrainerById(id);
-    //
-    //        if (trainer == null) {
-    //            log.debug("No trainer with {} exists.", id);
-    //            throw new GymIllegalIdException(String.format("No trainer with %d exists.", id));
-    //        }
-    //
-    //        if (trainer.getUser().isActive()) {
-    //            log.debug("Trainer with id: {} is already active.", id);
-    //            throw new GymIllegalStateException(String.format("Trainer with id: %d is already active", id));
-    //        }
-    //
-    //        trainerRepository.activateTrainer(trainer);
-    //
-    //    }
-    //
-    //    /**
-    //     * Deactivates Trainer.
-    //     *
-    //     * @param id id of the trainer
-    //     */
-    //    @Transactional
-    //    public void deactivateTrainer(Long id) {
-    //        log.info("Request to deactivate trainer with id: {}", id);
-    //        TrainerEntity trainer = trainerRepository.getTrainerById(id);
-    //
-    //        if (trainer == null) {
-    //            log.debug("No entity with {} exists.", id);
-    //            throw new GymIllegalIdException(String.format("No entity with %d exists.", id));
-    //        }
-    //
-    //        if (!trainer.getUser().isActive()) {
-    //            log.debug("Trainer with id: {} is already inactive.", id);
-    //            throw new GymIllegalStateException(String.format("Trainer with id: %d is already inactive", id));
-    //        }
-    //
-    //        trainerRepository.deactivateTrainer(trainer);
-    //
-    //    }
-    //
     //    /**
     //     * Returns trainers not assigned to trainee by trainee username.
     //     * Throws GymIllegalUsernameException if the username is not valid.
