@@ -136,7 +136,8 @@ public class TraineeController {
      *                                                                         isActive(required)
      */
     @PatchMapping("active-status")
-    public ResponseEntity<String> changeActiveStatus(@Valid @RequestBody UserChangeActiveStatusRequestDto activeStatusRequestDto) {
+    public ResponseEntity<String> changeActiveStatus(@Valid @RequestBody UserChangeActiveStatusRequestDto
+                                                                 activeStatusRequestDto) {
         log.debug("Request to change the active status of trainee with username: {} to {}",
                 activeStatusRequestDto.getUsername(), activeStatusRequestDto.getIsActive());
         String response = traineeService.changeActiveStatus(activeStatusRequestDto.getUsername(),

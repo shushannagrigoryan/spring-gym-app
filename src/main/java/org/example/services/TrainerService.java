@@ -237,4 +237,26 @@ public class TrainerService {
         log.debug("Successfully retrieved trainer profile by username: {}", username);
         return trainer.get();
     }
+
+    /**
+     * Activates/Deactivates trainer. Not Idempotent action.
+     *
+     * @param username username of the trainer
+     * @param isActive activate if true, deactivate if false.
+     */
+    @Transactional
+    public String changeActiveStatus(String username, boolean isActive) {
+        TrainerEntity trainer = getTrainerByUsername(username);
+
+        if (trainer.getUser().isActive() == isActive) {
+            log.debug("Trainer : {} isActive status is already: {}", username, isActive);
+            return "Trainer isActive status is already " + isActive;
+        }
+
+        log.debug("Setting trainer: {} isActive status to {}", username, isActive);
+        trainer.getUser().setActive(isActive);
+        trainerRepository.save(trainer);
+
+        return "Successfully set trainer active status to " + isActive;
+    }
 }

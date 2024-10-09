@@ -7,6 +7,7 @@ import org.example.dto.TrainerProfileResponseDto;
 import org.example.dto.TrainerResponseDto;
 import org.example.dto.TrainerUpdateRequestDto;
 import org.example.dto.TrainerUpdateResponseDto;
+import org.example.dto.UserChangeActiveStatusRequestDto;
 import org.example.entity.TrainerEntity;
 import org.example.mapper.TrainerMapper;
 import org.example.mapper.TrainerProfileMapper;
@@ -14,6 +15,7 @@ import org.example.services.TrainerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,7 +31,9 @@ public class TrainerController {
     private final TrainerMapper trainerMapper;
     private final TrainerProfileMapper trainerProfileMapper;
 
-    /** Setting dependencies. */
+    /**
+     * Setting dependencies.
+     */
     public TrainerController(TrainerService trainerService,
                              TrainerMapper trainerMapper,
                              TrainerProfileMapper trainerProfileMapper) {
@@ -80,7 +84,7 @@ public class TrainerController {
      * @return {@code TrainerUpdateResponseDto}
      */
     @PutMapping("/update-trainer")
-    public ResponseEntity<TrainerUpdateResponseDto> updateTrainee(
+    public ResponseEntity<TrainerUpdateResponseDto> updateTrainer(
             @Valid @RequestBody TrainerUpdateRequestDto trainer) {
         log.debug("Request to update trainer with username: {}", trainer.getUsername());
         TrainerEntity trainerEntity = trainerMapper.updateDtoToEntity(trainer);
@@ -88,5 +92,21 @@ public class TrainerController {
         TrainerUpdateResponseDto trainerResponse = trainerProfileMapper
                 .entityToUpdatedDto(updatedTrainer);
         return new ResponseEntity<>(trainerResponse, HttpStatus.OK);
+    }
+
+    /**
+     * PATCH request to activate/deactivate a trainer.
+     *
+     * @param activeStatusRequestDto {@code UserChangeActiveStatusRequestDto}: username(required)
+     *                               isActive(required)
+     */
+    @PatchMapping("active-status")
+    public ResponseEntity<String> changeActiveStatus(@Valid @RequestBody UserChangeActiveStatusRequestDto
+                                                                 activeStatusRequestDto) {
+        log.debug("Request to change the active status of trainer with username: {} to {}",
+                activeStatusRequestDto.getUsername(), activeStatusRequestDto.getIsActive());
+        String response = trainerService.changeActiveStatus(activeStatusRequestDto.getUsername(),
+                activeStatusRequestDto.getIsActive());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
