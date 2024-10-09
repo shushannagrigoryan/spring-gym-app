@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TraineeCreateDto;
 import org.example.dto.TraineeDto;
 import org.example.dto.TraineeResponseDto;
+import org.example.dto.TraineeUpdateRequestDto;
 import org.example.dto.TrainerProfileTraineeResponseDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.UserEntity;
@@ -82,6 +83,26 @@ public class TraineeMapper {
         trainee.setUsername(traineeEntity.getUser().getUsername());
         trainee.setFirstName(traineeEntity.getUser().getFirstName());
         trainee.setLastName(traineeEntity.getUser().getLastName());
+
+        return trainee;
+    }
+
+    /** Mapping trainee update dto to trainee entity. */
+    public TraineeEntity updateDtoToEntity(TraineeUpdateRequestDto traineeDto) {
+        if (traineeDto == null) {
+            return null;
+        }
+        TraineeEntity trainee = new TraineeEntity();
+
+        UserEntity user = new UserEntity();
+        user.setUsername(traineeDto.getUsername());
+        user.setFirstName(traineeDto.getFirstName());
+        user.setLastName(traineeDto.getLastName());
+        user.setActive(traineeDto.getIsActive());
+        trainee.setUser(user);
+
+        trainee.setAddress(traineeDto.getAddress());
+        trainee.setDateOfBirth(traineeDto.getDateOfBirth());
 
         return trainee;
     }

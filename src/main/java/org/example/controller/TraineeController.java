@@ -7,6 +7,7 @@ import org.example.dto.TraineeCreateDto;
 import org.example.dto.TraineeProfileResponseDto;
 import org.example.dto.TraineeResponseDto;
 import org.example.dto.TraineeUpdateRequestDto;
+import org.example.dto.TraineeUpdateResponseDto;
 import org.example.entity.TraineeEntity;
 import org.example.mapper.TraineeMapper;
 import org.example.mapper.TraineeProfileMapper;
@@ -31,7 +32,9 @@ public class TraineeController {
     private final TraineeMapper traineeMapper;
     private final TraineeProfileMapper traineeProfileMapper;
 
-    /** Setting dependencies.*/
+    /**
+     * Setting dependencies.
+     */
     public TraineeController(TraineeService traineeService,
                              TraineeMapper traineeMapper,
                              TraineeProfileMapper traineeProfileMapper) {
@@ -78,7 +81,9 @@ public class TraineeController {
 
     }
 
-    /** activate traeinne. */
+    /**
+     * activate traeinne.
+     */
     @PatchMapping
     public void activateTrainee(@RequestBody TraineeActivateDto traineeActivateDto) {
         log.debug("Request to activate trainee with username: {}", traineeActivateDto.getUsername());
@@ -100,16 +105,28 @@ public class TraineeController {
         return new ResponseEntity<>(traineeProfileMapper.entityToProfileDto(trainee), HttpStatus.OK);
     }
 
-    /** update trainee.*/
+    /**
+     * PUT request to update trainee.
+     *
+     * @param trainee to update: {@code TraineeUpdateRequestDto}:
+     *                username(required)
+     *                firstName(required)
+     *                lastName(required)
+     *                dateOfBirth(optional)
+     *                address(optional)
+     *                isActive(required)
+     * @return {@code TraineeProfileResponseDto}
+     */
     @PutMapping("/update-trainee")
-    public ResponseEntity<TraineeProfileResponseDto> updateTrainee(
+    public ResponseEntity<TraineeUpdateResponseDto> updateTrainee(
             @Valid @RequestBody TraineeUpdateRequestDto trainee) {
         log.debug("Request to update trainee with username: {}", trainee.getUsername());
-        TraineeProfileResponseDto traineeProfile = traineeProfileMapper
-                .entityToProfileDto(traineeService.updateTrainee(trainee));
-        return new ResponseEntity<>(traineeProfile, HttpStatus.OK);
+        TraineeEntity traineeEntity = traineeMapper.updateDtoToEntity(trainee);
+        TraineeEntity updatedTrainee = traineeService.updateTrainee(traineeEntity);
+        TraineeUpdateResponseDto traineeResponse = traineeProfileMapper
+                        .entityToUpdatedDto(updatedTrainee);
+        return new ResponseEntity<>(traineeResponse, HttpStatus.OK);
     }
-
 
 
 }

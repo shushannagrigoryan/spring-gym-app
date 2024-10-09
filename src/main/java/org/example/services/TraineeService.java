@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.TraineeUpdateRequestDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainingEntity;
 import org.example.entity.UserEntity;
@@ -162,13 +161,14 @@ public class TraineeService {
     //    }
 
     /**
-     * Updates trainee by id.
+     * Updates trainee.
      *
-     * @param traineeUpdateRequestDto {@code TraineeUpdateRequestDto} to update with
+     * @param traineeToUpdate trainee data to update
+     * @return {@code TraineeEntity} updated trainee
      */
     @Transactional
-    public TraineeEntity updateTrainee(TraineeUpdateRequestDto traineeUpdateRequestDto) {
-        String username = traineeUpdateRequestDto.getUsername();
+    public TraineeEntity updateTrainee(TraineeEntity traineeToUpdate) {
+        String username = traineeToUpdate.getUser().getUsername();
         Optional<TraineeEntity> trainee = traineeRepository.findByUser_Username(username);
 
         if (trainee.isEmpty()) {
@@ -176,29 +176,19 @@ public class TraineeService {
             throw new GymIllegalArgumentException(String.format("No trainee with username: %s", username));
         }
 
-        String updatedFirstName = traineeUpdateRequestDto.getFirstName();
-        String updatedLastName = traineeUpdateRequestDto.getLastName();
-        String firstName = trainee.get().getUser().getFirstName();
-        String lastName = trainee.get().getUser().getLastName();
+        trainee.get().getUser().setFirstName(traineeToUpdate.getUser().getFirstName());
+        trainee.get().getUser().setLastName(traineeToUpdate.getUser().getLastName());
 
-        if (!((firstName.equals(updatedFirstName)) && (lastName.equals(updatedLastName)))) {
-            String updatedUsername = usernameGenerator
-                    .generateUsername(updatedFirstName, updatedLastName);
-            trainee.get().getUser().setUsername(updatedUsername);
+        if (traineeToUpdate.getAddress() != null) {
+            trainee.get().setAddress(traineeToUpdate.getAddress());
         }
 
-        trainee.get().getUser().setFirstName(updatedFirstName);
-        trainee.get().getUser().setLastName(updatedLastName);
-
-        if (traineeUpdateRequestDto.getAddress() != null) {
-            trainee.get().setAddress(traineeUpdateRequestDto.getAddress());
-        }
-
-        if (traineeUpdateRequestDto.getDateOfBirth() != null) {
-            trainee.get().setDateOfBirth(traineeUpdateRequestDto.getDateOfBirth());
+        if (traineeToUpdate.getDateOfBirth() != null) {
+            trainee.get().setDateOfBirth(traineeToUpdate.getDateOfBirth());
         }
 
         TraineeEntity updatedTrainee = traineeRepository.save(trainee.get());
+
         List<TrainingEntity> trainings = updatedTrainee.getTrainings();
         log.debug("Lazily initialized trainee trainings {}", trainings);
 

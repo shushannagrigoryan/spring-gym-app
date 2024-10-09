@@ -3,6 +3,7 @@ package org.example.mapper;
 import java.util.List;
 import org.example.dto.TraineeProfileResponseDto;
 import org.example.dto.TraineeProfileTrainerResponseDto;
+import org.example.dto.TraineeUpdateResponseDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainingEntity;
 import org.springframework.stereotype.Component;
@@ -35,5 +36,26 @@ public class TraineeProfileMapper {
 
         traineeProfile.setTrainers(trainers);
         return traineeProfile;
+    }
+
+    /** Mapping updated trainee entity to response dto. */
+    public TraineeUpdateResponseDto entityToUpdatedDto(TraineeEntity updatedTrainee) {
+        if (updatedTrainee == null) {
+            return null;
+        }
+
+        List<TraineeProfileTrainerResponseDto> trainers = updatedTrainee.getTrainings()
+                .stream()
+                .map(x -> trainerMapper.entityToTraineeTrainerResponseDto(x.getTrainer()))
+                .toList();
+
+        return new TraineeUpdateResponseDto(updatedTrainee.getUser().getUsername(),
+                        updatedTrainee.getUser().getFirstName(),
+                        updatedTrainee.getUser().getLastName(),
+                        updatedTrainee.getDateOfBirth(),
+                        updatedTrainee.getAddress(),
+                        updatedTrainee.getUser().isActive(),
+                        trainers);
+
     }
 }
