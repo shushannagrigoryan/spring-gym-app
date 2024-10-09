@@ -74,7 +74,7 @@ public class TraineeService {
         if (trainee.isEmpty()) {
             log.debug("No trainee with the username: {}", username);
             throw new GymEntityNotFoundException(
-            String.format("Trainee with username %s does not exist.", username));
+                    String.format("Trainee with username %s does not exist.", username));
         }
         log.debug("Successfully retrieved trainee by username: {}", username);
         return trainee.get();
@@ -112,6 +112,7 @@ public class TraineeService {
     //        //traineeRepository.changeTraineePassword(username, passwordGeneration.generatePassword());
     //    }
     //
+
     /**
      * Activates Trainee.
      *
@@ -169,25 +170,28 @@ public class TraineeService {
     @Transactional
     public TraineeEntity updateTrainee(TraineeEntity traineeToUpdate) {
         String username = traineeToUpdate.getUser().getUsername();
+        log.debug("Updating trainee with username: {}", traineeToUpdate.getUser().getUsername());
+
         Optional<TraineeEntity> trainee = traineeRepository.findByUser_Username(username);
 
         if (trainee.isEmpty()) {
             log.debug("No trainee with username: {}", username);
             throw new GymIllegalArgumentException(String.format("No trainee with username: %s", username));
         }
+        TraineeEntity traineeEntity = trainee.get();
 
-        trainee.get().getUser().setFirstName(traineeToUpdate.getUser().getFirstName());
-        trainee.get().getUser().setLastName(traineeToUpdate.getUser().getLastName());
+        traineeEntity.getUser().setFirstName(traineeToUpdate.getUser().getFirstName());
+        traineeEntity.getUser().setLastName(traineeToUpdate.getUser().getLastName());
 
         if (traineeToUpdate.getAddress() != null) {
             trainee.get().setAddress(traineeToUpdate.getAddress());
         }
 
         if (traineeToUpdate.getDateOfBirth() != null) {
-            trainee.get().setDateOfBirth(traineeToUpdate.getDateOfBirth());
+            traineeEntity.setDateOfBirth(traineeToUpdate.getDateOfBirth());
         }
 
-        TraineeEntity updatedTrainee = traineeRepository.save(trainee.get());
+        TraineeEntity updatedTrainee = traineeRepository.save(traineeEntity);
 
         List<TrainingEntity> trainings = updatedTrainee.getTrainings();
         log.debug("Lazily initialized trainee trainings {}", trainings);

@@ -5,6 +5,7 @@ import org.example.dto.TraineeProfileTrainerResponseDto;
 import org.example.dto.TrainerCreateDto;
 import org.example.dto.TrainerDto;
 import org.example.dto.TrainerResponseDto;
+import org.example.dto.TrainerUpdateRequestDto;
 import org.example.dto.TrainingTypeResponseDto;
 import org.example.entity.TrainerEntity;
 import org.example.entity.UserEntity;
@@ -98,4 +99,21 @@ public class TrainerMapper {
         return trainer;
     }
 
+    /** Mapping trainer update request dto to trainer entity. */
+    public TrainerEntity updateDtoToEntity(TrainerUpdateRequestDto trainer) {
+        if (trainer == null) {
+            return null;
+        }
+
+        TrainerEntity trainerEntity = new TrainerEntity();
+        UserEntity user = new UserEntity();
+        user.setUsername(trainer.getUsername());
+        user.setFirstName(trainer.getFirstName());
+        user.setLastName(trainer.getLastName());
+        user.setActive(trainer.getIsActive());
+        trainerEntity.setUser(user);
+
+        trainerEntity.setSpecializationId(trainer.getSpecialization());
+        return trainerEntity;
+    }
 }
