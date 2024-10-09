@@ -236,4 +236,26 @@ public class TraineeService {
         return trainee.get();
     }
 
+    /**
+     * Activates/Deactivates trainee. Not Idempotent action.
+     *
+     * @param username username of the trainee
+     * @param isActive activate if true, deactivate if false.
+     */
+    @Transactional
+    public String changeActiveStatus(String username, boolean isActive) {
+        TraineeEntity trainee = getTraineeByUsername(username);
+
+        if (trainee.getUser().isActive() == isActive) {
+            log.debug("Trainee : {} isActive status is already: {}", username, isActive);
+            return "Trainee isActive status is already " + isActive;
+        }
+
+        log.debug("Setting trainee: {} isActive status to {}", username, isActive);
+        trainee.getUser().setActive(isActive);
+        traineeRepository.save(trainee);
+
+        return "Successfully set trainee active status to " + isActive;
+    }
+
 }

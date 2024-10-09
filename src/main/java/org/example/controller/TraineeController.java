@@ -8,6 +8,7 @@ import org.example.dto.TraineeProfileResponseDto;
 import org.example.dto.TraineeResponseDto;
 import org.example.dto.TraineeUpdateRequestDto;
 import org.example.dto.TraineeUpdateResponseDto;
+import org.example.dto.UserChangeActiveStatusRequestDto;
 import org.example.entity.TraineeEntity;
 import org.example.mapper.TraineeMapper;
 import org.example.mapper.TraineeProfileMapper;
@@ -126,6 +127,21 @@ public class TraineeController {
         TraineeUpdateResponseDto traineeResponse = traineeProfileMapper
                         .entityToUpdatedDto(updatedTrainee);
         return new ResponseEntity<>(traineeResponse, HttpStatus.OK);
+    }
+
+    /**
+     * PATCH request to activate/deactivate a trainee.
+     *
+     * @param activeStatusRequestDto {@code UserChangeActiveStatusRequestDto}: username(required)
+     *                                                                         isActive(required)
+     */
+    @PatchMapping("active-status")
+    public ResponseEntity<String> changeActiveStatus(@Valid @RequestBody UserChangeActiveStatusRequestDto activeStatusRequestDto) {
+        log.debug("Request to change the active status of trainee with username: {} to {}",
+                activeStatusRequestDto.getUsername(), activeStatusRequestDto.getIsActive());
+        String response = traineeService.changeActiveStatus(activeStatusRequestDto.getUsername(),
+                activeStatusRequestDto.getIsActive());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 
