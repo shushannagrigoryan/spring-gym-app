@@ -2,9 +2,7 @@ package org.example.services;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.TrainingCreateDto;
-import org.example.entity.TraineeEntity;
-import org.example.entity.TrainerEntity;
+import org.example.dto.TrainingCreateRequestDto;
 import org.example.entity.TrainingEntity;
 import org.example.repository.TrainingRepository;
 import org.springframework.stereotype.Service;
@@ -32,26 +30,25 @@ public class TrainingService {
 
     /**
      * Creates training in service layer.
-     * If either trainee or trainer is not found throws an {@code GymIllegalIdException}
+     * If either trainee or trainer is not found throws an {@code GymEntityNotFoundException}
+     * Throws GymIllegalIdException if training type does not exist.
      *
-     * @param trainingCreateDto {@code TrainingCreateDto} to create the trainee
+     * @param trainingCreateDto {@code TrainingCreateRequestDto} to create the training
      */
     @Transactional
-    public void createTraining(TrainingCreateDto trainingCreateDto) {
+    public void createTraining(TrainingCreateRequestDto trainingCreateDto) {
         log.debug("Creating training : {}", trainingCreateDto);
-        TraineeEntity trainee = traineeService.getTraineeByUsername(trainingCreateDto.getTraineeUsername());
-        TrainerEntity trainer = trainerService.getTrainerByUsername(trainingCreateDto.getTrainerUsername());
+
         TrainingEntity training = new TrainingEntity();
         training.setTrainingName(trainingCreateDto.getTrainingName());
         training.setTrainingDate(trainingCreateDto.getTrainingDate());
         training.setTrainingDuration(trainingCreateDto.getTrainingDuration());
-        training.setTrainee(trainee);
-        training.setTrainer(trainer);
         training.setTrainingType(trainingTypeService.getTrainingTypeById(trainingCreateDto.getTrainingType()));
+        training.setTrainee(traineeService.getTraineeByUsername(trainingCreateDto.getTraineeUsername()));
+        training.setTrainer(trainerService.getTrainerByUsername(trainingCreateDto.getTrainerUsername()));
 
-        //trainingRepository.createTraining(trainingEntity);
-        trainingRepository.save(training);
-        //log.debug("Successfully created new training with id: {}", training.getId());
+        TrainingEntity createdTraining = trainingRepository.save(training);
+        log.debug("Successfully created new training with id: {}", createdTraining.getId());
     }
 
     //    /**
