@@ -115,7 +115,7 @@ public class TraineeController {
      *                dateOfBirth(optional)
      *                address(optional)
      *                isActive(required)
-     * @return {@code TraineeProfileResponseDto}
+     * @return {@code TraineeUpdateResponseDto}
      */
     @PutMapping("/update-trainee")
     public ResponseEntity<TraineeUpdateResponseDto> updateTrainee(

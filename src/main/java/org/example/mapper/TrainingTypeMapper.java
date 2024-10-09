@@ -41,7 +41,7 @@ public class TrainingTypeMapper {
      * Maps a {@code TrainingType} to a {@code TrainingTypeResponseDto}.
      */
     public TrainingTypeResponseDto entityToResponseDto(TrainingTypeEntity trainingType) {
-        log.info("Mapping TrainerType {} to TrainingTypeResponseDto", trainingType);
+        log.info("Mapping TrainingType {} to TrainingTypeResponseDto", trainingType);
         if (trainingType == null) {
             return null;
         }

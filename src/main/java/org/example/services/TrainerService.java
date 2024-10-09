@@ -1,11 +1,14 @@
 package org.example.services;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainerEntity;
+import org.example.entity.TrainingEntity;
 import org.example.entity.TrainingTypeEntity;
 import org.example.exceptions.GymEntityNotFoundException;
+import org.example.exceptions.GymIllegalArgumentException;
 import org.example.password.PasswordGeneration;
 import org.example.repository.TrainerRepository;
 import org.example.username.UsernameGenerator;
@@ -94,6 +97,8 @@ public class TrainerService {
     //        return trainer;
     //    }
     //
+
+
     //    /**
     //     * Changes the password of the trainer by username. Before changing authentication is performed.
     //     *
@@ -106,44 +111,46 @@ public class TrainerService {
     //                passwordGeneration.generatePassword());
     //    }
     //
-    //    /**
-    //     * Updates trainer by id.
-    //     *
-    //     * @param id            id of the trainer
-    //     * @param trainerEntity {@code TrainerEntity} to update with
-    //     */
-    //    @Transactional
-    //    public void updateTrainerById(Long id, TrainerEntity trainerEntity) {
-    //        log.debug("Updating trainer by id: {}", id);
-    //        TrainerEntity trainer = trainerRepository.getTrainerById(id);
-    //
-    //        if (trainer == null) {
-    //            throw new GymIllegalIdException(String.format("No trainer with id: %d", id));
-    //        }
-    //
-    //        String updatedFirstName = trainerEntity.getUser().getFirstName();
-    //        String updatedLastName = trainerEntity.getUser().getLastName();
-    //        String firstName = trainer.getUser().getFirstName();
-    //        String lastName = trainer.getUser().getLastName();
-    //
-    //        if (!((firstName.equals(updatedFirstName)) && (lastName.equals(updatedLastName)))) {
-    //            String username = usernameGenerator
-    //                    .generateUsername(updatedFirstName, updatedLastName);
-    //            trainer.getUser().setUsername(username);
-    //            trainer.getUser().setFirstName(updatedFirstName);
-    //            trainer.getUser().setLastName(updatedLastName);
-    //        }
-    //
-    //        long trainingId = trainerEntity.getSpecializationId();
-    //        TrainingTypeEntity specialization = trainingTypeService.getTrainingTypeById(trainingId);
-    //        if (specialization == null) {
-    //            throw new GymIllegalIdException(String.format("Illegal id for training: %d", trainingId));
-    //        }
-    //        trainer.setSpecialization(specialization);
-    //        trainerRepository.updateTrainerById(id, trainer);
-    //        log.debug("Successfully updated trainer with id: {}", id);
-    //    }
-    //
+
+
+
+    /**
+     * Updates trainer.
+     *
+     * @param trainerToUpdate trainer data to update
+     * @return {@code TrainerEntity} updated trainer
+     */
+    @Transactional
+    public TrainerEntity updateTrainer(TrainerEntity trainerToUpdate) {
+        String username = trainerToUpdate.getUser().getUsername();
+        log.debug("Updating trainer with username: {}", trainerToUpdate.getUser().getUsername());
+
+        Optional<TrainerEntity> trainer = trainerRepository.findByUser_Username(username);
+
+        if (trainer.isEmpty()) {
+            log.debug("No trainer with username: {}", username);
+            throw new GymIllegalArgumentException(String.format("No trainer with username: %s", username));
+        }
+        TrainerEntity trainerEntity = trainer.get();
+        trainerEntity.getUser().setFirstName(trainerToUpdate.getUser().getFirstName());
+        trainerEntity.getUser().setLastName(trainerToUpdate.getUser().getLastName());
+
+        TrainerEntity updatedTrainer = trainerRepository.save(trainerEntity);
+
+        List<TrainingEntity> trainings = updatedTrainer.getTrainings();
+        log.debug("Lazily initialized trainer trainings {}", trainings);
+
+        TrainingTypeEntity specialization = updatedTrainer.getSpecialization();
+        log.debug("Lazily initialized trainer specialization {}", specialization);
+
+
+        log.debug("Successfully updated trainer with username: {}", username);
+        return updatedTrainer;
+    }
+
+
+
+
     //    /**
     //     * Activates Trainer.
     //     *

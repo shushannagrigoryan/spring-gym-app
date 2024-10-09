@@ -3,6 +3,7 @@ package org.example.mapper;
 import java.util.List;
 import org.example.dto.TrainerProfileResponseDto;
 import org.example.dto.TrainerProfileTraineeResponseDto;
+import org.example.dto.TrainerUpdateResponseDto;
 import org.example.dto.TrainingTypeResponseDto;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
@@ -42,5 +43,26 @@ public class TrainerProfileMapper {
 
         trainerProfile.setTrainees(trainees);
         return trainerProfile;
+    }
+
+    /** Mapping trainer entity to trainer update response dto. */
+    public TrainerUpdateResponseDto entityToUpdatedDto(TrainerEntity updatedTrainer) {
+        if (updatedTrainer == null) {
+            return null;
+        }
+
+        List<TrainerProfileTraineeResponseDto> trainees = updatedTrainer.getTrainings()
+                .stream()
+                .map(x -> traineeMapper.entityToTrainerTraineeResponseDto(x.getTrainee()))
+                .toList();
+
+        return new TrainerUpdateResponseDto(
+                updatedTrainer.getUser().getUsername(),
+                updatedTrainer.getUser().getFirstName(),
+                updatedTrainer.getUser().getLastName(),
+                trainingTypeMapper.entityToResponseDto(updatedTrainer.getSpecialization()),
+                updatedTrainer.getUser().isActive(),
+                trainees
+        );
     }
 }
