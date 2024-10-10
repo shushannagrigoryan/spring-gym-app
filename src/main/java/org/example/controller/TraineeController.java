@@ -1,8 +1,6 @@
 package org.example.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -11,11 +9,10 @@ import org.example.dto.TraineeProfileResponseDto;
 import org.example.dto.TraineeResponseDto;
 import org.example.dto.TraineeUpdateRequestDto;
 import org.example.dto.TraineeUpdateResponseDto;
+import org.example.dto.TraineeUpdateTrainersRequestDto;
 import org.example.dto.TrainerProfileDto;
 import org.example.dto.UserChangeActiveStatusRequestDto;
 import org.example.entity.TraineeEntity;
-import org.example.entity.TrainerEntity;
-import org.example.exceptions.GymIllegalArgumentException;
 import org.example.mapper.TraineeMapper;
 import org.example.mapper.TraineeProfileMapper;
 import org.example.mapper.TrainerMapper;
@@ -105,7 +102,7 @@ public class TraineeController {
         TraineeEntity traineeEntity = traineeMapper.updateDtoToEntity(trainee);
         TraineeEntity updatedTrainee = traineeService.updateTrainee(traineeEntity);
         TraineeUpdateResponseDto traineeResponse = traineeProfileMapper
-                        .entityToUpdatedDto(updatedTrainee);
+                .entityToUpdatedDto(updatedTrainee);
         return new ResponseEntity<>(traineeResponse, HttpStatus.OK);
     }
 
@@ -113,11 +110,11 @@ public class TraineeController {
      * PATCH request to activate/deactivate a trainee.
      *
      * @param activeStatusRequestDto {@code UserChangeActiveStatusRequestDto}: username(required)
-     *                                                                         isActive(required)
+     *                               isActive(required)
      */
     @PatchMapping("active-status")
     public ResponseEntity<String> changeActiveStatus(@Valid @RequestBody UserChangeActiveStatusRequestDto
-                                                                 activeStatusRequestDto) {
+                                                             activeStatusRequestDto) {
         log.debug("Request to change the active status of trainee with username: {} to {}",
                 activeStatusRequestDto.getUsername(), activeStatusRequestDto.getIsActive());
         String response = traineeService.changeActiveStatus(activeStatusRequestDto.getUsername(),
@@ -140,21 +137,20 @@ public class TraineeController {
     /**
      * PUT request to updates trainee's trainer list.
      *
-     * @param username username of the trainee
-     * @param trainers list of trainers
+     * @param updateTrainersDto {@code TraineeUpdateTrainersRequestDto}:username of the trainee
+     *                          list of trainers
      * @return {@code Set<TrainerProfileDto>} updated trainers set
      */
-    @PutMapping("/update-trainer-list/{username}")
-    public ResponseEntity<Set<TrainerProfileDto>> updateTraineesTrainerList(@PathVariable("username") String username,
-                                           @RequestBody(required = false) List<String> trainers) {
-        log.debug("Request to update trainee's: {} trainer list with: {}.", username, trainers);
-        if (trainers == null) {
-            throw new GymIllegalArgumentException("The list of trainers cannot be null.");
-        }
+    @PutMapping("/update-trainer-list")
+    public ResponseEntity<Set<TrainerProfileDto>> updateTraineesTrainerList(
+            @Valid @RequestBody TraineeUpdateTrainersRequestDto updateTrainersDto) {
+        log.debug("Request to update trainee's: {} trainer list with: {}.",
+                updateTrainersDto.getUsername(), updateTrainersDto.getTrainers());
 
-        return new ResponseEntity<>(traineeService.updateTraineesTrainerList(username, trainers)
+        return new ResponseEntity<>(traineeService.updateTraineesTrainerList(updateTrainersDto.getUsername(),
+                        updateTrainersDto.getTrainers())
                 .stream().map(trainerMapper::entityToProfileDto)
-                        .collect(Collectors.toSet()),
+                .collect(Collectors.toSet()),
                 HttpStatus.OK);
     }
 
