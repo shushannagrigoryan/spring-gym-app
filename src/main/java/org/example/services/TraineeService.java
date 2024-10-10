@@ -231,4 +231,17 @@ public class TraineeService {
         return trainerEntities;
     }
 
+    //    @Transactional
+    //    public Set<TraineeEntity> notAssignedOnTraineeActiveTrainers(String traineeUsername) {
+    //        TraineeEntity trainee = getTraineeByUsername(traineeUsername);
+    //        trainerService.notAssignedOnTraineeActiveTrainers(trainee);
+    //
+    //        return null;
+    //    }
+
+
+
+
+
+
 }

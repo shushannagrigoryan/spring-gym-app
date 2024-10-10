@@ -15,6 +15,7 @@ public interface TraineeRepository extends CrudRepository<TraineeEntity, Long> {
 
 
 
+
     //    /**
     //     * Adding trainee to database.
     //     *

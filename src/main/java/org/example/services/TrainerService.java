@@ -3,7 +3,9 @@ package org.example.services;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
+import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.entity.TrainingTypeEntity;
@@ -12,6 +14,7 @@ import org.example.exceptions.GymIllegalArgumentException;
 import org.example.password.PasswordGeneration;
 import org.example.repository.TrainerRepository;
 import org.example.username.UsernameGenerator;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +25,8 @@ public class TrainerService {
     private final PasswordGeneration passwordGeneration;
     private final TrainingTypeService trainingTypeService;
     private final UserService userService;
+    private TraineeService traineeService;
+
 
     /**
      * Injecting dependencies using constructor.
@@ -30,12 +35,14 @@ public class TrainerService {
                           UsernameGenerator usernameGenerator,
                           PasswordGeneration passwordGeneration,
                           TrainingTypeService trainingTypeService,
-                          UserService userService) {
+                          UserService userService,
+                          @Lazy TraineeService traineeService) {
         this.trainerRepository = trainerRepository;
         this.usernameGenerator = usernameGenerator;
         this.passwordGeneration = passwordGeneration;
         this.trainingTypeService = trainingTypeService;
         this.userService = userService;
+        this.traineeService = traineeService;
     }
 
     /**
@@ -191,5 +198,24 @@ public class TrainerService {
         trainerRepository.save(trainer);
 
         return "Successfully set trainer active status to " + isActive;
+    }
+
+    /**
+     * Returns active trainers which are not assigned to trainee with the given username.
+     *
+     * @param traineeUsername username of the trainee
+     * @return {@code Set<TrainerEntity>}
+     */
+    @Transactional
+    public Set<TrainerEntity> notAssignedOnTraineeActiveTrainers(String traineeUsername) {
+        TraineeEntity trainee = traineeService.getTraineeByUsername(traineeUsername);
+        Set<TrainerEntity> trainers = trainerRepository.getTrainerEntityByTraineesNotContainingAndUser_isActive(
+                trainee, true);
+        for (TrainerEntity t : trainers) {
+            TrainingTypeEntity specialization = t.getSpecialization();
+            log.debug("Lazily initialized trainer's: {} specialization: {}", t.getUser().getUsername(), specialization);
+        }
+
+        return trainers;
     }
 }
