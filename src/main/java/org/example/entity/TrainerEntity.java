@@ -6,12 +6,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import java.util.List;
+import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,6 +38,9 @@ public class TrainerEntity {
 
     @OneToMany(mappedBy = "trainer", fetch = FetchType.LAZY)
     private List<TrainingEntity> trainings;
+
+    @ManyToMany(mappedBy = "trainers", fetch = FetchType.LAZY)
+    private Set<TraineeEntity> trainees;
 
     @Transient
     private Long specializationId;

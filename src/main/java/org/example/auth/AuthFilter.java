@@ -13,6 +13,8 @@ import jakarta.servlet.annotation.WebInitParam;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.example.exceptionhandlers.ExceptionResponse;
 import org.example.exceptions.GymAuthenticationException;
@@ -27,12 +29,17 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
         initParams = {@WebInitParam(name = "excludedUrls", value = "/trainees/register,/trainers/register")})
 public class AuthFilter implements Filter {
     private UserAuth userAuth;
+    private List<String> excludedUrls;
+
 
     @Override
     public void init(FilterConfig filterConfig) {
         ApplicationContext ctx = WebApplicationContextUtils
                 .getRequiredWebApplicationContext(filterConfig.getServletContext());
         this.userAuth = ctx.getBean(UserAuth.class);
+
+        String excludedUrlsParam = filterConfig.getInitParameter("excludedUrls");
+        excludedUrls = Arrays.asList(excludedUrlsParam.split(","));
     }
 
     @Override
@@ -42,6 +49,12 @@ public class AuthFilter implements Filter {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+        boolean isExcluded = excludedUrls.stream().anyMatch(httpRequest.getRequestURI()::endsWith);
+        if (isExcluded) {
+            chain.doFilter(request, response);
+        }
+
 
         String username = httpRequest.getHeader("username");
         String password = httpRequest.getHeader("password");

@@ -30,6 +30,7 @@ public class WebConfig implements WebMvcConfigurer {
         dataSource.setUrl("jdbc:postgresql://localhost:5432/gymdb");
         dataSource.setUsername("postgres");
         dataSource.setPassword("postgres");
+
         return dataSource;
     }
 
@@ -45,7 +46,9 @@ public class WebConfig implements WebMvcConfigurer {
 
         em.setJpaPropertyMap(Map.of(
                 "hibernate.hbm2ddl.auto", "update",
-                "hibernate.show_sql", "true"
+                "hibernate.show_sql", "true",
+                "hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect"
+
         ));
         return em;
     }
