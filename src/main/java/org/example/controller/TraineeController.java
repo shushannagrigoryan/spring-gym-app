@@ -1,16 +1,24 @@
 package org.example.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TraineeCreateDto;
 import org.example.dto.TraineeProfileResponseDto;
 import org.example.dto.TraineeResponseDto;
 import org.example.dto.TraineeUpdateRequestDto;
 import org.example.dto.TraineeUpdateResponseDto;
+import org.example.dto.TrainerProfileDto;
 import org.example.dto.UserChangeActiveStatusRequestDto;
 import org.example.entity.TraineeEntity;
+import org.example.entity.TrainerEntity;
+import org.example.exceptions.GymIllegalArgumentException;
 import org.example.mapper.TraineeMapper;
 import org.example.mapper.TraineeProfileMapper;
+import org.example.mapper.TrainerMapper;
 import org.example.services.TraineeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TraineeController {
     private final TraineeService traineeService;
     private final TraineeMapper traineeMapper;
+    private final TrainerMapper trainerMapper;
     private final TraineeProfileMapper traineeProfileMapper;
 
     /**
@@ -37,10 +46,12 @@ public class TraineeController {
      */
     public TraineeController(TraineeService traineeService,
                              TraineeMapper traineeMapper,
-                             TraineeProfileMapper traineeProfileMapper) {
+                             TraineeProfileMapper traineeProfileMapper,
+                             TrainerMapper trainerMapper) {
         this.traineeService = traineeService;
         this.traineeMapper = traineeMapper;
         this.traineeProfileMapper = traineeProfileMapper;
+        this.trainerMapper = trainerMapper;
     }
 
     /**
@@ -124,6 +135,27 @@ public class TraineeController {
         log.debug("Request to delete trainee with username: {}", username);
         traineeService.deleteTraineeByUsername(username);
         return new ResponseEntity<>("Successfully deleted trainee", HttpStatus.OK);
+    }
+
+    /**
+     * PUT request to updates trainee's trainer list.
+     *
+     * @param username username of the trainee
+     * @param trainers list of trainers
+     * @return {@code Set<TrainerProfileDto>} updated trainers set
+     */
+    @PutMapping("/update-trainer-list/{username}")
+    public ResponseEntity<Set<TrainerProfileDto>> updateTraineesTrainerList(@PathVariable("username") String username,
+                                           @RequestBody(required = false) List<String> trainers) {
+        log.debug("Request to update trainee's: {} trainer list with: {}.", username, trainers);
+        if (trainers == null) {
+            throw new GymIllegalArgumentException("The list of trainers cannot be null.");
+        }
+
+        return new ResponseEntity<>(traineeService.updateTraineesTrainerList(username, trainers)
+                .stream().map(trainerMapper::entityToProfileDto)
+                        .collect(Collectors.toSet()),
+                HttpStatus.OK);
     }
 
 

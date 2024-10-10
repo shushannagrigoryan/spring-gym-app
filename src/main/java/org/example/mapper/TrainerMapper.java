@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TraineeProfileTrainerResponseDto;
 import org.example.dto.TrainerCreateDto;
 import org.example.dto.TrainerDto;
+import org.example.dto.TrainerProfileDto;
 import org.example.dto.TrainerResponseDto;
 import org.example.dto.TrainerUpdateRequestDto;
 import org.example.dto.TrainingTypeResponseDto;
@@ -115,5 +116,20 @@ public class TrainerMapper {
 
         trainerEntity.setSpecializationId(trainer.getSpecialization());
         return trainerEntity;
+    }
+
+    /** Mapping trainer entity to trainer profile dto(username, firstName, lastName, specialization). */
+    public TrainerProfileDto entityToProfileDto(TrainerEntity trainerEntity) {
+        if (trainerEntity == null) {
+            return null;
+        }
+
+        return new TrainerProfileDto(
+                trainerEntity.getUser().getUsername(),
+                trainerEntity.getUser().getFirstName(),
+                trainerEntity.getUser().getLastName(),
+                new TrainingTypeResponseDto(trainerEntity.getSpecialization().getId(),
+                        trainerEntity.getSpecialization().getTrainingTypeName()));
+
     }
 }

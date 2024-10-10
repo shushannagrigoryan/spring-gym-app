@@ -12,8 +12,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrainerProfileDto {
+    private String username;
     private String firstName;
     private String lastName;
-    private String username;
-    private Long specialization;
+    private TrainingTypeResponseDto specialization;
 }

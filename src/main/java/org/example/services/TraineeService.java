@@ -1,11 +1,15 @@
 package org.example.services;
 
 import jakarta.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TraineeEntity;
+import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
+import org.example.entity.TrainingTypeEntity;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalArgumentException;
@@ -22,6 +26,7 @@ public class TraineeService {
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
     private final UserService userService;
+    private final TrainerService trainerService;
 
     /**
      * Injecting dependencies using constructor.
@@ -29,11 +34,13 @@ public class TraineeService {
     public TraineeService(TraineeRepository traineeRepository,
                           UsernameGenerator usernameGenerator,
                           PasswordGeneration passwordGeneration,
-                          UserService userService) {
+                          UserService userService,
+                          TrainerService trainerService) {
         this.traineeRepository = traineeRepository;
         this.usernameGenerator = usernameGenerator;
         this.passwordGeneration = passwordGeneration;
         this.userService = userService;
+        this.trainerService = trainerService;
     }
 
     /**
@@ -201,6 +208,27 @@ public class TraineeService {
         traineeRepository.save(trainee);
 
         return "Successfully set trainee active status to " + isActive;
+    }
+
+    /**
+     * Updates trainee trainer list.
+     *
+     * @param username of the trainee.
+     * @param trainers List of trainers usernames
+     */
+    @Transactional
+    public Set<TrainerEntity> updateTraineesTrainerList(String username, List<String> trainers) {
+        TraineeEntity trainee = getTraineeByUsername(username);
+        Set<TrainerEntity> trainerEntities = new HashSet<>();
+        trainers.forEach(t -> {
+            TrainerEntity trainerEntity = trainerService.getTrainerByUsername(t);
+            TrainingTypeEntity trainingType = trainerEntity.getSpecialization();
+            log.debug("Lazily initialized trainer's specialization {}.", trainingType);
+            trainerEntities.add(trainerEntity);
+        });
+        trainee.setTrainers(trainerEntities);
+        traineeRepository.save(trainee);
+        return trainerEntities;
     }
 
 }
