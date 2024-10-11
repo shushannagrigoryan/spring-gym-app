@@ -25,7 +25,7 @@ public class TrainerService {
     private final PasswordGeneration passwordGeneration;
     private final TrainingTypeService trainingTypeService;
     private final UserService userService;
-    private TraineeService traineeService;
+    private final TraineeService traineeService;
 
 
     /**
@@ -85,25 +85,25 @@ public class TrainerService {
         log.debug("Successfully retrieved trainer by username: {}", username);
         return trainer.get();
     }
-    //
-    //    /**
-    //     * Gets trainer by id.
-    //     * If there is no trainer with the given id throws an {@code GymIllegalIdException}
-    //     *
-    //     * @param id of the trainer
-    //     * @return the TrainerDao
-    //     */
-    //    @Transactional
-    //    public TrainerEntity getTrainerById(Long id) {
-    //        log.debug("Retrieving trainer by id: {}", id);
-    //        TrainerEntity trainer = trainerRepository.getTrainerById(id);
-    //        if (trainer == null) {
-    //            throw new GymIllegalIdException(String.format("No trainer with id: %d", id));
-    //        }
-    //        log.debug("Successfully retrieved trainer with id: {}", id);
-    //        return trainer;
-    //    }
-    //
+
+    /**
+     * Gets trainer by id.
+     * If there is no trainer with the given id throws an {@code GymIllegalIdException}
+     *
+     * @param id of the trainer
+     * @return the TrainerDao
+     */
+    @Transactional
+    public TrainerEntity getTrainerById(Long id) {
+        log.debug("Retrieving trainer by id: {}", id);
+        Optional<TrainerEntity> trainer = trainerRepository.findById(id);
+        if (trainer.isEmpty()) {
+            throw new GymEntityNotFoundException(String.format("No trainer with id: %d", id));
+        }
+        log.debug("Successfully retrieved trainer with id: {}", id);
+        return trainer.get();
+    }
+
 
     /**
      * Updates trainer.
@@ -138,19 +138,6 @@ public class TrainerService {
         log.debug("Successfully updated trainer with username: {}", username);
         return updatedTrainer;
     }
-
-    //    /**
-    //     * Returns trainers not assigned to trainee by trainee username.
-    //     * Throws GymIllegalUsernameException if the username is not valid.
-    //     *
-    //     * @param traineeUsername of the trainee.
-    //     * @return {@code List<TrainerEntity>}
-    //     */
-    //
-    //    @Transactional
-    //    public List<TrainerEntity> getTrainersNotAssignedToTrainee(String traineeUsername) {
-    //        return trainerRepository.getTrainersNotAssignedToTrainee(traineeUsername);
-    //    }
 
     /**
      * Returns trainer profile.

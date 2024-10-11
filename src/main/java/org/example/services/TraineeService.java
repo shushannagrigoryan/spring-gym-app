@@ -84,25 +84,25 @@ public class TraineeService {
         log.debug("Successfully retrieved trainee by username: {}", username);
         return trainee.get();
     }
-    //
-    //    /**
-    //     * Gets the trainee by id in the service layer.
-    //     * If no trainee was found throws an {@code GymIllegalIdException}
-    //     *
-    //     * @param id id of the trainee to get
-    //     * @return the {@code TraineeEntity}
-    //     */
-    //    @Transactional
-    //    public TraineeEntity getTraineeById(Long id) {
-    //        log.debug("Retrieving trainee by id: {}", id);
-    //        TraineeEntity trainee = traineeRepository.getTraineeById(id);
-    //        if (trainee == null) {
-    //            throw new GymIllegalIdException(String.format("No trainee with id: %d", id));
-    //        }
-    //        log.debug("Successfully retrieved trainee by id: {}", id);
-    //        return trainee;
-    //    }
-    //
+
+    /**
+     * Gets the trainee by id in the service layer.
+     * If no trainee was found throws an {@code GymIllegalIdException}
+     *
+     * @param id id of the trainee to get
+     * @return the {@code TraineeEntity}
+     */
+    @Transactional
+    public TraineeEntity getTraineeById(Long id) {
+        log.debug("Retrieving trainee by id: {}", id);
+        Optional<TraineeEntity> trainee = traineeRepository.findById(id);
+        if (trainee.isEmpty()) {
+            throw new GymEntityNotFoundException(String.format("No trainee with id: %d", id));
+        }
+        log.debug("Successfully retrieved trainee by id: {}", id);
+        return trainee.get();
+    }
+
 
 
     /**
@@ -154,11 +154,14 @@ public class TraineeService {
     @Transactional
     public void deleteTraineeByUsername(String username) {
         log.debug("Deleting trainee with username: {}", username);
-        TraineeEntity trainee = getTraineeByUsername(username);
-        UserEntity user = trainee.getUser();
+        Optional<TraineeEntity> trainee = traineeRepository.findByUser_Username(username);
+        if (trainee.isEmpty()) {
+            throw new GymEntityNotFoundException(String.format("Trainee with username: %s does not exist.", username));
+        }
+        UserEntity user = trainee.get().getUser();
 
         log.debug("Deleting trainee with username: {}", username);
-        traineeRepository.deleteById(trainee.getId());
+        traineeRepository.deleteById(trainee.get().getId());
 
         log.debug("Deleting the corresponding user entity: {}", user);
         userService.deleteUser(user);
@@ -230,18 +233,4 @@ public class TraineeService {
         traineeRepository.save(trainee);
         return trainerEntities;
     }
-
-    //    @Transactional
-    //    public Set<TraineeEntity> notAssignedOnTraineeActiveTrainers(String traineeUsername) {
-    //        TraineeEntity trainee = getTraineeByUsername(traineeUsername);
-    //        trainerService.notAssignedOnTraineeActiveTrainers(trainee);
-    //
-    //        return null;
-    //    }
-
-
-
-
-
-
 }
