@@ -1,9 +1,12 @@
 package org.example.services;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.TraineeTrainingsFilterRequestDto;
 import org.example.dto.TrainingCreateRequestDto;
 import org.example.entity.TrainingEntity;
+import org.example.repository.TrainingCriteriaRepository;
 import org.example.repository.TrainingRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class TrainingService {
     private final TrainingRepository trainingRepository;
+    private final TrainingCriteriaRepository trainingCriteriaRepository;
     private final TrainingTypeService trainingTypeService;
     private final TrainerService trainerService;
     private final TraineeService traineeService;
@@ -21,11 +25,13 @@ public class TrainingService {
     public TrainingService(TrainingRepository trainingRepository,
                            TrainingTypeService trainingTypeService,
                            TrainerService trainerService,
-                           TraineeService traineeService) {
+                           TraineeService traineeService,
+                           TrainingCriteriaRepository trainingCriteriaRepository) {
         this.trainingRepository = trainingRepository;
         this.trainingTypeService = trainingTypeService;
         this.trainerService = trainerService;
         this.traineeService = traineeService;
+        this.trainingCriteriaRepository = trainingCriteriaRepository;
     }
 
     /**
@@ -130,4 +136,19 @@ public class TrainingService {
     //        return trainingRepository.getTraineeTrainingsByFilter(traineeUsername, fromDate,
     //                toDate, trainingTypeId, trainerUsername);
     //    }
+
+    /**
+     * Returns trainee trainings by the given criteria.
+     *
+     * @param traineeTrainings {@code TraineeTrainingsFilterRequestDto}
+     * @return {@code List<TrainingEntity>}
+     */
+    @Transactional
+    public List<TrainingEntity> getTraineeTrainingsByFilter(TraineeTrainingsFilterRequestDto traineeTrainings) {
+        return trainingCriteriaRepository
+                .getTraineeTrainingsByFilter(traineeTrainings.getTraineeUsername(),
+                traineeTrainings.getFromDate(),
+                traineeTrainings.getToDate(), traineeTrainings.getTrainingType(),
+                traineeTrainings.getTrainerUsername());
+    }
 }

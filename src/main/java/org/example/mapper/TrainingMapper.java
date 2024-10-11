@@ -1,6 +1,7 @@
 package org.example.mapper;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.TraineeCriteriaTrainingsResponseDto;
 import org.example.dto.TrainingDto;
 import org.example.entity.TrainingEntity;
 import org.springframework.stereotype.Component;
@@ -8,6 +9,12 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class TrainingMapper {
+    private final TrainingTypeMapper trainingTypeMapper;
+
+    /** Setting dependencies. */
+    public TrainingMapper(TrainingTypeMapper trainingTypeMapper) {
+        this.trainingTypeMapper = trainingTypeMapper;
+    }
 
     /**
      * Maps a {@code TrainingEntity} to a {@code TrainingDto}.
@@ -43,5 +50,16 @@ public class TrainingMapper {
         trainingEntity.setTrainingDuration(trainingDto.getTrainingDuration());
 
         return trainingEntity;
+    }
+
+    /** Mapping training entity to training criteria dto. */
+    public TraineeCriteriaTrainingsResponseDto entityToCriteriaDto(TrainingEntity training) {
+        if (training == null) {
+            return null;
+        }
+
+        return new TraineeCriteriaTrainingsResponseDto(training.getTrainingName(), training.getTrainingDate(),
+                        trainingTypeMapper.entityToResponseDto(training.getTrainingType()),
+                        training.getTrainingDuration(), training.getTrainer().getUser().getUsername());
     }
 }
