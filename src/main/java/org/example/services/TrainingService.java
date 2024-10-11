@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TraineeTrainingsFilterRequestDto;
+import org.example.dto.TrainerTrainingsFilterRequestDto;
 import org.example.dto.TrainingCreateRequestDto;
 import org.example.entity.TrainingEntity;
 import org.example.repository.TrainingCriteriaRepository;
@@ -150,5 +151,19 @@ public class TrainingService {
                 traineeTrainings.getFromDate(),
                 traineeTrainings.getToDate(), traineeTrainings.getTrainingType(),
                 traineeTrainings.getTrainerUsername());
+    }
+
+    /**
+     * Returns trainer trainings by the given criteria.
+     *
+     * @param trainerTrainings {@code TrainerTrainingsFilterRequestDto}
+     * @return {@code List<TrainingEntity>}
+     */
+    @Transactional
+    public List<TrainingEntity> getTrainerTrainingsByFilter(TrainerTrainingsFilterRequestDto trainerTrainings) {
+        return trainingCriteriaRepository.getTrainerTrainingsByFilter(trainerTrainings.getTrainerUsername(),
+                        trainerTrainings.getFromDate(),
+                        trainerTrainings.getToDate(),
+                        trainerTrainings.getTraineeUsername());
     }
 }

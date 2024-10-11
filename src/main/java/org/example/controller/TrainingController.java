@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TraineeCriteriaTrainingsResponseDto;
 import org.example.dto.TraineeTrainingsFilterRequestDto;
+import org.example.dto.TrainerCriteriaTrainingsResponseDto;
+import org.example.dto.TrainerTrainingsFilterRequestDto;
 import org.example.dto.TrainingCreateRequestDto;
 import org.example.entity.TrainingEntity;
 import org.example.mapper.TrainingMapper;
@@ -51,7 +53,7 @@ public class TrainingController {
      * @param trainingsDto {@code TraineeTrainingsFilterRequestDto} the given criteria
      * @return {@code List<TraineeCriteriaTrainingsResponseDto>}
      */
-    @GetMapping("/get-trainings")
+    @GetMapping("/trainee-trainings")
     public ResponseEntity<List<TraineeCriteriaTrainingsResponseDto>> getTraineeTrainingsFilter(
             @Valid @RequestBody TraineeTrainingsFilterRequestDto trainingsDto) {
         log.debug("Request for getting trainee's: {} trainings by filter"
@@ -60,7 +62,29 @@ public class TrainingController {
                 trainingsDto.getTrainerUsername(), trainingsDto.getTrainingType());
 
         List<TrainingEntity> trainings = trainingService.getTraineeTrainingsByFilter(trainingsDto);
-        return new ResponseEntity<>(trainings.stream().map(trainingMapper::entityToCriteriaDto)
+        return new ResponseEntity<>(trainings.stream().map(trainingMapper::traineeTrainingsEntityToCriteriaDto)
+                .collect(Collectors.toList()),
+                HttpStatus.OK);
+
+
+    }
+
+    /**
+     * GET request to get trainer trainings by given criteria.
+     *
+     * @param trainingsDto {@code TrainerTrainingsFilterRequestDto} the given criteria
+     * @return {@code List<TrainerCriteriaTrainingsResponseDto>}
+     */
+    @GetMapping("/trainer-trainings")
+    public ResponseEntity<List<TrainerCriteriaTrainingsResponseDto>> getTraineeTrainingsFilter(
+            @Valid @RequestBody TrainerTrainingsFilterRequestDto trainingsDto) {
+        log.debug("Request for getting trainer's: {} trainings by filter"
+                        + "(dateFrom: {} , dateTo: {}, traineeName: {})",
+                trainingsDto.getTrainerUsername(), trainingsDto.getFromDate(), trainingsDto.getToDate(),
+                trainingsDto.getTraineeUsername());
+
+        List<TrainingEntity> trainings = trainingService.getTrainerTrainingsByFilter(trainingsDto);
+        return new ResponseEntity<>(trainings.stream().map(trainingMapper::trainerTrainingsEntityToCriteriaDto)
                 .collect(Collectors.toList()),
                 HttpStatus.OK);
 
