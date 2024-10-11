@@ -45,7 +45,6 @@ public class AuthFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        log.debug("Authenticating user.");
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
@@ -53,8 +52,10 @@ public class AuthFilter implements Filter {
         boolean isExcluded = excludedUrls.stream().anyMatch(httpRequest.getRequestURI()::endsWith);
         if (isExcluded) {
             chain.doFilter(request, response);
+            return;
         }
 
+        log.debug("Authenticating user.");
 
         String username = httpRequest.getHeader("username");
         String password = httpRequest.getHeader("password");

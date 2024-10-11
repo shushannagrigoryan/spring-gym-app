@@ -11,11 +11,9 @@ import jakarta.persistence.Table;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name = "training_types")
 public class TrainingTypeEntity {
