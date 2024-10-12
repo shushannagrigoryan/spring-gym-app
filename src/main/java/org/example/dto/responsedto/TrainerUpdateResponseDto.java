@@ -1,5 +1,6 @@
-package org.example.dto;
+package org.example.dto.responsedto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,8 +12,11 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class TrainerProfileTraineeResponseDto {
+public class TrainerUpdateResponseDto {
     private String username;
     private String firstName;
     private String lastName;
+    private TrainingTypeResponseDto specialization;
+    private Boolean isActive;
+    private List<TrainerProfileTraineeResponseDto> trainees;
 }

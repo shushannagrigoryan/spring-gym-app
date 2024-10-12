@@ -80,7 +80,7 @@ public class TrainerService {
         if (trainer.isEmpty()) {
             log.debug("No trainer with the username: {}", username);
             throw new GymEntityNotFoundException(
-            String.format("Trainer with username %s does not exist.", username));
+                    String.format("Trainer with username %s does not exist.", username));
         }
         log.debug("Successfully retrieved trainer by username: {}", username);
         return trainer.get();

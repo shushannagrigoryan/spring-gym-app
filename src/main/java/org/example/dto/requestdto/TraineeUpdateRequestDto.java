@@ -1,7 +1,7 @@
-package org.example.dto;
+package org.example.dto.requestdto;
 
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,13 +13,15 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class TraineeUpdateResponseDto {
+public class TraineeUpdateRequestDto {
+    @NotNull(message = "Username is required")
     private String username;
+    @NotNull(message = "First name is required")
     private String firstName;
+    @NotNull(message = "Last name is required")
     private String lastName;
     private LocalDate dateOfBirth;
     private String address;
-    private boolean isActive;
-    private List<TraineeProfileTrainerResponseDto> trainers;
-
+    @NotNull(message = "IsActive is required")
+    private Boolean isActive;
 }

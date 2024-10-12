@@ -1,4 +1,4 @@
-package org.example.dto;
+package org.example.dto.responsedto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,10 +13,10 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class TrainerCriteriaTrainingsResponseDto {
+public class TraineeCriteriaTrainingsResponseDto {
     private String trainingName;
     private LocalDate trainingDate;
-    private TrainingTypeResponseDto  trainingType;
+    private TrainingTypeResponseDto trainingType;
     private BigDecimal trainingDuration;
-    private String traineeName;
+    private String trainerName;
 }

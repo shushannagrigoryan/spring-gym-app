@@ -1,4 +1,4 @@
-package org.example.dto;
+package org.example.dto.requestdto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -12,9 +12,15 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserChangeActiveStatusRequestDto {
+public class TrainerUpdateRequestDto {
     @NotNull(message = "Username is required.")
     private String username;
+    @NotNull(message = "First Name is required.")
+    private String firstName;
+    @NotNull(message = "Last Name is required.")
+    private String lastName;
+    private Long specialization;
     @NotNull(message = "IsActive is required.")
     private Boolean isActive;
+
 }

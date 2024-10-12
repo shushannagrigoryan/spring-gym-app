@@ -2,7 +2,7 @@ package org.example.controller;
 
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.TrainingTypeResponseDto;
+import org.example.dto.responsedto.TrainingTypeResponseDto;
 import org.example.entity.TrainingTypeEntity;
 import org.example.mapper.TrainingTypeMapper;
 import org.example.services.TrainingTypeService;
@@ -19,7 +19,9 @@ public class TrainingTypeController {
     private final TrainingTypeService trainingTypeService;
     private final TrainingTypeMapper trainingTypeMapper;
 
-    /** Setting dependencies. */
+    /**
+     * Setting dependencies.
+     */
     public TrainingTypeController(TrainingTypeService trainingTypeService,
                                   TrainingTypeMapper trainingTypeMapper) {
         this.trainingTypeService = trainingTypeService;

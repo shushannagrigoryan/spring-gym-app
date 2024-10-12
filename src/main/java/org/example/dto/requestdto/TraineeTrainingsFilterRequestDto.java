@@ -1,4 +1,4 @@
-package org.example.dto;
+package org.example.dto.requestdto;
 
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -13,10 +13,12 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class TrainerTrainingsFilterRequestDto {
-    @NotNull(message = "Trainer Username is required.")
-    private String trainerUsername;
+public class TraineeTrainingsFilterRequestDto {
+    @NotNull(message = "Trainee Username is required.")
+    private String traineeUsername;
     private LocalDate fromDate;
     private LocalDate toDate;
-    private String traineeUsername;
+    private String trainerUsername;
+    private Long trainingType;
+
 }

@@ -1,4 +1,4 @@
-package org.example.dto;
+package org.example.dto.responsedto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,9 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class TrainerResponseDto {
+public class TraineeProfileTrainerResponseDto {
     private String username;
-    private String password;
+    private String firstName;
+    private String lastName;
+    private TrainingTypeResponseDto specialization;
 }

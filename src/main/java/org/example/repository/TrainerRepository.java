@@ -12,7 +12,7 @@ public interface TrainerRepository extends JpaRepository<TrainerEntity, Long> {
     Optional<TrainerEntity> findByUser_Username(String username);
 
     Set<TrainerEntity> getTrainerEntityByTraineesNotContainingAndUser_isActive(TraineeEntity traineeEntity,
-                                                                     boolean isActive);
+                                                                               boolean isActive);
 
 
 }

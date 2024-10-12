@@ -47,7 +47,7 @@ public class UserService {
      * @param username username of the user
      * @return {@code UserEntity} if user exists, else null.
      */
-
+    @Transactional
     public Optional<UserEntity> getUserByUsername(String username) {
         log.debug("Getting user with username: {}", username);
         Optional<UserEntity> user = userRepository.findByUsername(username);
@@ -75,7 +75,7 @@ public class UserService {
     /**
      * Changes password of the user.
      *
-     * @param username username of the user
+     * @param username    username of the user
      * @param newPassword new password of the user.
      */
     @Transactional

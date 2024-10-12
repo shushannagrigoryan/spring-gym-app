@@ -1,10 +1,10 @@
 package org.example.mapper;
 
 import java.util.List;
-import org.example.dto.TrainerProfileResponseDto;
-import org.example.dto.TrainerProfileTraineeResponseDto;
-import org.example.dto.TrainerUpdateResponseDto;
-import org.example.dto.TrainingTypeResponseDto;
+import org.example.dto.responsedto.TrainerProfileResponseDto;
+import org.example.dto.responsedto.TrainerProfileTraineeResponseDto;
+import org.example.dto.responsedto.TrainerUpdateResponseDto;
+import org.example.dto.responsedto.TrainingTypeResponseDto;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.springframework.stereotype.Component;
@@ -14,14 +14,18 @@ public class TrainerProfileMapper {
     private final TrainingTypeMapper trainingTypeMapper;
     private final TraineeMapper traineeMapper;
 
-    /** Setting dependencies. */
+    /**
+     * Setting dependencies.
+     */
     public TrainerProfileMapper(TrainingTypeMapper trainingTypeMapper,
                                 TraineeMapper traineeMapper) {
         this.trainingTypeMapper = trainingTypeMapper;
         this.traineeMapper = traineeMapper;
     }
 
-    /** maps trainer entity to trainer profile. */
+    /**
+     * maps trainer entity to trainer profile.
+     */
     public TrainerProfileResponseDto entityToProfileDto(TrainerEntity trainerEntity) {
         if (trainerEntity == null) {
             return null;
@@ -45,7 +49,9 @@ public class TrainerProfileMapper {
         return trainerProfile;
     }
 
-    /** Mapping trainer entity to trainer update response dto. */
+    /**
+     * Mapping trainer entity to trainer update response dto.
+     */
     public TrainerUpdateResponseDto entityToUpdatedDto(TrainerEntity updatedTrainer) {
         if (updatedTrainer == null) {
             return null;

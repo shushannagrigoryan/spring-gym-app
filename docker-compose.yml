@@ -1,16 +1,15 @@
 services:
   postgres:
-    container_name: postgres-container
-    image: postgres:latest
+    container_name: postgres-container-new
+    image: postgres:15.4
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: gymdb
     ports:
-      - "5432:5432"
+      - "5432:5432"  # Expose PostgreSQL port
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_new:/var/lib/postgresql/data  # Match this with the defined volume name
 
 volumes:
-  postgres_data:
-
+  postgres_data_new:  # Define the volume here with the same name

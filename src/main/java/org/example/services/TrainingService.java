@@ -4,9 +4,9 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.TraineeTrainingsFilterRequestDto;
-import org.example.dto.TrainerTrainingsFilterRequestDto;
-import org.example.dto.TrainingCreateRequestDto;
+import org.example.dto.requestdto.TraineeTrainingsFilterRequestDto;
+import org.example.dto.requestdto.TrainerTrainingsFilterRequestDto;
+import org.example.dto.requestdto.TrainingCreateRequestDto;
 import org.example.entity.TrainingEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.repository.TrainingCriteriaRepository;
@@ -89,9 +89,9 @@ public class TrainingService {
         log.debug("Getting trainee trainings by filter");
         return trainingCriteriaRepository
                 .getTraineeTrainingsByFilter(traineeTrainings.getTraineeUsername(),
-                traineeTrainings.getFromDate(),
-                traineeTrainings.getToDate(), traineeTrainings.getTrainingType(),
-                traineeTrainings.getTrainerUsername());
+                        traineeTrainings.getFromDate(),
+                        traineeTrainings.getToDate(), traineeTrainings.getTrainingType(),
+                        traineeTrainings.getTrainerUsername());
     }
 
     /**
@@ -104,8 +104,8 @@ public class TrainingService {
     public List<TrainingEntity> getTrainerTrainingsByFilter(TrainerTrainingsFilterRequestDto trainerTrainings) {
         log.debug("Getting trainer trainings by filter");
         return trainingCriteriaRepository.getTrainerTrainingsByFilter(trainerTrainings.getTrainerUsername(),
-                        trainerTrainings.getFromDate(),
-                        trainerTrainings.getToDate(),
-                        trainerTrainings.getTraineeUsername());
+                trainerTrainings.getFromDate(),
+                trainerTrainings.getToDate(),
+                trainerTrainings.getTraineeUsername());
     }
 }

@@ -14,9 +14,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findByUsername(String username);
 
+
     @Query("select u.username from UserEntity u")
     List<String> findAllUsernames();
-
 
 
     Optional<UserEntity> findByUsernameAndPassword(String username, String password);

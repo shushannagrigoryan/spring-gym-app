@@ -4,13 +4,13 @@ import jakarta.validation.Valid;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.TrainerCreateDto;
-import org.example.dto.TrainerProfileDto;
-import org.example.dto.TrainerProfileResponseDto;
-import org.example.dto.TrainerResponseDto;
-import org.example.dto.TrainerUpdateRequestDto;
-import org.example.dto.TrainerUpdateResponseDto;
-import org.example.dto.UserChangeActiveStatusRequestDto;
+import org.example.dto.requestdto.TrainerCreateRequestDto;
+import org.example.dto.requestdto.TrainerUpdateRequestDto;
+import org.example.dto.requestdto.UserChangeActiveStatusRequestDto;
+import org.example.dto.responsedto.TrainerProfileDto;
+import org.example.dto.responsedto.TrainerProfileResponseDto;
+import org.example.dto.responsedto.TrainerResponseDto;
+import org.example.dto.responsedto.TrainerUpdateResponseDto;
 import org.example.entity.TrainerEntity;
 import org.example.mapper.TrainerMapper;
 import org.example.mapper.TrainerProfileMapper;
@@ -56,7 +56,8 @@ public class TrainerController {
      * @return generated username and password
      */
     @PostMapping("/register")
-    public ResponseEntity<TrainerResponseDto> registerTrainer(@Valid @RequestBody TrainerCreateDto trainerCreateDto) {
+    public ResponseEntity<TrainerResponseDto> registerTrainer(
+            @Valid @RequestBody TrainerCreateRequestDto trainerCreateDto) {
         log.debug("Request to register a new trainer: {}", trainerCreateDto);
         TrainerEntity trainer = trainerMapper.dtoToEntity(trainerCreateDto);
         TrainerEntity registeredTrainer = trainerService.registerTrainer(trainer);
@@ -106,7 +107,7 @@ public class TrainerController {
      */
     @PatchMapping("active-status")
     public ResponseEntity<String> changeActiveStatus(@Valid @RequestBody UserChangeActiveStatusRequestDto
-                                                                 activeStatusRequestDto) {
+                                                             activeStatusRequestDto) {
         log.debug("Request to change the active status of trainer with username: {} to {}",
                 activeStatusRequestDto.getUsername(), activeStatusRequestDto.getIsActive());
         String response = trainerService.changeActiveStatus(activeStatusRequestDto.getUsername(),

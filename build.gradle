@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'checkstyle'
     id 'war'
+    id 'org.flywaydb.flyway' version '9.10.2'
 }
 
 java{
@@ -19,12 +20,12 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'org.springframework', name: 'spring-core', version: '6.1.12'
-    implementation group: 'org.springframework', name: 'spring-context', version: '6.1.12'
-    implementation group: 'org.springframework', name: 'spring-orm', version: '6.1.12'
-    implementation group: 'org.springframework', name: 'spring-aop', version: '6.1.12'
-    implementation group: 'org.springframework', name: 'spring-web', version: '6.1.12'
-    implementation group: 'org.springframework', name: 'spring-webmvc', version: '6.1.12'
+    implementation group: 'org.springframework', name: 'spring-core', version: '6.1.13'
+    implementation group: 'org.springframework', name: 'spring-context', version: '6.1.13'
+    implementation group: 'org.springframework', name: 'spring-orm', version: '6.1.13'
+    implementation group: 'org.springframework', name: 'spring-aop', version: '6.1.13'
+    implementation group: 'org.springframework', name: 'spring-web', version: '5.'
+    implementation group: 'org.springframework', name: 'spring-webmvc', version: '6.1.13'
     implementation group: 'org.springframework.data', name: 'spring-data-jpa', version: '3.3.4'
     implementation group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: '3.0.0'
     implementation group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.0.0'
@@ -48,9 +49,10 @@ dependencies {
     implementation group: 'org.apache.tomcat', name: 'tomcat-servlet-api', version: '10.1.30'
     implementation group: 'org.apache.tomcat', name: 'tomcat-jdbc', version: '10.1.30'
 
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.10.2'
+
+    implementation 'org.springframework:spring-tx:6.1.13'
 }
-
-
 
 test{
     useJUnitPlatform()
@@ -60,4 +62,12 @@ checkstyle {
     ignoreFailures = false
     maxWarnings = 0
     configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+}
+
+flyway {
+    url = 'jdbc:postgresql://localhost:5432/gymdb'
+    user = 'postgres'
+    password = 'postgres'
+    schemas = ['public']
+    locations = ['filesystem:src/main/resources/db/migration']
 }

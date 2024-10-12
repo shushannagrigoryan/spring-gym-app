@@ -2,7 +2,7 @@ package org.example.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.ChangePasswordDto;
+import org.example.dto.requestdto.ChangePasswordRequestDto;
 import org.example.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class UserController {
     private final UserService userService;
+
     /**
      * Setting dependencies.
      */
@@ -49,7 +50,7 @@ public class UserController {
      *                          newPassword(required)
      */
     @PutMapping("/change-password")
-    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto) {
+    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordRequestDto changePasswordDto) {
         log.debug("Request to change password of user with username: {}", changePasswordDto.getUsername());
         userService.changeUserPassword(changePasswordDto.getUsername(),
                 changePasswordDto.getNewPassword());

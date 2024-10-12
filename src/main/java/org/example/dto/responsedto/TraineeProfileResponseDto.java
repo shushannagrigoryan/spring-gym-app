@@ -1,4 +1,4 @@
-package org.example.dto;
+package org.example.dto.responsedto;
 
 import java.time.LocalDate;
 import java.util.List;

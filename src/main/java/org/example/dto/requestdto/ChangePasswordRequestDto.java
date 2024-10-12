@@ -1,4 +1,4 @@
-package org.example.dto;
+package org.example.dto.requestdto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChangePasswordDto {
+public class ChangePasswordRequestDto {
     @NotNull(message = "Username is required.")
     private String username;
     @NotNull(message = "Password is required.")

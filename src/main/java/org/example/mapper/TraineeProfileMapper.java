@@ -1,9 +1,9 @@
 package org.example.mapper;
 
 import java.util.List;
-import org.example.dto.TraineeProfileResponseDto;
-import org.example.dto.TraineeProfileTrainerResponseDto;
-import org.example.dto.TraineeUpdateResponseDto;
+import org.example.dto.responsedto.TraineeProfileResponseDto;
+import org.example.dto.responsedto.TraineeProfileTrainerResponseDto;
+import org.example.dto.responsedto.TraineeUpdateResponseDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainingEntity;
 import org.springframework.stereotype.Component;
@@ -12,12 +12,16 @@ import org.springframework.stereotype.Component;
 public class TraineeProfileMapper {
     private final TrainerMapper trainerMapper;
 
-    /** Setting dependencies. */
+    /**
+     * Setting dependencies.
+     */
     public TraineeProfileMapper(TrainerMapper trainerMapper) {
         this.trainerMapper = trainerMapper;
     }
 
-    /** Maps trainee entity to trainee profile response dto. */
+    /**
+     * Maps trainee entity to trainee profile response dto.
+     */
     public TraineeProfileResponseDto entityToProfileDto(TraineeEntity traineeEntity) {
         if (traineeEntity == null) {
             return null;
@@ -38,7 +42,9 @@ public class TraineeProfileMapper {
         return traineeProfile;
     }
 
-    /** Mapping updated trainee entity to response dto. */
+    /**
+     * Mapping updated trainee entity to response dto.
+     */
     public TraineeUpdateResponseDto entityToUpdatedDto(TraineeEntity updatedTrainee) {
         if (updatedTrainee == null) {
             return null;
@@ -50,12 +56,12 @@ public class TraineeProfileMapper {
                 .toList();
 
         return new TraineeUpdateResponseDto(updatedTrainee.getUser().getUsername(),
-                        updatedTrainee.getUser().getFirstName(),
-                        updatedTrainee.getUser().getLastName(),
-                        updatedTrainee.getDateOfBirth(),
-                        updatedTrainee.getAddress(),
-                        updatedTrainee.getUser().isActive(),
-                        trainers);
+                updatedTrainee.getUser().getFirstName(),
+                updatedTrainee.getUser().getLastName(),
+                updatedTrainee.getDateOfBirth(),
+                updatedTrainee.getAddress(),
+                updatedTrainee.getUser().isActive(),
+                trainers);
 
     }
 }

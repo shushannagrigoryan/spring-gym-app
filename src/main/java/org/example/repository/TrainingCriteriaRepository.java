@@ -35,8 +35,8 @@ public class TrainingCriteriaRepository {
      */
 
     public List<TrainingEntity> getTraineeTrainingsByFilter(String traineeUsername, LocalDate fromDate,
-                                                           LocalDate toDate, Long trainingTypeId,
-                                                           String trainerUsername) {
+                                                            LocalDate toDate, Long trainingTypeId,
+                                                            String trainerUsername) {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TrainingEntity> criteriaQuery
@@ -137,4 +137,5 @@ public class TrainingCriteriaRepository {
 
         return trainings;
     }
+
 }

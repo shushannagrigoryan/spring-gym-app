@@ -1,9 +1,9 @@
 package org.example.mapper;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.TraineeCriteriaTrainingsResponseDto;
-import org.example.dto.TrainerCriteriaTrainingsResponseDto;
 import org.example.dto.TrainingDto;
+import org.example.dto.responsedto.TraineeCriteriaTrainingsResponseDto;
+import org.example.dto.responsedto.TrainerCriteriaTrainingsResponseDto;
 import org.example.entity.TrainingEntity;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,9 @@ import org.springframework.stereotype.Component;
 public class TrainingMapper {
     private final TrainingTypeMapper trainingTypeMapper;
 
-    /** Setting dependencies. */
+    /**
+     * Setting dependencies.
+     */
     public TrainingMapper(TrainingTypeMapper trainingTypeMapper) {
         this.trainingTypeMapper = trainingTypeMapper;
     }
@@ -53,18 +55,22 @@ public class TrainingMapper {
         return trainingEntity;
     }
 
-    /** Mapping trainee training entity to training criteria dto. */
+    /**
+     * Mapping trainee training entity to training criteria dto.
+     */
     public TraineeCriteriaTrainingsResponseDto traineeTrainingsEntityToCriteriaDto(TrainingEntity training) {
         if (training == null) {
             return null;
         }
 
         return new TraineeCriteriaTrainingsResponseDto(training.getTrainingName(), training.getTrainingDate(),
-                        trainingTypeMapper.entityToResponseDto(training.getTrainingType()),
-                        training.getTrainingDuration(), training.getTrainer().getUser().getUsername());
+                trainingTypeMapper.entityToResponseDto(training.getTrainingType()),
+                training.getTrainingDuration(), training.getTrainer().getUser().getUsername());
     }
 
-    /** Mapping trainer training entity to training criteria dto. */
+    /**
+     * Mapping trainer training entity to training criteria dto.
+     */
     public TrainerCriteriaTrainingsResponseDto trainerTrainingsEntityToCriteriaDto(TrainingEntity training) {
         if (training == null) {
             return null;

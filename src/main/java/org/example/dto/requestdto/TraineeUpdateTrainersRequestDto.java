@@ -1,4 +1,4 @@
-package org.example.dto;
+package org.example.dto.requestdto;
 
 import jakarta.validation.constraints.NotNull;
 import java.util.List;

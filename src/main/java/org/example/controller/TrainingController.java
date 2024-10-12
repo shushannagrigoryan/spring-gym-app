@@ -4,11 +4,11 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.TraineeCriteriaTrainingsResponseDto;
-import org.example.dto.TraineeTrainingsFilterRequestDto;
-import org.example.dto.TrainerCriteriaTrainingsResponseDto;
-import org.example.dto.TrainerTrainingsFilterRequestDto;
-import org.example.dto.TrainingCreateRequestDto;
+import org.example.dto.requestdto.TraineeTrainingsFilterRequestDto;
+import org.example.dto.requestdto.TrainerTrainingsFilterRequestDto;
+import org.example.dto.requestdto.TrainingCreateRequestDto;
+import org.example.dto.responsedto.TraineeCriteriaTrainingsResponseDto;
+import org.example.dto.responsedto.TrainerCriteriaTrainingsResponseDto;
 import org.example.entity.TrainingEntity;
 import org.example.mapper.TrainingMapper;
 import org.example.services.TrainingService;
@@ -27,7 +27,9 @@ public class TrainingController {
     private final TrainingService trainingService;
     private final TrainingMapper trainingMapper;
 
-    /** Setting dependencies. */
+    /**
+     * Setting dependencies.
+     */
     public TrainingController(TrainingService trainingService,
                               TrainingMapper trainingMapper) {
         this.trainingService = trainingService;

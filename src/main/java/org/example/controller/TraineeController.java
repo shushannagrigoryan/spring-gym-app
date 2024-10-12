@@ -4,14 +4,14 @@ import jakarta.validation.Valid;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.TraineeCreateDto;
-import org.example.dto.TraineeProfileResponseDto;
-import org.example.dto.TraineeResponseDto;
-import org.example.dto.TraineeUpdateRequestDto;
-import org.example.dto.TraineeUpdateResponseDto;
-import org.example.dto.TraineeUpdateTrainersRequestDto;
-import org.example.dto.TrainerProfileDto;
-import org.example.dto.UserChangeActiveStatusRequestDto;
+import org.example.dto.requestdto.TraineeCreateRequestDto;
+import org.example.dto.requestdto.TraineeUpdateRequestDto;
+import org.example.dto.requestdto.TraineeUpdateTrainersRequestDto;
+import org.example.dto.requestdto.UserChangeActiveStatusRequestDto;
+import org.example.dto.responsedto.TraineeProfileResponseDto;
+import org.example.dto.responsedto.TraineeResponseDto;
+import org.example.dto.responsedto.TraineeUpdateResponseDto;
+import org.example.dto.responsedto.TrainerProfileDto;
 import org.example.entity.TraineeEntity;
 import org.example.mapper.TraineeMapper;
 import org.example.mapper.TraineeProfileMapper;
@@ -62,7 +62,8 @@ public class TraineeController {
      * @return generated username and password
      */
     @PostMapping("/register")
-    public ResponseEntity<TraineeResponseDto> registerTrainee(@Valid @RequestBody TraineeCreateDto traineeCreateDto) {
+    public ResponseEntity<TraineeResponseDto> registerTrainee(
+            @Valid @RequestBody TraineeCreateRequestDto traineeCreateDto) {
         log.debug("Request to register a new trainee: {}", traineeCreateDto);
         TraineeEntity trainee = traineeMapper.dtoToEntity(traineeCreateDto);
         TraineeEntity registeredTrainee = traineeService.registerTrainee(trainee);
@@ -153,10 +154,6 @@ public class TraineeController {
                 .collect(Collectors.toSet()),
                 HttpStatus.OK);
     }
-
-
-
-
 
 
 }

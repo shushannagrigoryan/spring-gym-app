@@ -2,7 +2,7 @@ package org.example.mapper;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TrainingTypeDto;
-import org.example.dto.TrainingTypeResponseDto;
+import org.example.dto.responsedto.TrainingTypeResponseDto;
 import org.example.entity.TrainingTypeEntity;
 import org.springframework.stereotype.Component;
 

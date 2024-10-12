@@ -1,13 +1,13 @@
 package org.example.mapper;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.TraineeProfileTrainerResponseDto;
-import org.example.dto.TrainerCreateDto;
 import org.example.dto.TrainerDto;
-import org.example.dto.TrainerProfileDto;
-import org.example.dto.TrainerResponseDto;
-import org.example.dto.TrainerUpdateRequestDto;
-import org.example.dto.TrainingTypeResponseDto;
+import org.example.dto.requestdto.TrainerCreateRequestDto;
+import org.example.dto.requestdto.TrainerUpdateRequestDto;
+import org.example.dto.responsedto.TraineeProfileTrainerResponseDto;
+import org.example.dto.responsedto.TrainerProfileDto;
+import org.example.dto.responsedto.TrainerResponseDto;
+import org.example.dto.responsedto.TrainingTypeResponseDto;
 import org.example.entity.TrainerEntity;
 import org.example.entity.UserEntity;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,9 @@ import org.springframework.stereotype.Component;
 public class TrainerMapper {
     private final TrainingTypeMapper trainingTypeMapper;
 
-    /** Setting dependencies. */
+    /**
+     * Setting dependencies.
+     */
     public TrainerMapper(TrainingTypeMapper trainingTypeMapper) {
         this.trainingTypeMapper = trainingTypeMapper;
     }
@@ -69,7 +71,7 @@ public class TrainerMapper {
     /**
      * Maps a {@code TrainerCreateDto} to a {@code TrainerEntity}.
      */
-    public TrainerEntity dtoToEntity(TrainerCreateDto trainerCreateDto) {
+    public TrainerEntity dtoToEntity(TrainerCreateRequestDto trainerCreateDto) {
         log.info("Mapping TrainerCreateDto {} to TrainerEntity", trainerCreateDto);
         if (trainerCreateDto == null) {
             return null;
@@ -84,7 +86,9 @@ public class TrainerMapper {
         return trainerEntity;
     }
 
-    /**Mapping trainer entity to trainer response dto. */
+    /**
+     * Mapping trainer entity to trainer response dto.
+     */
     public TraineeProfileTrainerResponseDto entityToTraineeTrainerResponseDto(TrainerEntity trainerEntity) {
         if (trainerEntity == null) {
             return null;
@@ -100,7 +104,9 @@ public class TrainerMapper {
         return trainer;
     }
 
-    /** Mapping trainer update request dto to trainer entity. */
+    /**
+     * Mapping trainer update request dto to trainer entity.
+     */
     public TrainerEntity updateDtoToEntity(TrainerUpdateRequestDto trainer) {
         if (trainer == null) {
             return null;
@@ -118,7 +124,9 @@ public class TrainerMapper {
         return trainerEntity;
     }
 
-    /** Mapping trainer entity to trainer profile dto(username, firstName, lastName, specialization). */
+    /**
+     * Mapping trainer entity to trainer profile dto(username, firstName, lastName, specialization).
+     */
     public TrainerProfileDto entityToProfileDto(TrainerEntity trainerEntity) {
         if (trainerEntity == null) {
             return null;

@@ -1,6 +1,6 @@
-package org.example.dto;
+package org.example.dto.requestdto;
 
-import java.util.List;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,11 +12,9 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class TrainerUpdateResponseDto {
+public class UserChangeActiveStatusRequestDto {
+    @NotNull(message = "Username is required.")
     private String username;
-    private String firstName;
-    private String lastName;
-    private TrainingTypeResponseDto specialization;
+    @NotNull(message = "IsActive is required.")
     private Boolean isActive;
-    private List<TrainerProfileTraineeResponseDto> trainees;
 }

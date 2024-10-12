@@ -1,11 +1,11 @@
 package org.example.mapper;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.TraineeCreateDto;
 import org.example.dto.TraineeDto;
-import org.example.dto.TraineeResponseDto;
-import org.example.dto.TraineeUpdateRequestDto;
-import org.example.dto.TrainerProfileTraineeResponseDto;
+import org.example.dto.requestdto.TraineeCreateRequestDto;
+import org.example.dto.requestdto.TraineeUpdateRequestDto;
+import org.example.dto.responsedto.TraineeResponseDto;
+import org.example.dto.responsedto.TrainerProfileTraineeResponseDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.UserEntity;
 import org.springframework.stereotype.Component;
@@ -60,7 +60,7 @@ public class TraineeMapper {
     /**
      * Maps a {@code TraineeCreateDto} to {@code TraineeEntity}.
      */
-    public TraineeEntity dtoToEntity(TraineeCreateDto traineeCreateDto) {
+    public TraineeEntity dtoToEntity(TraineeCreateRequestDto traineeCreateDto) {
         log.info("Mapping TraineeDto {} to TraineeEntity", traineeCreateDto);
         if (traineeCreateDto == null) {
             return null;
@@ -74,7 +74,9 @@ public class TraineeMapper {
         return traineeEntity;
     }
 
-    /**Mapping trainee entity to trainee response dto. */
+    /**
+     * Mapping trainee entity to trainee response dto.
+     */
     public TrainerProfileTraineeResponseDto entityToTrainerTraineeResponseDto(TraineeEntity traineeEntity) {
         if (traineeEntity == null) {
             return null;
@@ -87,7 +89,9 @@ public class TraineeMapper {
         return trainee;
     }
 
-    /** Mapping trainee update dto to trainee entity. */
+    /**
+     * Mapping trainee update dto to trainee entity.
+     */
     public TraineeEntity updateDtoToEntity(TraineeUpdateRequestDto traineeDto) {
         if (traineeDto == null) {
             return null;
