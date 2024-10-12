@@ -1,13 +1,10 @@
 package org.example.controller;
 
 import jakarta.validation.Valid;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.TrainerCreateRequestDto;
 import org.example.dto.requestdto.TrainerUpdateRequestDto;
 import org.example.dto.requestdto.UserChangeActiveStatusRequestDto;
-import org.example.dto.responsedto.TrainerProfileDto;
 import org.example.dto.responsedto.TrainerProfileResponseDto;
 import org.example.dto.responsedto.TrainerResponseDto;
 import org.example.dto.responsedto.TrainerUpdateResponseDto;
@@ -24,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -115,21 +111,24 @@ public class TrainerController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    /**
-     * GET request to get active trainers which are not assigned to trainee with the given username.
-     *
-     * @param traineeUsername username of the trainee.
-     * @return {@code Set<TrainerProfileDto>}
-     */
-    @GetMapping("not-assigned-active-trainers")
-    public ResponseEntity<Set<TrainerProfileDto>> notAssignedOnTraineeActiveTrainers(
-            @RequestParam("username") String traineeUsername) {
-        log.debug("Request to get all active trainers which are not assigned to trainee with username: {}",
-                traineeUsername);
 
-        return new ResponseEntity<>(trainerService.notAssignedOnTraineeActiveTrainers(traineeUsername)
-                .stream()
-                .map(trainerMapper::entityToProfileDto).collect(Collectors.toSet()), HttpStatus.OK);
-    }
+    //TODO notAssignedOnTraineeActiveTrainers
+
+    //    /**
+    //     * GET request to get active trainers which are not assigned to trainee with the given username.
+    //     *
+    //     * @param traineeUsername username of the trainee.
+    //     * @return {@code Set<TrainerProfileDto>}
+    //     */
+    //    @GetMapping("not-assigned-active-trainers")
+    //    public ResponseEntity<Set<TrainerProfileDto>> notAssignedOnTraineeActiveTrainers(
+    //            @RequestParam("username") String traineeUsername) {
+    //        log.debug("Request to get all active trainers which are not assigned to trainee with username: {}",
+    //                traineeUsername);
+    //
+    //        return new ResponseEntity<>(trainerService.notAssignedOnTraineeActiveTrainers(traineeUsername)
+    //                .stream()
+    //                .map(trainerMapper::entityToProfileDto).collect(Collectors.toSet()), HttpStatus.OK);
+    //    }
 
 }

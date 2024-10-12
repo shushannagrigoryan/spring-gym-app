@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Optional;
 import org.example.entity.UserEntity;
-import org.example.repository.UserRepository;
+import org.example.repository.UserRepo;
 import org.example.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
     @Mock
-    private UserRepository userRepository;
+    private UserRepo userRepository;
     @InjectMocks
     private UserService userService;
 
@@ -28,7 +28,7 @@ public class UserServiceTest {
     public void testGetAllUsernames() {
         //given
         List<String> usernames = List.of("A.B", "A.B1", "B.C");
-        when(userRepository.findAllUsernames()).thenReturn(usernames);
+        when(userRepository.getAllUsernames()).thenReturn(usernames);
 
         //when
         List<String> result = userService.getAllUsernames();
@@ -36,7 +36,7 @@ public class UserServiceTest {
         //then
         assertNotNull(result);
         assertEquals(usernames, result);
-        verify(userRepository).findAllUsernames();
+        verify(userRepository).getAllUsernames();
     }
 
     @Test
@@ -45,13 +45,13 @@ public class UserServiceTest {
         String username = "A.B";
         UserEntity user = new UserEntity();
         user.setUsername(username);
-        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        when(userRepository.getUserByUsername(username)).thenReturn(Optional.of(user));
 
         //when
         Optional<UserEntity> result = userService.getUserByUsername(username);
 
         //then
-        verify(userRepository).findByUsername(username);
+        verify(userRepository).getUserByUsername(username);
         assertNotNull(result);
         assertEquals(user.getUsername(), result.get().getUsername());
     }
@@ -60,13 +60,13 @@ public class UserServiceTest {
     public void testGetUserByUsernameUserNotFound() {
         //given
         String username = "A.B";
-        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+        when(userRepository.getUserByUsername(username)).thenReturn(Optional.empty());
 
         //when
         Optional<UserEntity> result = userService.getUserByUsername(username);
 
         //then
-        verify(userRepository).findByUsername(username);
+        verify(userRepository).getUserByUsername(username);
         assertTrue(result.isEmpty());
     }
 }

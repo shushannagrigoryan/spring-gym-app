@@ -14,7 +14,7 @@ import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalArgumentException;
 import org.example.password.PasswordGeneration;
-import org.example.repository.TraineeRepository;
+import org.example.repository.TraineeRepo;
 import org.example.username.UsernameGenerator;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class TraineeService {
-    private final TraineeRepository traineeRepository;
+    private final TraineeRepo traineeRepository;
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
     private final UserService userService;
@@ -31,7 +31,7 @@ public class TraineeService {
     /**
      * Injecting dependencies using constructor.
      */
-    public TraineeService(TraineeRepository traineeRepository,
+    public TraineeService(TraineeRepo traineeRepository,
                           UsernameGenerator usernameGenerator,
                           PasswordGeneration passwordGeneration,
                           UserService userService,
@@ -75,7 +75,7 @@ public class TraineeService {
     public TraineeEntity getTraineeByUsername(String username) {
         log.debug("Retrieving trainee by username: {}", username);
         Optional<TraineeEntity> trainee = traineeRepository
-                .findByUser_Username(username);
+                .findByUsername(username);
         if (trainee.isEmpty()) {
             log.debug("No trainee with the username: {}", username);
             throw new GymEntityNotFoundException(
@@ -115,7 +115,7 @@ public class TraineeService {
         String username = traineeToUpdate.getUser().getUsername();
         log.debug("Updating trainee with username: {}", traineeToUpdate.getUser().getUsername());
 
-        Optional<TraineeEntity> trainee = traineeRepository.findByUser_Username(username);
+        Optional<TraineeEntity> trainee = traineeRepository.findByUsername(username);
 
         if (trainee.isEmpty()) {
             log.debug("No trainee with username: {}", username);
@@ -153,7 +153,7 @@ public class TraineeService {
     @Transactional
     public void deleteTraineeByUsername(String username) {
         log.debug("Deleting trainee with username: {}", username);
-        Optional<TraineeEntity> trainee = traineeRepository.findByUser_Username(username);
+        Optional<TraineeEntity> trainee = traineeRepository.findByUsername(username);
         if (trainee.isEmpty()) {
             throw new GymEntityNotFoundException(String.format("Trainee with username: %s does not exist.", username));
         }
@@ -178,7 +178,7 @@ public class TraineeService {
     @Transactional
     public TraineeEntity getTraineeProfile(String username) {
         log.debug("Getting trainee profile by username: {}", username);
-        Optional<TraineeEntity> trainee = traineeRepository.findByUser_Username(username);
+        Optional<TraineeEntity> trainee = traineeRepository.findByUsername(username);
         if (trainee.isEmpty()) {
             log.debug("No trainee with the username: {}", username);
             throw new GymEntityNotFoundException(

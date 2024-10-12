@@ -26,7 +26,7 @@ dependencies {
     implementation group: 'org.springframework', name: 'spring-aop', version: '6.1.13'
     implementation group: 'org.springframework', name: 'spring-web', version: '5.'
     implementation group: 'org.springframework', name: 'spring-webmvc', version: '6.1.13'
-    implementation group: 'org.springframework.data', name: 'spring-data-jpa', version: '3.3.4'
+    //implementation group: 'org.springframework.data', name: 'spring-data-jpa', version: '3.3.4'
     implementation group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: '3.0.0'
     implementation group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.0.0'
     implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.0'

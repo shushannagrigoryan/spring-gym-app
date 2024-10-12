@@ -10,7 +10,7 @@ import org.example.entity.TrainingTypeEntity;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.password.PasswordGeneration;
-import org.example.repository.TrainerRepository;
+import org.example.repository.TrainerRepo;
 import org.example.services.TrainerService;
 import org.example.services.TrainingTypeService;
 import org.example.username.UsernameGenerator;
@@ -29,7 +29,7 @@ public class TrainerServiceTest {
     private PasswordGeneration passwordGeneration;
 
     @Mock
-    private TrainerRepository trainerRepository;
+    private TrainerRepo trainerRepository;
     @Mock
     private TrainingTypeService trainingTypeService;
 
@@ -70,13 +70,13 @@ public class TrainerServiceTest {
         user.setLastName(lastName);
         trainerEntity.setUser(user);
         trainerEntity.setSpecialization(new TrainingTypeEntity());
-        when(trainerRepository.findByUser_Username(username)).thenReturn(Optional.of(trainerEntity));
+        when(trainerRepository.findByUsername(username)).thenReturn(Optional.of(trainerEntity));
 
         //when
         trainerService.getTrainerByUsername(username);
 
         //then
-        verify(trainerRepository).findByUser_Username(username);
+        verify(trainerRepository).findByUsername(username);
     }
 
     @Test
@@ -84,13 +84,13 @@ public class TrainerServiceTest {
         //given
         String username = "John.Smith";
 
-        when(trainerRepository.findByUser_Username(username)).thenReturn(Optional.empty());
+        when(trainerRepository.findByUsername(username)).thenReturn(Optional.empty());
 
         //then
         assertThrows(GymEntityNotFoundException.class,
                 () -> trainerService.getTrainerByUsername(username),
                 String.format("Trainer with username %s does not exist.", username));
-        verify(trainerRepository).findByUser_Username(username);
+        verify(trainerRepository).findByUsername(username);
     }
 
     //    @Test

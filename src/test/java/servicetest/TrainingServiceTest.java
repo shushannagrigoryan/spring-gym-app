@@ -1,6 +1,6 @@
 package servicetest;
 
-import org.example.repository.TrainingRepository;
+import org.example.repository.TrainingRepo;
 import org.example.services.TraineeService;
 import org.example.services.TrainerService;
 import org.example.services.TrainingService;
@@ -18,7 +18,7 @@ public class TrainingServiceTest {
     @Mock
     private TrainerService trainerService;
     @Mock
-    private TrainingRepository trainingRepository;
+    private TrainingRepo trainingRepository;
 
     @Mock
     private TrainingTypeService trainingTypeService;

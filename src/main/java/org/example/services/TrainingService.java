@@ -10,13 +10,13 @@ import org.example.dto.requestdto.TrainingCreateRequestDto;
 import org.example.entity.TrainingEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.repository.TrainingCriteriaRepository;
-import org.example.repository.TrainingRepository;
+import org.example.repository.TrainingRepo;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 public class TrainingService {
-    private final TrainingRepository trainingRepository;
+    private final TrainingRepo trainingRepository;
     private final TrainingCriteriaRepository trainingCriteriaRepository;
     private final TrainingTypeService trainingTypeService;
     private final TrainerService trainerService;
@@ -25,7 +25,7 @@ public class TrainingService {
     /**
      * Injecting dependencies using constructor.
      */
-    public TrainingService(TrainingRepository trainingRepository,
+    public TrainingService(TrainingRepo trainingRepository,
                            TrainingTypeService trainingTypeService,
                            TrainerService trainerService,
                            TraineeService traineeService,

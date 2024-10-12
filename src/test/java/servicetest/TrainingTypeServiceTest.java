@@ -1,6 +1,6 @@
 package servicetest;
 
-import org.example.repository.TrainingTypeRepository;
+import org.example.repository.TrainingTypeRepo;
 import org.example.services.TrainingTypeService;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,7 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class TrainingTypeServiceTest {
     @Mock
-    private TrainingTypeRepository trainingTypeRepository;
+    private TrainingTypeRepo trainingTypeRepository;
 
     @InjectMocks
     private TrainingTypeService trainingTypeService;

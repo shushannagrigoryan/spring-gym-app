@@ -6,15 +6,15 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
-import org.example.repository.UserRepository;
+import org.example.repository.UserRepo;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 public class UserService {
-    private final UserRepository userRepository;
+    private final UserRepo userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepo userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -38,7 +38,7 @@ public class UserService {
     @Transactional
     public List<String> getAllUsernames() {
         log.debug("Getting all usernames.");
-        return userRepository.findAllUsernames();
+        return userRepository.getAllUsernames();
     }
 
     /**
@@ -50,7 +50,7 @@ public class UserService {
     @Transactional
     public Optional<UserEntity> getUserByUsername(String username) {
         log.debug("Getting user with username: {}", username);
-        Optional<UserEntity> user = userRepository.findByUsername(username);
+        Optional<UserEntity> user = userRepository.getUserByUsername(username);
         if (user.isEmpty()) {
             log.debug("No user with username: {}", username);
         }
@@ -65,7 +65,7 @@ public class UserService {
      */
     public void login(String username, String password) {
         log.debug("Logging in user with username {} and password {}", username, password);
-        Optional<UserEntity> user = userRepository.findByUsernameAndPassword(username, password);
+        Optional<UserEntity> user = userRepository.getUserByUsernameAndPassword(username, password);
         if (user.isEmpty()) {
             throw new GymEntityNotFoundException("Invalid username and password.");
         }
