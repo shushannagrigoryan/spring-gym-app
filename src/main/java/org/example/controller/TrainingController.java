@@ -68,7 +68,6 @@ public class TrainingController {
                 .collect(Collectors.toList()),
                 HttpStatus.OK);
 
-
     }
 
     /**

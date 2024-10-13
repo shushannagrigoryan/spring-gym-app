@@ -3,6 +3,7 @@ package org.example.repository;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TraineeEntity;
+import org.example.entity.UserEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -96,7 +97,6 @@ public class TraineeRepository {
 
     /**
      * Deletes the trainee by id.
-     * If no trainee is found throws an {@code GymIllegalUsernameException}.
      *
      * @param id id of the trainee to be deleted
      */
@@ -112,6 +112,20 @@ public class TraineeRepository {
         session.remove(trainee.getUser());
         session.remove(trainee);
         log.debug("Successfully deleted trainee with id: {}", id);
+    }
+
+    /**
+     * Deletes the trainee.
+     *
+     * @param trainee to be deleted
+     */
+    public void delete(TraineeEntity trainee) {
+        log.debug("Deleting trainee : {}", trainee);
+        Session session = sessionFactory.getCurrentSession();
+        UserEntity user = trainee.getUser();
+        session.remove(trainee);
+        session.remove(user);
+        log.debug("Successfully deleted trainee : {}", trainee);
     }
 
 }

@@ -1,14 +1,18 @@
 package servicetest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Optional;
 import org.example.entity.TrainerEntity;
+import org.example.entity.TrainingEntity;
 import org.example.entity.TrainingTypeEntity;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
+import org.example.exceptions.GymIllegalArgumentException;
 import org.example.password.PasswordGeneration;
 import org.example.repository.TrainerRepository;
 import org.example.services.TrainerService;
@@ -36,27 +40,28 @@ public class TrainerServiceTest {
     @InjectMocks
     private TrainerService trainerService;
 
-    //    @Test
-    //    public void testRegisterTraineeSuccess() {
-    //        //given
-    //        String password = "myPassword";
-    //        TrainerEntity trainerEntity = new TrainerEntity();
-    //        trainerEntity.setUser(new UserEntity());
-    //        trainerEntity.getUser().setPassword(password);
-    //        when(usernameGenerator.generateUsername(trainerEntity.getUser().getFirstName(),
-    //                trainerEntity.getUser().getLastName()))
-    //                .thenReturn("Jack.Jones");
-    //        doNothing().when(trainerRepository).save(trainerEntity);
-    //
-    //        //when
-    //        trainerService.registerTrainer(trainerEntity);
-    //
-    //        //then
-    //        verify(passwordGeneration).generatePassword();
-    //        verify(usernameGenerator).generateUsername(trainerEntity.getUser().getFirstName(),
-    //                trainerEntity.getUser().getLastName());
-    //
-    //    }
+    @Test
+    public void testRegisterTrainerSuccess() {
+        //given
+        String password = "myPassword";
+        TrainerEntity trainerEntity = new TrainerEntity();
+        trainerEntity.setUser(new UserEntity());
+        trainerEntity.getUser().setPassword(password);
+        when(usernameGenerator.generateUsername(trainerEntity.getUser().getFirstName(),
+                trainerEntity.getUser().getLastName()))
+                .thenReturn("Jack.Jones");
+        when(trainerRepository.save(trainerEntity)).thenReturn(new TrainerEntity());
+
+
+        //when
+        trainerService.registerTrainer(trainerEntity);
+
+        //then
+        verify(passwordGeneration).generatePassword();
+        verify(usernameGenerator).generateUsername(trainerEntity.getUser().getFirstName(),
+                trainerEntity.getUser().getLastName());
+
+    }
 
     @Test
     public void testGetTraineeByUsernameSuccess() {
@@ -248,19 +253,23 @@ public class TrainerServiceTest {
     //    }
     //
     //
-    //    @Test
-    //    public void testUpdateTrainerByIdInvalidId() {
-    //        //given
-    //        Long id = 1L;
-    //        trainerRepository.getTrainerById(id);
-    //        when(trainerRepository.getTrainerById(id)).thenReturn(null);
-    //
-    //        //then
-    //        RuntimeException exception =
-    //                assertThrows(RuntimeException.class,
-    //                        () -> trainerService.updateTrainerById(id, new TrainerEntity()));
-    //        assertEquals("No trainer with id: " + id, exception.getMessage());
-    //    }
+    @Test
+    public void testUpdateTrainerByUsernameInvalidId() {
+        //given
+        String username = "A.A";
+        TrainerEntity trainer = new TrainerEntity();
+        UserEntity user = new UserEntity();
+        user.setUsername(username);
+        trainer.setUser(user);
+        trainerRepository.findByUsername(username);
+        when(trainerRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+        //then
+        RuntimeException exception =
+                assertThrows(GymIllegalArgumentException.class,
+                        () -> trainerService.updateTrainer(trainer));
+        assertEquals(String.format("No trainer with username: %s", username), exception.getMessage());
+    }
     //
     //    @Test
     //    public void testUpdateTraineeSuccess() {
@@ -332,5 +341,37 @@ public class TrainerServiceTest {
     //                () -> trainerService.updateTrainerById(id, trainerEntity),
     //                String.format("Illegal id for training: %d", trainingId));
     //    }
+
+    @Test
+    public void testGetTrainerProfileSuccess() {
+        //given
+        String username = "A.A";
+        TrainerEntity trainer = new TrainerEntity();
+        TrainingEntity training = new TrainingEntity();
+        training.setTrainer(new TrainerEntity());
+        trainer.setTrainings(List.of(training));
+        when(trainerRepository.findByUsername(username)).thenReturn(Optional.of(trainer));
+
+        //when
+        TrainerEntity result = trainerService.getTrainerProfile(username);
+
+        //then
+        verify(trainerRepository).findByUsername(username);
+        assertEquals(trainer, result);
+
+    }
+
+    @Test
+    public void testGetTrainerProfileFailure() {
+        //given
+        String username = "A.A";
+        when(trainerRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+        //then
+        assertThrows(GymEntityNotFoundException.class,
+                () -> trainerService.getTrainerProfile(username),
+                String.format("Trainer with username %s does not exist.", username));
+
+    }
 
 }

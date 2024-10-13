@@ -63,6 +63,7 @@ public class UserService {
      * @param username of the user
      * @param password of the user
      */
+    @Transactional
     public void login(String username, String password) {
         log.debug("Logging in user with username {} and password {}", username, password);
         Optional<UserEntity> user = userRepository.getUserByUsernameAndPassword(username, password);

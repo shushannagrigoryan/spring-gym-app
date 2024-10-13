@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.entity.TrainingTypeEntity;
@@ -184,25 +185,22 @@ public class TrainerService {
         return "Successfully set trainer active status to " + isActive;
     }
 
-    //TODO notAssignedOnTraineeActiveTrainers
+    /**
+     * Returns active trainers which are not assigned to trainee with the given username.
+     *
+     * @param traineeUsername username of the trainee
+     * @return {@code Set<TrainerEntity>}
+     */
+    @Transactional
+    public List<TrainerEntity> notAssignedOnTraineeActiveTrainers(String traineeUsername) {
+        TraineeEntity trainee = traineeService.getTraineeByUsername(traineeUsername);
+        List<TrainerEntity> trainers = trainerRepository.getTrainersNotAssignedToTraineeActiveTrainers(traineeUsername);
+        for (TrainerEntity t : trainers) {
+            TrainingTypeEntity specialization = t.getSpecialization();
+            log.debug("Lazily initialized trainer's: {} specialization: {}",
+                    t.getUser().getUsername(), specialization);
+        }
 
-    //    /**
-    //     * Returns active trainers which are not assigned to trainee with the given username.
-    //     *
-    //     * @param traineeUsername username of the trainee
-    //     * @return {@code Set<TrainerEntity>}
-    //     */
-    //    @Transactional
-    //    public Set<TrainerEntity> notAssignedOnTraineeActiveTrainers(String traineeUsername) {
-    //        TraineeEntity trainee = traineeService.getTraineeByUsername(traineeUsername);
-    //        Set<TrainerEntity> trainers = trainerRepository.getTrainerEntityByTraineesNotContainingAndUser_isActive(
-    //                trainee, true);
-    //        for (TrainerEntity t : trainers) {
-    //            TrainingTypeEntity specialization = t.getSpecialization();
-    //            log.debug("Lazily initialized trainer's: {} specialization: {}",
-    //            t.getUser().getUsername(), specialization);
-    //        }
-    //
-    //        return trainers;
-    //    }
+        return trainers;
+    }
 }

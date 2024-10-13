@@ -2,13 +2,16 @@ package servicetest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
 import org.example.entity.UserEntity;
+import org.example.exceptions.GymEntityNotFoundException;
 import org.example.repository.UserRepository;
 import org.example.services.UserService;
 import org.junit.jupiter.api.Test;
@@ -68,5 +71,75 @@ public class UserServiceTest {
         //then
         verify(userRepository).getUserByUsername(username);
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testRegisterUser() {
+        //given
+        UserEntity user = new UserEntity();
+        when(userRepository.save(user)).thenReturn(user);
+
+        //when
+        userService.registerUser(user);
+
+        //then
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    public void testLoginSuccess() {
+        //given
+        String username = "A";
+        String password = "B";
+        when(userRepository.getUserByUsernameAndPassword(username, password))
+                .thenReturn(Optional.of(new UserEntity()));
+
+        //when
+        userService.login(username, password);
+
+        //then
+        verify(userRepository).getUserByUsernameAndPassword(username, password);
+    }
+
+    @Test
+    public void testLoginFailure() {
+        //given
+        String username = "A";
+        String password = "B";
+        when(userRepository.getUserByUsernameAndPassword(username, password)).thenReturn(Optional.empty());
+
+        //then
+        assertThrows(GymEntityNotFoundException.class,
+                () -> userService.login(username, password),
+                "Invalid username and password.");
+    }
+
+    @Test
+    public void testChangeUserPassword() {
+        //given
+        String username = "A.B";
+        String password = "myPassword";
+        doNothing().when(userRepository).updatePassword(username, password);
+
+        //when
+        userService.changeUserPassword(username, password);
+
+        //then
+        verify(userRepository).updatePassword(username, password);
+
+    }
+
+    @Test
+    public void testDeleteUser() {
+        //given
+        UserEntity user = new UserEntity();
+        doNothing().when(userRepository).deleteById(user.getId());
+
+        //when
+        userService.deleteUser(user);
+
+        //then
+        verify(userRepository).deleteById(user.getId());
+
     }
 }

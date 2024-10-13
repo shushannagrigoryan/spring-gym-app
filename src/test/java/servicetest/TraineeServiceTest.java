@@ -1,15 +1,20 @@
 package servicetest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import org.example.entity.TraineeEntity;
+import org.example.entity.TrainerEntity;
+import org.example.entity.TrainingEntity;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
+import org.example.exceptions.GymIllegalArgumentException;
 import org.example.password.PasswordGeneration;
 import org.example.repository.TraineeRepository;
 import org.example.services.TraineeService;
@@ -36,29 +41,29 @@ public class TraineeServiceTest {
     @InjectMocks
     private TraineeService traineeService;
 
-    //    @Test
-    //    public void testRegisterTraineeSuccess() {
-    //        //given
-    //        String password = "myPassword";
-    //        TraineeEntity traineeEntity = new TraineeEntity();
-    //        UserEntity user = new UserEntity();
-    //        traineeEntity.setUser(user);
-    //        traineeEntity.getUser().setPassword(password);
-    //        when(usernameGenerator.generateUsername(traineeEntity.getUser().getFirstName(),
-    //                traineeEntity.getUser().getLastName()))
-    //                .thenReturn("Jack.Jones");
-    //        doNothing().when(userService).registerUser(user);
-    //        when(traineeRepository.save(traineeEntity)).thenReturn(new TraineeEntity());
-    //
-    //        //when
-    //        traineeService.registerTrainee(traineeEntity);
-    //
-    //        //then
-    //        verify(passwordGeneration).generatePassword();
-    //        verify(usernameGenerator).generateUsername(traineeEntity.getUser().getFirstName(),
-    //                traineeEntity.getUser().getLastName());
-    //
-    //    }
+    @Test
+    public void testRegisterTraineeSuccess() {
+        //given
+        String password = "myPassword";
+        TraineeEntity traineeEntity = new TraineeEntity();
+        UserEntity user = new UserEntity();
+        traineeEntity.setUser(user);
+        traineeEntity.getUser().setPassword(password);
+        when(usernameGenerator.generateUsername(traineeEntity.getUser().getFirstName(),
+                traineeEntity.getUser().getLastName()))
+                .thenReturn("Jack.Jones");
+        when(traineeRepository.save(traineeEntity)).thenReturn(traineeEntity);
+
+        //when
+        TraineeEntity result = traineeService.registerTrainee(traineeEntity);
+
+        //then
+        verify(passwordGeneration).generatePassword();
+        verify(usernameGenerator).generateUsername(traineeEntity.getUser().getFirstName(),
+                traineeEntity.getUser().getLastName());
+        assertEquals("Jack.Jones", result.getUser().getUsername());
+
+    }
 
 
     @Test
@@ -134,34 +139,47 @@ public class TraineeServiceTest {
         String username = "A.A";
         UserEntity user = new UserEntity();
         TraineeEntity trainee = new TraineeEntity();
-        trainee.setId(1L);
         trainee.setUser(user);
         when(traineeRepository.findByUsername(username)).thenReturn(Optional.of(trainee));
-
-        doNothing().when(traineeRepository).deleteById(trainee.getId());
-        doNothing().when(userService).deleteUser(user);
+        doNothing().when(traineeRepository).delete(trainee);
 
         //when
         traineeService.deleteTraineeByUsername(username);
 
         //then
-        verify(traineeRepository).deleteById(trainee.getId());
+        verify(traineeRepository).delete(trainee);
+    }
+
+    @Test
+    public void testDeleteTraineeByUsernameFailure() {
+        //given
+        String username = "A.A";
+        when(traineeRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+        //then
+        assertThrows(GymEntityNotFoundException.class,
+                () -> traineeService.deleteTraineeByUsername(username),
+                String.format(String.format("Trainee with username: %s does not exist.", username)));
     }
 
 
-    //    @Test
-    //    public void testUpdateTraineeByIdInvalidId() {
-    //        //given
-    //        Long id = 1L;
-    //        traineeRepository.findById(id);
-    //        when(traineeRepository.findById(id)).thenReturn(null);
-    //
-    //        //then
-    //        RuntimeException exception =
-    //                assertThrows(RuntimeException.class,
-    //                        () -> traineeService.updateTraineeById(id, new TraineeEntity()));
-    //        assertEquals("No trainee with id: " + id, exception.getMessage());
-    //    }
+    @Test
+    public void testUpdateTraineeByIdInvalidUsername() {
+        //given
+        String username = "A.A";
+        TraineeEntity trainee = new TraineeEntity();
+        UserEntity user = new UserEntity();
+        user.setUsername(username);
+        trainee.setUser(user);
+        traineeRepository.findByUsername(username);
+        when(traineeRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+        //then
+        RuntimeException exception =
+                assertThrows(GymIllegalArgumentException.class,
+                        () -> traineeService.updateTrainee(trainee));
+        assertEquals(String.format("No trainee with username: %s", username), exception.getMessage());
+    }
 
     //    @Test
     //    public void testUpdateTraineeSuccess() {
@@ -312,5 +330,59 @@ public class TraineeServiceTest {
     //                String.format("No trainee with %d exists.", traineeId));
     //    }
 
+    //    @Test
+    //    public void testChangeActiveStatus() {
+    //        //given
+    //        String username = "A.I";
+    //        TraineeEntity trainee = new TraineeEntity();
+    //        UserEntity user = new UserEntity();
+    //        user.setUsername(username);
+    //        trainee.setUser(user);
+    //
+    //        //doReturn(trainee).when(traineeService).getTraineeByUsername(username);
+    //        lenient().when(traineeService.getTraineeByUsername(username)).thenReturn(trainee);
+    //        TraineeEntity activatedTrainee = new TraineeEntity();
+    //        activatedTrainee.setUser(user);
+    //        activatedTrainee.getUser().setActive(true);
+    //        lenient().when(traineeRepository.save(trainee)).thenReturn(activatedTrainee);
+    //
+    //        //when
+    //        String result = traineeService.changeActiveStatus(username, true);
+    //
+    //        //then
+    //        verify(traineeService).getTraineeByUsername(username);
+    //        assertEquals("Successfully set trainee active status to " + true, result);
+    //    }
 
+    @Test
+    public void testGetTraineeProfileSuccess() {
+        //given
+        String username = "A.A";
+        TraineeEntity trainee = new TraineeEntity();
+        TrainingEntity training = new TrainingEntity();
+        training.setTrainer(new TrainerEntity());
+        trainee.setTrainings(List.of(training));
+        when(traineeRepository.findByUsername(username)).thenReturn(Optional.of(trainee));
+
+        //when
+        TraineeEntity result = traineeService.getTraineeProfile(username);
+
+        //then
+        verify(traineeRepository).findByUsername(username);
+        assertEquals(trainee, result);
+
+    }
+
+    @Test
+    public void testGetTraineeProfileFailure() {
+        //given
+        String username = "A.A";
+        when(traineeRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+        //then
+        assertThrows(GymEntityNotFoundException.class,
+                () -> traineeService.getTraineeProfile(username),
+                String.format("Trainee with username %s does not exist.", username));
+
+    }
 }

@@ -9,7 +9,6 @@ import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.entity.TrainingTypeEntity;
-import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalArgumentException;
 import org.example.password.PasswordGeneration;
@@ -155,14 +154,9 @@ public class TraineeService {
         if (trainee.isEmpty()) {
             throw new GymEntityNotFoundException(String.format("Trainee with username: %s does not exist.", username));
         }
-        UserEntity user = trainee.get().getUser();
 
         log.debug("Deleting trainee with username: {}", username);
-        traineeRepository.deleteById(trainee.get().getId());
-
-        log.debug("Deleting the corresponding user entity: {}", user);
-        userService.deleteUser(user);
-
+        traineeRepository.delete(trainee.get());
         log.debug("Successfully deleted trainee with username: {}", username);
     }
 
@@ -185,6 +179,10 @@ public class TraineeService {
         log.debug("Lazily initializing trainee trainings: {}", trainee.get().getTrainings());
 
         log.debug("Successfully retrieved trainee profile by username: {}", username);
+        trainee.get().getTrainings().forEach(t -> {
+            TrainingTypeEntity specialization = t.getTrainer().getSpecialization();
+            log.debug("Lazily initialized trainer specialization: {}", specialization);
+        });
         return trainee.get();
     }
 
@@ -197,6 +195,7 @@ public class TraineeService {
     @Transactional
     public String changeActiveStatus(String username, boolean isActive) {
         TraineeEntity trainee = getTraineeByUsername(username);
+        System.out.println("TRAINEE = "  + trainee);
 
         if (trainee.getUser().isActive() == isActive) {
             log.debug("Trainee : {} isActive status is already: {}", username, isActive);
@@ -209,6 +208,7 @@ public class TraineeService {
 
         return "Successfully set trainee active status to " + isActive;
     }
+
 
     /**
      * Updates trainee trainer list.
