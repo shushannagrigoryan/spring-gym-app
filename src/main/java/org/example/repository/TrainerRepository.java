@@ -63,22 +63,6 @@ public class TrainerRepository {
         return Optional.ofNullable(session.get(TrainerEntity.class, id));
     }
 
-    /**
-     * Changes the password of the trainer by username.
-     *
-     * @param username username of the trainer
-     */
-    public void changeTrainerPassword(String username, String password) {
-        Session session = sessionFactory.getCurrentSession();
-
-        String hql = "from TrainerEntity t where t.user.username =:username";
-        TrainerEntity trainer = session.createQuery(hql, TrainerEntity.class)
-                .setParameter("username", username)
-                .uniqueResult();
-        trainer.getUser().setPassword(password);
-        session.merge(trainer);
-        log.debug("Successfully updated password of the trainer with username {}", username);
-    }
 
     /**
      * Updates trainer entity in storage by id.
@@ -92,34 +76,6 @@ public class TrainerRepository {
         session.merge(trainerEntity);
         log.debug("Updating trainer with id: {} with {}", id, trainerEntity);
     }
-
-    /**
-     * Activates trainer.
-     *
-     * @param trainer trainer to activate
-     */
-    public void activateTrainer(TrainerEntity trainer) {
-        log.debug("Activating trainer : {}", trainer);
-        Session session = sessionFactory.getCurrentSession();
-        trainer.getUser().setActive(true);
-        session.merge(trainer);
-        log.debug("Successfully activated trainer: {}", trainer);
-    }
-
-    /**
-     * Deactivates trainer.
-     *
-     * @param trainer id of the trainer to deactivate
-     */
-    public void deactivateTrainer(TrainerEntity trainer) {
-        log.debug("Deactivating trainer: {}", trainer);
-        Session session = sessionFactory.getCurrentSession();
-        trainer.getUser().setActive(false);
-        session.merge(trainer);
-        log.debug("Successfully deactivated trainer: {}", trainer);
-    }
-
-
 
     //    /**
     //     * Getting trainers list that are not assigned to the given trainee.

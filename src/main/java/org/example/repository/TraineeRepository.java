@@ -61,50 +61,6 @@ public class TraineeRepository {
     }
 
     /**
-     * Changes the password of the trainee by username.
-     *
-     * @param username username of the trainee
-     */
-    public void changeTraineePassword(String username, String password) {
-        Session session = sessionFactory.getCurrentSession();
-
-        String hql = "from TraineeEntity t where t.user.username =:username";
-        TraineeEntity trainee = session.createQuery(hql, TraineeEntity.class)
-                .setParameter("username", username)
-                .uniqueResult();
-        trainee.getUser().setPassword(password);
-        session.merge(trainee);
-
-        log.debug("Successfully updated password of the trainee with username {}", username);
-    }
-
-    /**
-     * Activates trainee.
-     *
-     * @param trainee trainee to activate
-     */
-    public void activateTrainee(TraineeEntity trainee) {
-        log.debug("Activating trainee :{}", trainee);
-        Session session = sessionFactory.getCurrentSession();
-        trainee.getUser().setActive(true);
-        session.merge(trainee);
-        log.debug("Successfully activated trainee: {}", trainee);
-    }
-
-    /**
-     * Deactivates trainee.
-     *
-     * @param trainee trainee to deactivate
-     */
-    public void deactivateTrainee(TraineeEntity trainee) {
-        log.debug("Deactivating trainee :{}", trainee);
-        Session session = sessionFactory.getCurrentSession();
-        trainee.getUser().setActive(false);
-        session.merge(trainee);
-        log.debug("Successfully deactivated trainee: {}", trainee);
-    }
-
-    /**
      * Updates trainee entity in storage by id.
      * If no trainee is found throws an {@code IllegalIdException}
      *
