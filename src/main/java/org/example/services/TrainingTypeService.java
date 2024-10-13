@@ -5,19 +5,19 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainingTypeEntity;
 import org.example.exceptions.GymIllegalIdException;
-import org.example.repository.TrainingTypeRepo;
+import org.example.repository.TrainingTypeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
 public class TrainingTypeService {
-    private final TrainingTypeRepo trainingTypeRepository;
+    private final TrainingTypeRepository trainingTypeRepository;
 
     /**
      * Injecting dependencies using constructor.
      */
-    public TrainingTypeService(TrainingTypeRepo trainingTypeRepository) {
+    public TrainingTypeService(TrainingTypeRepository trainingTypeRepository) {
         this.trainingTypeRepository = trainingTypeRepository;
     }
 

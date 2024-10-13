@@ -10,7 +10,7 @@ import org.example.entity.TrainingTypeEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalArgumentException;
 import org.example.password.PasswordGeneration;
-import org.example.repository.TrainerRepo;
+import org.example.repository.TrainerRepository;
 import org.example.username.UsernameGenerator;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class TrainerService {
-    private final TrainerRepo trainerRepository;
+    private final TrainerRepository trainerRepository;
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
     private final TrainingTypeService trainingTypeService;
@@ -29,7 +29,7 @@ public class TrainerService {
     /**
      * Injecting dependencies using constructor.
      */
-    public TrainerService(TrainerRepo trainerRepository,
+    public TrainerService(TrainerRepository trainerRepository,
                           UsernameGenerator usernameGenerator,
                           PasswordGeneration passwordGeneration,
                           TrainingTypeService trainingTypeService,
@@ -59,7 +59,6 @@ public class TrainerService {
                 trainerEntity.getUser().getLastName());
         trainerEntity.getUser().setUsername(username);
         trainerEntity.getUser().setPassword(passwordGeneration.generatePassword());
-        userService.registerUser(trainerEntity.getUser());
         TrainerEntity trainer = trainerRepository.save(trainerEntity);
         log.debug("Successfully created a new trainer with username: {}", username);
         return trainer;

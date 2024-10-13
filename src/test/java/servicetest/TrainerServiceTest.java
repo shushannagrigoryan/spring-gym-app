@@ -10,7 +10,7 @@ import org.example.entity.TrainingTypeEntity;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.password.PasswordGeneration;
-import org.example.repository.TrainerRepo;
+import org.example.repository.TrainerRepository;
 import org.example.services.TrainerService;
 import org.example.services.TrainingTypeService;
 import org.example.username.UsernameGenerator;
@@ -29,7 +29,7 @@ public class TrainerServiceTest {
     private PasswordGeneration passwordGeneration;
 
     @Mock
-    private TrainerRepo trainerRepository;
+    private TrainerRepository trainerRepository;
     @Mock
     private TrainingTypeService trainingTypeService;
 

@@ -11,7 +11,7 @@ import org.example.entity.TraineeEntity;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.password.PasswordGeneration;
-import org.example.repository.TraineeRepo;
+import org.example.repository.TraineeRepository;
 import org.example.services.TraineeService;
 import org.example.services.UserService;
 import org.example.username.UsernameGenerator;
@@ -25,7 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class TraineeServiceTest {
     @Mock
-    private TraineeRepo traineeRepository;
+    private TraineeRepository traineeRepository;
     @Mock
     private UsernameGenerator usernameGenerator;
     @Mock

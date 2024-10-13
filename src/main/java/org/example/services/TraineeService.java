@@ -1,6 +1,5 @@
 package org.example.services;
 
-import jakarta.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -14,15 +13,16 @@ import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalArgumentException;
 import org.example.password.PasswordGeneration;
-import org.example.repository.TraineeRepo;
+import org.example.repository.TraineeRepository;
 import org.example.username.UsernameGenerator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
 @Slf4j
 public class TraineeService {
-    private final TraineeRepo traineeRepository;
+    private final TraineeRepository traineeRepository;
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
     private final UserService userService;
@@ -31,7 +31,7 @@ public class TraineeService {
     /**
      * Injecting dependencies using constructor.
      */
-    public TraineeService(TraineeRepo traineeRepository,
+    public TraineeService(TraineeRepository traineeRepository,
                           UsernameGenerator usernameGenerator,
                           PasswordGeneration passwordGeneration,
                           UserService userService,
@@ -57,8 +57,6 @@ public class TraineeService {
                 traineeEntity.getUser().getLastName());
         traineeEntity.getUser().setUsername(username);
         traineeEntity.getUser().setPassword(passwordGeneration.generatePassword());
-        UserEntity user = userService.registerUser(traineeEntity.getUser());
-        log.debug("Successfully registered user: {}", user);
         TraineeEntity trainee = traineeRepository.save(traineeEntity);
         log.debug("Successfully registered trainee: {}", traineeEntity);
         return trainee;

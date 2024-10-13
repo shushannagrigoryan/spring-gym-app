@@ -1,20 +1,20 @@
 package org.example.services;
 
-import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
-import org.example.repository.UserRepo;
+import org.example.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
 public class UserService {
-    private final UserRepo userRepository;
+    private final UserRepository userRepository;
 
-    public UserService(UserRepo userRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

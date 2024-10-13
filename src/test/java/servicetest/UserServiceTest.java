@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Optional;
 import org.example.entity.UserEntity;
-import org.example.repository.UserRepo;
+import org.example.repository.UserRepository;
 import org.example.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
     @Mock
-    private UserRepo userRepository;
+    private UserRepository userRepository;
     @InjectMocks
     private UserService userService;
 
