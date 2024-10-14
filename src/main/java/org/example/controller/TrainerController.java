@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/trainers")
 @Slf4j
+//@Api(value = "TrainerController")
 public class TrainerController {
     private final TrainerService trainerService;
     private final TrainerMapper trainerMapper;
@@ -55,6 +56,7 @@ public class TrainerController {
      *                         specialization id(required)
      * @return generated username and password
      */
+    //@ApiOperation(value = "Register a new trainee.")
     @PostMapping("/register")
     public ResponseEntity<TrainerResponseDto> registerTrainer(
             @Valid @RequestBody TrainerCreateRequestDto trainerCreateDto) {
@@ -70,6 +72,7 @@ public class TrainerController {
      * @param username username of the Trainer
      * @return {@code TrainerProfileResponseDto}:
      */
+    //@ApiOperation(value = "Get trainer profile.")
     @GetMapping("/{username}")
     public ResponseEntity<TrainerProfileResponseDto> getTrainerProfile(@PathVariable("username") String username) {
         log.debug("Request to get trainer profile with username: {}", username);
@@ -88,6 +91,7 @@ public class TrainerController {
      *                isActive(required)
      * @return {@code TrainerUpdateResponseDto}
      */
+    //@ApiOperation(value = "Update trainer.")
     @PutMapping("/update-trainer")
     public ResponseEntity<TrainerUpdateResponseDto> updateTrainer(
             @Valid @RequestBody TrainerUpdateRequestDto trainer) {
@@ -105,6 +109,7 @@ public class TrainerController {
      * @param activeStatusRequestDto {@code UserChangeActiveStatusRequestDto}: username(required)
      *                               isActive(required)
      */
+    //@ApiOperation(value = "Activate/Deactivate trainer.")
     @PatchMapping("active-status")
     public ResponseEntity<String> changeActiveStatus(@Valid @RequestBody UserChangeActiveStatusRequestDto
                                                              activeStatusRequestDto) {
@@ -122,6 +127,7 @@ public class TrainerController {
      * @param traineeUsername username of the trainee.
      * @return {@code Set<TrainerProfileDto>}
      */
+    //@ApiOperation(value = "Get active trainers which are not assigned on trainee by traineeUsername.")
     @GetMapping("not-assigned-active-trainers")
     public ResponseEntity<Set<TrainerProfileDto>> notAssignedOnTraineeActiveTrainers(
             @RequestParam("username") String traineeUsername) {

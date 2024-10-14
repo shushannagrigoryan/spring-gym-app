@@ -34,5 +34,6 @@ public class AppInitializer implements WebApplicationInitializer {
         encodingFilter.setInitParameter("encoding", "UTF-8");
         encodingFilter.setInitParameter("forceEncoding", "true");
         encodingFilter.addMappingForUrlPatterns(null, true, "/*");
+
     }
 }
