@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.example.dto.TrainingTypeDto;
+import org.example.dto.responsedto.TrainingTypeResponseDto;
 import org.example.entity.TrainingTypeEntity;
 import org.example.mapper.TrainingTypeMapper;
 import org.junit.jupiter.api.Test;
@@ -54,5 +55,26 @@ public class TrainingTypeMapperTest {
         //then
         assertNotNull(trainingEntity);
         assertEquals(trainingEntity.getTrainingTypeName(), trainingTypeDto.getName());
+    }
+
+    @Test
+    public void testEntityToResponseDto() {
+        //given
+        TrainingTypeEntity trainingType = new TrainingTypeEntity();
+        trainingType.setTrainingTypeName("name");
+        trainingType.setId(1L);
+
+        //when
+        TrainingTypeResponseDto  typeResponseDto = trainingTypeMapper.entityToResponseDto(trainingType);
+
+        //then
+        assertNotNull(typeResponseDto);
+        assertEquals("name", typeResponseDto.getTrainingTypeName());
+        assertEquals(1L, typeResponseDto.getId());
+    }
+
+    @Test
+    public void testNullEntityToResponseDto() {
+        assertNull(trainingTypeMapper.entityToResponseDto(null));
     }
 }

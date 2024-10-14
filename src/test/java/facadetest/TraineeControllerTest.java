@@ -203,13 +203,13 @@ public class TraineeControllerTest {
 
 
         //when
-        ResponseEntity<Set<TrainerProfileDto>> result =
+        ResponseEntity<List<TrainerProfileDto>> result =
                 traineeController.updateTraineesTrainerList(requestDto);
 
         //then
         verify(traineeService).updateTraineesTrainerList(username, list);
         assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals(Set.of(trainerProfileDto), result.getBody());
+        assertEquals(List.of(trainerProfileDto), result.getBody());
     }
 
     @Test

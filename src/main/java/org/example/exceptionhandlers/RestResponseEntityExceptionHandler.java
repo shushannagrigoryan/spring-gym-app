@@ -1,5 +1,6 @@
 package org.example.exceptionhandlers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.exceptions.GymAuthenticationException;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalArgumentException;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
+@Slf4j
 public class RestResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {GymIllegalArgumentException.class, GymEntityNotFoundException.class,
@@ -17,6 +19,8 @@ public class RestResponseEntityExceptionHandler {
     protected ResponseEntity<ExceptionResponse> handleIllegalArgumentException(Exception e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ExceptionResponse response = new ExceptionResponse(e.getMessage(), status);
+        log.debug("Response: {}", response);
+        log.debug("Status Code: {}", status);
         return new ResponseEntity<>(response, status);
     }
 
@@ -26,6 +30,8 @@ public class RestResponseEntityExceptionHandler {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         ExceptionResponse response = new ExceptionResponse(
                 "Authentication error:" + e.getMessage(), status);
+        log.debug("Response: {}", response);
+        log.debug("Status Code: {}", status);
         return new ResponseEntity<>(response, status);
     }
 }

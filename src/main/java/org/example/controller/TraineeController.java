@@ -1,7 +1,7 @@
 package org.example.controller;
 
 import jakarta.validation.Valid;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.TraineeCreateRequestDto;
@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/trainees")
 @Slf4j
+//@Api(value = "TraineeController")
 public class TraineeController {
     private final TraineeService traineeService;
     private final TraineeMapper traineeMapper;
@@ -61,6 +62,7 @@ public class TraineeController {
      *                         address(optional)
      * @return generated username and password
      */
+    //@ApiOperation(value = "Register a new trainee.")
     @PostMapping("/register")
     public ResponseEntity<TraineeResponseDto> registerTrainee(
             @Valid @RequestBody TraineeCreateRequestDto traineeCreateDto) {
@@ -76,6 +78,7 @@ public class TraineeController {
      * @param username of the trainee
      * @return {@code TraineeProfileResponseDto}
      */
+    //@ApiOperation(value = "Get trainee profile.")
     @GetMapping("/{username}")
     public ResponseEntity<TraineeProfileResponseDto> getTraineeProfile(
             @PathVariable("username") String username) {
@@ -96,6 +99,7 @@ public class TraineeController {
      *                isActive(required)
      * @return {@code TraineeUpdateResponseDto}
      */
+    //@ApiOperation(value = "Update trainee")
     @PutMapping("/update-trainee")
     public ResponseEntity<TraineeUpdateResponseDto> updateTrainee(
             @Valid @RequestBody TraineeUpdateRequestDto trainee) {
@@ -113,6 +117,7 @@ public class TraineeController {
      * @param activeStatusRequestDto {@code UserChangeActiveStatusRequestDto}: username(required)
      *                               isActive(required)
      */
+    //@ApiOperation("Activate/Deactivate trainee")
     @PatchMapping("active-status")
     public ResponseEntity<String> changeActiveStatus(@Valid @RequestBody UserChangeActiveStatusRequestDto
                                                              activeStatusRequestDto) {
@@ -128,6 +133,7 @@ public class TraineeController {
      *
      * @param username of the trainee
      */
+    //@ApiOperation(value = "Delete trainee by username.")
     @DeleteMapping("/{username}")
     public ResponseEntity<String> deleteTrainee(@PathVariable(value = "username") String username) {
         log.debug("Request to delete trainee with username: {}", username);
@@ -142,8 +148,9 @@ public class TraineeController {
      *                          list of trainers
      * @return {@code Set<TrainerProfileDto>} updated trainers set
      */
+    //@ApiOperation(value = "Update trainee's trainer list.")
     @PutMapping("/update-trainer-list")
-    public ResponseEntity<Set<TrainerProfileDto>> updateTraineesTrainerList(
+    public ResponseEntity<List<TrainerProfileDto>> updateTraineesTrainerList(
             @Valid @RequestBody TraineeUpdateTrainersRequestDto updateTrainersDto) {
         log.debug("Request to update trainee's: {} trainer list with: {}.",
                 updateTrainersDto.getUsername(), updateTrainersDto.getTrainers());
@@ -151,7 +158,7 @@ public class TraineeController {
         return new ResponseEntity<>(traineeService.updateTraineesTrainerList(updateTrainersDto.getUsername(),
                         updateTrainersDto.getTrainers())
                 .stream().map(trainerMapper::entityToProfileDto)
-                .collect(Collectors.toSet()),
+                .collect(Collectors.toList()),
                 HttpStatus.OK);
     }
 

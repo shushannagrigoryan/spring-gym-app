@@ -15,9 +15,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.example.exceptionhandlers.ExceptionResponse;
 import org.example.exceptions.GymAuthenticationException;
+import org.slf4j.MDC;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -55,22 +57,31 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        log.debug("Authenticating user.");
-
-        String username = httpRequest.getHeader("username");
-        String password = httpRequest.getHeader("password");
-
         try {
+            String transactionId = UUID.randomUUID().toString();
+            MDC.put("transactionId", transactionId);
+            log.debug("Authenticating user.");
+
+            String username = httpRequest.getHeader("username");
+            String password = httpRequest.getHeader("password");
+
             userAuth.userAuth(username, password);
         } catch (GymAuthenticationException e) {
             httpResponse.setContentType("application/json");
             httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
             String json = objectWriter.writeValueAsString(
-                    new ExceptionResponse("Authentication failed: " + e.getMessage(), HttpStatus.UNAUTHORIZED));
+                    new ExceptionResponse("Authentication failed: "
+                    + e.getMessage(), HttpStatus.UNAUTHORIZED));
             httpResponse.getWriter().print(json);
+            log.debug("Authentication failed: {}", e.getMessage());
+            log.debug("Status Code: {}", HttpStatus.UNAUTHORIZED);
+            //throw e;
             return;
+        } finally {
+            MDC.clear();
         }
+        log.debug("Authentication succeeded.");
 
         chain.doFilter(request, response);
     }

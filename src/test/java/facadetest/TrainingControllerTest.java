@@ -186,7 +186,7 @@ public class TrainingControllerTest {
 
         //when
         ResponseEntity<List<TrainerCriteriaTrainingsResponseDto>> result =
-                trainingController.getTraineeTrainingsFilter(requestDto);
+                trainingController.getTrainerTrainingsFilter(requestDto);
 
         //then
         verify(trainingService).getTrainerTrainingsByFilter(requestDto);
