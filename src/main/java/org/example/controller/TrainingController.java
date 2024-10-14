@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/trainings")
 @Slf4j
-//@Api(value = "TrainingController")
 public class TrainingController {
     private final TrainingService trainingService;
     private final TrainingMapper trainingMapper;
@@ -43,7 +42,6 @@ public class TrainingController {
      *
      * @param trainingDto training to create: {@code TrainingCreateDto}
      */
-    //@ApiOperation(value = "Create a new training.")
     @PostMapping("/add-training")
     public ResponseEntity<String> createTraining(@Valid @RequestBody TrainingCreateRequestDto trainingDto) {
         log.debug("Request to create new training: {}", trainingDto);
@@ -57,7 +55,6 @@ public class TrainingController {
      * @param trainingsDto {@code TraineeTrainingsFilterRequestDto} the given criteria
      * @return {@code List<TraineeCriteriaTrainingsResponseDto>}
      */
-    //@ApiOperation(value = "Get trainee trainings by given criteria.")
     @GetMapping("/trainee-trainings")
     public ResponseEntity<List<TraineeCriteriaTrainingsResponseDto>> getTraineeTrainingsFilter(
             @Valid @RequestBody TraineeTrainingsFilterRequestDto trainingsDto) {
@@ -79,7 +76,6 @@ public class TrainingController {
      * @param trainingsDto {@code TrainerTrainingsFilterRequestDto} the given criteria
      * @return {@code List<TrainerCriteriaTrainingsResponseDto>}
      */
-    //@ApiOperation(value = "Get trainer trainings by given criteria.")
     @GetMapping("/trainer-trainings")
     public ResponseEntity<List<TrainerCriteriaTrainingsResponseDto>> getTrainerTrainingsFilter(
             @Valid @RequestBody TrainerTrainingsFilterRequestDto trainingsDto) {

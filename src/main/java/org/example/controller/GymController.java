@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-//@Api(value = "GymController")
 public class GymController {
     @GetMapping()
     public ResponseEntity<String> gymPage() {

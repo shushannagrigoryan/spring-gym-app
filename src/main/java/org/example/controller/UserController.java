@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/users")
 @Slf4j
-//@Api(value = "UserController")
 public class UserController {
     private final UserService userService;
 
@@ -34,8 +33,6 @@ public class UserController {
      * @param username username of the user
      * @param password password of the user
      */
-    //@ApiOperation(value = "Login a user.")
-    //@Operation(summary = "Login a user.", description = "Logins a user.")
     @GetMapping("/login")
     public ResponseEntity<String> login(@RequestHeader("username") String username,
                                         @RequestHeader("password") String password) {
@@ -52,7 +49,6 @@ public class UserController {
      *                          password(required)
      *                          newPassword(required)
      */
-    //@ApiOperation(value = "Change user password.")
     @PutMapping("/change-password")
     public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordRequestDto changePasswordDto) {
         log.debug("Request to change password of user with username: {}", changePasswordDto.getUsername());

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/training-types")
 @Slf4j
-//@Api(value = "TrainingTypeController")
 public class TrainingTypeController {
     private final TrainingTypeService trainingTypeService;
     private final TrainingTypeMapper trainingTypeMapper;
@@ -34,7 +33,6 @@ public class TrainingTypeController {
      *
      * @return {@code TrainingTypeResponseDto}
      */
-    //@ApiOperation(value = "Get all training types.")
     @GetMapping
     public ResponseEntity<List<TrainingTypeResponseDto>> getTrainingTypes() {
         log.debug("Request to get all training types.");
