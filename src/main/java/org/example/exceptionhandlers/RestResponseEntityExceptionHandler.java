@@ -1,5 +1,7 @@
 package org.example.exceptionhandlers;
 
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.example.exceptions.GymAuthenticationException;
 import org.example.exceptions.GymEntityNotFoundException;
@@ -25,13 +27,15 @@ public class RestResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = {GymAuthenticationException.class})
-    protected ResponseEntity<ExceptionResponse> handleAuthenticationFailException(GymAuthenticationException e) {
+    protected ResponseEntity<ExceptionResponse> handleAuthenticationFailException(
+            GymAuthenticationException e, HttpServletResponse servletResponse) throws IOException {
         System.out.println("Exception handling for authorization.");
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         ExceptionResponse response = new ExceptionResponse(
                 "Authentication error:" + e.getMessage(), status);
         log.debug("Response: {}", response);
         log.debug("Status Code: {}", status);
+        servletResponse.getWriter().write(401);
         return new ResponseEntity<>(response, status);
     }
 }

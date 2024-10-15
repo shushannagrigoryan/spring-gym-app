@@ -2,11 +2,13 @@ package org.example.config;
 
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
+import org.example.auth.AuthInterceptor;
 import org.flywaydb.core.Flyway;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -14,57 +16,20 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ComponentScan(basePackages = "org.example")
 @Slf4j
 public class WebMvcConfig implements WebMvcConfigurer {
+    private final AuthInterceptor authInterceptor;
 
-    //    /**
-    //     * data source.
-    //     */
-    //    @Bean
-    //    public DataSource dataSource() {
-    //        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-    //        dataSource.setDriverClassName("org.postgresql.Driver");
-    //        dataSource.setUrl("jdbc:postgresql://localhost:5432/gymdb");
-    //        dataSource.setUsername("postgres");
-    //        dataSource.setPassword("postgres");
-    //        return dataSource;
-    //    }
-    //
-    //    /**
-    //     * entity manager.
-    //     */
-    //    @Bean
-    //    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-    //        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-    //        em.setDataSource(dataSource());
-    //        em.setPackagesToScan("org.example.entity");
-    //
-    //        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-    //        em.setJpaVendorAdapter(vendorAdapter);
-    //        em.setJpaProperties(hibernateProperties());
-    //        return em;
-    //    }
-    //
-    //    private Properties hibernateProperties() {
-    //        Properties properties = new Properties();
-    //        properties.setProperty("hibernate.hbm2ddl.auto", "update");
-    //        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-    //        properties.setProperty("hibernate.show_sql", "true");
-    //        return properties;
-    //    }
-    //
-    //    /**
-    //     * transaction manager.
-    //     */
-    //    @Bean
-    //    public JpaTransactionManager transactionManager() {
-    //        JpaTransactionManager transactionManager = new JpaTransactionManager();
-    //        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
-    //        return transactionManager;
-    //    }
-    //
-    //    @Bean
-    //    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
-    //        return new PersistenceExceptionTranslationPostProcessor();
-    //    }
+    /** Setting dependencies. */
+    public WebMvcConfig(AuthInterceptor authInterceptor) {
+        this.authInterceptor = authInterceptor;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(authInterceptor)
+                .addPathPatterns("/trainees/**", "/trainers/**", "/users/**", "/training-types/**", "/trainings/**")
+                .excludePathPatterns("/trainees/register", "/trainers/register");
+
+    }
 
     /**
      * Flyway configuration.
