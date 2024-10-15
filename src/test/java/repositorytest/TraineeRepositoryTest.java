@@ -145,7 +145,6 @@ public class TraineeRepositoryTest {
     @Test
     public void testDelete() {
         //given
-        Long id  = 1L;
         UserEntity user = new UserEntity();
         TraineeEntity trainee = new TraineeEntity();
         trainee.setUser(user);

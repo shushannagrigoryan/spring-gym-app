@@ -20,7 +20,6 @@ public class TransactionIdFilter implements Filter {
                          FilterChain chain) throws IOException, ServletException {
         String transactionId = UUID.randomUUID().toString();
         MDC.put("transactionId", transactionId);
-        System.out.println("Transaction ID: " + transactionId);
         try {
             chain.doFilter(request, response);
         } finally {

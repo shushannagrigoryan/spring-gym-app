@@ -1,4 +1,4 @@
-package facadetest;
+package controllertest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
@@ -65,94 +65,6 @@ public class TraineeControllerTest {
         assertEquals(HttpStatus.CREATED, result.getStatusCode());
         assertEquals(response, result.getBody());
     }
-
-    //    @Test
-    //    public void testGetTraineeByIdSuccess() {
-    //        //given
-    //        Long id = 1L;
-    //        TraineeEntity traineeEntity = new TraineeEntity();
-    //        TraineeDto traineeDto = new TraineeDto();
-    //        when(traineeService.getTraineeById(id)).thenReturn(traineeEntity);
-    //        when(traineeMapper.entityToDto(traineeEntity)).thenReturn(traineeDto);
-    //
-    //        //when
-    //        TraineeDto result = traineeFacade.getTraineeById(id);
-    //
-    //        //then
-    //        verify(traineeService).getTraineeById(id);
-    //        assertNotNull(result);
-    //    }
-
-    //    @Test
-    //    public void testGetTraineeByUsernameSuccess() {
-    //        //given
-    //        String username = "A.B";
-    //        TraineeEntity traineeEntity = new TraineeEntity();
-    //        TraineeDto traineeDto = new TraineeDto();
-    //        when(traineeService.getTraineeByUsername(username)).thenReturn(traineeEntity);
-    //        when(traineeMapper.entityToDto(traineeEntity)).thenReturn(traineeDto);
-    //
-    //        //when
-    //        TraineeDto result = traineeFacade.getTraineeByUsername(username);
-    //
-    //        //then
-    //        verify(traineeService).getTraineeByUsername(username);
-    //        assertNotNull(result);
-    //    }
-
-    //    @Test
-    //    public void testChangeTraineePasswordSuccess() {
-    //        //given
-    //        String username = "A.B";
-    //        String password = "1234567890";
-    //        when(traineeAuth.traineeAuth(username, password)).thenReturn(true);
-    //
-    //        //when
-    //        traineeFacade.changeTraineePassword(username, password);
-    //
-    //        //then
-    //        verify(traineeService).changeTraineePassword(username);
-    //    }
-
-    //    @Test
-    //    public void testChangeTraineePasswordFailure() {
-    //        //given
-    //        String username = "A.B";
-    //        String password = "1234567890";
-    //        when(traineeAuth.traineeAuth(username, password)).thenReturn(false);
-    //
-    //        //when
-    //        traineeFacade.changeTraineePassword(username, password);
-    //
-    //        //then
-    //        verify(traineeService, times(0)).changeTraineePassword(username);
-    //    }
-
-    //    @Test
-    //    public void testActivateTrainee() {
-    //        //given
-    //        Long id = 1L;
-    //        doNothing().when(traineeService).activateTrainee(id);
-    //
-    //        //when
-    //        traineeFacade.activateTrainee(id);
-    //
-    //        //then
-    //        verify(traineeService).activateTrainee(id);
-    //    }
-
-    //    @Test
-    //    public void testDeactivateTrainee() {
-    //        //given
-    //        Long id = 1L;
-    //        doNothing().when(traineeService).deactivateTrainee(id);
-    //
-    //        //when
-    //        traineeFacade.deactivateTrainee(id);
-    //
-    //        //then
-    //        verify(traineeService).deactivateTrainee(id);
-    //    }
 
     @Test
     public void testChangeActiveStatusSuccess() {

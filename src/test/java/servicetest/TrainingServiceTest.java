@@ -108,48 +108,6 @@ public class TrainingServiceTest {
         verify(trainingRepository).findById(trainingId);
     }
 
-    //@Test
-    //    public void testUpdateTrainingSuccess() {
-    //        // Given
-    //        Long trainingId = 1L;
-    //        TrainingEntity training = new TrainingEntity();
-    //        training.setId(trainingId);
-    //        training.setTrainingName("training1");
-    //
-    //        TrainingEntity updatedTraining = new TrainingEntity();
-    //        updatedTraining.setTrainingName("training2");
-    //        updatedTraining.setTrainingTypeId(2L);
-    //        updatedTraining.setTrainingDate(LocalDate.of(2023, 9, 1));
-    //        updatedTraining.setTrainingDuration(BigDecimal.valueOf(60));
-    //        updatedTraining.setTraineeId(1L);
-    //        updatedTraining.setTrainerId(1L);
-    //
-    //        when(trainingRepository.getTrainingById(trainingId)).thenReturn(training);
-    //        when(trainingTypeService.getTrainingTypeById(updatedTraining.getTrainingTypeId()))
-    //                .thenReturn(new TrainingTypeEntity());
-    //        when(traineeService.getTraineeById(updatedTraining.getTraineeId())).thenReturn(new TraineeEntity());
-    //        when(trainerService.getTrainerById(updatedTraining.getTrainerId())).thenReturn(new TrainerEntity());
-    //
-    //        // When
-    //        trainingService.updateTraining(trainingId, updatedTraining);
-    //
-    //        // Then
-    //        assertEquals("training2", training.getTrainingName());
-    //        verify(trainingRepository).updateTraining(training);
-    //    }
-    //
-    //    @Test
-    //    public void testUpdateTrainingInvalidId() {
-    //        //given
-    //        long trainingId = 1L;
-    //        when(trainingRepository.getTrainingById(trainingId)).thenReturn(null);
-    //
-    //        //then
-    //        GymIllegalIdException exception = assertThrows(GymIllegalIdException.class,
-    //                () -> trainingService.updateTraining(trainingId, new TrainingEntity()));
-    //        assertEquals(String.format("No training with id: %d", trainingId), exception.getMessage());
-    //    }
-
     @Test
     public void testGetTraineeTrainingsByFilter() {
         // Given

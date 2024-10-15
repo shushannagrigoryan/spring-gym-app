@@ -1,4 +1,4 @@
-package facadetest;
+package controllertest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -80,33 +80,6 @@ public class TrainerControllerTest {
         verify(trainerMapper).entityToProfileDto(trainer);
     }
 
-    //    @Test
-    //    public void testGetTrainersNotAssignedToTrainee_WhenNoTrainersFound() {
-    //        // Given
-    //        String traineeUsername = "A.A";
-    //
-    //        when(trainerService.getTrainersNotAssignedToTrainee(traineeUsername))
-    //                .thenReturn(Collections.emptyList());
-    //
-    //        // When
-    //        List<TrainerDto> result = trainerFacade.getTrainersNotAssignedToTrainee(traineeUsername);
-    //
-    //        // Then
-    //        assertTrue(result.isEmpty());
-    //    }
-
-    //    @Test
-    //    public void testGetTrainersNotAssignedToTrainee_WhenServiceThrowsException() {
-    //        // Given
-    //        String traineeUsername = "A.A";
-    //        when(trainerService.getTrainersNotAssignedToTrainee(traineeUsername))
-    //                .thenThrow(new RuntimeException("Error"));
-    //
-    //        // Then
-    //        RuntimeException exception = assertThrows(RuntimeException.class,
-    //                () -> trainerFacade.getTrainersNotAssignedToTrainee(traineeUsername));
-    //        assertEquals("Error", exception.getMessage());
-    //    }
     @Test
     public void testChangeActiveStatusSuccess() {
         //given

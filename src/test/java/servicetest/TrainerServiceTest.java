@@ -1,12 +1,15 @@
 package servicetest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
+import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.entity.TrainingTypeEntity;
@@ -15,6 +18,7 @@ import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalArgumentException;
 import org.example.password.PasswordGeneration;
 import org.example.repository.TrainerRepository;
+import org.example.services.TraineeService;
 import org.example.services.TrainerService;
 import org.example.services.TrainingTypeService;
 import org.example.username.UsernameGenerator;
@@ -36,6 +40,8 @@ public class TrainerServiceTest {
     private TrainerRepository trainerRepository;
     @Mock
     private TrainingTypeService trainingTypeService;
+    @Mock
+    private TraineeService traineeService;
 
     @InjectMocks
     private TrainerService trainerService;
@@ -98,161 +104,57 @@ public class TrainerServiceTest {
         verify(trainerRepository).findByUsername(username);
     }
 
-    //    @Test
-    //    public void testGetTrainerByIdSuccess() {
-    //        //given
-    //        TrainerEntity trainerEntity = new TrainerEntity();
-    //        Long id = 1L;
-    //        trainerEntity.setId(id);
-    //        when(trainerRepository.getTrainerById(id)).thenReturn(trainerEntity);
-    //
-    //        //when
-    //        trainerService.getTrainerById(id);
-    //
-    //        //then
-    //        verify(trainerRepository).getTrainerById(id);
-    //    }
+    @Test
+    public void testGetTrainerByIdSuccess() {
+        //given
+        TrainerEntity trainerEntity = new TrainerEntity();
+        Long id = 1L;
+        trainerEntity.setId(id);
+        when(trainerRepository.findById(id)).thenReturn(Optional.of(trainerEntity));
 
-    //    @Test
-    //    public void testGetTrainerBIdFailure() {
-    //        //given
-    //        Long id = 1L;
-    //
-    //        when(trainerRepository.getTrainerById(id)).thenReturn(null);
-    //
-    //        //then
-    //        assertThrows(GymIllegalIdException.class,
-    //                () -> trainerService.getTrainerById(id),
-    //                String.format("No trainer with id: %d", id));
-    //        verify(trainerRepository).getTrainerById(id);
-    //    }
+        //when
+        TrainerEntity trainer = trainerService.getTrainerById(id);
+
+        //then
+        verify(trainerRepository).findById(id);
+        assertNotNull(trainer);
+    }
+
+    @Test
+    public void testGetTrainerBIdFailure() {
+        //given
+        Long id = 1L;
+
+        when(trainerRepository.findById(id)).thenReturn(Optional.empty());
+
+        //then
+        assertThrows(GymEntityNotFoundException.class,
+                () -> trainerService.getTrainerById(id),
+                String.format("No trainer with id: %d", id));
+        verify(trainerRepository).findById(id);
+    }
 
 
-    //    @Test
-    //    public void testChangeTrainerPassword() {
-    //        // Given
-    //        String username = "A.A";
-    //        String generatedPassword = "password12";
-    //        when(passwordGeneration.generatePassword()).thenReturn(generatedPassword);
-    //
-    //        //when
-    //        trainerService.changeTrainerPassword(username);
-    //
-    //        // then
-    //        verify(trainerRepository).changeTrainerPassword(username, generatedPassword);
-    //    }
-    //
-    //    @Test
-    //    public void testActivateTrainerSuccess() {
-    //        // Given
-    //        Long trainerId = 1L;
-    //        UserEntity user = new UserEntity();
-    //        TrainerEntity trainerEntity = new TrainerEntity();
-    //        trainerEntity.setUser(user);
-    //        when(trainerRepository.getTrainerById(trainerId)).thenReturn(trainerEntity);
-    //
-    //        // When
-    //        trainerService.activateTrainer(trainerId);
-    //
-    //        // Then
-    //        verify(trainerRepository).activateTrainer(trainerEntity);
-    //    }
-    //
-    //    @Test
-    //    public void testActivateTrainerAlreadyActive() {
-    //        // Given
-    //        Long trainerId = 1L;
-    //        UserEntity user = new UserEntity();
-    //        user.setActive(true);
-    //        TrainerEntity trainerEntity = new TrainerEntity();
-    //        trainerEntity.setUser(user);
-    //        when(trainerRepository.getTrainerById(trainerId)).thenReturn(trainerEntity);
-    //
-    //        // Then
-    //        assertThrows(GymIllegalStateException.class,
-    //                () -> trainerService.activateTrainer(trainerId),
-    //                String.format("Trainer with id: %d is already active", trainerId));
-    //    }
-    //
-    //    @Test
-    //    public void testActivateTrainerNull() {
-    //        // Given
-    //        Long trainerId = 1L;
-    //        UserEntity user = new UserEntity();
-    //        user.setActive(true);
-    //        TrainerEntity trainerEntity = new TrainerEntity();
-    //        trainerEntity.setUser(user);
-    //        when(trainerRepository.getTrainerById(trainerId)).thenReturn(null);
-    //
-    //        // Then
-    //        assertThrows(GymIllegalIdException.class,
-    //                () -> trainerService.activateTrainer(trainerId),
-    //                String.format("No trainer with %d exists.", trainerId));
-    //    }
-    //
-    //    @Test
-    //    public void testDeactivateTrainerSuccess() {
-    //        // Given
-    //        Long trainerId = 1L;
-    //        UserEntity user = new UserEntity();
-    //        user.setActive(true);
-    //        TrainerEntity trainerEntity = new TrainerEntity();
-    //        trainerEntity.setUser(user);
-    //        when(trainerRepository.getTrainerById(trainerId)).thenReturn(trainerEntity);
-    //
-    //        // When
-    //        trainerService.deactivateTrainer(trainerId);
-    //
-    //        // Then
-    //        verify(trainerRepository).deactivateTrainer(trainerEntity);
-    //    }
-    //
-    //    @Test
-    //    public void testDeactivateTrainerAlreadyActive() {
-    //        // Given
-    //        Long trainerId = 1L;
-    //        UserEntity user = new UserEntity();
-    //        user.setActive(false);
-    //        TrainerEntity trainerEntity = new TrainerEntity();
-    //        trainerEntity.setUser(user);
-    //        when(trainerRepository.getTrainerById(trainerId)).thenReturn(trainerEntity);
-    //
-    //        // Then
-    //        assertThrows(GymIllegalStateException.class,
-    //                () -> trainerService.deactivateTrainer(trainerId),
-    //                String.format("Trainer with id: %d is already inactive", trainerId));
-    //    }
-    //
-    //    @Test
-    //    public void testDeactivateTrainerNull() {
-    //        // Given
-    //        Long trainerId = 1L;
-    //        UserEntity user = new UserEntity();
-    //        user.setActive(true);
-    //        TrainerEntity trainerEntity = new TrainerEntity();
-    //        trainerEntity.setUser(user);
-    //        when(trainerRepository.getTrainerById(trainerId)).thenReturn(null);
-    //
-    //        // Then
-    //        assertThrows(GymIllegalIdException.class,
-    //                () -> trainerService.deactivateTrainer(trainerId),
-    //                String.format("No trainer with %d exists.", trainerId));
-    //    }
-    //
-    //    @Test
-    //    public void testGetTrainersNotAssignedToTrainee() {
-    //        //given
-    //        String username = "A.A";
-    //        when(trainerRepository.getTrainersNotAssignedToTrainee(username)).thenReturn(new ArrayList<>());
-    //
-    //        //when
-    //        trainerService.getTrainersNotAssignedToTrainee(username);
-    //
-    //        //then
-    //        verify(trainerRepository).getTrainersNotAssignedToTrainee(username);
-    //    }
-    //
-    //
+        @Test
+        public void testNotAssignedOnTraineeActiveTrainers() {
+            //given
+            String username = "A.A";
+            when(traineeService.getTraineeByUsername(username)).thenReturn(new TraineeEntity());
+            UserEntity user = new UserEntity();
+            TrainerEntity trainer = new TrainerEntity();
+            trainer.setUser(user);
+            when(trainerRepository.getTrainersNotAssignedToTraineeActiveTrainers(username))
+                    .thenReturn(List.of(trainer));
+
+            //when
+            List<TrainerEntity> result = trainerService.notAssignedOnTraineeActiveTrainers(username);
+
+            //then
+            verify(trainerRepository).getTrainersNotAssignedToTraineeActiveTrainers(username);
+            assertEquals(1, result.size());
+        }
+
+
     @Test
     public void testUpdateTrainerByUsernameInvalidId() {
         //given
@@ -270,77 +172,34 @@ public class TrainerServiceTest {
                         () -> trainerService.updateTrainer(trainer));
         assertEquals(String.format("No trainer with username: %s", username), exception.getMessage());
     }
-    //
-    //    @Test
-    //    public void testUpdateTraineeSuccess() {
-    //        // given
-    //        String firstName = "A";
-    //        String lastName = "V";
-    //        TrainerEntity trainerEntity = new TrainerEntity();
-    //        UserEntity user = new UserEntity();
-    //        user.setFirstName(firstName);
-    //        user.setLastName(lastName);
-    //        trainerEntity.setUser(user);
-    //        TrainingTypeEntity specialization = new TrainingTypeEntity();
-    //        specialization.setId(1L);
-    //        trainerEntity.setSpecialization(specialization);
-    //
-    //        Long id = 1L;
-    //
-    //        trainerEntity.setSpecializationId(id);
-    //        UserEntity resultUser = new UserEntity();
-    //        resultUser.setFirstName("B");
-    //        resultUser.setLastName(lastName);
-    //        TrainerEntity result = new TrainerEntity();
-    //        result.setUser(resultUser);
-    //
-    //        when(trainerRepository.getTrainerById(id)).thenReturn(result);
-    //        when(trainingTypeService.getTrainingTypeById(id)).thenReturn(specialization);
-    //        ArgumentCaptor<TrainerEntity> trainerCaptor = ArgumentCaptor.forClass(TrainerEntity.class);
-    //
-    //        // when
-    //        trainerService.updateTrainerById(id, trainerEntity);
-    //
-    //        // then
-    //        verify(trainerRepository).updateTrainerById(eq(id), trainerCaptor.capture());
-    //        TrainerEntity updatedTrainer = trainerCaptor.getValue();
-    //        assertEquals(firstName, updatedTrainer.getUser().getFirstName());
-    //        assertEquals(lastName, updatedTrainer.getUser().getLastName());
-    //        assertEquals(id, updatedTrainer.getSpecialization().getId());
-    //    }
 
-    //    @Test
-    //    public void testUpdateTraineeSuccessIllegalSpecialization() {
-    //        // given
-    //        String firstName = "A";
-    //        String lastName = "V";
-    //        TrainerEntity trainerEntity = new TrainerEntity();
-    //        UserEntity user = new UserEntity();
-    //        user.setFirstName(firstName);
-    //        user.setLastName(lastName);
-    //        trainerEntity.setUser(user);
-    //        Long trainingId = 1L;
-    //        TrainingTypeEntity specialization = new TrainingTypeEntity();
-    //        specialization.setId(trainingId);
-    //        trainerEntity.setSpecialization(specialization);
-    //
-    //        Long id = 1L;
-    //
-    //        trainerEntity.setSpecializationId(id);
-    //        UserEntity resultUser = new UserEntity();
-    //        resultUser.setFirstName("B");
-    //        resultUser.setLastName(lastName);
-    //        TrainerEntity result = new TrainerEntity();
-    //        result.setUser(resultUser);
-    //
-    //        when(trainerRepository.getTrainerById(id)).thenReturn(result);
-    //        when(trainingTypeService.getTrainingTypeById(id)).thenReturn(null);
-    //
-    //        // then
-    //        assertThrows(GymIllegalIdException.class,
-    //                () -> trainerService.updateTrainerById(id, trainerEntity),
-    //                String.format("Illegal id for training: %d", trainingId));
-    //    }
+    @Test
+    public void testUpdateTraineeSuccess() {
+        // given
+        String firstName = "A";
+        String lastName = "V";
+        TrainerEntity trainerEntity = new TrainerEntity();
+        UserEntity user = new UserEntity();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setUsername("A.V");
+        trainerEntity.setUser(user);
+        TrainingTypeEntity specialization = new TrainingTypeEntity();
+        specialization.setId(1L);
+        trainerEntity.setSpecialization(specialization);
+
+        when(trainerRepository.findByUsername("A.V")).thenReturn(Optional.of(trainerEntity));
+        user.setFirstName("B");
+        when(trainerRepository.save(trainerEntity)).thenReturn(trainerEntity);
+
+        // when
+        TrainerEntity trainer = trainerService.updateTrainer(trainerEntity);
+
+        // then
+        assertNotNull(trainer);
+        assertEquals("B", trainer.getUser().getFirstName());
+        assertEquals("A.V", trainer.getUser().getUsername());
+    }
 
     @Test
     public void testGetTrainerProfileSuccess() {
@@ -372,6 +231,60 @@ public class TrainerServiceTest {
                 () -> trainerService.getTrainerProfile(username),
                 String.format("Trainer with username %s does not exist.", username));
 
+    }
+
+    @Test
+    public void testDeactivateTrainerSuccess() {
+        //given
+        String username = "A.I";
+        TrainerEntity trainer = new TrainerEntity();
+        UserEntity user = new UserEntity();
+        user.setActive(true);
+        user.setUsername(username);
+        trainer.setUser(user);
+
+        when(trainerRepository.findByUsername(username)).thenReturn(Optional.of(trainer));
+        TrainerEntity activatedTrainer = new TrainerEntity();
+        activatedTrainer.setUser(user);
+        activatedTrainer.getUser().setActive(true);
+        when(trainerRepository.save(trainer)).thenReturn(activatedTrainer);
+
+        //when
+        String result = trainerService.changeActiveStatus(username, false);
+
+        //then
+        verify(trainerRepository).findByUsername(username);
+        verify(trainerRepository).save(trainer);
+        assertEquals("Successfully set trainer active status to " + false, result);
+    }
+
+    @Test
+    public void testDeactivateTrainerAlreadyInactive() {
+        //given
+        String username = "A.I";
+        TrainerEntity trainer = new TrainerEntity();
+        UserEntity user = new UserEntity();
+        user.setUsername(username);
+        trainer.setUser(user);
+        when(trainerRepository.findByUsername(username)).thenReturn(Optional.of(trainer));
+
+        //when
+        String result = trainerService.changeActiveStatus(username, false);
+
+        //then
+        verify(trainerRepository).findByUsername(username);
+        assertEquals("Trainer isActive status is already " + false, result);
+    }
+
+    @Test
+    public void testDeactivateTrainerNotFound() {
+        //given
+        String username = "A.I";
+        doThrow(new GymEntityNotFoundException(String.format("Trainer with username %s does not exist.", username)))
+                .when(trainerRepository).findByUsername(username);
+        assertThrows(GymEntityNotFoundException.class, () ->
+                        trainerService.changeActiveStatus(username, false),
+                String.format("Trainer with username %s does not exist.", username));
     }
 
 }
