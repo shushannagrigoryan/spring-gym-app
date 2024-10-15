@@ -1,4 +1,4 @@
-package facadetest;
+package controllertest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
@@ -51,97 +51,6 @@ public class TrainingControllerTest {
         assertEquals("Successfully created a new training.", result.getBody());
         assertEquals(HttpStatus.OK, result.getStatusCode());
     }
-
-    //    @Test
-    //    public void testGetTrainingByIdSuccess() {
-    //        // Given
-    //        Long id = 1L;
-    //        TrainingEntity trainingEntity = new TrainingEntity();
-    //        TrainingDto expectedTrainingDto = new TrainingDto();
-    //        when(trainingService.getTrainingById(id)).thenReturn(trainingEntity);
-    //        when(trainingMapper.entityToDto(trainingEntity)).thenReturn(expectedTrainingDto);
-    //
-    //        // When
-    //        TrainingDto actualTrainingDto = trainingFacade.getTrainingById(id);
-    //
-    //        // Then
-    //        verify(trainingService).getTrainingById(id);
-    //        verify(trainingMapper).entityToDto(trainingEntity);
-    //        assertEquals(expectedTrainingDto, actualTrainingDto);
-    //
-    //    }
-
-    //    @Test
-    //    public void testUpdateTraining() {
-    //        // Given
-    //        Long trainingId = 1L;
-    //        TrainingDto trainingDto = new TrainingDto();
-    //        TrainingEntity trainingEntity = new TrainingEntity();
-    //        when(trainingMapper.dtoToEntity(trainingDto)).thenReturn(trainingEntity);
-    //
-    //        // When
-    //        trainingFacade.updateTraining(trainingId, trainingDto);
-    //
-    //        // Then
-    //        verify(trainingMapper).dtoToEntity(trainingDto);
-    //        verify(trainingService).updateTraining(trainingId, trainingEntity);
-    //    }
-
-    //    @Test
-    //    public void testGetTraineeTrainingsByFilter() {
-    //        // Given
-    //        String traineeUsername = "R.R";
-    //        LocalDate fromDate = LocalDate.now();
-    //        LocalDate toDate = LocalDate.now();
-    //        Long trainingTypeId = 1L;
-    //        String trainerUsername = "O.O";
-    //
-    //        List<TrainingEntity> trainingList = Arrays.asList(new TrainingEntity(), new TrainingEntity());
-    //        when(trainingService.getTraineeTrainingsByFilter(
-    //                traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername))
-    //                .thenReturn(trainingList);
-    //
-    //        List<TrainingDto> expectedDtoList = Arrays.asList(new TrainingDto(), new TrainingDto());
-    //        when(trainingMapper.entityToDto(trainingList.get(0))).thenReturn(expectedDtoList.get(0));
-    //        when(trainingMapper.entityToDto(trainingList.get(1))).thenReturn(expectedDtoList.get(1));
-    //
-    //        // When
-    //        List<TrainingDto> actualDtoList = trainingFacade.getTraineeTrainingsByFilter(
-    //                traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername);
-    //
-    //        // Then
-    //        verify(trainingService)
-    //                .getTraineeTrainingsByFilter(traineeUsername, fromDate, toDate,
-    //                        trainingTypeId, trainerUsername);
-    //        verify(trainingMapper, times(2)).entityToDto(any(TrainingEntity.class));
-    //        assertEquals(expectedDtoList, actualDtoList);
-    //    }
-
-    //    @Test
-    //    public void testGetTrainerTrainingsByFilter() {
-    //        // Given
-    //        String trainerUsername = "R.R";
-    //        LocalDate fromDate = LocalDate.now();
-    //        LocalDate toDate = LocalDate.now();
-    //        String traineeUsername = "O.O";
-    //
-    //        List<TrainingEntity> trainingList = Arrays.asList(new TrainingEntity(), new TrainingEntity());
-    //        when(trainingService.getTrainerTrainingsByFilter(trainerUsername, fromDate, toDate, traineeUsername))
-    //                .thenReturn(trainingList);
-    //
-    //        List<TrainingDto> expectedDtoList = Arrays.asList(new TrainingDto(), new TrainingDto());
-    //        when(trainingMapper.entityToDto(trainingList.get(0))).thenReturn(expectedDtoList.get(0));
-    //        when(trainingMapper.entityToDto(trainingList.get(1))).thenReturn(expectedDtoList.get(1));
-    //
-    //        // When
-    //        List<TrainingDto> actualDtoList = trainingFacade.getTrainerTrainingsByFilter(
-    //                trainerUsername, fromDate, toDate, traineeUsername);
-    //
-    //        // Then
-    //        verify(trainingService).getTrainerTrainingsByFilter(trainerUsername, fromDate, toDate, traineeUsername);
-    //        verify(trainingMapper, times(2)).entityToDto(any(TrainingEntity.class));
-    //        assertEquals(expectedDtoList, actualDtoList);
-    //    }
 
     @Test
     public void getTraineeTrainingsFilter() {

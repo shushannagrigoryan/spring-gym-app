@@ -49,11 +49,6 @@ public class TraineeMapperTest {
         assertEquals(traineeEntity.getDateOfBirth(), traineeDto.getDateOfBirth());
     }
 
-    //    @Test
-    //    public void testDtoToEntityNull() {
-    //        assertNull(traineeMapper.dtoToEntity(null));
-    //    }
-
     @Test
     public void testDtoToEntity() {
         //given

@@ -24,7 +24,6 @@ public class TraineeService {
     private final TraineeRepository traineeRepository;
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
-    private final UserService userService;
     private final TrainerService trainerService;
 
     /**
@@ -33,12 +32,10 @@ public class TraineeService {
     public TraineeService(TraineeRepository traineeRepository,
                           UsernameGenerator usernameGenerator,
                           PasswordGeneration passwordGeneration,
-                          UserService userService,
                           TrainerService trainerService) {
         this.traineeRepository = traineeRepository;
         this.usernameGenerator = usernameGenerator;
         this.passwordGeneration = passwordGeneration;
-        this.userService = userService;
         this.trainerService = trainerService;
     }
 
@@ -194,8 +191,9 @@ public class TraineeService {
      */
     @Transactional
     public String changeActiveStatus(String username, boolean isActive) {
-        TraineeEntity trainee = getTraineeByUsername(username);
-        System.out.println("TRAINEE = "  + trainee);
+        TraineeEntity trainee = traineeRepository.findByUsername(username)
+                .orElseThrow(() -> new GymEntityNotFoundException(
+                        String.format("Trainee with username %s does not exist.", username)));
 
         if (trainee.getUser().isActive() == isActive) {
             log.debug("Trainee : {} isActive status is already: {}", username, isActive);
@@ -218,7 +216,9 @@ public class TraineeService {
      */
     @Transactional
     public Set<TrainerEntity> updateTraineesTrainerList(String username, List<String> trainers) {
-        TraineeEntity trainee = getTraineeByUsername(username);
+        TraineeEntity trainee = traineeRepository.findByUsername(username)
+                .orElseThrow(() -> new GymEntityNotFoundException(
+                        String.format("Trainee with username %s does not exist.", username)));
         Set<TrainerEntity> trainerEntities = new HashSet<>();
         trainers.forEach(t -> {
             TrainerEntity trainerEntity = trainerService.getTrainerByUsername(t);

@@ -24,12 +24,11 @@ public class UserService {
      * @param userEntity the new {@code UserEntity}
      */
     @Transactional
-    public UserEntity registerUser(UserEntity userEntity) {
+    public void registerUser(UserEntity userEntity) {
         log.debug("Creating user: {}", userEntity);
 
         UserEntity user = userRepository.save(userEntity);
         log.debug("Successfully created user: {}", user);
-        return user;
     }
 
     /**

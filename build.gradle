@@ -50,8 +50,11 @@ dependencies {
     implementation group: 'org.apache.tomcat', name: 'tomcat-jdbc', version: '10.1.30'
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.10.2'
 
-    //implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
-    //implementation group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
+
+    //implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.8.0'
+    //implementation 'org.springdoc:springdoc-openapi-ui:1.8.0'
+
+
 }
 
 test{

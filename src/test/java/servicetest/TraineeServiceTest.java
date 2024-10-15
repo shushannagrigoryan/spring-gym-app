@@ -1,14 +1,18 @@
 package servicetest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
@@ -18,7 +22,7 @@ import org.example.exceptions.GymIllegalArgumentException;
 import org.example.password.PasswordGeneration;
 import org.example.repository.TraineeRepository;
 import org.example.services.TraineeService;
-import org.example.services.UserService;
+import org.example.services.TrainerService;
 import org.example.username.UsernameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +40,7 @@ public class TraineeServiceTest {
     @Mock
     private PasswordGeneration passwordGeneration;
     @Mock
-    private UserService userService;
+    private TrainerService trainerService;
 
     @InjectMocks
     private TraineeService traineeService;
@@ -112,10 +116,11 @@ public class TraineeServiceTest {
         when(traineeRepository.findById(id)).thenReturn(Optional.of(traineeEntity));
 
         //when
-        traineeService.getTraineeById(id);
+        TraineeEntity trainee = traineeService.getTraineeById(id);
 
         //then
         verify(traineeRepository).findById(id);
+        assertNotNull(trainee);
     }
 
     @Test
@@ -181,178 +186,85 @@ public class TraineeServiceTest {
         assertEquals(String.format("No trainee with username: %s", username), exception.getMessage());
     }
 
-    //    @Test
-    //    public void testUpdateTraineeSuccess() {
-    //        // given
-    //        String firstName = "A";
-    //        String lastName = "V";
-    //        String address = "myAddress";
-    //        LocalDate dateOfBirth = LocalDate.of(2024, 9, 3);
-    //        TraineeEntity traineeEntity = new TraineeEntity();
-    //        UserEntity user = new UserEntity();
-    //        user.setFirstName(firstName);
-    //        user.setLastName(lastName);
-    //        traineeEntity.setUser(user);
-    //        traineeEntity.setDateOfBirth(dateOfBirth);
-    //        traineeEntity.setAddress(address);
-    //        Long id = 1L;
-    //
-    //        UserEntity resultUser = new UserEntity();
-    //        resultUser.setFirstName("B");
-    //        resultUser.setLastName(lastName);
-    //        TraineeEntity result = new TraineeEntity();
-    //        result.setUser(resultUser);
-    //
-    //        when(traineeRepository.getTraineeById(id)).thenReturn(result);
-    //        ArgumentCaptor<TraineeEntity> traineeCaptor = ArgumentCaptor.forClass(TraineeEntity.class);
-    //
-    //        // when
-    //        traineeService.updateTraineeById(id, traineeEntity);
-    //
-    //        // then
-    //        verify(traineeRepository).updateTraineeById(eq(id), traineeCaptor.capture());
-    //        TraineeEntity updatedTrainee = traineeCaptor.getValue();
-    //        assertEquals(firstName, updatedTrainee.getUser().getFirstName());
-    //        assertEquals(lastName, updatedTrainee.getUser().getLastName());
-    //        assertEquals(dateOfBirth, updatedTrainee.getDateOfBirth());
-    //        assertEquals(address, updatedTrainee.getAddress());
-    //    }
+    @Test
+    public void testUpdateTraineeSuccess() {
+        //given
+        String firstName = "A";
+        String lastName = "V";
+        TraineeEntity traineeEntity = new TraineeEntity();
+        traineeEntity.setDateOfBirth(LocalDate.now());
+        traineeEntity.setAddress("myAddress");
+        UserEntity user = new UserEntity();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setUsername("A.B");
+        traineeEntity.setUser(user);
+        when(traineeRepository.findByUsername("A.B")).thenReturn(Optional.of(traineeEntity));
+        user.setFirstName("B");
+        when(traineeRepository.save(traineeEntity)).thenReturn(traineeEntity);
 
+        // when
+        TraineeEntity trainee =  traineeService.updateTrainee(traineeEntity);
 
-    //    @Test
-    //    public void testChangeTraineePassword() {
-    //        // Given
-    //        String username = "A.A";
-    //        String generatedPassword = "password12";
-    //        when(passwordGeneration.generatePassword()).thenReturn(generatedPassword);
-    //
-    //        //when
-    //        traineeService.changeTraineePassword(username);
-    //
-    //        // then
-    //        verify(traineeRepository).changeTraineePassword(username, generatedPassword);
-    //    }
+        // then
+        assertNotNull(trainee);
+        assertEquals("B", trainee.getUser().getFirstName());
+        assertEquals("A.B", trainee.getUser().getUsername());
+    }
 
-    //    @Test
-    //    public void testActivateTraineeSuccess() {
-    //        // Given
-    //        Long traineeId = 1L;
-    //        UserEntity user = new UserEntity();
-    //        TraineeEntity traineeEntity = new TraineeEntity();
-    //        traineeEntity.setUser(user);
-    //        when(traineeRepository.getTraineeById(traineeId)).thenReturn(traineeEntity);
-    //
-    //        // When
-    //        traineeService.activateTrainee(traineeId);
-    //
-    //        // Then
-    //        verify(traineeRepository).activateTrainee(traineeEntity);
-    //    }
-    //
-    //    @Test
-    //    public void testActivateTraineeAlreadyActive() {
-    //        // Given
-    //        Long traineeId = 1L;
-    //        UserEntity user = new UserEntity();
-    //        user.setActive(true);
-    //        TraineeEntity traineeEntity = new TraineeEntity();
-    //        traineeEntity.setUser(user);
-    //        when(traineeRepository.getTraineeById(traineeId)).thenReturn(traineeEntity);
-    //
-    //        // Then
-    //        assertThrows(GymIllegalStateException.class,
-    //                () -> traineeService.activateTrainee(traineeId),
-    //                String.format("Trainee with id: %d is already active", traineeId));
-    //    }
-    //
-    //    @Test
-    //    public void testActivateTraineeNull() {
-    //        // Given
-    //        Long traineeId = 1L;
-    //        UserEntity user = new UserEntity();
-    //        user.setActive(true);
-    //        TraineeEntity traineeEntity = new TraineeEntity();
-    //        traineeEntity.setUser(user);
-    //        when(traineeRepository.getTraineeById(traineeId)).thenReturn(null);
-    //
-    //        // Then
-    //        assertThrows(GymIllegalIdException.class,
-    //                () -> traineeService.activateTrainee(traineeId),
-    //                String.format("No trainee with %d exists.", traineeId));
-    //    }
-    //
-    //    @Test
-    //    public void testDeactivateTraineeSuccess() {
-    //        // Given
-    //        Long traineeId = 1L;
-    //        UserEntity user = new UserEntity();
-    //        user.setActive(true);
-    //        TraineeEntity traineeEntity = new TraineeEntity();
-    //        traineeEntity.setUser(user);
-    //        when(traineeRepository.getTraineeById(traineeId)).thenReturn(traineeEntity);
-    //
-    //        // When
-    //        traineeService.deactivateTrainee(traineeId);
-    //
-    //        // Then
-    //        verify(traineeRepository).deactivateTrainee(traineeEntity);
-    //    }
-    //
-    //    @Test
-    //    public void testDeactivateTraineeAlreadyActive() {
-    //        // Given
-    //        Long traineeId = 1L;
-    //        UserEntity user = new UserEntity();
-    //        user.setActive(false);
-    //        TraineeEntity traineeEntity = new TraineeEntity();
-    //        traineeEntity.setUser(user);
-    //        when(traineeRepository.getTraineeById(traineeId)).thenReturn(traineeEntity);
-    //
-    //        // Then
-    //        assertThrows(GymIllegalStateException.class,
-    //                () -> traineeService.deactivateTrainee(traineeId),
-    //                String.format("Trainee with id: %d is already inactive", traineeId));
-    //    }
-    //
-    //    @Test
-    //    public void testDeactivateTraineeNull() {
-    //        // Given
-    //        Long traineeId = 1L;
-    //        UserEntity user = new UserEntity();
-    //        user.setActive(true);
-    //        TraineeEntity traineeEntity = new TraineeEntity();
-    //        traineeEntity.setUser(user);
-    //        when(traineeRepository.getTraineeById(traineeId)).thenReturn(null);
-    //
-    //        // Then
-    //        assertThrows(GymIllegalIdException.class,
-    //                () -> traineeService.deactivateTrainee(traineeId),
-    //                String.format("No trainee with %d exists.", traineeId));
-    //    }
+    @Test
+    public void testActivateTraineeSuccess() {
+        //given
+        String username = "A.I";
+        TraineeEntity trainee = new TraineeEntity();
+        UserEntity user = new UserEntity();
+        user.setUsername(username);
+        trainee.setUser(user);
 
-    //    @Test
-    //    public void testChangeActiveStatus() {
-    //        //given
-    //        String username = "A.I";
-    //        TraineeEntity trainee = new TraineeEntity();
-    //        UserEntity user = new UserEntity();
-    //        user.setUsername(username);
-    //        trainee.setUser(user);
-    //
-    //        //doReturn(trainee).when(traineeService).getTraineeByUsername(username);
-    //        lenient().when(traineeService.getTraineeByUsername(username)).thenReturn(trainee);
-    //        TraineeEntity activatedTrainee = new TraineeEntity();
-    //        activatedTrainee.setUser(user);
-    //        activatedTrainee.getUser().setActive(true);
-    //        lenient().when(traineeRepository.save(trainee)).thenReturn(activatedTrainee);
-    //
-    //        //when
-    //        String result = traineeService.changeActiveStatus(username, true);
-    //
-    //        //then
-    //        verify(traineeService).getTraineeByUsername(username);
-    //        assertEquals("Successfully set trainee active status to " + true, result);
-    //    }
+        when(traineeRepository.findByUsername(username)).thenReturn(Optional.of(trainee));
+        TraineeEntity activatedTrainee = new TraineeEntity();
+        activatedTrainee.setUser(user);
+        activatedTrainee.getUser().setActive(true);
+        when(traineeRepository.save(trainee)).thenReturn(activatedTrainee);
+
+        //when
+        String result = traineeService.changeActiveStatus(username, false);
+
+        //then
+        verify(traineeRepository).findByUsername(username);
+        verify(traineeRepository).save(trainee);
+        assertEquals("Successfully set trainee active status to false", result);
+    }
+
+    @Test
+    public void testActivateTraineeAlreadyActive() {
+        //given
+        String username = "A.I";
+        TraineeEntity trainee = new TraineeEntity();
+        UserEntity user = new UserEntity();
+        user.setActive(true);
+        user.setUsername(username);
+        trainee.setUser(user);
+        when(traineeRepository.findByUsername(username)).thenReturn(Optional.of(trainee));
+
+        //when
+        String result = traineeService.changeActiveStatus(username, true);
+
+        //then
+        verify(traineeRepository).findByUsername(username);
+        assertEquals("Trainee isActive status is already true", result);
+    }
+
+    @Test
+    public void testActivateTraineeNotFound() {
+        //given
+        String username = "A.I";
+        doThrow(new GymEntityNotFoundException(String.format("Trainee with username %s does not exist.", username)))
+                .when(traineeRepository).findByUsername(username);
+        assertThrows(GymEntityNotFoundException.class, () ->
+                traineeService.changeActiveStatus(username, true),
+                String.format("Trainee with username %s does not exist.", username));
+    }
 
     @Test
     public void testGetTraineeProfileSuccess() {
@@ -385,4 +297,37 @@ public class TraineeServiceTest {
                 String.format("Trainee with username %s does not exist.", username));
 
     }
+
+    @Test
+    public void testTraineeTrainersList() {
+        //given
+        String username = "A.A";
+        TraineeEntity trainee = new TraineeEntity();
+        UserEntity user = new UserEntity();
+        user.setUsername(username);
+        trainee.setUser(user);
+        List<String> trainers = Arrays.asList("A.C", "A.B");
+        when(traineeRepository.findByUsername(username)).thenReturn(Optional.of(trainee));
+        TraineeEntity updatedTrainee = new TraineeEntity();
+        UserEntity user1 = new UserEntity();
+        user1.setUsername(trainers.get(0));
+        TrainerEntity trainer1 = new TrainerEntity();
+        trainer1.setUser(user1);
+        UserEntity user2 = new UserEntity();
+        user2.setUsername(trainers.get(1));
+        TrainerEntity trainer2 = new TrainerEntity();
+        trainer2.setUser(user2);
+        updatedTrainee.setTrainers(Set.of(trainer1, trainer2));
+        when(trainerService.getTrainerByUsername(trainers.get(0))).thenReturn(trainer1);
+        when(trainerService.getTrainerByUsername(trainers.get(1))).thenReturn(trainer2);
+        when(traineeRepository.save(trainee)).thenReturn(updatedTrainee);
+
+        //when
+        Set<TrainerEntity> result = traineeService.updateTraineesTrainerList(username, trainers);
+
+        //then
+        assertEquals(Set.of(trainer1, trainer2), result);
+
+    }
+
 }

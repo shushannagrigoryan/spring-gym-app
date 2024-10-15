@@ -56,6 +56,7 @@ public class UserServiceTest {
         //then
         verify(userRepository).getUserByUsername(username);
         assertNotNull(result);
+        assertTrue(result.isPresent());
         assertEquals(user.getUsername(), result.get().getUsername());
     }
 

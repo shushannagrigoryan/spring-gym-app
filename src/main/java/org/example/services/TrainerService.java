@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.entity.TrainingTypeEntity;
@@ -23,7 +22,6 @@ public class TrainerService {
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
     private final TrainingTypeService trainingTypeService;
-    private final UserService userService;
     private final TraineeService traineeService;
 
 
@@ -34,13 +32,11 @@ public class TrainerService {
                           UsernameGenerator usernameGenerator,
                           PasswordGeneration passwordGeneration,
                           TrainingTypeService trainingTypeService,
-                          UserService userService,
                           @Lazy TraineeService traineeService) {
         this.trainerRepository = trainerRepository;
         this.usernameGenerator = usernameGenerator;
         this.passwordGeneration = passwordGeneration;
         this.trainingTypeService = trainingTypeService;
-        this.userService = userService;
         this.traineeService = traineeService;
     }
 
@@ -171,7 +167,9 @@ public class TrainerService {
      */
     @Transactional
     public String changeActiveStatus(String username, boolean isActive) {
-        TrainerEntity trainer = getTrainerByUsername(username);
+        TrainerEntity trainer = trainerRepository.findByUsername(username)
+                .orElseThrow(() -> new GymEntityNotFoundException(
+                        String.format("Trainer with username %s does not exist.", username)));
 
         if (trainer.getUser().isActive() == isActive) {
             log.debug("Trainer : {} isActive status is already: {}", username, isActive);
@@ -193,7 +191,7 @@ public class TrainerService {
      */
     @Transactional
     public List<TrainerEntity> notAssignedOnTraineeActiveTrainers(String traineeUsername) {
-        TraineeEntity trainee = traineeService.getTraineeByUsername(traineeUsername);
+        traineeService.getTraineeByUsername(traineeUsername);
         List<TrainerEntity> trainers = trainerRepository.getTrainersNotAssignedToTraineeActiveTrainers(traineeUsername);
         for (TrainerEntity t : trainers) {
             TrainingTypeEntity specialization = t.getSpecialization();
