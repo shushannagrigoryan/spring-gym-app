@@ -51,11 +51,18 @@ dependencies {
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.10.2'
 
 
-    //implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.8.0'
-    //implementation 'org.springdoc:springdoc-openapi-ui:1.8.0'
+//    //swagger dependencies.
+
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.6.0'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-api', version: '2.6.0'
+//    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-common', version: '2.6.0'
+//    implementation('io.swagger.core.v3:swagger-annotations-jakarta:2.2.22')
+//    implementation("io.swagger.core.v3:swagger-models-jakarta:2.2.22")
+//    implementation('org.webjars:swagger-ui:5.17.14')
+//    implementation('io.swagger.core.v3:swagger-core-jakarta:2.2.22')
+
 
 }
-
 test{
     useJUnitPlatform()
 }

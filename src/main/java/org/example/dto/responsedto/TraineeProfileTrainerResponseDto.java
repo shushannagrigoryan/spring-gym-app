@@ -16,4 +16,21 @@ public class TraineeProfileTrainerResponseDto {
     private String firstName;
     private String lastName;
     private TrainingTypeResponseDto specialization;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        return username.equals(((TraineeProfileTrainerResponseDto) o).username);
+    }
+
+    @Override
+    public int hashCode() {
+        return username != null ? username.hashCode() : 0;
+    }
 }

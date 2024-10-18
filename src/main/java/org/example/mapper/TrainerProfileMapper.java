@@ -1,6 +1,8 @@
 package org.example.mapper;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.example.dto.responsedto.TrainerProfileResponseDto;
 import org.example.dto.responsedto.TrainerProfileTraineeResponseDto;
 import org.example.dto.responsedto.TrainerUpdateResponseDto;
@@ -40,10 +42,10 @@ public class TrainerProfileMapper {
 
 
         List<TrainingEntity> trainingEntityList = trainerEntity.getTrainings();
-        List<TrainerProfileTraineeResponseDto> trainees = trainingEntityList
+        Set<TrainerProfileTraineeResponseDto> trainees = trainingEntityList
                 .stream()
                 .map(x -> traineeMapper.entityToTrainerTraineeResponseDto(x.getTrainee()))
-                .toList();
+                .collect(Collectors.toSet());
 
         trainerProfile.setTrainees(trainees);
         return trainerProfile;

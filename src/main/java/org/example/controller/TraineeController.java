@@ -1,5 +1,11 @@
 package org.example.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,6 +19,7 @@ import org.example.dto.responsedto.TraineeResponseDto;
 import org.example.dto.responsedto.TraineeUpdateResponseDto;
 import org.example.dto.responsedto.TrainerProfileDto;
 import org.example.entity.TraineeEntity;
+import org.example.exceptionhandlers.ExceptionResponse;
 import org.example.mapper.TraineeMapper;
 import org.example.mapper.TraineeProfileMapper;
 import org.example.mapper.TrainerMapper;
@@ -32,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/trainees")
 @Slf4j
+@Tag(name = "TraineeController")
 public class TraineeController {
     private final TraineeService traineeService;
     private final TraineeMapper traineeMapper;
@@ -62,6 +70,16 @@ public class TraineeController {
      * @return generated username and password
      */
     @PostMapping("/register")
+    @Operation(description = "Registering a new trainee")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Successfully registered a new trainee",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = TraineeResponseDto.class))),
+        @ApiResponse(responseCode = "400", description = "Bad request",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = ExceptionResponse.class)))
+    }
+    )
     public ResponseEntity<TraineeResponseDto> registerTrainee(
             @Valid @RequestBody TraineeCreateRequestDto traineeCreateDto) {
         log.debug("Request to register a new trainee: {}", traineeCreateDto);
@@ -77,6 +95,17 @@ public class TraineeController {
      * @return {@code TraineeProfileResponseDto}
      */
     @GetMapping("/{username}")
+    @Operation(description = "Getting trainee profile")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully received trainee profile",
+            content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = TraineeProfileResponseDto.class))),
+        @ApiResponse(responseCode = "400", description = "Bad request",
+            content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = ExceptionResponse.class))),
+        @ApiResponse(responseCode = "401", description = "Unauthorized")
+    }
+    )
     public ResponseEntity<TraineeProfileResponseDto> getTraineeProfile(
             @PathVariable("username") String username) {
         log.debug("Request to get trainee profile with username: {}", username);

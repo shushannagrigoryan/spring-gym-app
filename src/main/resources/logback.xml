@@ -5,6 +5,15 @@
         </encoder>
     </appender>
 
+    <!-- Enable DEBUG logging for Spring Web components -->
+    <logger name="org.springframework.web" level="DEBUG" />
+
+    <!-- Enable DEBUG logging for the springdoc-openapi package -->
+    <logger name="org.springdoc" level="DEBUG" />
+
+    <!-- Enable DEBUG logging for resource handlers (Swagger UI static resources) -->
+    <logger name="org.springframework.web.servlet.resource.ResourceHttpRequestHandler" level="DEBUG" />
+
     <root level="debug">
         <appender-ref ref="STDOUT" />
     </root>

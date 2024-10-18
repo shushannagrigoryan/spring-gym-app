@@ -1,5 +1,11 @@
 package org.example.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -12,6 +18,7 @@ import org.example.dto.responsedto.TrainerProfileResponseDto;
 import org.example.dto.responsedto.TrainerResponseDto;
 import org.example.dto.responsedto.TrainerUpdateResponseDto;
 import org.example.entity.TrainerEntity;
+import org.example.exceptionhandlers.ExceptionResponse;
 import org.example.mapper.TrainerMapper;
 import org.example.mapper.TrainerProfileMapper;
 import org.example.services.TrainerService;
@@ -30,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/trainers")
 @Slf4j
+@Tag(name = "TrainerController")
 //@Api(value = "TrainerController")
 public class TrainerController {
     private final TrainerService trainerService;
@@ -57,6 +65,16 @@ public class TrainerController {
      * @return generated username and password
      */
     @PostMapping("/register")
+    @Operation(description = "Registering a new trainer")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Successfully registered a new trainer",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = TrainerResponseDto.class))),
+        @ApiResponse(responseCode = "400", description = "Bad request",
+                content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ExceptionResponse.class)))
+    }
+    )
     public ResponseEntity<TrainerResponseDto> registerTrainer(
             @Valid @RequestBody TrainerCreateRequestDto trainerCreateDto) {
         log.debug("Request to register a new trainer: {}", trainerCreateDto);
