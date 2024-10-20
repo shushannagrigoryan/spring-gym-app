@@ -2,6 +2,7 @@ package org.example.exceptionhandlers;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.format.DateTimeParseException;
 import lombok.extern.slf4j.Slf4j;
 import org.example.exceptions.GymAuthenticationException;
 import org.example.exceptions.GymEntityNotFoundException;
@@ -29,13 +30,24 @@ public class RestResponseEntityExceptionHandler {
     @ExceptionHandler(value = {GymAuthenticationException.class})
     protected ResponseEntity<ExceptionResponse> handleAuthenticationFailException(
             GymAuthenticationException e, HttpServletResponse servletResponse) throws IOException {
-        System.out.println("Exception handling for authorization.");
+        System.out.println("Exception handling for authentication.");
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         ExceptionResponse response = new ExceptionResponse(
                 "Authentication error:" + e.getMessage(), status);
         log.debug("Response: {}", response);
         log.debug("Status Code: {}", status);
         servletResponse.getWriter().write(401);
+        return new ResponseEntity<>(response, status);
+    }
+
+    @ExceptionHandler(value = {DateTimeParseException.class})
+    protected ResponseEntity<ExceptionResponse> handleDateFormatException() {
+        System.out.println("Exception handling for date format parse exception.");
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ExceptionResponse response = new ExceptionResponse(
+                "Wrong date format.Correct format is: yyyy-MM-dd", status);
+        log.debug("Response: {}", response);
+        log.debug("Status Code: {}", status);
         return new ResponseEntity<>(response, status);
     }
 }

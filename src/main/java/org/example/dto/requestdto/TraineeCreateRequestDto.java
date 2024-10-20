@@ -1,6 +1,6 @@
 package org.example.dto.requestdto;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,9 +14,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TraineeCreateRequestDto {
-    @NotNull(message = "FirstName is required.")
+    @NotBlank(message = "FirstName is required and can't be blank")
     private String firstName;
-    @NotNull(message = "LastName is required.")
+    @NotBlank(message = "LastName is required and can't be blank")
     private String lastName;
     private LocalDate dateOfBirth;
     private String address;
