@@ -28,7 +28,8 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, @NonNull HttpServletResponse response,
                               @NonNull Object handler) throws Exception {
         if (request.getMethod().equals("POST")
-                && (request.getRequestURI().equals("/gym/trainers") || request.getRequestURI().equals("/gym/trainees"))) {
+                && (request.getRequestURI().equals("/gym/trainers")
+                || request.getRequestURI().equals("/gym/trainees"))) {
             return true;
         }
         String username = request.getHeader("username");

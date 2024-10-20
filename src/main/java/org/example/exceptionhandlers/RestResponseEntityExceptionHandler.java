@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @ControllerAdvice
 @Slf4j
@@ -57,6 +58,16 @@ public class RestResponseEntityExceptionHandler {
             HttpRequestMethodNotSupportedException e) {
         System.out.println("Exception handling not supported request methods exception.");
         HttpStatus status = HttpStatus.METHOD_NOT_ALLOWED;
+        ExceptionResponse response = new ExceptionResponse(e.getMessage(), status);
+        log.debug("Response: {}", response);
+        log.debug("Status Code: {}", status);
+        return new ResponseEntity<>(response, status);
+    }
+
+    @ExceptionHandler(value = {NoHandlerFoundException.class})
+    protected ResponseEntity<ExceptionResponse> handleRequestNoHandlerFoundException(NoHandlerFoundException e) {
+        System.out.println("Exception handling no handler found exception.");
+        HttpStatus status = HttpStatus.NOT_FOUND;
         ExceptionResponse response = new ExceptionResponse(e.getMessage(), status);
         log.debug("Response: {}", response);
         log.debug("Status Code: {}", status);
