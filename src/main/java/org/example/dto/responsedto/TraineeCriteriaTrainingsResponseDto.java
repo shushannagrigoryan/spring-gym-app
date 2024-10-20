@@ -1,5 +1,6 @@
 package org.example.dto.responsedto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class TraineeCriteriaTrainingsResponseDto {
     private String trainingName;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate trainingDate;
     private TrainingTypeResponseDto trainingType;
     private BigDecimal trainingDuration;
