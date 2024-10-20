@@ -1,17 +1,12 @@
 <configuration>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] [%X{transactionId}] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %replace([traceId:%X{transactionId}]){'\[traceId:\]', ''} %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <!-- Enable DEBUG logging for Spring Web components -->
     <logger name="org.springframework.web" level="DEBUG" />
-
-    <!-- Enable DEBUG logging for the springdoc-openapi package -->
     <logger name="org.springdoc" level="DEBUG" />
-
-    <!-- Enable DEBUG logging for resource handlers (Swagger UI static resources) -->
     <logger name="org.springframework.web.servlet.resource.ResourceHttpRequestHandler" level="DEBUG" />
 
     <root level="debug">
