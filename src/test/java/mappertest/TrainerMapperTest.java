@@ -101,7 +101,7 @@ public class TrainerMapperTest {
     public void testCreateDtoToEntity() {
         //given
         TrainerCreateRequestDto trainerCreateDto = new TrainerCreateRequestDto(
-                "A", "A", 1L);
+                "A", "A", "1");
 
         //when
         TrainerEntity trainer = trainerMapper.dtoToEntity(trainerCreateDto);

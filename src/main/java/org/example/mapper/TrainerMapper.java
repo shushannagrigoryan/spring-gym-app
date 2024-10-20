@@ -81,7 +81,7 @@ public class TrainerMapper {
         trainerEntity.setUser(new UserEntity(trainerCreateDto.getFirstName(),
                 trainerCreateDto.getLastName()));
 
-        trainerEntity.setSpecializationId(trainerCreateDto.getSpecialization());
+        trainerEntity.setSpecializationId(Long.valueOf(trainerCreateDto.getSpecialization()));
 
         return trainerEntity;
     }
