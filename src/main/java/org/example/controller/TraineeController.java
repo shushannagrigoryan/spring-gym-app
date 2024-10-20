@@ -69,7 +69,7 @@ public class TraineeController {
      *                         address(optional)
      * @return generated username and password
      */
-    @PostMapping("/register")
+    @PostMapping()
     @Operation(description = "Registering a new trainee")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Successfully registered a new trainee",

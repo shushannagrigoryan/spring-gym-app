@@ -10,6 +10,7 @@ import org.example.exceptions.GymIllegalArgumentException;
 import org.example.exceptions.GymIllegalIdException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -50,4 +51,16 @@ public class RestResponseEntityExceptionHandler {
         log.debug("Status Code: {}", status);
         return new ResponseEntity<>(response, status);
     }
+
+    @ExceptionHandler(value = {HttpRequestMethodNotSupportedException.class})
+    protected ResponseEntity<ExceptionResponse> handleNotSupportedMethodException(
+            HttpRequestMethodNotSupportedException e) {
+        System.out.println("Exception handling not supported request methods exception.");
+        HttpStatus status = HttpStatus.METHOD_NOT_ALLOWED;
+        ExceptionResponse response = new ExceptionResponse(e.getMessage(), status);
+        log.debug("Response: {}", response);
+        log.debug("Status Code: {}", status);
+        return new ResponseEntity<>(response, status);
+    }
+
 }

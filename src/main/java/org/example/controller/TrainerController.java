@@ -64,7 +64,7 @@ public class TrainerController {
      *                         specialization id(required)
      * @return generated username and password
      */
-    @PostMapping("/register")
+    @PostMapping()
     @Operation(description = "Registering a new trainer")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Successfully registered a new trainer",
