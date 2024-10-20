@@ -16,10 +16,12 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
     private final UserAuth userAuth;
+    private final ObjectMapper objectMapper;
 
     /** Setting dependencies. */
-    public AuthInterceptor(UserAuth userAuth) {
+    public AuthInterceptor(UserAuth userAuth, ObjectMapper objectMapper) {
         this.userAuth = userAuth;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         } catch (GymAuthenticationException e) {
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            ObjectWriter objectWriter = objectMapper.writer().withDefaultPrettyPrinter();
             String json = objectWriter.writeValueAsString(
                     new ExceptionResponse("Authentication failed: " + e.getMessage(),
                             HttpStatus.UNAUTHORIZED));
