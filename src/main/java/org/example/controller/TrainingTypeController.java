@@ -1,9 +1,15 @@
 package org.example.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.responsedto.TrainingTypeResponseDto;
 import org.example.entity.TrainingTypeEntity;
+import org.example.exceptionhandlers.ExceptionResponse;
 import org.example.mapper.TrainingTypeMapper;
 import org.example.services.TrainingTypeService;
 import org.springframework.http.HttpStatus;
@@ -34,6 +40,25 @@ public class TrainingTypeController {
      * @return {@code TrainingTypeResponseDto}
      */
     @GetMapping
+    @Operation(description = "Getting training types.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully got training types.",
+            content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = List.class))),
+        @ApiResponse(responseCode = "401", description = "Authentication error",
+            content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = ExceptionResponse.class))),
+        @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found",
+            content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = ExceptionResponse.class))),
+        @ApiResponse(responseCode = "405", description = "Method is not allowed.",
+            content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = ExceptionResponse.class))),
+        @ApiResponse(responseCode = "400", description = "Bad request.",
+            content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = ExceptionResponse.class)))
+    }
+    )
     public ResponseEntity<List<TrainingTypeResponseDto>> getTrainingTypes() {
         log.debug("Request to get all training types.");
         List<TrainingTypeEntity> trainingTypes = trainingTypeService.getAllTrainingTypes();
