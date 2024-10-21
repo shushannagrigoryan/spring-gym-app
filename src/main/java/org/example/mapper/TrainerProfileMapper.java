@@ -59,10 +59,10 @@ public class TrainerProfileMapper {
             return null;
         }
 
-        List<TrainerProfileTraineeResponseDto> trainees = updatedTrainer.getTrainings()
+        Set<TrainerProfileTraineeResponseDto> trainees = updatedTrainer.getTrainings()
                 .stream()
                 .map(x -> traineeMapper.entityToTrainerTraineeResponseDto(x.getTrainee()))
-                .toList();
+                .collect(Collectors.toSet());
 
         return new TrainerUpdateResponseDto(
                 updatedTrainer.getUser().getUsername(),

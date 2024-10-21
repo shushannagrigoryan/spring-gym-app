@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -107,7 +106,7 @@ public class TrainerController {
      *                isActive(required)
      * @return {@code TrainerUpdateResponseDto}
      */
-    @PutMapping("/update-trainer")
+    @PutMapping()
     public ResponseEntity<TrainerUpdateResponseDto> updateTrainer(
             @Valid @RequestBody TrainerUpdateRequestDto trainer) {
         log.debug("Request to update trainer with username: {}", trainer.getUsername());
@@ -141,9 +140,9 @@ public class TrainerController {
      * @param traineeUsername username of the trainee.
      * @return {@code Set<TrainerProfileDto>}
      */
-    @GetMapping("not-assigned-active-trainers")
+    @GetMapping("/unassigned/trainee/{username}")
     public ResponseEntity<Set<TrainerProfileDto>> notAssignedOnTraineeActiveTrainers(
-            @RequestParam("username") String traineeUsername) {
+            @PathVariable("username") String traineeUsername) {
         log.debug("Request to get all active trainers which are not assigned to trainee with username: {}",
                 traineeUsername);
 
