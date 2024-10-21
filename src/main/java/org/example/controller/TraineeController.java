@@ -171,13 +171,14 @@ public class TraineeController {
      *                          list of trainers
      * @return {@code Set<TrainerProfileDto>} updated trainers set
      */
-    @PutMapping("/update-trainer-list")
+    @PutMapping("/{username}/trainers")
     public ResponseEntity<List<TrainerProfileDto>> updateTraineesTrainerList(
+            @PathVariable(value = "username") String username,
             @Valid @RequestBody TraineeUpdateTrainersRequestDto updateTrainersDto) {
         log.debug("Request to update trainee's: {} trainer list with: {}.",
-                updateTrainersDto.getUsername(), updateTrainersDto.getTrainers());
+                username, updateTrainersDto.getTrainers());
 
-        return new ResponseEntity<>(traineeService.updateTraineesTrainerList(updateTrainersDto.getUsername(),
+        return new ResponseEntity<>(traineeService.updateTraineesTrainerList(username,
                         updateTrainersDto.getTrainers())
                 .stream().map(trainerMapper::entityToProfileDto)
                 .collect(Collectors.toList()),

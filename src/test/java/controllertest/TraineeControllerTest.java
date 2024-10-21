@@ -116,7 +116,7 @@ public class TraineeControllerTest {
 
         //when
         ResponseEntity<List<TrainerProfileDto>> result =
-                traineeController.updateTraineesTrainerList(requestDto);
+                traineeController.updateTraineesTrainerList(username, requestDto);
 
         //then
         verify(traineeService).updateTraineesTrainerList(username, list);

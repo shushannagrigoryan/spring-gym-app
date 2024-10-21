@@ -58,14 +58,16 @@ public class TrainingServiceTest {
 
         TrainingTypeEntity trainingType = new TrainingTypeEntity();
         trainingType.setId(trainingTypeId);
+        TrainerEntity trainer = new TrainerEntity();
+        trainer.setSpecialization(trainingType);
         when(trainingTypeService.getTrainingTypeById(trainingTypeId)).thenReturn(trainingType);
         when(traineeService.getTraineeByUsername(traineeUsername)).thenReturn(new TraineeEntity());
-        when(trainerService.getTrainerByUsername(trainerUsername)).thenReturn(new TrainerEntity());
+        when(trainerService.getTrainerByUsername(trainerUsername)).thenReturn(trainer);
 
         String trainingName = "trainingName";
         when(trainingRepository.save(any(TrainingEntity.class))).thenReturn(new TrainingEntity());
         TrainingCreateRequestDto requestDto = new TrainingCreateRequestDto(traineeUsername, trainerUsername,
-                trainingName, trainingTypeId, LocalDate.now(), BigDecimal.valueOf(60));
+                trainingName, LocalDate.now(), BigDecimal.valueOf(60));
 
         //when
         trainingService.createTraining(requestDto);

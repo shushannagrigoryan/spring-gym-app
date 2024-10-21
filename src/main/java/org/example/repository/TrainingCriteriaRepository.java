@@ -70,7 +70,7 @@ public class TrainingCriteriaRepository {
                     .equal(trainingRoot.get("trainingType").get("id"), trainingTypeId));
         }
 
-        if (trainerUsername != null) {
+        if (trainerUsername != null && !trainerUsername.isBlank()) {
             predicates.add(criteriaBuilder.equal(trainerJoin.get("username"), trainerUsername));
         }
 
@@ -125,7 +125,7 @@ public class TrainingCriteriaRepository {
                     .lessThanOrEqualTo(trainingRoot.get("trainingDate"), toDate));
         }
 
-        if (traineeUsername != null) {
+        if (traineeUsername != null && !traineeUsername.isBlank()) {
             predicates.add(criteriaBuilder.equal(traineeJoin.get("username"), traineeUsername));
         }
 

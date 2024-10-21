@@ -1,5 +1,6 @@
 package org.example.dto.requestdto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,14 +16,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrainingCreateRequestDto {
-    @NotNull(message = "Trainee username is required.")
+    @NotBlank(message = "Trainee username is required.")
     private String traineeUsername;
-    @NotNull(message = "Trainer username is required.")
+    @NotBlank(message = "Trainer username is required.")
     private String trainerUsername;
-    @NotNull(message = "Training name is required.")
+    @NotBlank(message = "Training name is required.")
     private String trainingName;
-    @NotNull(message = "Training type is required.")
-    private Long trainingType;
     @NotNull(message = "Training date is required.")
     private LocalDate trainingDate;
     @NotNull(message = "Training duration is required.")

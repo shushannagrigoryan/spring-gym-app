@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.TraineeTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainerTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainingCreateRequestDto;
+import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.repository.TrainingCriteriaRepository;
@@ -48,13 +49,16 @@ public class TrainingService {
     public void createTraining(TrainingCreateRequestDto trainingCreateDto) {
         log.debug("Creating training : {}", trainingCreateDto);
 
+
         TrainingEntity training = new TrainingEntity();
+
+        TrainerEntity trainer = trainerService.getTrainerByUsername(trainingCreateDto.getTrainerUsername());
         training.setTrainingName(trainingCreateDto.getTrainingName());
         training.setTrainingDate(trainingCreateDto.getTrainingDate());
         training.setTrainingDuration(trainingCreateDto.getTrainingDuration());
-        training.setTrainingType(trainingTypeService.getTrainingTypeById(trainingCreateDto.getTrainingType()));
+        training.setTrainingType(trainingTypeService.getTrainingTypeById(trainer.getSpecialization().getId()));
         training.setTrainee(traineeService.getTraineeByUsername(trainingCreateDto.getTraineeUsername()));
-        training.setTrainer(trainerService.getTrainerByUsername(trainingCreateDto.getTrainerUsername()));
+        training.setTrainer(trainer);
 
         TrainingEntity createdTraining = trainingRepository.save(training);
         log.debug("Successfully created new training with id: {}", createdTraining.getId());

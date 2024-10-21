@@ -15,6 +15,7 @@ import org.example.services.TrainingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +43,7 @@ public class TrainingController {
      *
      * @param trainingDto training to create: {@code TrainingCreateDto}
      */
-    @PostMapping("/add-training")
+    @PostMapping()
     public ResponseEntity<String> createTraining(@Valid @RequestBody TrainingCreateRequestDto trainingDto) {
         log.debug("Request to create new training: {}", trainingDto);
         trainingService.createTraining(trainingDto);
@@ -55,12 +56,13 @@ public class TrainingController {
      * @param trainingsDto {@code TraineeTrainingsFilterRequestDto} the given criteria
      * @return {@code List<TraineeCriteriaTrainingsResponseDto>}
      */
-    @GetMapping("/trainee-trainings")
+    @GetMapping("/trainees/{username}")
     public ResponseEntity<List<TraineeCriteriaTrainingsResponseDto>> getTraineeTrainingsFilter(
+            @PathVariable("username") String username,
             @Valid @RequestBody TraineeTrainingsFilterRequestDto trainingsDto) {
         log.debug("Request for getting trainee's: {} trainings by filter"
                         + "(dateFrom: {} , dateTo: {}, trainerName: {}, trainingType: {})",
-                trainingsDto.getTraineeUsername(), trainingsDto.getFromDate(), trainingsDto.getToDate(),
+                username, trainingsDto.getFromDate(), trainingsDto.getToDate(),
                 trainingsDto.getTrainerUsername(), trainingsDto.getTrainingType());
 
         List<TrainingEntity> trainings = trainingService.getTraineeTrainingsByFilter(trainingsDto);
@@ -76,12 +78,13 @@ public class TrainingController {
      * @param trainingsDto {@code TrainerTrainingsFilterRequestDto} the given criteria
      * @return {@code List<TrainerCriteriaTrainingsResponseDto>}
      */
-    @GetMapping("/trainer-trainings")
+    @GetMapping("/trainers/{username}")
     public ResponseEntity<List<TrainerCriteriaTrainingsResponseDto>> getTrainerTrainingsFilter(
+            @PathVariable("username") String username,
             @Valid @RequestBody TrainerTrainingsFilterRequestDto trainingsDto) {
         log.debug("Request for getting trainer's: {} trainings by filter"
                         + "(dateFrom: {} , dateTo: {}, traineeName: {})",
-                trainingsDto.getTrainerUsername(), trainingsDto.getFromDate(), trainingsDto.getToDate(),
+                username, trainingsDto.getFromDate(), trainingsDto.getToDate(),
                 trainingsDto.getTraineeUsername());
 
         List<TrainingEntity> trainings = trainingService.getTrainerTrainingsByFilter(trainingsDto);

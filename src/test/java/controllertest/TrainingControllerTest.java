@@ -69,7 +69,7 @@ public class TrainingControllerTest {
 
         //when
         ResponseEntity<List<TraineeCriteriaTrainingsResponseDto>> result =
-                trainingController.getTraineeTrainingsFilter(requestDto);
+                trainingController.getTraineeTrainingsFilter(traineeUsername, requestDto);
 
         //then
         verify(trainingService).getTraineeTrainingsByFilter(requestDto);
@@ -95,7 +95,7 @@ public class TrainingControllerTest {
 
         //when
         ResponseEntity<List<TrainerCriteriaTrainingsResponseDto>> result =
-                trainingController.getTrainerTrainingsFilter(requestDto);
+                trainingController.getTrainerTrainingsFilter(trainerUsername, requestDto);
 
         //then
         verify(trainingService).getTrainerTrainingsByFilter(requestDto);
