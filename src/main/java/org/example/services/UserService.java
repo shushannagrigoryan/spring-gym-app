@@ -79,8 +79,11 @@ public class UserService {
      * @param newPassword new password of the user.
      */
     @Transactional
-    public void changeUserPassword(String username, String newPassword) {
+    public void changeUserPassword(String username, String oldPassword, String newPassword) {
         log.debug("Changing the password of user with username: {}", username);
+        userRepository.getUserByUsernameAndPassword(username, oldPassword)
+                .orElseThrow(() -> new GymEntityNotFoundException(
+                                String.format("No user with username: %s and password: %s", username, oldPassword)));
         userRepository.updatePassword(username, newPassword);
         log.debug("Successfully changed password of user with username: {}", username);
     }

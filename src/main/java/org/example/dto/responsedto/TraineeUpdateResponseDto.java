@@ -2,7 +2,7 @@ package org.example.dto.responsedto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +22,6 @@ public class TraineeUpdateResponseDto {
     private LocalDate dateOfBirth;
     private String address;
     private boolean isActive;
-    private List<TraineeProfileTrainerResponseDto> trainers;
+    private Set<TraineeProfileTrainerResponseDto> trainers;
 
 }

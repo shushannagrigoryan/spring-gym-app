@@ -13,6 +13,7 @@ import org.example.entity.UserEntity;
 import org.example.repository.UserRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.MutationQuery;
 import org.hibernate.query.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,8 @@ public class UserRepositoryTest {
     private Query<String> query;
     @Mock
     private Query<UserEntity> query1;
+    @Mock
+    private MutationQuery mutationQuery;
     @InjectMocks
     private UserRepository userRepository;
 
@@ -126,21 +129,21 @@ public class UserRepositoryTest {
         UserEntity user = new UserEntity();
         user.setUsername(username);
         user.setPassword(password);
-        String hql = "update UserEntity u set u.password =:password where u.username = :username";
-        when(session.createQuery(hql, UserEntity.class)).thenReturn(query1);
-        when(query1.setParameter("username", username)).thenReturn(query1);
-        when(query1.setParameter("password", password)).thenReturn(query1);
-        when(query1.executeUpdate()).thenReturn(1);
+        String hql = "update UserEntity u set u.password =:newPassword where u.username = :username";
+        when(session.createMutationQuery(hql)).thenReturn(mutationQuery);
+        when(mutationQuery.setParameter("username", username)).thenReturn(mutationQuery);
+        when(mutationQuery.setParameter("newPassword", password)).thenReturn(mutationQuery);
+        when(mutationQuery.executeUpdate()).thenReturn(1);
 
         //when
         userRepository.updatePassword(username, password);
 
         //then
 
-        verify(session).createQuery(hql, UserEntity.class);
-        verify(query1).setParameter("username", username);
-        verify(query1).setParameter("password", password);
-        verify(query1).executeUpdate();
+        verify(session).createMutationQuery(hql);
+        verify(mutationQuery).setParameter("username", username);
+        verify(mutationQuery).setParameter("newPassword", password);
+        verify(mutationQuery).executeUpdate();
 
     }
 

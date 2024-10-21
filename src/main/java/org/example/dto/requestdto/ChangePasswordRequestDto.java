@@ -1,6 +1,7 @@
 package org.example.dto.requestdto;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,5 +19,6 @@ public class ChangePasswordRequestDto {
     @NotNull(message = "Password is required.")
     private String password;
     @NotNull(message = "New Password is required.")
+    @Pattern(regexp = "[!-~]+", message = "Right password characters(ASCII 33 - 126).")
     private String newPassword;
 }

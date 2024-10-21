@@ -51,7 +51,7 @@ public class UserControllerTest {
         ResponseEntity<String> result = userController.changePassword(requestDto);
 
         //then
-        verify(userService).changeUserPassword(username, newPassword);
+        verify(userService).changeUserPassword(username, oldPassword, newPassword);
         assertEquals("Successfully changed user password.", result.getBody());
         assertEquals(HttpStatus.OK, result.getStatusCode());
     }

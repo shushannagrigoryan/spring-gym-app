@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.MutationQuery;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
@@ -75,15 +76,15 @@ public class UserRepository {
      * Updates user password.
      *
      * @param username username of the user
-     * @param password password of the user
+     * @param newPassword new password of the user
      */
-    public void updatePassword(String username, String password) {
-        log.debug("Updating user password: {}", password);
+    public void updatePassword(String username, String newPassword) {
+        log.debug("Updating user password: {}", newPassword);
         Session session = sessionFactory.getCurrentSession();
-        String hql = "update UserEntity u set u.password =:password where u.username = :username";
-        Query<UserEntity> query = session.createQuery(hql, UserEntity.class);
+        String hql = "update UserEntity u set u.password =:newPassword where u.username = :username";
+        MutationQuery query = session.createMutationQuery(hql);
         query.setParameter("username", username);
-        query.setParameter("password", password);
+        query.setParameter("newPassword", newPassword);
         query.executeUpdate();
     }
 

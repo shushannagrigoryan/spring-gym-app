@@ -132,6 +132,10 @@ public class TraineeService {
 
         List<TrainingEntity> trainings = updatedTrainee.getTrainings();
         log.debug("Lazily initialized trainee trainings {}", trainings);
+        for (TrainingEntity training : trainings) {
+            TrainingTypeEntity trainingType = training.getTrainer().getSpecialization();
+            log.debug("Lazily initialized trainer specialization {}", trainingType);
+        }
 
         log.debug("Successfully updated trainee with username: {}", username);
         return updatedTrainee;

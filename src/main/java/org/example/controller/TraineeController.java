@@ -125,7 +125,7 @@ public class TraineeController {
      *                isActive(required)
      * @return {@code TraineeUpdateResponseDto}
      */
-    @PutMapping("/update-trainee")
+    @PutMapping()
     public ResponseEntity<TraineeUpdateResponseDto> updateTrainee(
             @Valid @RequestBody TraineeUpdateRequestDto trainee) {
         log.debug("Request to update trainee with username: {}", trainee.getUsername());

@@ -119,14 +119,18 @@ public class UserServiceTest {
     public void testChangeUserPassword() {
         //given
         String username = "A.B";
-        String password = "myPassword";
-        doNothing().when(userRepository).updatePassword(username, password);
+        String oldPassword = "oldPassword";
+        String newPassword = "newPassword";
+        when(userRepository.getUserByUsernameAndPassword(username, oldPassword))
+                .thenReturn(Optional.of(new UserEntity()));
+        doNothing().when(userRepository).updatePassword(username, newPassword);
 
         //when
-        userService.changeUserPassword(username, password);
+        userService.changeUserPassword(username, oldPassword, newPassword);
 
         //then
-        verify(userRepository).updatePassword(username, password);
+        verify(userRepository).getUserByUsernameAndPassword(username, oldPassword);
+        verify(userRepository).updatePassword(username, newPassword);
 
     }
 

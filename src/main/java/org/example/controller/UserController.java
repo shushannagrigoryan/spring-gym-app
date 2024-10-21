@@ -49,10 +49,10 @@ public class UserController {
      *                          password(required)
      *                          newPassword(required)
      */
-    @PutMapping("/change-password")
+    @PutMapping("/password")
     public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordRequestDto changePasswordDto) {
         log.debug("Request to change password of user with username: {}", changePasswordDto.getUsername());
-        userService.changeUserPassword(changePasswordDto.getUsername(),
+        userService.changeUserPassword(changePasswordDto.getUsername(), changePasswordDto.getPassword(),
                 changePasswordDto.getNewPassword());
         return new ResponseEntity<>("Successfully changed user password.", HttpStatus.OK);
     }
