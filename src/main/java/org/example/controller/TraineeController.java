@@ -142,7 +142,7 @@ public class TraineeController {
      * @param activeStatusRequestDto {@code UserChangeActiveStatusRequestDto}: username(required)
      *                               isActive(required)
      */
-    @PatchMapping("active-status")
+    @PatchMapping("activation")
     public ResponseEntity<String> changeActiveStatus(@Valid @RequestBody UserChangeActiveStatusRequestDto
                                                              activeStatusRequestDto) {
         log.debug("Request to change the active status of trainee with username: {} to {}",

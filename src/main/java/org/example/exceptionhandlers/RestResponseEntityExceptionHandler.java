@@ -3,6 +3,8 @@ package org.example.exceptionhandlers;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.format.DateTimeParseException;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.example.exceptions.GymAuthenticationException;
 import org.example.exceptions.GymEntityNotFoundException;
@@ -11,7 +13,9 @@ import org.example.exceptions.GymIllegalIdException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -77,6 +81,16 @@ public class RestResponseEntityExceptionHandler {
 
         ExceptionResponse response = new ExceptionResponse("Request body is missing or is invalid", status);
         return new ResponseEntity<>(response, status);
+    }
+
+    /** Exception handler for MethodArgumentNotValidException. */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidRequestExceptions(
+            MethodArgumentNotValidException exception) {
+        Map<String, String> response = new HashMap<>();
+        exception.getBindingResult().getAllErrors().forEach(e ->
+                response.put(((FieldError) e).getField(), e.getDefaultMessage()));
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
 }

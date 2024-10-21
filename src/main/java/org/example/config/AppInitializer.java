@@ -3,6 +3,14 @@ package org.example.config;
 import jakarta.servlet.FilterRegistration;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletRegistration;
+import org.springdoc.core.configuration.SpringDocConfiguration;
+import org.springdoc.core.configuration.SpringDocSpecPropertiesConfiguration;
+import org.springdoc.core.configuration.SpringDocUIConfiguration;
+import org.springdoc.core.properties.SpringDocConfigProperties;
+import org.springdoc.core.properties.SwaggerUiConfigProperties;
+import org.springdoc.core.properties.SwaggerUiOAuthProperties;
+import org.springdoc.webmvc.core.configuration.MultipleOpenApiSupportConfiguration;
+import org.springdoc.webmvc.core.configuration.SpringDocWebMvcConfiguration;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -30,17 +38,17 @@ public class AppInitializer implements WebApplicationInitializer {
         encodingFilter.setInitParameter("forceEncoding", "true");
         encodingFilter.addMappingForUrlPatterns(null, true, "/*");
 
-        //        rootContext.register(this.getClass(),
-        //                SpringDocConfiguration.class,
-        //                SpringDocConfigProperties.class,
-        //                SpringDocSpecPropertiesConfiguration.class,
-        //                SpringDocWebMvcConfiguration.class,
-        //                MultipleOpenApiSupportConfiguration.class,
-        //                MySwaggerConfig.class,
-        //                SwaggerUiConfigProperties.class,
-        //                SwaggerUiOAuthProperties.class,
-        //                SpringDocUIConfiguration.class
-        //        );
+        rootContext.register(this.getClass(),
+                SpringDocConfiguration.class,
+                SpringDocConfigProperties.class,
+                SpringDocSpecPropertiesConfiguration.class,
+                SpringDocWebMvcConfiguration.class,
+                MultipleOpenApiSupportConfiguration.class,
+                MySwaggerConfig.class,
+                SwaggerUiConfigProperties.class,
+                SwaggerUiOAuthProperties.class,
+                SpringDocUIConfiguration.class
+        );
 
     }
 
