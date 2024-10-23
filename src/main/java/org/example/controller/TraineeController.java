@@ -14,6 +14,7 @@ import org.example.dto.requestdto.TraineeCreateRequestDto;
 import org.example.dto.requestdto.TraineeUpdateRequestDto;
 import org.example.dto.requestdto.TraineeUpdateTrainersRequestDto;
 import org.example.dto.requestdto.UserChangeActiveStatusRequestDto;
+import org.example.dto.responsedto.ResponseDto;
 import org.example.dto.responsedto.TraineeProfileResponseDto;
 import org.example.dto.responsedto.TraineeResponseDto;
 import org.example.dto.responsedto.TraineeUpdateResponseDto;
@@ -74,7 +75,7 @@ public class TraineeController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Successfully registered a new trainee.",
             content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = TraineeResponseDto.class))),
+            schema = @Schema(implementation = ResponseEntity.class))),
         @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found",
             content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = ExceptionResponse.class))),
@@ -86,12 +87,13 @@ public class TraineeController {
             schema = @Schema(implementation = ExceptionResponse.class)))
     }
     )
-    public ResponseEntity<TraineeResponseDto> registerTrainee(
+    public ResponseEntity<ResponseDto<TraineeResponseDto>> registerTrainee(
             @Valid @RequestBody TraineeCreateRequestDto traineeCreateDto) {
         log.debug("Request to register a new trainee: {}", traineeCreateDto);
         TraineeEntity trainee = traineeMapper.dtoToEntity(traineeCreateDto);
         TraineeEntity registeredTrainee = traineeService.registerTrainee(trainee);
-        return new ResponseEntity<>(traineeMapper.entityToResponseDto(registeredTrainee), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ResponseDto<>(traineeMapper.entityToResponseDto(registeredTrainee),
+                "Successfully registered a new trainee."), HttpStatus.CREATED);
     }
 
     /**
@@ -120,11 +122,13 @@ public class TraineeController {
             schema = @Schema(implementation = ExceptionResponse.class)))
     }
     )
-    public ResponseEntity<TraineeProfileResponseDto> getTraineeProfile(
+    public ResponseEntity<ResponseDto<TraineeProfileResponseDto>> getTraineeProfile(
             @PathVariable("username") String username) {
         log.debug("Request to get trainee profile with username: {}", username);
         TraineeEntity trainee = traineeService.getTraineeProfile(username);
-        return new ResponseEntity<>(traineeProfileMapper.entityToProfileDto(trainee), HttpStatus.OK);
+
+        return new ResponseEntity<>(new ResponseDto<>(traineeProfileMapper.entityToProfileDto(trainee),
+                "Successfully retrieved trainee profile."), HttpStatus.OK);
     }
 
     /**

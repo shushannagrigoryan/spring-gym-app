@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 @ToString
 public class ExceptionResponse {
-    //@Schema(description = "Error message")
     private String message;
-    //@Schema(description = "HTTP status code", example = "400 BAD REQUEST")
     private HttpStatus httpStatus;
 }

@@ -8,12 +8,14 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import org.example.controller.TraineeController;
 import org.example.dto.requestdto.TraineeCreateRequestDto;
 import org.example.dto.requestdto.TraineeUpdateRequestDto;
 import org.example.dto.requestdto.TraineeUpdateTrainersRequestDto;
 import org.example.dto.requestdto.UserChangeActiveStatusRequestDto;
+import org.example.dto.responsedto.ResponseDto;
 import org.example.dto.responsedto.TraineeProfileResponseDto;
 import org.example.dto.responsedto.TraineeResponseDto;
 import org.example.dto.responsedto.TraineeUpdateResponseDto;
@@ -57,13 +59,13 @@ public class TraineeControllerTest {
         when(traineeMapper.entityToResponseDto(registered)).thenReturn(response);
 
         //when
-        ResponseEntity<TraineeResponseDto> result =  traineeController.registerTrainee(traineeCreateRequestDto);
+        ResponseEntity<ResponseDto<TraineeResponseDto>> result =  traineeController.registerTrainee(traineeCreateRequestDto);
 
         //then
         verify(traineeService).registerTrainee(traineeEntity);
         verify(traineeMapper).entityToResponseDto(registered);
         assertEquals(HttpStatus.CREATED, result.getStatusCode());
-        assertEquals(response, result.getBody());
+        assertEquals(response, Objects.requireNonNull(result.getBody()).getPayload());
     }
 
     @Test
@@ -134,13 +136,13 @@ public class TraineeControllerTest {
         when(traineeProfileMapper.entityToProfileDto(trainee)).thenReturn(response);
 
         //when
-        ResponseEntity<TraineeProfileResponseDto> result =
+        ResponseEntity<ResponseDto<TraineeProfileResponseDto>> result =
                 traineeController.getTraineeProfile(username);
 
         //then
         verify(traineeService).getTraineeProfile(username);
         assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals(response, result.getBody());
+        assertEquals(response, Objects.requireNonNull(result.getBody()).getPayload());
     }
 
     @Test

@@ -5,11 +5,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import org.example.controller.TrainerController;
 import org.example.dto.requestdto.TrainerCreateRequestDto;
 import org.example.dto.requestdto.TrainerUpdateRequestDto;
 import org.example.dto.requestdto.UserChangeActiveStatusRequestDto;
+import org.example.dto.responsedto.ResponseDto;
 import org.example.dto.responsedto.TrainerProfileDto;
 import org.example.dto.responsedto.TrainerProfileResponseDto;
 import org.example.dto.responsedto.TrainerResponseDto;
@@ -50,13 +52,13 @@ public class TrainerControllerTest {
         when(trainerMapper.entityToResponseDto(registered)).thenReturn(response);
 
         //when
-        ResponseEntity<TrainerResponseDto> result = trainerController.registerTrainer(requestDto);
+        ResponseEntity<ResponseDto<TrainerResponseDto>> result = trainerController.registerTrainer(requestDto);
 
         //then
         verify(trainerService).registerTrainer(trainerEntity);
         verify(trainerMapper).entityToResponseDto(registered);
         assertEquals(HttpStatus.CREATED, result.getStatusCode());
-        assertEquals(response, result.getBody());
+        assertEquals(response, Objects.requireNonNull(result.getBody()).getPayload());
     }
 
 
@@ -109,13 +111,13 @@ public class TrainerControllerTest {
         when(trainerProfileMapper.entityToProfileDto(trainer)).thenReturn(response);
 
         //when
-        ResponseEntity<TrainerProfileResponseDto> result =
+        ResponseEntity<ResponseDto<TrainerProfileResponseDto>> result =
                 trainerController.getTrainerProfile(username);
 
         //then
         verify(trainerService).getTrainerProfile(username);
         assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals(response, result.getBody());
+        assertEquals(response, Objects.requireNonNull(result.getBody()).getPayload());
     }
 
     @Test

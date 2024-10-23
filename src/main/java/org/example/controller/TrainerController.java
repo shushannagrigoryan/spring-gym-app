@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.TrainerCreateRequestDto;
 import org.example.dto.requestdto.TrainerUpdateRequestDto;
 import org.example.dto.requestdto.UserChangeActiveStatusRequestDto;
+import org.example.dto.responsedto.ResponseDto;
 import org.example.dto.responsedto.TraineeResponseDto;
 import org.example.dto.responsedto.TrainerProfileDto;
 import org.example.dto.responsedto.TrainerProfileResponseDto;
@@ -69,7 +70,7 @@ public class TrainerController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Successfully registered a new trainer.",
             content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = TraineeResponseDto.class))),
+            schema = @Schema(implementation = ResponseEntity.class))),
         @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found",
             content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = ExceptionResponse.class))),
@@ -81,12 +82,13 @@ public class TrainerController {
             schema = @Schema(implementation = ExceptionResponse.class)))
     }
     )
-    public ResponseEntity<TrainerResponseDto> registerTrainer(
+    public ResponseEntity<ResponseDto<TrainerResponseDto>> registerTrainer(
             @Valid @RequestBody TrainerCreateRequestDto trainerCreateDto) {
         log.debug("Request to register a new trainer: {}", trainerCreateDto);
         TrainerEntity trainer = trainerMapper.dtoToEntity(trainerCreateDto);
         TrainerEntity registeredTrainer = trainerService.registerTrainer(trainer);
-        return new ResponseEntity<>(trainerMapper.entityToResponseDto(registeredTrainer), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ResponseDto<>(trainerMapper.entityToResponseDto(registeredTrainer),
+                "Successfully registered a new trainer."), HttpStatus.CREATED);
     }
 
     /**
@@ -115,10 +117,11 @@ public class TrainerController {
             schema = @Schema(implementation = ExceptionResponse.class)))
     }
     )
-    public ResponseEntity<TrainerProfileResponseDto> getTrainerProfile(@PathVariable("username") String username) {
+    public ResponseEntity<ResponseDto<TrainerProfileResponseDto>> getTrainerProfile(@PathVariable("username") String username) {
         log.debug("Request to get trainer profile with username: {}", username);
         TrainerEntity trainer = trainerService.getTrainerProfile(username);
-        return new ResponseEntity<>(trainerProfileMapper.entityToProfileDto(trainer), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(trainerProfileMapper.entityToProfileDto(trainer),
+                "Successfully retrieved trainer profile."), HttpStatus.OK);
     }
 
     /**
