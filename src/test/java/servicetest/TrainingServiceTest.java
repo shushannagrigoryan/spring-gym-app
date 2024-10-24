@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.example.dto.requestdto.TraineeTrainingsFilterRequestDto;
@@ -67,7 +68,7 @@ public class TrainingServiceTest {
         String trainingName = "trainingName";
         when(trainingRepository.save(any(TrainingEntity.class))).thenReturn(new TrainingEntity());
         TrainingCreateRequestDto requestDto = new TrainingCreateRequestDto(traineeUsername, trainerUsername,
-                trainingName, LocalDate.now(), BigDecimal.valueOf(60));
+                trainingName, LocalDateTime.now(), BigDecimal.valueOf(60));
 
         //when
         trainingService.createTraining(requestDto);

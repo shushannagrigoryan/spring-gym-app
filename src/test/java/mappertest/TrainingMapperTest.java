@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.example.dto.TrainingDto;
 import org.example.dto.responsedto.TraineeCriteriaTrainingsResponseDto;
 import org.example.dto.responsedto.TrainerCriteriaTrainingsResponseDto;
@@ -42,7 +42,7 @@ public class TrainingMapperTest {
         TrainingEntity trainingEntity =
                 new TrainingEntity(1L, 1L,
                         "boxing", 1L,
-                        LocalDate.now(), BigDecimal.valueOf(60));
+                        LocalDateTime.now(), BigDecimal.valueOf(60));
         TraineeEntity traineeEntity = new TraineeEntity();
         traineeEntity.setId(1L);
         TrainerEntity trainerEntity = new TrainerEntity();
@@ -76,7 +76,7 @@ public class TrainingMapperTest {
         TrainingDto trainingDto =
                 new TrainingDto(1L, 1L,
                         "boxing", 1L,
-                        LocalDate.now(), BigDecimal.valueOf(60));
+                        LocalDateTime.now(), BigDecimal.valueOf(60));
 
         //when
         TrainingEntity trainingEntity = trainingMapper.dtoToEntity(trainingDto);
@@ -94,7 +94,7 @@ public class TrainingMapperTest {
     public void testTraineeTrainingsEntityToCriteriaDto() {
         //given
         TrainingEntity training = new TrainingEntity(1L, 1L, "trainingName",
-                1L, LocalDate.now(), BigDecimal.valueOf(60));
+                1L, LocalDateTime.now(), BigDecimal.valueOf(60));
         TrainerEntity trainer = new TrainerEntity();
         trainer.setUser(new UserEntity());
         training.setTrainer(trainer);
@@ -119,7 +119,7 @@ public class TrainingMapperTest {
     public void testTrainerTrainingsEntityToCriteriaDto() {
         //given
         TrainingEntity training = new TrainingEntity(1L, 1L, "trainingName",
-                1L, LocalDate.now(), BigDecimal.valueOf(60));
+                1L, LocalDateTime.now(), BigDecimal.valueOf(60));
         TraineeEntity trainee = new TraineeEntity();
         trainee.setUser(new UserEntity());
         training.setTrainee(trainee);

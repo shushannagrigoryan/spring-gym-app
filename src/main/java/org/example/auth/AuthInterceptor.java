@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.example.exceptionhandlers.ExceptionResponse;
 import org.example.exceptions.GymAuthenticationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -44,8 +43,8 @@ public class AuthInterceptor implements HandlerInterceptor {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             ObjectWriter objectWriter = objectMapper.writer().withDefaultPrettyPrinter();
             String json = objectWriter.writeValueAsString(
-                    new ExceptionResponse("Authentication failed: " + e.getMessage(),
-                            HttpStatus.UNAUTHORIZED));
+                    new ExceptionResponse<>("Authentication failed: Bad credentials",
+                            request.getRequestURI()));
             response.getWriter().write(json);
             return false;
         }

@@ -1,16 +1,25 @@
 package org.example.exceptionhandlers;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @ToString
-public class ExceptionResponse {
-    private String message;
-    private HttpStatus httpStatus;
+public class ExceptionResponse<T> {
+    private T message;
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
+    private LocalDateTime timestamp;
+    private String path;
+
+    /** Constructs a new exception response instance. */
+    public ExceptionResponse(T message, String path) {
+        this.message = message;
+        this.path = path;
+        this.timestamp = LocalDateTime.now();
+    }
 }
