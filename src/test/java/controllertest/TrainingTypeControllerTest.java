@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Objects;
 import org.example.controller.TrainingTypeController;
+import org.example.dto.responsedto.ResponseDto;
 import org.example.dto.responsedto.TrainingTypeResponseDto;
 import org.example.entity.TrainingTypeEntity;
 import org.example.mapper.TrainingTypeMapper;
@@ -38,13 +39,13 @@ public class TrainingTypeControllerTest {
         when(trainingTypeMapper.entityToResponseDto(trainingTypeEntity)).thenReturn(responseDto);
 
         //when
-        ResponseEntity<List<TrainingTypeResponseDto>> result =
+        ResponseEntity<ResponseDto<List<TrainingTypeResponseDto>>> result =
                 trainingTypeController.getTrainingTypes();
 
         //then
         assertNotNull(result);
-        assertEquals(1, Objects.requireNonNull(result.getBody()).size());
-        assertEquals(responseDto, Objects.requireNonNull(result.getBody()).get(0));
+        assertEquals(1, Objects.requireNonNull(result.getBody()).getPayload().size());
+        assertEquals(responseDto, Objects.requireNonNull(result.getBody()).getPayload().get(0));
         assertEquals(HttpStatus.OK, result.getStatusCode());
         verify(trainingTypeService).getAllTrainingTypes();
         verify(trainingTypeMapper).entityToResponseDto(trainingTypeEntity);

@@ -73,11 +73,11 @@ public class TrainerControllerTest {
         when(trainerMapper.entityToProfileDto(trainer)).thenReturn(trainerProfileDto);
 
         // When
-        ResponseEntity<Set<TrainerProfileDto>> result =
+        ResponseEntity<ResponseDto<Set<TrainerProfileDto>>> result =
                 trainerController.notAssignedOnTraineeActiveTrainers(traineeUsername);
 
         // Then
-        assertEquals(Set.of(trainerProfileDto), result.getBody());
+        assertEquals(Set.of(trainerProfileDto), Objects.requireNonNull(result.getBody()).getPayload());
         verify(trainerService).notAssignedOnTraineeActiveTrainers(traineeUsername);
         verify(trainerMapper).entityToProfileDto(trainer);
     }
@@ -92,11 +92,11 @@ public class TrainerControllerTest {
         when(trainerService.changeActiveStatus(username, isActive)).thenReturn("Success.");
 
         //when
-        ResponseEntity<String> response = trainerController.changeActiveStatus(requestDto);
+        ResponseEntity<ResponseDto<Object>> response = trainerController.changeActiveStatus(requestDto);
 
         //then
         verify(trainerService).changeActiveStatus(username, isActive);
-        assertEquals("Success.", response.getBody());
+        assertEquals("Success.", Objects.requireNonNull(response.getBody()).getMessage());
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
     }
@@ -139,13 +139,13 @@ public class TrainerControllerTest {
                 .entityToUpdatedDto(updatedTrainer)).thenReturn(trainerResponse);
 
         //when
-        ResponseEntity<TrainerUpdateResponseDto> result = trainerController.updateTrainer(requestDto);
+        ResponseEntity<ResponseDto<TrainerUpdateResponseDto>> result = trainerController.updateTrainer(requestDto);
 
         //then
         verify(trainerMapper).updateDtoToEntity(requestDto);
         verify(trainerService).updateTrainer(trainer);
         verify(trainerProfileMapper).entityToUpdatedDto(updatedTrainer);
-        assertEquals(trainerResponse, result.getBody());
+        assertEquals(trainerResponse, Objects.requireNonNull(result.getBody()).getPayload());
         assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 }

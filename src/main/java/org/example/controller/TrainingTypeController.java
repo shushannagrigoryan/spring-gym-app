@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.responsedto.ResponseDto;
 import org.example.dto.responsedto.TrainingTypeResponseDto;
 import org.example.entity.TrainingTypeEntity;
 import org.example.exceptionhandlers.ExceptionResponse;
@@ -44,7 +45,7 @@ public class TrainingTypeController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully got training types.",
             content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = List.class))),
+            schema = @Schema(implementation = ResponseEntity.class))),
         @ApiResponse(responseCode = "401", description = "Authentication error",
             content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = ExceptionResponse.class))),
@@ -59,11 +60,13 @@ public class TrainingTypeController {
             schema = @Schema(implementation = ExceptionResponse.class)))
     }
     )
-    public ResponseEntity<List<TrainingTypeResponseDto>> getTrainingTypes() {
+    public ResponseEntity<ResponseDto<List<TrainingTypeResponseDto>>> getTrainingTypes() {
         log.debug("Request to get all training types.");
         List<TrainingTypeEntity> trainingTypes = trainingTypeService.getAllTrainingTypes();
-        return new ResponseEntity<>(trainingTypes.stream()
-                .map(trainingTypeMapper::entityToResponseDto).toList(),
+        List<TrainingTypeResponseDto> payload =
+                trainingTypes.stream()
+                        .map(trainingTypeMapper::entityToResponseDto).toList();
+        return new ResponseEntity<>(new ResponseDto<>(payload, "Successfully retrieved training types."),
                 HttpStatus.OK);
     }
 }

@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.TraineeCreateRequestDto;
 import org.example.dto.requestdto.TraineeUpdateRequestDto;
@@ -107,7 +106,7 @@ public class TraineeController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully received trainee profile.",
             content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = TraineeProfileResponseDto.class))),
+            schema = @Schema(implementation = ResponseEntity.class))),
         @ApiResponse(responseCode = "401", description = "Authentication error",
             content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = ExceptionResponse.class))),
@@ -148,7 +147,7 @@ public class TraineeController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully updated trainee profile.",
             content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = TraineeUpdateResponseDto.class))),
+            schema = @Schema(implementation = ResponseEntity.class))),
         @ApiResponse(responseCode = "401", description = "Authentication error",
             content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = ExceptionResponse.class))),
@@ -163,14 +162,16 @@ public class TraineeController {
             schema = @Schema(implementation = ExceptionResponse.class)))
     }
     )
-    public ResponseEntity<TraineeUpdateResponseDto> updateTrainee(
+    public ResponseEntity<ResponseDto<TraineeUpdateResponseDto>> updateTrainee(
             @Valid @RequestBody TraineeUpdateRequestDto trainee) {
         log.debug("Request to update trainee with username: {}", trainee.getUsername());
         TraineeEntity traineeEntity = traineeMapper.updateDtoToEntity(trainee);
         TraineeEntity updatedTrainee = traineeService.updateTrainee(traineeEntity);
         TraineeUpdateResponseDto traineeResponse = traineeProfileMapper
                 .entityToUpdatedDto(updatedTrainee);
-        return new ResponseEntity<>(traineeResponse, HttpStatus.OK);
+
+        return new ResponseEntity<>(new ResponseDto<>(traineeResponse,
+                "Successfully updated trainee profile."), HttpStatus.OK);
     }
 
     /**
@@ -197,13 +198,13 @@ public class TraineeController {
             schema = @Schema(implementation = ExceptionResponse.class)))
     }
     )
-    public ResponseEntity<String> changeActiveStatus(@Valid @RequestBody UserChangeActiveStatusRequestDto
+    public ResponseEntity<ResponseDto<Object>> changeActiveStatus(@Valid @RequestBody UserChangeActiveStatusRequestDto
                                                              activeStatusRequestDto) {
         log.debug("Request to change the active status of trainee with username: {} to {}",
                 activeStatusRequestDto.getUsername(), activeStatusRequestDto.getIsActive());
         String response = traineeService.changeActiveStatus(activeStatusRequestDto.getUsername(),
                 activeStatusRequestDto.getIsActive());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(null, response), HttpStatus.OK);
     }
 
     /**
@@ -229,10 +230,11 @@ public class TraineeController {
             schema = @Schema(implementation = ExceptionResponse.class)))
     }
     )
-    public ResponseEntity<String> deleteTrainee(@PathVariable(value = "username") String username) {
+    public ResponseEntity<ResponseDto<Object>> deleteTrainee(@PathVariable(value = "username") String username) {
         log.debug("Request to delete trainee with username: {}", username);
         traineeService.deleteTraineeByUsername(username);
-        return new ResponseEntity<>("Successfully deleted trainee", HttpStatus.OK);
+        return new ResponseEntity<>(
+                new ResponseDto<>(null, "Successfully deleted trainee"), HttpStatus.OK);
     }
 
     /**
@@ -247,7 +249,7 @@ public class TraineeController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully updated trainee's trainers list.",
             content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = TrainerProfileDto.class))),
+            schema = @Schema(implementation = ResponseEntity.class))),
         @ApiResponse(responseCode = "401", description = "Authentication error",
             content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = ExceptionResponse.class))),
@@ -262,17 +264,18 @@ public class TraineeController {
             schema = @Schema(implementation = ExceptionResponse.class)))
     }
     )
-    public ResponseEntity<List<TrainerProfileDto>> updateTraineesTrainerList(
+    public ResponseEntity<ResponseDto<List<TrainerProfileDto>>> updateTraineesTrainerList(
             @PathVariable(value = "username") String username,
             @Valid @RequestBody TraineeUpdateTrainersRequestDto updateTrainersDto) {
         log.debug("Request to update trainee's: {} trainer list with: {}.",
                 username, updateTrainersDto.getTrainers());
 
-        return new ResponseEntity<>(traineeService.updateTraineesTrainerList(username,
+        List<TrainerProfileDto> payload = traineeService.updateTraineesTrainerList(username,
                         updateTrainersDto.getTrainers())
                 .stream().map(trainerMapper::entityToProfileDto)
-                .collect(Collectors.toList()),
-                HttpStatus.OK);
+                .toList();
+        return new ResponseEntity<>(new ResponseDto<>(payload,
+                "Successfully updated trainee trainers list."), HttpStatus.OK);
     }
 
 

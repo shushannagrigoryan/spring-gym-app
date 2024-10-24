@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.ChangePasswordRequestDto;
+import org.example.dto.responsedto.ResponseDto;
 import org.example.exceptionhandlers.ExceptionResponse;
 import org.example.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -67,11 +68,11 @@ public class UserController {
             examples = @ExampleObject(value = "{ \"message\": \"Bad request\","
                  + " \"httpStatus\": \"400 BAD_REQUEST\" }")))
     })
-    public ResponseEntity<String> login(@RequestHeader("username") String username,
-                                        @RequestHeader("password") String password) {
+    public ResponseEntity<ResponseDto<Object>> login(@RequestHeader("username") String username,
+                                             @RequestHeader("password") String password) {
         log.debug("Request to login a user.");
         userService.login(username, password);
-        return new ResponseEntity<>("Successfully logged in.", HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(null, "Successfully logged in."), HttpStatus.OK);
     }
 
     /**
@@ -108,11 +109,13 @@ public class UserController {
                     + " \"httpStatus\": \"400 BAD_REQUEST\" }")))
     }
     )
-    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordRequestDto changePasswordDto) {
+    public ResponseEntity<ResponseDto<Object>> changePassword(
+            @Valid @RequestBody ChangePasswordRequestDto changePasswordDto) {
         log.debug("Request to change password of user with username: {}", changePasswordDto.getUsername());
         userService.changeUserPassword(changePasswordDto.getUsername(), changePasswordDto.getPassword(),
                 changePasswordDto.getNewPassword());
-        return new ResponseEntity<>("Successfully changed user password.", HttpStatus.OK);
+        return new ResponseEntity<>(
+                new ResponseDto<>(null, "Successfully changed user password."), HttpStatus.OK);
     }
 
 }

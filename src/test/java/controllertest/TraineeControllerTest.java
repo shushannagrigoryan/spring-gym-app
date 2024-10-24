@@ -59,7 +59,8 @@ public class TraineeControllerTest {
         when(traineeMapper.entityToResponseDto(registered)).thenReturn(response);
 
         //when
-        ResponseEntity<ResponseDto<TraineeResponseDto>> result =  traineeController.registerTrainee(traineeCreateRequestDto);
+        ResponseEntity<ResponseDto<TraineeResponseDto>> result =
+                traineeController.registerTrainee(traineeCreateRequestDto);
 
         //then
         verify(traineeService).registerTrainee(traineeEntity);
@@ -78,11 +79,11 @@ public class TraineeControllerTest {
         when(traineeService.changeActiveStatus(username, isActive)).thenReturn("Success.");
 
         //when
-        ResponseEntity<String> response = traineeController.changeActiveStatus(requestDto);
+        ResponseEntity<ResponseDto<Object>> response = traineeController.changeActiveStatus(requestDto);
 
         //then
         verify(traineeService).changeActiveStatus(username, isActive);
-        assertEquals("Success.", response.getBody());
+        assertEquals("Success.", Objects.requireNonNull(response.getBody()).getMessage());
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
     }
@@ -94,11 +95,11 @@ public class TraineeControllerTest {
         doNothing().when(traineeService).deleteTraineeByUsername(username);
 
         //when
-        ResponseEntity<String> result = traineeController.deleteTrainee(username);
+        ResponseEntity<ResponseDto<Object>> result = traineeController.deleteTrainee(username);
 
         //then
         verify(traineeService).deleteTraineeByUsername(username);
-        assertEquals("Successfully deleted trainee", result.getBody());
+        assertEquals("Successfully deleted trainee", Objects.requireNonNull(result.getBody()).getMessage());
         assertEquals(HttpStatus.OK, result.getStatusCode());
 
     }
@@ -117,13 +118,13 @@ public class TraineeControllerTest {
 
 
         //when
-        ResponseEntity<List<TrainerProfileDto>> result =
+        ResponseEntity<ResponseDto<List<TrainerProfileDto>>> result =
                 traineeController.updateTraineesTrainerList(username, requestDto);
 
         //then
         verify(traineeService).updateTraineesTrainerList(username, list);
         assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals(List.of(trainerProfileDto), result.getBody());
+        assertEquals(List.of(trainerProfileDto), Objects.requireNonNull(result.getBody()).getPayload());
     }
 
     @Test
@@ -165,13 +166,13 @@ public class TraineeControllerTest {
                 .entityToUpdatedDto(updatedTrainee)).thenReturn(traineeResponse);
 
         //when
-        ResponseEntity<TraineeUpdateResponseDto> result = traineeController.updateTrainee(requestDto);
+        ResponseEntity<ResponseDto<TraineeUpdateResponseDto>> result = traineeController.updateTrainee(requestDto);
 
         //then
         verify(traineeMapper).updateDtoToEntity(requestDto);
         verify(traineeService).updateTrainee(trainee);
         verify(traineeProfileMapper).entityToUpdatedDto(updatedTrainee);
-        assertEquals(traineeResponse, result.getBody());
+        assertEquals(traineeResponse, Objects.requireNonNull(result.getBody()).getPayload());
         assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 

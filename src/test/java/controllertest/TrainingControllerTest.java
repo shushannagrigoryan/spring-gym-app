@@ -12,6 +12,7 @@ import org.example.controller.TrainingController;
 import org.example.dto.requestdto.TraineeTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainerTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainingCreateRequestDto;
+import org.example.dto.responsedto.ResponseDto;
 import org.example.dto.responsedto.TraineeCriteriaTrainingsResponseDto;
 import org.example.dto.responsedto.TrainerCriteriaTrainingsResponseDto;
 import org.example.entity.TrainingEntity;
@@ -44,11 +45,12 @@ public class TrainingControllerTest {
         doNothing().when(trainingService).createTraining(requestDto);
 
         //when
-        ResponseEntity<String> result =  trainingController.createTraining(requestDto);
+        ResponseEntity<ResponseDto<Object>> result =  trainingController.createTraining(requestDto);
 
         //then
         verify(trainingService).createTraining(requestDto);
-        assertEquals("Successfully created a new training.", result.getBody());
+        assertEquals("Successfully created a new training.",
+                Objects.requireNonNull(result.getBody()).getMessage());
         assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
@@ -68,13 +70,13 @@ public class TrainingControllerTest {
         when(trainingMapper.traineeTrainingsEntityToCriteriaDto(training)).thenReturn(responseDto);
 
         //when
-        ResponseEntity<List<TraineeCriteriaTrainingsResponseDto>> result =
+        ResponseEntity<ResponseDto<List<TraineeCriteriaTrainingsResponseDto>>> result =
                 trainingController.getTraineeTrainingsFilter(traineeUsername, requestDto);
 
         //then
         verify(trainingService).getTraineeTrainingsByFilter(requestDto);
         verify(trainingMapper).traineeTrainingsEntityToCriteriaDto(training);
-        assertEquals(responseDto, Objects.requireNonNull(result.getBody()).get(0));
+        assertEquals(responseDto, Objects.requireNonNull(result.getBody()).getPayload().get(0));
         assertEquals(HttpStatus.OK, result.getStatusCode());
 
     }
@@ -94,13 +96,13 @@ public class TrainingControllerTest {
         when(trainingMapper.trainerTrainingsEntityToCriteriaDto(training)).thenReturn(responseDto);
 
         //when
-        ResponseEntity<List<TrainerCriteriaTrainingsResponseDto>> result =
+        ResponseEntity<ResponseDto<List<TrainerCriteriaTrainingsResponseDto>>> result =
                 trainingController.getTrainerTrainingsFilter(trainerUsername, requestDto);
 
         //then
         verify(trainingService).getTrainerTrainingsByFilter(requestDto);
         verify(trainingMapper).trainerTrainingsEntityToCriteriaDto(training);
-        assertEquals(responseDto, Objects.requireNonNull(result.getBody()).get(0));
+        assertEquals(responseDto, Objects.requireNonNull(result.getBody()).getPayload().get(0));
         assertEquals(HttpStatus.OK, result.getStatusCode());
 
     }

@@ -7,11 +7,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.TraineeTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainerTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainingCreateRequestDto;
+import org.example.dto.responsedto.ResponseDto;
 import org.example.dto.responsedto.TraineeCriteriaTrainingsResponseDto;
 import org.example.dto.responsedto.TrainerCriteriaTrainingsResponseDto;
 import org.example.entity.TrainingEntity;
@@ -67,10 +67,12 @@ public class TrainingController {
             schema = @Schema(implementation = ExceptionResponse.class)))
     }
     )
-    public ResponseEntity<String> createTraining(@Valid @RequestBody TrainingCreateRequestDto trainingDto) {
+    public ResponseEntity<ResponseDto<Object>> createTraining(
+            @Valid @RequestBody TrainingCreateRequestDto trainingDto) {
         log.debug("Request to create new training: {}", trainingDto);
         trainingService.createTraining(trainingDto);
-        return new ResponseEntity<>("Successfully created a new training.", HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(null,
+                "Successfully created a new training."), HttpStatus.OK);
     }
 
     /**
@@ -84,7 +86,7 @@ public class TrainingController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully got trainee trainings.",
             content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = List.class))),
+            schema = @Schema(implementation = ResponseEntity.class))),
         @ApiResponse(responseCode = "401", description = "Authentication error",
             content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = ExceptionResponse.class))),
@@ -99,7 +101,7 @@ public class TrainingController {
             schema = @Schema(implementation = ExceptionResponse.class)))
     }
     )
-    public ResponseEntity<List<TraineeCriteriaTrainingsResponseDto>> getTraineeTrainingsFilter(
+    public ResponseEntity<ResponseDto<List<TraineeCriteriaTrainingsResponseDto>>> getTraineeTrainingsFilter(
             @PathVariable("username") String username,
             @Valid @RequestBody TraineeTrainingsFilterRequestDto trainingsDto) {
         log.debug("Request for getting trainee's: {} trainings by filter"
@@ -108,10 +110,12 @@ public class TrainingController {
                 trainingsDto.getTrainerUsername(), trainingsDto.getTrainingType());
 
         List<TrainingEntity> trainings = trainingService.getTraineeTrainingsByFilter(trainingsDto);
-        return new ResponseEntity<>(trainings.stream().map(trainingMapper::traineeTrainingsEntityToCriteriaDto)
-                .collect(Collectors.toList()),
-                HttpStatus.OK);
+        List<TraineeCriteriaTrainingsResponseDto> payload =
+                trainings.stream().map(trainingMapper::traineeTrainingsEntityToCriteriaDto)
+                        .toList();
 
+        return new ResponseEntity<>(new ResponseDto<>(payload, "Successfully retrieved trainee trainings"),
+                HttpStatus.OK);
     }
 
     /**
@@ -125,7 +129,7 @@ public class TrainingController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully got trainer trainings.",
             content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = List.class))),
+            schema = @Schema(implementation = ResponseEntity.class))),
         @ApiResponse(responseCode = "401", description = "Authentication error",
             content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = ExceptionResponse.class))),
@@ -140,7 +144,7 @@ public class TrainingController {
             schema = @Schema(implementation = ExceptionResponse.class)))
     }
     )
-    public ResponseEntity<List<TrainerCriteriaTrainingsResponseDto>> getTrainerTrainingsFilter(
+    public ResponseEntity<ResponseDto<List<TrainerCriteriaTrainingsResponseDto>>> getTrainerTrainingsFilter(
             @PathVariable("username") String username,
             @Valid @RequestBody TrainerTrainingsFilterRequestDto trainingsDto) {
         log.debug("Request for getting trainer's: {} trainings by filter"
@@ -149,8 +153,10 @@ public class TrainingController {
                 trainingsDto.getTraineeUsername());
 
         List<TrainingEntity> trainings = trainingService.getTrainerTrainingsByFilter(trainingsDto);
-        return new ResponseEntity<>(trainings.stream().map(trainingMapper::trainerTrainingsEntityToCriteriaDto)
-                .collect(Collectors.toList()),
+        List<TrainerCriteriaTrainingsResponseDto> payload =
+                trainings.stream().map(trainingMapper::trainerTrainingsEntityToCriteriaDto)
+                        .toList();
+        return new ResponseEntity<>(new ResponseDto<>(payload, "Successfully retrieved trainer trainings"),
                 HttpStatus.OK);
 
 

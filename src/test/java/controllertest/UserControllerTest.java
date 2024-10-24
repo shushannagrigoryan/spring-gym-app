@@ -4,8 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
+import java.util.Objects;
 import org.example.controller.UserController;
 import org.example.dto.requestdto.ChangePasswordRequestDto;
+import org.example.dto.responsedto.ResponseDto;
 import org.example.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,11 +32,11 @@ public class UserControllerTest {
         doNothing().when(userService).login(username, password);
 
         //when
-        ResponseEntity<String> result = userController.login(username, password);
+        ResponseEntity<ResponseDto<Object>> result = userController.login(username, password);
 
         //then
         verify(userService).login(username, password);
-        assertEquals("Successfully logged in.", result.getBody());
+        assertEquals("Successfully logged in.", Objects.requireNonNull(result.getBody()).getMessage());
         assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
@@ -48,11 +50,12 @@ public class UserControllerTest {
                 new ChangePasswordRequestDto(username, oldPassword, newPassword);
 
         //when
-        ResponseEntity<String> result = userController.changePassword(requestDto);
+        ResponseEntity<ResponseDto<Object>> result = userController.changePassword(requestDto);
 
         //then
         verify(userService).changeUserPassword(username, oldPassword, newPassword);
-        assertEquals("Successfully changed user password.", result.getBody());
+        assertEquals("Successfully changed user password.",
+                Objects.requireNonNull(result.getBody()).getMessage());
         assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
