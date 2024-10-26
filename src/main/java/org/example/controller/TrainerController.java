@@ -7,14 +7,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.TrainerCreateRequestDto;
 import org.example.dto.requestdto.TrainerUpdateRequestDto;
 import org.example.dto.requestdto.UserChangeActiveStatusRequestDto;
 import org.example.dto.responsedto.ResponseDto;
-import org.example.dto.responsedto.TrainerProfileDto;
 import org.example.dto.responsedto.TrainerProfileResponseDto;
 import org.example.dto.responsedto.TrainerResponseDto;
 import org.example.dto.responsedto.TrainerUpdateResponseDto;
@@ -199,43 +196,44 @@ public class TrainerController {
     }
 
 
-    /**
-     * GET request to get active trainers which are not assigned to trainee with the given username.
-     *
-     * @param traineeUsername username of the trainee.
-     * @return {@code Set<TrainerProfileDto>}
-     */
-    @GetMapping("/unassigned/trainee/{username}")
-    @Operation(description = "Getting not assigned on trainee active trainers.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successfully got not assigned on trainee active trainers.",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ResponseEntity.class))),
-        @ApiResponse(responseCode = "401", description = "Authentication error",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class))),
-        @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class))),
-        @ApiResponse(responseCode = "405", description = "Method is not allowed.",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class))),
-        @ApiResponse(responseCode = "400", description = "Bad request.",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class)))
-    }
-    )
-    public ResponseEntity<ResponseDto<Set<TrainerProfileDto>>> notAssignedOnTraineeActiveTrainers(
-            @PathVariable("username") String traineeUsername) {
-        log.debug("Request to get all active trainers which are not assigned to trainee with username: {}",
-                traineeUsername);
-
-        Set<TrainerProfileDto> payload = trainerService.notAssignedOnTraineeActiveTrainers(traineeUsername)
-                .stream()
-                .map(trainerMapper::entityToProfileDto).collect(Collectors.toSet());
-        return new ResponseEntity<>(new ResponseDto<>(payload,
-                "Successfully retrieved active trainers which are not assigned to trainee."),
-                HttpStatus.OK);
-    }
+    //    /**
+    //     * GET request to get active trainers which are not assigned to trainee with the given username.
+    //     *
+    //     * @param traineeUsername username of the trainee.
+    //     * @return {@code Set<TrainerProfileDto>}
+    //     */
+    //    @GetMapping("/unassigned/trainee/{username}")
+    //    @Operation(description = "Getting not assigned on trainee active trainers.")
+    //    @ApiResponses(value = {
+    //        @ApiResponse(responseCode = "200",
+    //        description = "Successfully got not assigned on trainee active trainers.",
+    //            content = @Content(mediaType = "application/json",
+    //            schema = @Schema(implementation = ResponseEntity.class))),
+    //        @ApiResponse(responseCode = "401", description = "Authentication error",
+    //            content = @Content(mediaType = "application/json",
+    //            schema = @Schema(implementation = ExceptionResponse.class))),
+    //        @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found",
+    //            content = @Content(mediaType = "application/json",
+    //            schema = @Schema(implementation = ExceptionResponse.class))),
+    //        @ApiResponse(responseCode = "405", description = "Method is not allowed.",
+    //            content = @Content(mediaType = "application/json",
+    //            schema = @Schema(implementation = ExceptionResponse.class))),
+    //        @ApiResponse(responseCode = "400", description = "Bad request.",
+    //            content = @Content(mediaType = "application/json",
+    //            schema = @Schema(implementation = ExceptionResponse.class)))
+    //    }
+    //    )
+    //    public ResponseEntity<ResponseDto<Set<TrainerProfileDto>>> notAssignedOnTraineeActiveTrainers(
+    //            @PathVariable("username") String traineeUsername) {
+    //        log.debug("Request to get all active trainers which are not assigned to trainee with username: {}",
+    //                traineeUsername);
+    //
+    //        Set<TrainerProfileDto> payload = trainerService.notAssignedOnTraineeActiveTrainers(traineeUsername)
+    //                .stream()
+    //                .map(trainerMapper::entityToProfileDto).collect(Collectors.toSet());
+    //        return new ResponseEntity<>(new ResponseDto<>(payload,
+    //                "Successfully retrieved active trainers which are not assigned to trainee."),
+    //                HttpStatus.OK);
+    //    }
 
 }

@@ -1,20 +1,20 @@
 package org.example.services;
 
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
-import org.example.repository.UserRepository;
+import org.example.repositories.UserRepo;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
 public class UserService {
-    private final UserRepository userRepository;
+    private final UserRepo userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepo userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -37,7 +37,8 @@ public class UserService {
     @Transactional
     public List<String> getAllUsernames() {
         log.debug("Getting all usernames.");
-        return userRepository.getAllUsernames();
+        //return userRepository.getAllUsernames();
+        return userRepository.findAllUsernames();
     }
 
     /**
@@ -49,7 +50,8 @@ public class UserService {
     @Transactional
     public Optional<UserEntity> getUserByUsername(String username) {
         log.debug("Getting user with username: {}", username);
-        Optional<UserEntity> user = userRepository.getUserByUsername(username);
+        //Optional<UserEntity> user = userRepository.getUserByUsername(username);
+        Optional<UserEntity> user = userRepository.findByUsername(username);
         if (user.isEmpty()) {
             log.debug("No user with username: {}", username);
         }
@@ -65,7 +67,8 @@ public class UserService {
     @Transactional
     public void login(String username, String password) {
         log.debug("Logging in user with username {} and password {}", username, password);
-        Optional<UserEntity> user = userRepository.getUserByUsernameAndPassword(username, password);
+        //Optional<UserEntity> user = userRepository.getUserByUsernameAndPassword(username, password);
+        Optional<UserEntity> user = userRepository.findByUsernameAndPassword(username, password);
         if (user.isEmpty()) {
             throw new GymEntityNotFoundException("Invalid username and password.");
         }
@@ -81,7 +84,7 @@ public class UserService {
     @Transactional
     public void changeUserPassword(String username, String oldPassword, String newPassword) {
         log.debug("Changing the password of user with username: {}", username);
-        userRepository.getUserByUsernameAndPassword(username, oldPassword)
+        userRepository.findByUsernameAndPassword(username, oldPassword)
                 .orElseThrow(() -> new GymEntityNotFoundException(
                                 String.format("No user with username: %s and password: %s", username, oldPassword)));
         userRepository.updatePassword(username, newPassword);

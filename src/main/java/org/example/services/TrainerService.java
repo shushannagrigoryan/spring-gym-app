@@ -10,7 +10,7 @@ import org.example.entity.TrainingTypeEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalArgumentException;
 import org.example.password.PasswordGeneration;
-import org.example.repository.TrainerRepository;
+import org.example.repositories.TrainerRepo;
 import org.example.username.UsernameGenerator;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class TrainerService {
-    private final TrainerRepository trainerRepository;
+    private final TrainerRepo trainerRepository;
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
     private final TrainingTypeService trainingTypeService;
@@ -28,7 +28,7 @@ public class TrainerService {
     /**
      * Injecting dependencies using constructor.
      */
-    public TrainerService(TrainerRepository trainerRepository,
+    public TrainerService(TrainerRepo trainerRepository,
                           UsernameGenerator usernameGenerator,
                           PasswordGeneration passwordGeneration,
                           TrainingTypeService trainingTypeService,
@@ -70,7 +70,7 @@ public class TrainerService {
      */
     public TrainerEntity getTrainerByUsername(String username) {
         log.debug("Retrieving trainer by username: {}", username);
-        Optional<TrainerEntity> trainer = trainerRepository.findByUsername(username);
+        Optional<TrainerEntity> trainer = trainerRepository.findByUser_Username(username);
         if (trainer.isEmpty()) {
             log.debug("No trainer with the username: {}", username);
             throw new GymEntityNotFoundException(
@@ -110,7 +110,7 @@ public class TrainerService {
         String username = trainerToUpdate.getUser().getUsername();
         log.debug("Updating trainer with username: {}", trainerToUpdate.getUser().getUsername());
 
-        Optional<TrainerEntity> trainer = trainerRepository.findByUsername(username);
+        Optional<TrainerEntity> trainer = trainerRepository.findByUser_Username(username);
 
         if (trainer.isEmpty()) {
             log.debug("No trainer with username: {}", username);
@@ -143,7 +143,7 @@ public class TrainerService {
     @Transactional
     public TrainerEntity getTrainerProfile(String username) {
         log.debug("Getting trainer profile by username: {}", username);
-        Optional<TrainerEntity> trainer = trainerRepository.findByUsername(username);
+        Optional<TrainerEntity> trainer = trainerRepository.findByUser_Username(username);
         if (trainer.isEmpty()) {
             log.debug("No trainer with the username: {}", username);
             throw new GymEntityNotFoundException(
@@ -167,7 +167,7 @@ public class TrainerService {
      */
     @Transactional
     public String changeActiveStatus(String username, boolean isActive) {
-        TrainerEntity trainer = trainerRepository.findByUsername(username)
+        TrainerEntity trainer = trainerRepository.findByUser_Username(username)
                 .orElseThrow(() -> new GymEntityNotFoundException(
                         String.format("Trainer with username %s does not exist.", username)));
 
@@ -183,22 +183,23 @@ public class TrainerService {
         return "Successfully set trainer active status to " + isActive;
     }
 
-    /**
-     * Returns active trainers which are not assigned to trainee with the given username.
-     *
-     * @param traineeUsername username of the trainee
-     * @return {@code Set<TrainerEntity>}
-     */
-    @Transactional
-    public List<TrainerEntity> notAssignedOnTraineeActiveTrainers(String traineeUsername) {
-        traineeService.getTraineeByUsername(traineeUsername);
-        List<TrainerEntity> trainers = trainerRepository.getTrainersNotAssignedToTraineeActiveTrainers(traineeUsername);
-        for (TrainerEntity t : trainers) {
-            TrainingTypeEntity specialization = t.getSpecialization();
-            log.debug("Lazily initialized trainer's: {} specialization: {}",
-                    t.getUser().getUsername(), specialization);
-        }
-
-        return trainers;
-    }
+    //    /**
+    //     * Returns active trainers which are not assigned to trainee with the given username.
+    //     *
+    //     * @param traineeUsername username of the trainee
+    //     * @return {@code Set<TrainerEntity>}
+    //     */
+    //    @Transactional
+    //    public List<TrainerEntity> notAssignedOnTraineeActiveTrainers(String traineeUsername) {
+    //        traineeService.getTraineeByUsername(traineeUsername);
+    //        List<TrainerEntity> trainers = trainerRepository
+    //        .getTrainersNotAssignedToTraineeActiveTrainers(traineeUsername);
+    //        for (TrainerEntity t : trainers) {
+    //            TrainingTypeEntity specialization = t.getSpecialization();
+    //            log.debug("Lazily initialized trainer's: {} specialization: {}",
+    //                    t.getUser().getUsername(), specialization);
+    //        }
+    //
+    //        return trainers;
+    //    }
 }

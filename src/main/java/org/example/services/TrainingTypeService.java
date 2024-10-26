@@ -1,23 +1,23 @@
 package org.example.services;
 
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainingTypeEntity;
 import org.example.exceptions.GymIllegalIdException;
-import org.example.repository.TrainingTypeRepository;
+import org.example.repositories.TrainingTypeRepo;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
 public class TrainingTypeService {
-    private final TrainingTypeRepository trainingTypeRepository;
+    private final TrainingTypeRepo trainingTypeRepository;
 
     /**
      * Injecting dependencies using constructor.
      */
-    public TrainingTypeService(TrainingTypeRepository trainingTypeRepository) {
+    public TrainingTypeService(TrainingTypeRepo trainingTypeRepository) {
         this.trainingTypeRepository = trainingTypeRepository;
     }
 
