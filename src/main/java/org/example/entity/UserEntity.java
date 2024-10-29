@@ -28,7 +28,7 @@ public class UserEntity {
     @Column(name = "password", nullable = false)
     protected String password;
     @Column(name = "is_active", nullable = false)
-    protected boolean isActive;
+    protected boolean active;
 
     /**
      * constructor.

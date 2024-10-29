@@ -19,16 +19,17 @@ public class UserService {
     }
 
     /**
-     * Creates a new user in the service layer.
+     * Saving a new user in the service layer.
      *
      * @param userEntity the new {@code UserEntity}
      */
     @Transactional
-    public void registerUser(UserEntity userEntity) {
-        log.debug("Creating user: {}", userEntity);
+    public UserEntity save(UserEntity userEntity) {
+        log.debug("Saving user: {}", userEntity);
 
         UserEntity user = userRepository.save(userEntity);
-        log.debug("Successfully created user: {}", user);
+        log.debug("Successfully saved user: {}", user);
+        return user;
     }
 
     /**
@@ -84,10 +85,12 @@ public class UserService {
     @Transactional
     public void changeUserPassword(String username, String oldPassword, String newPassword) {
         log.debug("Changing the password of user with username: {}", username);
-        userRepository.findByUsernameAndPassword(username, oldPassword)
+        UserEntity user = userRepository.findByUsernameAndPassword(username, oldPassword)
                 .orElseThrow(() -> new GymEntityNotFoundException(
                                 String.format("No user with username: %s and password: %s", username, oldPassword)));
-        userRepository.updatePassword(username, newPassword);
+        //userRepository.updatePassword(username, newPassword);
+        user.setPassword(newPassword);
+        userRepository.save(user);
         log.debug("Successfully changed password of user with username: {}", username);
     }
 

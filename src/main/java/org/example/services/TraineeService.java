@@ -8,8 +8,6 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
-import org.example.entity.TrainingEntity;
-import org.example.entity.TrainingTypeEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalArgumentException;
 import org.example.password.PasswordGeneration;
@@ -25,6 +23,7 @@ public class TraineeService {
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
     private final TrainerService trainerService;
+    private final UserService userService;
 
     /**
      * Injecting dependencies using constructor.
@@ -32,11 +31,13 @@ public class TraineeService {
     public TraineeService(TraineeRepo traineeRepository,
                           UsernameGenerator usernameGenerator,
                           PasswordGeneration passwordGeneration,
-                          TrainerService trainerService) {
+                          TrainerService trainerService,
+                          UserService userService) {
         this.traineeRepository = traineeRepository;
         this.usernameGenerator = usernameGenerator;
         this.passwordGeneration = passwordGeneration;
         this.trainerService = trainerService;
+        this.userService = userService;
     }
 
     /**
@@ -53,6 +54,7 @@ public class TraineeService {
                 traineeEntity.getUser().getLastName());
         traineeEntity.getUser().setUsername(username);
         traineeEntity.getUser().setPassword(passwordGeneration.generatePassword());
+        userService.save(traineeEntity.getUser());
         TraineeEntity trainee = traineeRepository.save(traineeEntity);
         log.debug("Successfully registered trainee: {}", traineeEntity);
         return trainee;
@@ -130,13 +132,6 @@ public class TraineeService {
 
         TraineeEntity updatedTrainee = traineeRepository.save(traineeEntity);
 
-        List<TrainingEntity> trainings = updatedTrainee.getTrainings();
-        log.debug("Lazily initialized trainee trainings {}", trainings);
-        for (TrainingEntity training : trainings) {
-            TrainingTypeEntity trainingType = training.getTrainer().getSpecialization();
-            log.debug("Lazily initialized trainer specialization {}", trainingType);
-        }
-
         log.debug("Successfully updated trainee with username: {}", username);
         return updatedTrainee;
     }
@@ -177,13 +172,7 @@ public class TraineeService {
             throw new GymEntityNotFoundException(
                     String.format("Trainee with username %s does not exist.", username));
         }
-        log.debug("Lazily initializing trainee trainings: {}", trainee.get().getTrainings());
-
         log.debug("Successfully retrieved trainee profile by username: {}", username);
-        trainee.get().getTrainings().forEach(t -> {
-            TrainingTypeEntity specialization = t.getTrainer().getSpecialization();
-            log.debug("Lazily initialized trainer specialization: {}", specialization);
-        });
         return trainee.get();
     }
 
@@ -226,8 +215,6 @@ public class TraineeService {
         Set<TrainerEntity> trainerEntities = new HashSet<>();
         trainers.forEach(t -> {
             TrainerEntity trainerEntity = trainerService.getTrainerByUsername(t);
-            TrainingTypeEntity trainingType = trainerEntity.getSpecialization();
-            log.debug("Lazily initialized trainer's specialization {}.", trainingType);
             trainerEntities.add(trainerEntity);
         });
         trainee.setTrainers(trainerEntities);
