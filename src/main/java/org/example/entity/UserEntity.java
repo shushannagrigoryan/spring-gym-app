@@ -18,17 +18,17 @@ import lombok.Setter;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id;
+    private Long id;
     @Column(name = "first_name", nullable = false)
-    protected String firstName;
+    private String firstName;
     @Column(name = "last_name", nullable = false)
-    protected String lastName;
+    private String lastName;
     @Column(name = "username", nullable = false, unique = true)
-    protected String username;
+    private String username;
     @Column(name = "password", nullable = false)
-    protected String password;
+    private String password;
     @Column(name = "is_active", nullable = false)
-    protected boolean active;
+    private boolean active;
 
     /**
      * constructor.
