@@ -11,7 +11,7 @@ import org.example.entity.TrainingTypeEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalArgumentException;
 import org.example.password.PasswordGeneration;
-import org.example.repositories.TrainerRepo;
+import org.example.repositories.TrainerRepository;
 import org.example.username.UsernameGenerator;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class TrainerService {
-    private final TrainerRepo trainerRepository;
+    private final TrainerRepository trainerRepository;
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
     private final TrainingTypeService trainingTypeService;
@@ -30,7 +30,7 @@ public class TrainerService {
     /**
      * Injecting dependencies using constructor.
      */
-    public TrainerService(TrainerRepo trainerRepository,
+    public TrainerService(TrainerRepository trainerRepository,
                           UsernameGenerator usernameGenerator,
                           PasswordGeneration passwordGeneration,
                           TrainingTypeService trainingTypeService,
@@ -182,17 +182,9 @@ public class TrainerService {
      */
     @Transactional
     public List<TrainerEntity> notAssignedOnTraineeActiveTrainers(String traineeUsername) {
+        log.debug("Getting active trainers which are not assigned on trainee: {}", traineeUsername);
         TraineeEntity trainee = traineeService.getTraineeByUsername(traineeUsername);
-        //        List<TrainerEntity> trainers = trainerRepository
-        //        .getTrainersNotAssignedToTraineeActiveTrainers(traineeUsername);
-        List<TrainerEntity> trainers = trainerRepository
-                .findByTraineesNotContainingAndUserActive(Set.of(trainee), true);
-        for (TrainerEntity t : trainers) {
-            TrainingTypeEntity specialization = t.getSpecialization();
-            log.debug("Lazily initialized trainer's: {} specialization: {}",
-                    t.getUser().getUsername(), specialization);
-        }
-
-        return trainers;
+        return trainerRepository
+                .findByTrainingsTraineeNotInAndUserActive(Set.of(trainee), true);
     }
 }

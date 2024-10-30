@@ -11,7 +11,7 @@ import org.example.entity.TrainerEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalArgumentException;
 import org.example.password.PasswordGeneration;
-import org.example.repositories.TraineeRepo;
+import org.example.repositories.TraineeRepository;
 import org.example.username.UsernameGenerator;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class TraineeService {
-    private final TraineeRepo traineeRepository;
+    private final TraineeRepository traineeRepository;
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
     private final TrainerService trainerService;
@@ -28,7 +28,7 @@ public class TraineeService {
     /**
      * Injecting dependencies using constructor.
      */
-    public TraineeService(TraineeRepo traineeRepository,
+    public TraineeService(TraineeRepository traineeRepository,
                           UsernameGenerator usernameGenerator,
                           PasswordGeneration passwordGeneration,
                           TrainerService trainerService,

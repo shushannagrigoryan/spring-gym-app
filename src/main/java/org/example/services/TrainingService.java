@@ -1,20 +1,24 @@
 package org.example.services;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.requestdto.TraineeTrainingsFilterRequestDto;
+import org.example.dto.requestdto.TrainerTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainingCreateRequestDto;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.exceptions.GymEntityNotFoundException;
-import org.example.repositories.TrainingRepo;
+import org.example.repositories.TrainingRepository;
+import org.example.specifications.TrainingSpecification;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 public class TrainingService {
-    private final TrainingRepo trainingRepository;
-    //private final TrainingCriteriaRepository trainingCriteriaRepository;
+    private final TrainingRepository trainingRepository;
     private final TrainingTypeService trainingTypeService;
     private final TrainerService trainerService;
     private final TraineeService traineeService;
@@ -22,7 +26,7 @@ public class TrainingService {
     /**
      * Injecting dependencies using constructor.
      */
-    public TrainingService(TrainingRepo trainingRepository,
+    public TrainingService(TrainingRepository trainingRepository,
                            TrainingTypeService trainingTypeService,
                            TrainerService trainerService,
                            TraineeService traineeService) {
@@ -77,34 +81,41 @@ public class TrainingService {
         return training.get();
     }
 
-    //    /**
-    //     * Returns trainee trainings by the given criteria.
-    //     *
-    //     * @param traineeTrainings {@code TraineeTrainingsFilterRequestDto}
-    //     * @return {@code List<TrainingEntity>}
-    //     */
-    //    @Transactional
-    //    public List<TrainingEntity> getTraineeTrainingsByFilter(TraineeTrainingsFilterRequestDto traineeTrainings) {
-    //        log.debug("Getting trainee trainings by filter");
-    //        return trainingCriteriaRepository
-    //                .getTraineeTrainingsByFilter(traineeTrainings.getTraineeUsername(),
-    //                        traineeTrainings.getFromDate(),
-    //                        traineeTrainings.getToDate(), traineeTrainings.getTrainingType(),
-    //                        traineeTrainings.getTrainerUsername());
-    //    }
-    //
-    //    /**
-    //     * Returns trainer trainings by the given criteria.
-    //     *
-    //     * @param trainerTrainings {@code TrainerTrainingsFilterRequestDto}
-    //     * @return {@code List<TrainingEntity>}
-    //     */
-    //    @Transactional
-    //    public List<TrainingEntity> getTrainerTrainingsByFilter(TrainerTrainingsFilterRequestDto trainerTrainings) {
-    //        log.debug("Getting trainer trainings by filter");
-    //        return trainingCriteriaRepository.getTrainerTrainingsByFilter(trainerTrainings.getTrainerUsername(),
-    //                trainerTrainings.getFromDate(),
-    //                trainerTrainings.getToDate(),
-    //                trainerTrainings.getTraineeUsername());
-    //    }
+    /**
+     * Returns trainee trainings by the given criteria.
+     *
+     * @param traineeTrainings {@code TraineeTrainingsFilterRequestDto}
+     * @return {@code List<TrainingEntity>}
+     */
+    @Transactional
+    public List<TrainingEntity> getTraineeTrainingsByFilter(TraineeTrainingsFilterRequestDto traineeTrainings) {
+        log.debug("Getting trainee trainings by filter");
+        Specification<TrainingEntity> specification = Specification.where(
+                        TrainingSpecification.hasTraineeUsername(traineeTrainings.getTraineeUsername()))
+                .and(TrainingSpecification.hasTrainingDateBetween(traineeTrainings.getFromDate(),
+                        traineeTrainings.getToDate()))
+                .and(TrainingSpecification.hasTrainingType(traineeTrainings.getTrainingType()))
+                .and(TrainingSpecification.hasTrainerUsername(traineeTrainings.getTrainerUsername()));
+
+        return trainingRepository.findAll(specification);
+    }
+
+    /**
+     * Returns trainer trainings by the given criteria.
+     *
+     * @param trainerTrainings {@code TrainerTrainingsFilterRequestDto}
+     * @return {@code List<TrainingEntity>}
+     */
+    @Transactional
+    public List<TrainingEntity> getTrainerTrainingsByFilter(TrainerTrainingsFilterRequestDto trainerTrainings) {
+        log.debug("Getting trainer trainings by filter");
+        Specification<TrainingEntity> specification = Specification.where(
+                TrainingSpecification.hasTrainerUsername(trainerTrainings.getTrainerUsername())
+                        .and(TrainingSpecification.hasTrainingDateBetween(trainerTrainings.getFromDate(),
+                                trainerTrainings.getToDate()))
+                        .and(TrainingSpecification.hasTraineeUsername(trainerTrainings.getTraineeUsername()))
+        );
+
+        return trainingRepository.findAll(specification);
+    }
 }

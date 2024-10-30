@@ -6,18 +6,18 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainingTypeEntity;
 import org.example.exceptions.GymIllegalIdException;
-import org.example.repositories.TrainingTypeRepo;
+import org.example.repositories.TrainingTypeRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 public class TrainingTypeService {
-    private final TrainingTypeRepo trainingTypeRepository;
+    private final TrainingTypeRepository trainingTypeRepository;
 
     /**
      * Injecting dependencies using constructor.
      */
-    public TrainingTypeService(TrainingTypeRepo trainingTypeRepository) {
+    public TrainingTypeService(TrainingTypeRepository trainingTypeRepository) {
         this.trainingTypeRepository = trainingTypeRepository;
     }
 
@@ -33,7 +33,6 @@ public class TrainingTypeService {
     public TrainingTypeEntity getTrainingTypeById(Long id) {
         log.debug("Retrieving trainingType by id: {}", id);
         Optional<TrainingTypeEntity> trainingType = trainingTypeRepository.findById(id);
-
         if (trainingType.isEmpty()) {
             throw new GymIllegalIdException(String.format("No training type with id: %d", id));
         }

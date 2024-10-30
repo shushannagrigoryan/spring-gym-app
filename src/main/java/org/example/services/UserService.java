@@ -6,15 +6,15 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
-import org.example.repositories.UserRepo;
+import org.example.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 public class UserService {
-    private final UserRepo userRepository;
+    private final UserRepository userRepository;
 
-    public UserService(UserRepo userRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
