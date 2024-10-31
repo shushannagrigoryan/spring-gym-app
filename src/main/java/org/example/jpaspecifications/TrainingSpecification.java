@@ -1,4 +1,4 @@
-package org.example.specifications;
+package org.example.jpaspecifications;
 
 import java.time.LocalDateTime;
 import org.example.entity.TrainingEntity;
