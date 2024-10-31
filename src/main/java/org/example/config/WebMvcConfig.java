@@ -2,16 +2,15 @@ package org.example.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.auth.AuthInterceptor;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@ComponentScan(basePackages = "org.example")
 @Slf4j
-@EnableJpaRepositories(basePackages = "org.example.repositories")
+//@EnableJpaRepositories(basePackages = "org.example.repositories")
+@EntityScan(basePackages = "org.example.entity")
 public class WebMvcConfig implements WebMvcConfigurer {
     private final AuthInterceptor authInterceptor;
 

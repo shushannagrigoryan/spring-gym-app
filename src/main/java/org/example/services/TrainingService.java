@@ -10,8 +10,8 @@ import org.example.dto.requestdto.TrainingCreateRequestDto;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.exceptions.GymEntityNotFoundException;
-import org.example.repositories.TrainingRepository;
 import org.example.jpaspecifications.TrainingSpecification;
+import org.example.repositories.TrainingRepository;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
