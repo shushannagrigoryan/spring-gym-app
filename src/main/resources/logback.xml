@@ -5,11 +5,7 @@
         </encoder>
     </appender>
 
-    <logger name="org.springframework.web" level="DEBUG" />
-    <logger name="org.springdoc" level="DEBUG" />
-    <logger name="org.springframework.web.servlet.resource.ResourceHttpRequestHandler" level="DEBUG" />
-
-    <root level="debug">
+    <root>
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>
