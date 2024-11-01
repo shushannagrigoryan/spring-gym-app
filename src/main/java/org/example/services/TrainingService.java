@@ -11,6 +11,7 @@ import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.jpaspecifications.TrainingSpecification;
+import org.example.metrics.TrainingMetrics;
 import org.example.repositories.TrainingRepository;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class TrainingService {
     private final TrainingTypeService trainingTypeService;
     private final TrainerService trainerService;
     private final TraineeService traineeService;
+    private final TrainingMetrics trainingMetrics;
 
     /**
      * Injecting dependencies using constructor.
@@ -29,12 +31,13 @@ public class TrainingService {
     public TrainingService(TrainingRepository trainingRepository,
                            TrainingTypeService trainingTypeService,
                            TrainerService trainerService,
-                           TraineeService traineeService) {
+                           TraineeService traineeService,
+                           TrainingMetrics trainingMetrics) {
         this.trainingRepository = trainingRepository;
         this.trainingTypeService = trainingTypeService;
         this.trainerService = trainerService;
         this.traineeService = traineeService;
-        //this.trainingCriteriaRepository = trainingCriteriaRepository;
+        this.trainingMetrics = trainingMetrics;
     }
 
     /**
@@ -60,6 +63,7 @@ public class TrainingService {
         training.setTrainer(trainer);
 
         TrainingEntity createdTraining = trainingRepository.save(training);
+        trainingMetrics.incrementCounter();
         log.debug("Successfully created new training with id: {}", createdTraining.getId());
     }
 

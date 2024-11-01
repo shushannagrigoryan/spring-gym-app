@@ -1,11 +1,13 @@
 package org.example.services;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
+import org.example.metrics.UserMetrics;
 import org.example.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +15,17 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
+    private final UserMetrics userMetrics;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,
+                       UserMetrics userMetrics) {
         this.userRepository = userRepository;
+        this.userMetrics = userMetrics;
+    }
+
+    @PostConstruct
+    public void initUserGauge() {
+        userMetrics.updateGauge(userRepository.countByActive(true));
     }
 
     /**
@@ -26,8 +36,8 @@ public class UserService {
     @Transactional
     public UserEntity save(UserEntity userEntity) {
         log.debug("Saving user: {}", userEntity);
-
         UserEntity user = userRepository.save(userEntity);
+        userMetrics.incrementCounter();
         log.debug("Successfully saved user: {}", user);
         return user;
     }
