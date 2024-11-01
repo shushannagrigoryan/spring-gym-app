@@ -3,6 +3,8 @@ plugins {
     id 'checkstyle'
     id 'war'
     id 'org.flywaydb.flyway' version '9.10.2'
+    id 'org.springframework.boot' version '3.3.5'
+    id 'io.spring.dependency-management' version '1.1.6'
 }
 
 java{
@@ -20,32 +22,22 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.3.5'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '3.3.5'
-    implementation group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: '3.0.0'
-    implementation group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.0.0'
-    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.0'
-    implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '8.0.1.Final'
-//    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.2'
-//    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.17.2'
-//    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.16'
-//    implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.5.7'
-//    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.7'
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.3.1'
-
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.11.0'
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.11.0'
-//    testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.13.0'
-//    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.13.0'
-//    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.26.3'
-//    implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.1.Final'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'jakarta.annotation:jakarta.annotation-api'
+    implementation 'jakarta.servlet:jakarta.servlet-api'
+    implementation 'jakarta.validation:jakarta.validation-api'
+    implementation 'org.hibernate.validator:hibernate-validator'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine'
     runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
-    implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.10.2'
-    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.6.0'
-    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-api', version: '2.6.0'
-    implementation 'org.projectlombok:lombok:1.18.28'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.6.0'
+    implementation 'org.projectlombok:lombok'
 
 }
 test{
