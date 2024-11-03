@@ -17,6 +17,7 @@ import org.example.dto.responsedto.TraineeCriteriaTrainingsResponseDto;
 import org.example.dto.responsedto.TrainerCriteriaTrainingsResponseDto;
 import org.example.entity.TrainingEntity;
 import org.example.mapper.TrainingMapper;
+import org.example.metrics.TrainingRequestMetrics;
 import org.example.services.TrainingService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,6 +35,8 @@ public class TrainingControllerTest {
 
     @Mock
     private TrainingService trainingService;
+    @Mock
+    private TrainingRequestMetrics trainingRequestMetrics;
 
     @InjectMocks
     private TrainingController trainingController;
@@ -42,6 +45,7 @@ public class TrainingControllerTest {
     public void testCreateTraining() {
         //given
         TrainingCreateRequestDto requestDto = new TrainingCreateRequestDto();
+        doNothing().when(trainingRequestMetrics).incrementCounter();
         doNothing().when(trainingService).createTraining(requestDto);
 
         //when
@@ -65,6 +69,7 @@ public class TrainingControllerTest {
         TraineeTrainingsFilterRequestDto requestDto = new TraineeTrainingsFilterRequestDto(
                 traineeUsername, fromDate, toDate, trainerUsername, trainingType);
         TrainingEntity training = new TrainingEntity();
+        doNothing().when(trainingRequestMetrics).incrementCounter();
         when(trainingService.getTraineeTrainingsByFilter(requestDto)).thenReturn(List.of(training));
         TraineeCriteriaTrainingsResponseDto responseDto = new TraineeCriteriaTrainingsResponseDto();
         when(trainingMapper.traineeTrainingsEntityToCriteriaDto(training)).thenReturn(responseDto);
@@ -91,6 +96,7 @@ public class TrainingControllerTest {
         TrainerTrainingsFilterRequestDto requestDto = new TrainerTrainingsFilterRequestDto(
                 trainerUsername, fromDate, toDate, traineeUsername);
         TrainingEntity training = new TrainingEntity();
+        doNothing().when(trainingRequestMetrics).incrementCounter();
         when(trainingService.getTrainerTrainingsByFilter(requestDto)).thenReturn(List.of(training));
         TrainerCriteriaTrainingsResponseDto responseDto = new TrainerCriteriaTrainingsResponseDto();
         when(trainingMapper.trainerTrainingsEntityToCriteriaDto(training)).thenReturn(responseDto);

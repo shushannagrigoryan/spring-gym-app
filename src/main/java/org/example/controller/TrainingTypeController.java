@@ -12,6 +12,7 @@ import org.example.dto.responsedto.TrainingTypeResponseDto;
 import org.example.entity.TrainingTypeEntity;
 import org.example.exceptionhandlers.ExceptionResponse;
 import org.example.mapper.TrainingTypeMapper;
+import org.example.metrics.TrainingTypeRequestMetrics;
 import org.example.services.TrainingTypeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +26,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class TrainingTypeController {
     private final TrainingTypeService trainingTypeService;
     private final TrainingTypeMapper trainingTypeMapper;
+    private final TrainingTypeRequestMetrics trainingTypeRequestMetrics;
 
     /**
      * Setting dependencies.
      */
     public TrainingTypeController(TrainingTypeService trainingTypeService,
-                                  TrainingTypeMapper trainingTypeMapper) {
+                                  TrainingTypeMapper trainingTypeMapper,
+                                  TrainingTypeRequestMetrics trainingTypeRequestMetrics) {
         this.trainingTypeService = trainingTypeService;
         this.trainingTypeMapper = trainingTypeMapper;
+        this.trainingTypeRequestMetrics = trainingTypeRequestMetrics;
     }
 
     /**
@@ -61,6 +65,7 @@ public class TrainingTypeController {
     }
     )
     public ResponseEntity<ResponseDto<List<TrainingTypeResponseDto>>> getTrainingTypes() {
+        trainingTypeRequestMetrics.incrementCounter();
         log.debug("Request to get all training types.");
         List<TrainingTypeEntity> trainingTypes = trainingTypeService.getAllTrainingTypes();
         List<TrainingTypeResponseDto> payload =

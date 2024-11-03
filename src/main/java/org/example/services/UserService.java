@@ -48,7 +48,6 @@ public class UserService {
     @Transactional
     public List<String> getAllUsernames() {
         log.debug("Getting all usernames.");
-        //return userRepository.getAllUsernames();
         return userRepository.findAllUsernames();
     }
 
@@ -61,7 +60,6 @@ public class UserService {
     @Transactional
     public Optional<UserEntity> getUserByUsername(String username) {
         log.debug("Getting user with username: {}", username);
-        //Optional<UserEntity> user = userRepository.getUserByUsername(username);
         Optional<UserEntity> user = userRepository.findByUsername(username);
         if (user.isEmpty()) {
             log.debug("No user with username: {}", username);
@@ -78,7 +76,6 @@ public class UserService {
     @Transactional
     public void login(String username, String password) {
         log.debug("Logging in user with username {} and password {}", username, password);
-        //Optional<UserEntity> user = userRepository.getUserByUsernameAndPassword(username, password);
         Optional<UserEntity> user = userRepository.findByUsernameAndPassword(username, password);
         if (user.isEmpty()) {
             throw new GymEntityNotFoundException("Invalid username and password.");
@@ -98,7 +95,6 @@ public class UserService {
         UserEntity user = userRepository.findByUsernameAndPassword(username, oldPassword)
                 .orElseThrow(() -> new GymEntityNotFoundException(
                                 String.format("No user with username: %s and password: %s", username, oldPassword)));
-        //userRepository.updatePassword(username, newPassword);
         user.setPassword(newPassword);
         userRepository.save(user);
         log.debug("Successfully changed password of user with username: {}", username);

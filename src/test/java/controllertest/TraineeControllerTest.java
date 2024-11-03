@@ -25,6 +25,7 @@ import org.example.entity.TrainerEntity;
 import org.example.mapper.TraineeMapper;
 import org.example.mapper.TraineeProfileMapper;
 import org.example.mapper.TrainerMapper;
+import org.example.metrics.TraineeRequestMetrics;
 import org.example.services.TraineeService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,12 +45,15 @@ public class TraineeControllerTest {
     private TrainerMapper trainerMapper;
     @Mock
     private TraineeProfileMapper traineeProfileMapper;
+    @Mock
+    private TraineeRequestMetrics traineeRequestMetrics;
     @InjectMocks
     private TraineeController traineeController;
 
     @Test
     public void testRegisterTraineeSuccess() {
         //given
+        doNothing().when(traineeRequestMetrics).incrementCounter();
         TraineeCreateRequestDto traineeCreateRequestDto = new TraineeCreateRequestDto();
         TraineeEntity traineeEntity = new TraineeEntity();
         when(traineeMapper.dtoToEntity(traineeCreateRequestDto)).thenReturn(traineeEntity);
@@ -76,6 +80,7 @@ public class TraineeControllerTest {
         boolean isActive = true;
         UserChangeActiveStatusRequestDto requestDto =
                 new UserChangeActiveStatusRequestDto(username, isActive);
+        doNothing().when(traineeRequestMetrics).incrementCounter();
         when(traineeService.changeActiveStatus(username, isActive)).thenReturn("Success.");
 
         //when
@@ -92,6 +97,7 @@ public class TraineeControllerTest {
     public void testDeleteTraineeByUsernameSuccess() {
         //given
         String username = "A.A";
+        doNothing().when(traineeRequestMetrics).incrementCounter();
         doNothing().when(traineeService).deleteTraineeByUsername(username);
 
         //when
@@ -112,6 +118,7 @@ public class TraineeControllerTest {
                 username, new ArrayList<>());
         TrainerEntity trainer = new TrainerEntity();
         List<String> list = new ArrayList<>();
+        doNothing().when(traineeRequestMetrics).incrementCounter();
         when(traineeService.updateTraineesTrainerList(username, list)).thenReturn(Set.of(trainer));
         TrainerProfileDto trainerProfileDto = new TrainerProfileDto();
         when(trainerMapper.entityToProfileDto(trainer)).thenReturn(trainerProfileDto);
@@ -133,6 +140,7 @@ public class TraineeControllerTest {
         String username = "A.A";
         TraineeProfileResponseDto response = new TraineeProfileResponseDto();
         TraineeEntity trainee = new TraineeEntity();
+        doNothing().when(traineeRequestMetrics).incrementCounter();
         when(traineeService.getTraineeProfile(username)).thenReturn(trainee);
         when(traineeProfileMapper.entityToProfileDto(trainee)).thenReturn(response);
 
@@ -158,6 +166,7 @@ public class TraineeControllerTest {
         TraineeUpdateRequestDto requestDto =
                 new TraineeUpdateRequestDto(username, firstName, lastName, dateOfBirth, address, isActive);
         TraineeEntity trainee = new TraineeEntity();
+        doNothing().when(traineeRequestMetrics).incrementCounter();
         when(traineeMapper.updateDtoToEntity(requestDto)).thenReturn(trainee);
         TraineeEntity updatedTrainee = new TraineeEntity();
         when(traineeService.updateTrainee(trainee)).thenReturn(updatedTrainee);

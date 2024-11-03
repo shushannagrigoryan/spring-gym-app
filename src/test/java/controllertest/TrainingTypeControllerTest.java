@@ -2,6 +2,7 @@ package controllertest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -12,6 +13,7 @@ import org.example.dto.responsedto.ResponseDto;
 import org.example.dto.responsedto.TrainingTypeResponseDto;
 import org.example.entity.TrainingTypeEntity;
 import org.example.mapper.TrainingTypeMapper;
+import org.example.metrics.TrainingTypeRequestMetrics;
 import org.example.services.TrainingTypeService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +29,8 @@ public class TrainingTypeControllerTest {
     private TrainingTypeService trainingTypeService;
     @Mock
     private TrainingTypeMapper trainingTypeMapper;
+    @Mock
+    private TrainingTypeRequestMetrics trainingTypeRequestMetrics;
     @InjectMocks
     private TrainingTypeController trainingTypeController;
 
@@ -34,6 +38,7 @@ public class TrainingTypeControllerTest {
     public void testGetTrainingTypes() {
         //given
         TrainingTypeEntity trainingTypeEntity = new TrainingTypeEntity();
+        doNothing().when(trainingTypeRequestMetrics).incrementCounter();
         when(trainingTypeService.getAllTrainingTypes()).thenReturn(List.of(trainingTypeEntity));
         TrainingTypeResponseDto responseDto = new TrainingTypeResponseDto();
         when(trainingTypeMapper.entityToResponseDto(trainingTypeEntity)).thenReturn(responseDto);

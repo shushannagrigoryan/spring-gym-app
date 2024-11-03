@@ -12,8 +12,6 @@ public class UserMetrics {
     private final Counter userCreationCounter;
     private double myGaugeValue = 0;
 
-
-
     /** Custom metrics. */
     public UserMetrics(MeterRegistry meterRegistry,
                        UserRepository userRepository) {

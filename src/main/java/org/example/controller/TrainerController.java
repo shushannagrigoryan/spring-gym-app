@@ -22,6 +22,7 @@ import org.example.entity.TrainerEntity;
 import org.example.exceptionhandlers.ExceptionResponse;
 import org.example.mapper.TrainerMapper;
 import org.example.mapper.TrainerProfileMapper;
+import org.example.metrics.TrainerRequestMetrics;
 import org.example.services.TrainerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,16 +43,19 @@ public class TrainerController {
     private final TrainerService trainerService;
     private final TrainerMapper trainerMapper;
     private final TrainerProfileMapper trainerProfileMapper;
+    private final TrainerRequestMetrics trainerRequestMetrics;
 
     /**
      * Setting dependencies.
      */
     public TrainerController(TrainerService trainerService,
                              TrainerMapper trainerMapper,
-                             TrainerProfileMapper trainerProfileMapper) {
+                             TrainerProfileMapper trainerProfileMapper,
+                             TrainerRequestMetrics trainerRequestMetrics) {
         this.trainerService = trainerService;
         this.trainerMapper = trainerMapper;
         this.trainerProfileMapper = trainerProfileMapper;
+        this.trainerRequestMetrics = trainerRequestMetrics;
     }
 
     /**
@@ -82,6 +86,7 @@ public class TrainerController {
     )
     public ResponseEntity<ResponseDto<TrainerResponseDto>> registerTrainer(
             @Valid @RequestBody TrainerCreateRequestDto trainerCreateDto) {
+        trainerRequestMetrics.incrementCounter();
         log.debug("Request to register a new trainer: {}", trainerCreateDto);
         TrainerEntity trainer = trainerMapper.dtoToEntity(trainerCreateDto);
         TrainerEntity registeredTrainer = trainerService.registerTrainer(trainer);
@@ -117,6 +122,7 @@ public class TrainerController {
     )
     public ResponseEntity<ResponseDto<TrainerProfileResponseDto>> getTrainerProfile(
             @PathVariable("username") String username) {
+        trainerRequestMetrics.incrementCounter();
         log.debug("Request to get trainer profile with username: {}", username);
         TrainerEntity trainer = trainerService.getTrainerProfile(username);
         return new ResponseEntity<>(new ResponseDto<>(trainerProfileMapper.entityToProfileDto(trainer),
@@ -156,6 +162,7 @@ public class TrainerController {
     )
     public ResponseEntity<ResponseDto<TrainerUpdateResponseDto>> updateTrainer(
             @Valid @RequestBody TrainerUpdateRequestDto trainer) {
+        trainerRequestMetrics.incrementCounter();
         log.debug("Request to update trainer with username: {}", trainer.getUsername());
         TrainerEntity trainerEntity = trainerMapper.updateDtoToEntity(trainer);
         TrainerEntity updatedTrainer = trainerService.updateTrainer(trainerEntity);
@@ -191,6 +198,7 @@ public class TrainerController {
     )
     public ResponseEntity<ResponseDto<Object>> changeActiveStatus(@Valid @RequestBody UserChangeActiveStatusRequestDto
                                                              activeStatusRequestDto) {
+        trainerRequestMetrics.incrementCounter();
         log.debug("Request to change the active status of trainer with username: {} to {}",
                 activeStatusRequestDto.getUsername(), activeStatusRequestDto.getIsActive());
         String response = trainerService.changeActiveStatus(activeStatusRequestDto.getUsername(),
@@ -228,6 +236,7 @@ public class TrainerController {
     )
     public ResponseEntity<ResponseDto<Set<TrainerProfileDto>>> notAssignedOnTraineeActiveTrainers(
             @PathVariable("username") String traineeUsername) {
+        trainerRequestMetrics.incrementCounter();
         log.debug("Request to get all active trainers which are not assigned to trainee with username: {}",
                 traineeUsername);
 

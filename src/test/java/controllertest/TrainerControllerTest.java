@@ -1,6 +1,7 @@
 package controllertest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -19,6 +20,7 @@ import org.example.dto.responsedto.TrainerUpdateResponseDto;
 import org.example.entity.TrainerEntity;
 import org.example.mapper.TrainerMapper;
 import org.example.mapper.TrainerProfileMapper;
+import org.example.metrics.TrainerRequestMetrics;
 import org.example.services.TrainerService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +38,8 @@ public class TrainerControllerTest {
     private TrainerMapper trainerMapper;
     @Mock
     private TrainerProfileMapper trainerProfileMapper;
+    @Mock
+    private TrainerRequestMetrics trainerRequestMetrics;
     @InjectMocks
     private TrainerController trainerController;
 
@@ -45,6 +49,7 @@ public class TrainerControllerTest {
         //given
         TrainerCreateRequestDto requestDto = new TrainerCreateRequestDto();
         TrainerEntity trainerEntity = new TrainerEntity();
+        doNothing().when(trainerRequestMetrics).incrementCounter();
         when(trainerMapper.dtoToEntity(requestDto)).thenReturn(trainerEntity);
         TrainerEntity registered = new TrainerEntity();
         when(trainerService.registerTrainer(trainerEntity)).thenReturn(registered);
@@ -68,6 +73,7 @@ public class TrainerControllerTest {
         // Given
         String traineeUsername = "A.A";
         TrainerEntity trainer = new TrainerEntity();
+        doNothing().when(trainerRequestMetrics).incrementCounter();
         when(trainerService.notAssignedOnTraineeActiveTrainers(traineeUsername)).thenReturn(List.of(trainer));
         TrainerProfileDto trainerProfileDto = new TrainerProfileDto();
         when(trainerMapper.entityToProfileDto(trainer)).thenReturn(trainerProfileDto);
@@ -89,6 +95,7 @@ public class TrainerControllerTest {
         boolean isActive = true;
         UserChangeActiveStatusRequestDto requestDto =
                 new UserChangeActiveStatusRequestDto(username, isActive);
+        doNothing().when(trainerRequestMetrics).incrementCounter();
         when(trainerService.changeActiveStatus(username, isActive)).thenReturn("Success.");
 
         //when
@@ -107,6 +114,7 @@ public class TrainerControllerTest {
         String username = "A.A";
         TrainerProfileResponseDto response = new TrainerProfileResponseDto();
         TrainerEntity trainer = new TrainerEntity();
+        doNothing().when(trainerRequestMetrics).incrementCounter();
         when(trainerService.getTrainerProfile(username)).thenReturn(trainer);
         when(trainerProfileMapper.entityToProfileDto(trainer)).thenReturn(response);
 
@@ -131,6 +139,7 @@ public class TrainerControllerTest {
         TrainerUpdateRequestDto requestDto =
                 new TrainerUpdateRequestDto(username, firstName, lastName, specialization, isActive);
         TrainerEntity trainer = new TrainerEntity();
+        doNothing().when(trainerRequestMetrics).incrementCounter();
         when(trainerMapper.updateDtoToEntity(requestDto)).thenReturn(trainer);
         TrainerEntity updatedTrainer = new TrainerEntity();
         when(trainerService.updateTrainer(trainer)).thenReturn(updatedTrainer);

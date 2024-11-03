@@ -23,6 +23,7 @@ import org.example.exceptionhandlers.ExceptionResponse;
 import org.example.mapper.TraineeMapper;
 import org.example.mapper.TraineeProfileMapper;
 import org.example.mapper.TrainerMapper;
+import org.example.metrics.TraineeRequestMetrics;
 import org.example.services.TraineeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +46,7 @@ public class TraineeController {
     private final TraineeMapper traineeMapper;
     private final TrainerMapper trainerMapper;
     private final TraineeProfileMapper traineeProfileMapper;
+    private final TraineeRequestMetrics traineeRequestMetrics;
 
     /**
      * Setting dependencies.
@@ -52,11 +54,13 @@ public class TraineeController {
     public TraineeController(TraineeService traineeService,
                              TraineeMapper traineeMapper,
                              TraineeProfileMapper traineeProfileMapper,
-                             TrainerMapper trainerMapper) {
+                             TrainerMapper trainerMapper,
+                             TraineeRequestMetrics traineeRequestMetrics) {
         this.traineeService = traineeService;
         this.traineeMapper = traineeMapper;
         this.traineeProfileMapper = traineeProfileMapper;
         this.trainerMapper = trainerMapper;
+        this.traineeRequestMetrics = traineeRequestMetrics;
     }
 
     /**
@@ -88,6 +92,7 @@ public class TraineeController {
     )
     public ResponseEntity<ResponseDto<TraineeResponseDto>> registerTrainee(
             @Valid @RequestBody TraineeCreateRequestDto traineeCreateDto) {
+        traineeRequestMetrics.incrementCounter();
         log.debug("Request to register a new trainee: {}", traineeCreateDto);
         TraineeEntity trainee = traineeMapper.dtoToEntity(traineeCreateDto);
         TraineeEntity registeredTrainee = traineeService.registerTrainee(trainee);
@@ -123,6 +128,7 @@ public class TraineeController {
     )
     public ResponseEntity<ResponseDto<TraineeProfileResponseDto>> getTraineeProfile(
             @PathVariable("username") String username) {
+        traineeRequestMetrics.incrementCounter();
         log.debug("Request to get trainee profile with username: {}", username);
         TraineeEntity trainee = traineeService.getTraineeProfile(username);
 
@@ -164,6 +170,7 @@ public class TraineeController {
     )
     public ResponseEntity<ResponseDto<TraineeUpdateResponseDto>> updateTrainee(
             @Valid @RequestBody TraineeUpdateRequestDto trainee) {
+        traineeRequestMetrics.incrementCounter();
         log.debug("Request to update trainee with username: {}", trainee.getUsername());
         TraineeEntity traineeEntity = traineeMapper.updateDtoToEntity(trainee);
         TraineeEntity updatedTrainee = traineeService.updateTrainee(traineeEntity);
@@ -200,6 +207,7 @@ public class TraineeController {
     )
     public ResponseEntity<ResponseDto<Object>> changeActiveStatus(@Valid @RequestBody UserChangeActiveStatusRequestDto
                                                              activeStatusRequestDto) {
+        traineeRequestMetrics.incrementCounter();
         log.debug("Request to change the active status of trainee with username: {} to {}",
                 activeStatusRequestDto.getUsername(), activeStatusRequestDto.getIsActive());
         String response = traineeService.changeActiveStatus(activeStatusRequestDto.getUsername(),
@@ -231,6 +239,7 @@ public class TraineeController {
     }
     )
     public ResponseEntity<ResponseDto<Object>> deleteTrainee(@PathVariable(value = "username") String username) {
+        traineeRequestMetrics.incrementCounter();
         log.debug("Request to delete trainee with username: {}", username);
         traineeService.deleteTraineeByUsername(username);
         return new ResponseEntity<>(
@@ -267,6 +276,7 @@ public class TraineeController {
     public ResponseEntity<ResponseDto<List<TrainerProfileDto>>> updateTraineesTrainerList(
             @PathVariable(value = "username") String username,
             @Valid @RequestBody TraineeUpdateTrainersRequestDto updateTrainersDto) {
+        traineeRequestMetrics.incrementCounter();
         log.debug("Request to update trainee's: {} trainer list with: {}.",
                 username, updateTrainersDto.getTrainers());
 

@@ -82,6 +82,7 @@ public class UserServiceTest {
         //given
         UserEntity user = new UserEntity();
         when(userRepository.save(user)).thenReturn(user);
+        doNothing().when(userMetrics).incrementCounter();
 
         //when
         userService.save(user);

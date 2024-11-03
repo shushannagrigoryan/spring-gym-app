@@ -1,22 +1,21 @@
 package org.example.actuator;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
-import java.lang.management.MemoryUsage;
-
 @Component
 public class MemoryHealthIndicator implements HealthIndicator {
 
-    private final MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+    private final MemoryMXBean memoryMxBean = ManagementFactory.getMemoryMXBean();
 
     @Override
     public Health health() {
-        MemoryUsage heapMemoryUsage = memoryMXBean.getHeapMemoryUsage();
-        MemoryUsage nonHeapMemoryUsage = memoryMXBean.getNonHeapMemoryUsage();
+        MemoryUsage heapMemoryUsage = memoryMxBean.getHeapMemoryUsage();
+        MemoryUsage nonHeapMemoryUsage = memoryMxBean.getNonHeapMemoryUsage();
 
         long maxHeapMemory = heapMemoryUsage.getMax();
         long usedHeapMemory = heapMemoryUsage.getUsed();

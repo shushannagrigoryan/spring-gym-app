@@ -3,6 +3,7 @@ package servicetest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -41,8 +42,6 @@ public class TrainingServiceTest {
 
     @Mock
     private TrainingTypeService trainingTypeService;
-    //    @Mock
-    //    private TrainingCriteriaRepository trainingCriteriaRepository;
 
     @InjectMocks
     private TrainingService trainingService;
@@ -67,6 +66,7 @@ public class TrainingServiceTest {
         when(trainingRepository.save(any(TrainingEntity.class))).thenReturn(new TrainingEntity());
         TrainingCreateRequestDto requestDto = new TrainingCreateRequestDto(traineeUsername, trainerUsername,
                 trainingName, LocalDateTime.now(), BigDecimal.valueOf(60));
+        doNothing().when(trainingMetrics).incrementCounter();
 
         //when
         trainingService.createTraining(requestDto);

@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.ChangePasswordRequestDto;
 import org.example.dto.responsedto.ResponseDto;
 import org.example.exceptionhandlers.ExceptionResponse;
+import org.example.metrics.UserRequestMetrics;
 import org.example.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,13 +29,16 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "User methods.")
 public class UserController {
     private final UserService userService;
+    private final UserRequestMetrics userRequestMetrics;
 
     /**
      * Setting dependencies.
      */
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService,
+                          UserRequestMetrics userRequestMetrics) {
         this.userService = userService;
+        this.userRequestMetrics = userRequestMetrics;
     }
 
     /**
@@ -70,6 +74,7 @@ public class UserController {
     })
     public ResponseEntity<ResponseDto<Object>> login(@RequestHeader("username") String username,
                                              @RequestHeader("password") String password) {
+        userRequestMetrics.incrementCounter();
         log.debug("Request to login a user.");
         userService.login(username, password);
         return new ResponseEntity<>(new ResponseDto<>(null, "Successfully logged in."), HttpStatus.OK);
@@ -111,6 +116,7 @@ public class UserController {
     )
     public ResponseEntity<ResponseDto<Object>> changePassword(
             @Valid @RequestBody ChangePasswordRequestDto changePasswordDto) {
+        userRequestMetrics.incrementCounter();
         log.debug("Request to change password of user with username: {}", changePasswordDto.getUsername());
         userService.changeUserPassword(changePasswordDto.getUsername(), changePasswordDto.getPassword(),
                 changePasswordDto.getNewPassword());

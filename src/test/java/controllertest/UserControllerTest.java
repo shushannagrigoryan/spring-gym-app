@@ -8,6 +8,7 @@ import java.util.Objects;
 import org.example.controller.UserController;
 import org.example.dto.requestdto.ChangePasswordRequestDto;
 import org.example.dto.responsedto.ResponseDto;
+import org.example.metrics.UserRequestMetrics;
 import org.example.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +22,8 @@ import org.springframework.http.ResponseEntity;
 public class UserControllerTest {
     @Mock
     private UserService userService;
+    @Mock
+    private UserRequestMetrics userRequestMetrics;
     @InjectMocks
     private UserController userController;
 
@@ -29,6 +32,7 @@ public class UserControllerTest {
         //given
         String username = "A";
         String password = "B";
+        doNothing().when(userRequestMetrics).incrementCounter();
         doNothing().when(userService).login(username, password);
 
         //when
@@ -48,6 +52,7 @@ public class UserControllerTest {
         String newPassword = "newPassword";
         ChangePasswordRequestDto requestDto =
                 new ChangePasswordRequestDto(username, oldPassword, newPassword);
+        doNothing().when(userRequestMetrics).incrementCounter();
 
         //when
         ResponseEntity<ResponseDto<Object>> result = userController.changePassword(requestDto);

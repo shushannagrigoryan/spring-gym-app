@@ -17,6 +17,7 @@ import org.example.dto.responsedto.TrainerCriteriaTrainingsResponseDto;
 import org.example.entity.TrainingEntity;
 import org.example.exceptionhandlers.ExceptionResponse;
 import org.example.mapper.TrainingMapper;
+import org.example.metrics.TrainingRequestMetrics;
 import org.example.services.TrainingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,14 +34,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class TrainingController {
     private final TrainingService trainingService;
     private final TrainingMapper trainingMapper;
+    private final TrainingRequestMetrics trainingRequestMetrics;
 
     /**
      * Setting dependencies.
      */
     public TrainingController(TrainingService trainingService,
-                              TrainingMapper trainingMapper) {
+                              TrainingMapper trainingMapper,
+                              TrainingRequestMetrics trainingRequestMetrics) {
         this.trainingService = trainingService;
         this.trainingMapper = trainingMapper;
+        this.trainingRequestMetrics = trainingRequestMetrics;
     }
 
 
@@ -69,6 +73,7 @@ public class TrainingController {
     )
     public ResponseEntity<ResponseDto<Object>> createTraining(
             @Valid @RequestBody TrainingCreateRequestDto trainingDto) {
+        trainingRequestMetrics.incrementCounter();
         log.debug("Request to create new training: {}", trainingDto);
         trainingService.createTraining(trainingDto);
         return new ResponseEntity<>(new ResponseDto<>(null,
@@ -104,6 +109,7 @@ public class TrainingController {
     public ResponseEntity<ResponseDto<List<TraineeCriteriaTrainingsResponseDto>>> getTraineeTrainingsFilter(
             @PathVariable("username") String username,
             @Valid @RequestBody TraineeTrainingsFilterRequestDto trainingsDto) {
+        trainingRequestMetrics.incrementCounter();
         log.debug("Request for getting trainee's: {} trainings by filter"
                         + "(dateFrom: {} , dateTo: {}, trainerName: {}, trainingType: {})",
                 username, trainingsDto.getFromDate(), trainingsDto.getToDate(),
@@ -147,6 +153,7 @@ public class TrainingController {
     public ResponseEntity<ResponseDto<List<TrainerCriteriaTrainingsResponseDto>>> getTrainerTrainingsFilter(
             @PathVariable("username") String username,
             @Valid @RequestBody TrainerTrainingsFilterRequestDto trainingsDto) {
+        trainingRequestMetrics.incrementCounter();
         log.debug("Request for getting trainer's: {} trainings by filter"
                         + "(dateFrom: {} , dateTo: {}, traineeName: {})",
                 username, trainingsDto.getFromDate(), trainingsDto.getToDate(),
