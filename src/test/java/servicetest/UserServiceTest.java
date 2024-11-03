@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
+import org.example.metrics.UserMetrics;
 import org.example.repositories.UserRepository;
 import org.example.services.UserService;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private UserMetrics userMetrics;
     @InjectMocks
     private UserService userService;
 

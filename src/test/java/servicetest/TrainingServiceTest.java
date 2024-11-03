@@ -15,6 +15,7 @@ import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.entity.TrainingTypeEntity;
 import org.example.exceptions.GymEntityNotFoundException;
+import org.example.metrics.TrainingMetrics;
 import org.example.repositories.TrainingRepository;
 import org.example.services.TraineeService;
 import org.example.services.TrainerService;
@@ -35,6 +36,8 @@ public class TrainingServiceTest {
     private TrainerService trainerService;
     @Mock
     private TrainingRepository trainingRepository;
+    @Mock
+    private TrainingMetrics trainingMetrics;
 
     @Mock
     private TrainingTypeService trainingTypeService;
