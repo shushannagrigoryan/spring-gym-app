@@ -118,6 +118,7 @@ public class TrainingServiceTest {
     private static Specification<TrainingEntity> anySpecification() {
         return any(Specification.class);
     }
+
     @Test
     public void testGetTraineeTrainingsByFilter() {
         // Given
@@ -146,7 +147,7 @@ public class TrainingServiceTest {
     public void testGetTrainerTrainingsByFilter() {
         // Given
         String trainerUsername = "A.A";
-        LocalDateTime fromDate = LocalDateTime.of(2023, 1, 1, 0,0);
+        LocalDateTime fromDate = LocalDateTime.of(2023, 1, 1, 0, 0);
         LocalDateTime toDate = LocalDateTime.of(2023, 12, 31, 0, 0);
         String traineeUsername = "B.B";
         TrainerTrainingsFilterRequestDto requestDto = new TrainerTrainingsFilterRequestDto(

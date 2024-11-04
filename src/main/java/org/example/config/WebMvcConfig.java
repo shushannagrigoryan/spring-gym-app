@@ -9,7 +9,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @Slf4j
-//@EnableJpaRepositories(basePackages = "org.example.repositories")
 @EntityScan(basePackages = "org.example.entity")
 public class WebMvcConfig implements WebMvcConfigurer {
     private final AuthInterceptor authInterceptor;
