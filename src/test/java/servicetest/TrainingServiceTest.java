@@ -9,7 +9,10 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import org.example.dto.requestdto.TraineeTrainingsFilterRequestDto;
+import org.example.dto.requestdto.TrainerTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainingCreateRequestDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
@@ -27,6 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.jpa.domain.Specification;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -109,53 +113,54 @@ public class TrainingServiceTest {
         verify(trainingRepository).findById(trainingId);
     }
 
-    //    @Test
-    //    public void testGetTraineeTrainingsByFilter() {
-    //        // Given
-    //        String traineeUsername = "A.A";
-    //        LocalDate fromDate = LocalDate.of(2023, 1, 1);
-    //        LocalDate toDate = LocalDate.of(2023, 12, 31);
-    //        Long trainingTypeId = 1L;
-    //        String trainerUsername = "B.B";
-    //        TraineeTrainingsFilterRequestDto requestDto = new TraineeTrainingsFilterRequestDto(
-    //                traineeUsername, fromDate, toDate, trainerUsername, trainingTypeId);
-    //
-    //
-    //        List<TrainingEntity> expectedTrainings = List.of(new TrainingEntity());
-    //        when(trainingCriteriaRepository.getTraineeTrainingsByFilter(
-    //                traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername))
-    //                .thenReturn(expectedTrainings);
-    //
-    //        // When
-    //        List<TrainingEntity> actualTrainings = trainingService.getTraineeTrainingsByFilter(requestDto);
-    //
-    //        // Then
-    //        assertEquals(expectedTrainings, actualTrainings);
-    //        verify(trainingCriteriaRepository).getTraineeTrainingsByFilter(
-    //                traineeUsername, fromDate, toDate, trainingTypeId, trainerUsername);
-    //    }
 
-    //    @Test
-    //    public void testGetTrainerTrainingsByFilter() {
-    //        // Given
-    //        String trainerUsername = "A.A";
-    //        LocalDate fromDate = LocalDate.of(2023, 1, 1);
-    //        LocalDate toDate = LocalDate.of(2023, 12, 31);
-    //        String traineeUsername = "B.B";
-    //        TrainerTrainingsFilterRequestDto requestDto = new TrainerTrainingsFilterRequestDto(
-    //                trainerUsername, fromDate, toDate, traineeUsername);
-    //
-    //        List<TrainingEntity> expectedTrainings = List.of(new TrainingEntity());
-    //        when(trainingCriteriaRepository.getTrainerTrainingsByFilter(trainerUsername, fromDate,
-    //                toDate, traineeUsername))
-    //                .thenReturn(expectedTrainings);
-    //
-    //        // When
-    //        List<TrainingEntity> actualTrainings = trainingService.getTrainerTrainingsByFilter(requestDto);
-    //
-    //        // Then
-    //        assertEquals(expectedTrainings, actualTrainings);
-    //        verify(trainingCriteriaRepository).getTrainerTrainingsByFilter(
-    //                trainerUsername, fromDate, toDate, traineeUsername);
-    //    }
+    @SuppressWarnings("unchecked")
+    private static Specification<TrainingEntity> anySpecification() {
+        return any(Specification.class);
+    }
+    @Test
+    public void testGetTraineeTrainingsByFilter() {
+        // Given
+        String traineeUsername = "A.A";
+        LocalDateTime fromDate = LocalDateTime.of(2023, 1, 1, 0, 0);
+        LocalDateTime toDate = LocalDateTime.of(2023, 12, 31, 0, 0);
+        Long trainingTypeId = 1L;
+        String trainerUsername = "B.B";
+        TraineeTrainingsFilterRequestDto requestDto = new TraineeTrainingsFilterRequestDto(
+                traineeUsername, fromDate, toDate, trainerUsername, trainingTypeId);
+
+        List<TrainingEntity> expectedTrainings = List.of(new TrainingEntity());
+
+        when(trainingRepository.findAll(anySpecification()))
+                .thenReturn(expectedTrainings);
+
+        // When
+        List<TrainingEntity> actualTrainings = trainingService.getTraineeTrainingsByFilter(requestDto);
+
+        // Then
+        assertEquals(expectedTrainings, actualTrainings);
+        verify(trainingRepository).findAll(anySpecification());
+    }
+
+    @Test
+    public void testGetTrainerTrainingsByFilter() {
+        // Given
+        String trainerUsername = "A.A";
+        LocalDateTime fromDate = LocalDateTime.of(2023, 1, 1, 0,0);
+        LocalDateTime toDate = LocalDateTime.of(2023, 12, 31, 0, 0);
+        String traineeUsername = "B.B";
+        TrainerTrainingsFilterRequestDto requestDto = new TrainerTrainingsFilterRequestDto(
+                trainerUsername, fromDate, toDate, traineeUsername);
+
+        List<TrainingEntity> expectedTrainings = List.of(new TrainingEntity());
+        when(trainingRepository.findAll(anySpecification()))
+                .thenReturn(expectedTrainings);
+
+        // When
+        List<TrainingEntity> actualTrainings = trainingService.getTrainerTrainingsByFilter(requestDto);
+
+        // Then
+        assertEquals(expectedTrainings, actualTrainings);
+        verify(trainingRepository).findAll(anySpecification());
+    }
 }

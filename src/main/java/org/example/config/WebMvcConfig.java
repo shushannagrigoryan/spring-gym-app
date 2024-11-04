@@ -25,31 +25,4 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/trainees/**", "/trainers/**", "/users/**", "/trainingTypes/**", "/trainings/**");
     }
 
-    //    /**
-    //     * Flyway configuration.
-    //     */
-    //    @Bean(initMethod = "migrate")
-    //    public Flyway flyway(DataSource dataSource) {
-    //        Flyway flyway = Flyway.configure()
-    //                .dataSource(dataSource)
-    //                .locations("classpath:db/migration")
-    //                .baselineOnMigrate(true)
-    //                .load();
-    //        flyway.repair();
-    //        flyway.migrate();
-    //        log.info("Flyway configuration completed successfully");
-    //        return flyway;
-    //    }
-
-
-    //    /** config.*/
-    //    @Override
-    //    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    //        registry.addResourceHandler("/swagger-ui/**")
-    //                .addResourceLocations("classpath:/META-INF/resources/webjars/swagger-ui/");
-    //
-    //        registry.addResourceHandler("/v3/api-docs/**")
-    //                .addResourceLocations("classpath:/META-INF/resources/");
-    //    }
-
 }
