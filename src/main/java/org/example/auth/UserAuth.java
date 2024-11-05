@@ -46,6 +46,9 @@ public class UserAuth {
                             username));
         }
 
+        // TODO distinguishing between "No user with username" and "Incorrect password for user with username"
+        //  makes brute force easier, never make different error messages for different cases in login form
+
     }
 
 }

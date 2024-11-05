@@ -27,32 +27,32 @@ public class RestResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {GymIllegalArgumentException.class, GymIllegalIdException.class})
     protected ResponseEntity<ExceptionResponse<String>> handleIllegalArgumentException(
-            HttpServletRequest request) {
+        HttpServletRequest request) {
         log.debug("Exception handling for bad request.");
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ExceptionResponse<String> response = new ExceptionResponse<>(
-                "Illegal arguments", request.getRequestURI());
+            "Illegal arguments", request.getRequestURI());
         return new ResponseEntity<>(response, status);
     }
 
     @ExceptionHandler(value = {GymEntityNotFoundException.class})
     protected ResponseEntity<ExceptionResponse<String>> handleEntityNotFoundException(
-            HttpServletRequest request) {
+        HttpServletRequest request) {
         log.debug("Exception handling for bad request for EntityNotFoundException.");
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ExceptionResponse<String> response = new ExceptionResponse<>(
-                "Entity not found.", request.getRequestURI());
+            "Entity not found.", request.getRequestURI());
         return new ResponseEntity<>(response, status);
     }
 
     @ExceptionHandler(value = {GymAuthenticationException.class})
     protected ResponseEntity<ExceptionResponse<String>> handleAuthenticationFailException(
-             HttpServletRequest request,
-            HttpServletResponse servletResponse) throws IOException {
+        HttpServletRequest request,
+        HttpServletResponse servletResponse) throws IOException {
         log.debug("Exception handling for authentication.");
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         ExceptionResponse<String> response = new ExceptionResponse<>(
-                "Authentication error: Bad credentials", request.getRequestURI());
+            "Authentication error: Bad credentials", request.getRequestURI());
         servletResponse.getWriter().write(401);
         return new ResponseEntity<>(response, status);
     }
@@ -62,13 +62,13 @@ public class RestResponseEntityExceptionHandler {
         log.debug("Exception handling for date format parse exception.");
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ExceptionResponse<String> response = new ExceptionResponse<>(
-                "Wrong date format.Correct format is: yyyy-MM-dd", request.getRequestURI());
+            "Wrong date format.Correct format is: yyyy-MM-dd", request.getRequestURI());
         return new ResponseEntity<>(response, status);
     }
 
     @ExceptionHandler(value = {HttpRequestMethodNotSupportedException.class})
     protected ResponseEntity<ExceptionResponse<String>> handleNotSupportedMethodException(
-            HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
+        HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
         log.debug("Exception handling not supported request methods exception.");
         HttpStatus status = HttpStatus.METHOD_NOT_ALLOWED;
         ExceptionResponse<String> response = new ExceptionResponse<>(e.getMessage(), request.getRequestURI());
@@ -77,7 +77,7 @@ public class RestResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {NoHandlerFoundException.class})
     protected ResponseEntity<ExceptionResponse<String>> handleRequestNoHandlerFoundException(NoHandlerFoundException e,
-                                                                                     HttpServletRequest request) {
+                                                                                             HttpServletRequest request) {
         log.debug("Exception handling no handler found exception.");
         HttpStatus status = HttpStatus.NOT_FOUND;
         ExceptionResponse<String> response = new ExceptionResponse<>(e.getMessage(), request.getRequestURI());
@@ -86,33 +86,37 @@ public class RestResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
     protected ResponseEntity<ExceptionResponse<String>> handleHttpMessageNotReadableException(
-            HttpMessageNotReadableException e, HttpServletRequest request) {
+        HttpMessageNotReadableException e, HttpServletRequest request) {
         log.debug("Exception handling for http message not readable exception.");
         HttpStatus status = HttpStatus.BAD_REQUEST;
         if (e.getRootCause() instanceof DateTimeParseException) {
             return new ResponseEntity<>(new ExceptionResponse<>(
-                    "Wrong date format. Correct format is: yyyy-MM-dd'T'HH:mm:ss", request.getRequestURI()), status);
+                "Wrong date format. Correct format is: yyyy-MM-dd'T'HH:mm:ss", request.getRequestURI()), status);
         }
 
         ExceptionResponse<String> response = new ExceptionResponse<>("Request body is missing or is invalid",
-                request.getRequestURI());
+            request.getRequestURI());
         return new ResponseEntity<>(response, status);
     }
 
-    /** Exception handler for MethodArgumentNotValidException. */
+    /**
+     * Exception handler for MethodArgumentNotValidException.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse<Map<String, String>>> handleInvalidRequestExceptions(
-            MethodArgumentNotValidException exception, HttpServletRequest request) {
+        MethodArgumentNotValidException exception, HttpServletRequest request) {
         log.debug("Exception handling for MethodArgumentNotValidException");
         Map<String, String> response = new HashMap<>();
         exception.getBindingResult().getAllErrors().forEach(e ->
-                response.put(((FieldError) e).getField(), e.getDefaultMessage()));
+            response.put(((FieldError) e).getField(), e.getDefaultMessage()));
         return new ResponseEntity<>(
-                new ExceptionResponse<>(response,
-                        request.getRequestURI()), HttpStatus.BAD_REQUEST);
+            new ExceptionResponse<>(response,
+                request.getRequestURI()), HttpStatus.BAD_REQUEST);
     }
 
-    /** General exception handler. */
+    /**
+     * General exception handler.
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse<String>> handleGeneralException(Exception e, HttpServletRequest request) {
         log.debug("Exception handling for general exceptions.");

@@ -26,6 +26,10 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, @NonNull HttpServletResponse response,
                               @NonNull Object handler) throws Exception {
+        // TODO you can take a look at AntPathMatcher matcher = new AntPathMatcher();
+        //  spring security has AntPathRequestMatcher, which you can not hav now
+
+        // TODO You could use regexp
         if (request.getMethod().equals("POST")
                 && (request.getRequestURI().equals("/gym/trainers")
                 || request.getRequestURI().equals("/gym/trainees"))) {

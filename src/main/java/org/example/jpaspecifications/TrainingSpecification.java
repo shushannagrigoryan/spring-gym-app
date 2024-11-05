@@ -13,19 +13,19 @@ public class TrainingSpecification {
      */
     public static Specification<TrainingEntity> hasTraineeUsername(String traineeUserUsername) {
         return (root, query, cb) ->
-                traineeUserUsername == null ? cb.conjunction() : cb.equal(root.get("trainee")
-                        .get("user").get("username"), traineeUserUsername);
+            traineeUserUsername == null ? cb.conjunction() : cb.equal(root.get("trainee")
+                .get("user").get("username"), traineeUserUsername);
     }
 
     /**
      * Jpa specification for hasTrainingDateBetween.
      *
      * @param fromDate training date from
-     * @param toDate training date to
+     * @param toDate   training date to
      * @return {@code Specification<TrainingEntity>}
      */
     public static Specification<TrainingEntity> hasTrainingDateBetween(
-            LocalDateTime fromDate, LocalDateTime toDate) {
+        LocalDateTime fromDate, LocalDateTime toDate) {
         return (root, query, cb) -> {
             if (fromDate == null && toDate == null) {
                 return cb.conjunction();
@@ -47,8 +47,8 @@ public class TrainingSpecification {
      */
     public static Specification<TrainingEntity> hasTrainingType(Long trainingTypeId) {
         return (root, query, cb) ->
-                trainingTypeId == null ? cb.conjunction() : cb.equal(
-                        root.get("trainingType").get("id"), trainingTypeId);
+            trainingTypeId == null ? cb.conjunction() : cb.equal(
+                root.get("trainingType").get("id"), trainingTypeId);
     }
 
     /**
@@ -59,7 +59,7 @@ public class TrainingSpecification {
      */
     public static Specification<TrainingEntity> hasTrainerUsername(String trainerUserUsername) {
         return (root, query, cb) ->
-                trainerUserUsername == null ? cb.conjunction() : cb.equal(
-                        root.get("trainer").get("user").get("username"), trainerUserUsername);
+            trainerUserUsername == null ? cb.conjunction() : cb.equal(
+                root.get("trainer").get("user").get("username"), trainerUserUsername);
     }
 }

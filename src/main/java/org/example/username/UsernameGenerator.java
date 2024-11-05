@@ -51,6 +51,7 @@ public class UsernameGenerator {
      */
     public Long getSuffix(String username) {
         log.debug("Generating suffix for username: {}", username);
+        // TODO I would avoid loading all usernames, load only what you need
         List<String> allUsernames = userService.getAllUsernames();
 
         Long suffix = allUsernames.stream()

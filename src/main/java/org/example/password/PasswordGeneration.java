@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class PasswordGeneration {
     private static final SecureRandom secureRandom = new SecureRandom();
-    private static final int startChar = 33;
+    private static final int startChar = 33; // TODO private/public static final name are in SNAKE_CASE_FORMAT
+    private static final char CAN_WE_USE_CHAR = 33; // TODO :)
     private static final int endChar = 127;
 
     /**

@@ -11,7 +11,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EntityScan(basePackages = "org.example.entity")
 @EnableJpaRepositories(basePackages = "org.example.repositories")
-@EnableTransactionManagement
+@EnableTransactionManagement // TODO main is a configuration class, but it is not usually used as config,
+// so move such annotations from here to specific configuration classes
 public class Main {
     /**
      * Main method.
@@ -19,7 +20,7 @@ public class Main {
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
 
-
+        // TODO to much new lines
     }
 
 }
