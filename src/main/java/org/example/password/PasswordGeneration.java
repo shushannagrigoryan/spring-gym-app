@@ -7,10 +7,9 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class PasswordGeneration {
-    private static final SecureRandom secureRandom = new SecureRandom();
-    private static final int startChar = 33; // TODO private/public static final name are in SNAKE_CASE_FORMAT
-    private static final char CAN_WE_USE_CHAR = 33; // TODO :)
-    private static final int endChar = 127;
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+    private static final char START_CHARACTER = 33;
+    private static final char END_CHARACTER = 127;
 
     /**
      * Generating random 10 length password.
@@ -19,7 +18,7 @@ public class PasswordGeneration {
         log.debug("Generating a random password.");
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < 10; i++) {
-            stringBuilder.append((char) secureRandom.nextInt(startChar, endChar));
+            stringBuilder.append((char) SECURE_RANDOM.nextInt(START_CHARACTER, END_CHARACTER));
         }
         return stringBuilder.toString();
     }

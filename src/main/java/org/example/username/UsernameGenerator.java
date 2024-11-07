@@ -44,19 +44,17 @@ public class UsernameGenerator {
 
 
     /**
-     * Generates suffix for the given username which is not present both in trainee and trainer maps.
+     * Generates suffix for the given username which is not present both for trainees and trainers.
      *
      * @param username username for which suffix is generated
      * @return the suffix
      */
     public Long getSuffix(String username) {
         log.debug("Generating suffix for username: {}", username);
-        // TODO I would avoid loading all usernames, load only what you need
-        List<String> allUsernames = userService.getAllUsernames();
+        List<String> allUsernames = userService.getAllUsernamesWithPrefix(username);
 
         Long suffix = allUsernames.stream()
-                .filter(u -> u.startsWith(username))
-                .map(key -> key.substring(username.length()))
+                .map(u -> u.substring(username.length()))
                 .filter(s -> !s.isEmpty()).map(Long::valueOf)
                 .max(Long::compareTo).orElse(0L);
 

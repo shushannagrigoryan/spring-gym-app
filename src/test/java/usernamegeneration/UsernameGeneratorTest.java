@@ -52,7 +52,7 @@ class UsernameGeneratorTest {
 
         when(userService.getUserByUsername(username)).thenReturn(Optional.of(new UserEntity()));
 
-        when(userService.getAllUsernames()).thenReturn(List.of("John.Smith"));
+        when(userService.getAllUsernamesWithPrefix(username)).thenReturn(List.of("John.Smith"));
 
         String generatedUsername = usernameGenerator.generateUsername(firstName, lastName);
 
@@ -63,14 +63,13 @@ class UsernameGeneratorTest {
     @Test
     void testGetSuffix_1() {
         String username = "John.Smith";
-        List<String> usernameList = Arrays.asList("A.B", "John.James");
 
-        when(userService.getAllUsernames()).thenReturn(usernameList);
+        when(userService.getAllUsernamesWithPrefix(username)).thenReturn(List.of());
 
         Long suffix = usernameGenerator.getSuffix(username);
 
         assertEquals(1L, suffix);
-        verify(userService).getAllUsernames();
+        verify(userService).getAllUsernamesWithPrefix(username);
     }
 
     @Test
@@ -78,11 +77,11 @@ class UsernameGeneratorTest {
         String username = "John.Smith";
         List<String> allUsernames = Arrays.asList("John.Smith", "John.Smith1", "John.Smith2");
 
-        when(userService.getAllUsernames()).thenReturn(allUsernames);
+        when(userService.getAllUsernamesWithPrefix(username)).thenReturn(allUsernames);
 
         Long suffix = usernameGenerator.getSuffix(username);
 
         assertEquals(3L, suffix);
-        verify(userService).getAllUsernames();
+        verify(userService).getAllUsernamesWithPrefix(username);
     }
 }

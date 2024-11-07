@@ -52,6 +52,15 @@ public class UserService {
     }
 
     /**
+     * Get all usernames(both trainer and trainee) starting with prefix.
+     */
+    @Transactional
+    public List<String> getAllUsernamesWithPrefix(String prefix) {
+        log.debug("Getting all usernames with prefix: {}.", prefix);
+        return userRepository.findUsernamesStartingWith(prefix);
+    }
+
+    /**
      * Getting user by username.
      *
      * @param username username of the user

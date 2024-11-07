@@ -63,16 +63,16 @@ public class TraineeController {
         this.traineeRequestMetrics = traineeRequestMetrics;
     }
 
-    /**
-     * POST request to register a new trainee.
-     *
-     * @param traineeCreateDto request contains:
-     *                         firstName(required)
-     *                         lastName(required)
-     *                         dateOfBirth(optional)
-     *                         address(optional)
-     * @return generated username and password
-     */
+    //    /**
+    //     * POST request to register a new trainee.
+    //     *
+    //     * @param traineeCreateDto request contains:
+    //     *                         firstName(required)
+    //     *                         lastName(required)
+    //     *                         dateOfBirth(optional)
+    //     *                         address(optional)
+    //     * @return generated username and password
+    //     */
     // TODO let's talk about style, your variant and mine.
     //  Which one is easier to read?
     /*
@@ -96,6 +96,7 @@ public class TraineeController {
      */
 
     // TODO mine
+    /** register trainee. */
     @PostMapping
     @Operation(description = "Registering a new trainee")
     @ApiResponses(

@@ -76,8 +76,8 @@ public class RestResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = {NoHandlerFoundException.class})
-    protected ResponseEntity<ExceptionResponse<String>> handleRequestNoHandlerFoundException(NoHandlerFoundException e,
-                                                                                             HttpServletRequest request) {
+    protected ResponseEntity<ExceptionResponse<String>> handleRequestNoHandlerFoundException(
+        NoHandlerFoundException e, HttpServletRequest request) {
         log.debug("Exception handling no handler found exception.");
         HttpStatus status = HttpStatus.NOT_FOUND;
         ExceptionResponse<String> response = new ExceptionResponse<>(e.getMessage(), request.getRequestURI());

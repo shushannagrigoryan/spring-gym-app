@@ -12,6 +12,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query("select username from UserEntity")
     List<String> findAllUsernames();
 
+    @Query("select username from UserEntity where username like :prefix%")
+    List<String> findUsernamesStartingWith(String prefix);
+
     Optional<UserEntity> findByUsername(String username);
 
     Optional<UserEntity> findByUsernameAndPassword(String username, String password);
