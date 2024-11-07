@@ -9,12 +9,13 @@ import org.example.exceptionhandlers.ExceptionResponse;
 import org.example.exceptions.GymAuthenticationException;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
 @Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
-    private static final String AUTH_PATH_MATCHER = "^/gym/(trainees|trainers)$";
+    private static final String AUTH_PATH_MATCHER = "/gym/{spring:(trainees|trainers)}";
     private final UserAuth userAuth;
     private final ObjectMapper objectMapper;
 
@@ -29,7 +30,8 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, @NonNull HttpServletResponse response,
                              @NonNull Object handler) throws Exception {
-        if (request.getMethod().equals("POST") && request.getRequestURI().matches(AUTH_PATH_MATCHER)) {
+        AntPathMatcher antPathMatcher = new AntPathMatcher();
+        if (request.getMethod().equals("POST") && antPathMatcher.match(AUTH_PATH_MATCHER, request.getRequestURI())) {
             return true;
         }
         String username = request.getHeader("username");
