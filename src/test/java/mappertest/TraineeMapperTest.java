@@ -35,7 +35,7 @@ public class TraineeMapperTest {
         //given
         UserEntity user = new UserEntity("A", "B", "A.B", "password12");
         TraineeEntity traineeEntity = new TraineeEntity(1L, LocalDate.now(),
-                "myAddress", user, new ArrayList<>(), new HashSet<>());
+            "myAddress", user, new ArrayList<>(), new HashSet<>());
 
 
         //when
@@ -53,8 +53,8 @@ public class TraineeMapperTest {
     public void testDtoToEntity() {
         //given
         TraineeDto traineeDto =
-                new TraineeDto("Jack", "Smith",
-                        LocalDate.now(), "myAddress");
+            new TraineeDto("Jack", "Smith",
+                LocalDate.now(), "myAddress");
 
         //when
         TraineeEntity traineeEntity = traineeMapper.dtoToEntity(traineeDto);
@@ -74,8 +74,8 @@ public class TraineeMapperTest {
         user.setUsername("username");
         user.setPassword("password");
         TraineeEntity traineeEntity =
-                new TraineeEntity(1L, LocalDate.now(), "myAddress",
-                        user, new ArrayList<>(), new HashSet<>());
+            new TraineeEntity(1L, LocalDate.now(), "myAddress",
+                user, new ArrayList<>(), new HashSet<>());
 
         //when
         TraineeResponseDto responseDto = traineeMapper.entityToResponseDto(traineeEntity);
@@ -100,7 +100,7 @@ public class TraineeMapperTest {
         //given
 
         TraineeCreateRequestDto traineeCreateDto = new TraineeCreateRequestDto(
-                "A", "B", LocalDate.now(), "myAddress");
+            "A", "B", LocalDate.now(), "myAddress");
         //when
         TraineeEntity responseDto = traineeMapper.dtoToEntity(traineeCreateDto);
 
@@ -112,7 +112,7 @@ public class TraineeMapperTest {
     public void testNullEntityToTrainerTraineeResponseDto() {
         //when
         TrainerProfileTraineeResponseDto responseDto =
-                traineeMapper.entityToTrainerTraineeResponseDto(null);
+            traineeMapper.entityToTrainerTraineeResponseDto(null);
 
         //then
         assertNull(responseDto);
@@ -125,12 +125,12 @@ public class TraineeMapperTest {
         user.setUsername("username");
         user.setPassword("password");
         TraineeEntity traineeEntity =
-                new TraineeEntity(1L, LocalDate.now(), "myAddress",
-                        user, new ArrayList<>(), new HashSet<>());
+            new TraineeEntity(1L, LocalDate.now(), "myAddress",
+                user, new ArrayList<>(), new HashSet<>());
 
         //when
         TrainerProfileTraineeResponseDto responseDto =
-                traineeMapper.entityToTrainerTraineeResponseDto(traineeEntity);
+            traineeMapper.entityToTrainerTraineeResponseDto(traineeEntity);
 
         //then
         assertNotNull(responseDto);
@@ -141,7 +141,7 @@ public class TraineeMapperTest {
     public void testUpdateDtoToEntity() {
         //given
         TraineeUpdateRequestDto traineeDto = new TraineeUpdateRequestDto("A.A", "A", "B",
-                LocalDate.now(), "myAddress", false);
+            LocalDate.now(), "myAddress", false);
 
         //when
         TraineeEntity trainee = traineeMapper.updateDtoToEntity(traineeDto);

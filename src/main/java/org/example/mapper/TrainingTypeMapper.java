@@ -47,6 +47,6 @@ public class TrainingTypeMapper {
         }
 
         return new TrainingTypeResponseDto(trainingType.getId(),
-                trainingType.getTrainingTypeName());
+            trainingType.getTrainingTypeName());
     }
 }

@@ -12,18 +12,20 @@ public class UserMetrics {
     private final Counter userCreationCounter;
     private double myGaugeValue = 0;
 
-    /** Custom metrics. */
+    /**
+     * Custom metrics.
+     */
     public UserMetrics(MeterRegistry meterRegistry,
                        UserRepository userRepository) {
         userCreationCounter = Counter.builder("users_created")
-                .description("Number of users created")
-                .register(meterRegistry);
+            .description("Number of users created")
+            .register(meterRegistry);
 
         userCreationCounter.increment(userRepository.count());
 
         Gauge.builder("active_users", () -> myGaugeValue)
-                .description("Number of active users")
-                .register(meterRegistry);
+            .description("Number of active users")
+            .register(meterRegistry);
     }
 
     public void incrementCounter() {

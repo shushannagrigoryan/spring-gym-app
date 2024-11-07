@@ -32,7 +32,7 @@ public class TraineeProfileMapperTest {
         //given
         UserEntity user = new UserEntity("A", "B", "A.B", "password12");
         TraineeEntity traineeEntity = new TraineeEntity(1L, LocalDate.now(),
-                "myAddress", user, new ArrayList<>(), new HashSet<>());
+            "myAddress", user, new ArrayList<>(), new HashSet<>());
 
 
         //when
@@ -59,8 +59,8 @@ public class TraineeProfileMapperTest {
         user.setUsername("username");
         user.setPassword("password");
         TraineeEntity traineeEntity =
-                new TraineeEntity(1L, LocalDate.now(), "myAddress",
-                        user, new ArrayList<>(), new HashSet<>());
+            new TraineeEntity(1L, LocalDate.now(), "myAddress",
+                user, new ArrayList<>(), new HashSet<>());
 
         //when
         TraineeUpdateResponseDto responseDto = traineeProfileMapper.entityToUpdatedDto(traineeEntity);

@@ -50,8 +50,8 @@ public class TraineeService {
         log.debug("Creating trainee: {}", traineeEntity);
 
         String username = usernameGenerator.generateUsername(
-                traineeEntity.getUser().getFirstName(),
-                traineeEntity.getUser().getLastName());
+            traineeEntity.getUser().getFirstName(),
+            traineeEntity.getUser().getLastName());
         traineeEntity.getUser().setUsername(username);
         traineeEntity.getUser().setPassword(passwordGeneration.generatePassword());
         userService.save(traineeEntity.getUser());
@@ -71,11 +71,11 @@ public class TraineeService {
     public TraineeEntity getTraineeByUsername(String username) {
         log.debug("Retrieving trainee by username: {}", username);
         Optional<TraineeEntity> trainee = traineeRepository
-                .findByUser_Username(username);
+            .findByUser_Username(username);
         if (trainee.isEmpty()) {
             log.debug("No trainee with the username: {}", username);
             throw new GymEntityNotFoundException(
-                    String.format("Trainee with username %s does not exist.", username));
+                String.format("Trainee with username %s does not exist.", username));
         }
         log.debug("Successfully retrieved trainee by username: {}", username);
         return trainee.get();
@@ -170,7 +170,7 @@ public class TraineeService {
         if (trainee.isEmpty()) {
             log.debug("No trainee with the username: {}", username);
             throw new GymEntityNotFoundException(
-                    String.format("Trainee with username %s does not exist.", username));
+                String.format("Trainee with username %s does not exist.", username));
         }
         log.debug("Successfully retrieved trainee profile by username: {}", username);
         return trainee.get();
@@ -185,8 +185,8 @@ public class TraineeService {
     @Transactional
     public String changeActiveStatus(String username, boolean isActive) {
         TraineeEntity trainee = traineeRepository.findByUser_Username(username)
-                .orElseThrow(() -> new GymEntityNotFoundException(
-                        String.format("Trainee with username %s does not exist.", username)));
+            .orElseThrow(() -> new GymEntityNotFoundException(
+                String.format("Trainee with username %s does not exist.", username)));
 
         if (trainee.getUser().isActive() == isActive) {
             log.debug("Trainee : {} isActive status is already: {}", username, isActive);
@@ -210,8 +210,8 @@ public class TraineeService {
     @Transactional
     public Set<TrainerEntity> updateTraineesTrainerList(String username, List<String> trainers) {
         TraineeEntity trainee = traineeRepository.findByUser_Username(username)
-                .orElseThrow(() -> new GymEntityNotFoundException(
-                        String.format("Trainee with username %s does not exist.", username)));
+            .orElseThrow(() -> new GymEntityNotFoundException(
+                String.format("Trainee with username %s does not exist.", username)));
         Set<TrainerEntity> trainerEntities = new HashSet<>();
         trainers.forEach(t -> {
             TrainerEntity trainerEntity = trainerService.getTrainerByUsername(t);

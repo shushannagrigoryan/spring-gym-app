@@ -42,12 +42,12 @@ public class TraineeEntity {
     private UserEntity user;
 
     @OneToMany(mappedBy = "trainee", fetch = FetchType.LAZY,
-            cascade = CascadeType.REMOVE, orphanRemoval = true)
+        cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<TrainingEntity> trainings;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "trainee_trainer",
-            joinColumns = @JoinColumn(name = "trainee_id"),
-            inverseJoinColumns = @JoinColumn(name = "trainer_id"))
+        joinColumns = @JoinColumn(name = "trainee_id"),
+        inverseJoinColumns = @JoinColumn(name = "trainer_id"))
     private Set<TrainerEntity> trainers;
 }

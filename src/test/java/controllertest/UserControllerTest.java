@@ -51,7 +51,7 @@ public class UserControllerTest {
         String oldPassword = "oldPassword";
         String newPassword = "newPassword";
         ChangePasswordRequestDto requestDto =
-                new ChangePasswordRequestDto(username, oldPassword, newPassword);
+            new ChangePasswordRequestDto(username, oldPassword, newPassword);
         doNothing().when(userRequestMetrics).incrementCounter();
 
         //when
@@ -60,11 +60,9 @@ public class UserControllerTest {
         //then
         verify(userService).changeUserPassword(username, oldPassword, newPassword);
         assertEquals("Successfully changed user password.",
-                Objects.requireNonNull(result.getBody()).getMessage());
+            Objects.requireNonNull(result.getBody()).getMessage());
         assertEquals(HttpStatus.OK, result.getStatusCode());
     }
-
-
 
 
 }

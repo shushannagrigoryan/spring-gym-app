@@ -40,9 +40,9 @@ public class TrainingMapperTest {
     public void testEntityToDto() {
         //given
         TrainingEntity trainingEntity =
-                new TrainingEntity(1L, 1L,
-                        "boxing", 1L,
-                        LocalDateTime.now(), BigDecimal.valueOf(60));
+            new TrainingEntity(1L, 1L,
+                "boxing", 1L,
+                LocalDateTime.now(), BigDecimal.valueOf(60));
         TraineeEntity traineeEntity = new TraineeEntity();
         traineeEntity.setId(1L);
         TrainerEntity trainerEntity = new TrainerEntity();
@@ -74,9 +74,9 @@ public class TrainingMapperTest {
     public void testDtoToEntity() {
         //given
         TrainingDto trainingDto =
-                new TrainingDto(1L, 1L,
-                        "boxing", 1L,
-                        LocalDateTime.now(), BigDecimal.valueOf(60));
+            new TrainingDto(1L, 1L,
+                "boxing", 1L,
+                LocalDateTime.now(), BigDecimal.valueOf(60));
 
         //when
         TrainingEntity trainingEntity = trainingMapper.dtoToEntity(trainingDto);
@@ -94,15 +94,15 @@ public class TrainingMapperTest {
     public void testTraineeTrainingsEntityToCriteriaDto() {
         //given
         TrainingEntity training = new TrainingEntity(1L, 1L, "trainingName",
-                1L, LocalDateTime.now(), BigDecimal.valueOf(60));
+            1L, LocalDateTime.now(), BigDecimal.valueOf(60));
         TrainerEntity trainer = new TrainerEntity();
         trainer.setUser(new UserEntity());
         training.setTrainer(trainer);
         when(trainingTypeMapper.entityToResponseDto(training.getTrainingType()))
-                .thenReturn(new TrainingTypeResponseDto());
+            .thenReturn(new TrainingTypeResponseDto());
         //when
         TraineeCriteriaTrainingsResponseDto responseDto =
-                trainingMapper.traineeTrainingsEntityToCriteriaDto(training);
+            trainingMapper.traineeTrainingsEntityToCriteriaDto(training);
 
         //then
         assertNotNull(responseDto);
@@ -119,15 +119,15 @@ public class TrainingMapperTest {
     public void testTrainerTrainingsEntityToCriteriaDto() {
         //given
         TrainingEntity training = new TrainingEntity(1L, 1L, "trainingName",
-                1L, LocalDateTime.now(), BigDecimal.valueOf(60));
+            1L, LocalDateTime.now(), BigDecimal.valueOf(60));
         TraineeEntity trainee = new TraineeEntity();
         trainee.setUser(new UserEntity());
         training.setTrainee(trainee);
         when(trainingTypeMapper.entityToResponseDto(training.getTrainingType()))
-                .thenReturn(new TrainingTypeResponseDto());
+            .thenReturn(new TrainingTypeResponseDto());
         //when
         TrainerCriteriaTrainingsResponseDto responseDto =
-                trainingMapper.trainerTrainingsEntityToCriteriaDto(training);
+            trainingMapper.trainerTrainingsEntityToCriteriaDto(training);
 
         //then
         assertNotNull(responseDto);

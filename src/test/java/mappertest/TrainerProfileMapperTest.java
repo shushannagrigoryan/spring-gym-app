@@ -32,10 +32,23 @@ public class TrainerProfileMapperTest {
     @Mock
     private TrainingTypeMapper trainingTypeMapper;
     @Mock
-    private  TraineeMapper traineeMapper;
+    private TraineeMapper traineeMapper;
 
     @InjectMocks
     private TrainerProfileMapper trainerProfileMapper;
+
+    private static TrainerEntity getTrainerEntity() {
+        UserEntity user = new UserEntity("A", "B", "A.B", "password12");
+        TrainerEntity trainerEntity = new TrainerEntity();
+        trainerEntity.setUser(user);
+        TrainingTypeEntity specialization = new TrainingTypeEntity();
+        specialization.setId(1L);
+        trainerEntity.setSpecialization(specialization);
+        trainerEntity.setId(1L);
+        trainerEntity.setTrainees(Set.of(new TraineeEntity()));
+        trainerEntity.setTrainings(List.of(new TrainingEntity()));
+        return trainerEntity;
+    }
 
     @Test
     public void testEntityToProfileDto() {
@@ -54,19 +67,6 @@ public class TrainerProfileMapperTest {
         assertEquals(trainerEntity.getUser().getFirstName(), trainerDto.getFirstName());
         assertEquals(trainerEntity.getUser().getLastName(), trainerDto.getLastName());
         assertEquals(trainerEntity.getSpecialization().getId(), trainerDto.getSpecialization().getId());
-    }
-
-    private static TrainerEntity getTrainerEntity() {
-        UserEntity user = new UserEntity("A", "B", "A.B", "password12");
-        TrainerEntity trainerEntity = new TrainerEntity();
-        trainerEntity.setUser(user);
-        TrainingTypeEntity specialization = new TrainingTypeEntity();
-        specialization.setId(1L);
-        trainerEntity.setSpecialization(specialization);
-        trainerEntity.setId(1L);
-        trainerEntity.setTrainees(Set.of(new TraineeEntity()));
-        trainerEntity.setTrainings(List.of(new TrainingEntity()));
-        return trainerEntity;
     }
 
     @Test
@@ -93,7 +93,7 @@ public class TrainerProfileMapperTest {
         TrainingTypeResponseDto typeResponseDto = new TrainingTypeResponseDto();
         typeResponseDto.setId(1L);
         when(traineeMapper.entityToTrainerTraineeResponseDto(trainee))
-                .thenReturn(new TrainerProfileTraineeResponseDto());
+            .thenReturn(new TrainerProfileTraineeResponseDto());
 
         //when
         TrainerUpdateResponseDto result = trainerProfileMapper.entityToUpdatedDto(trainerEntity);

@@ -54,9 +54,9 @@ public class UsernameGenerator {
         List<String> allUsernames = userService.getAllUsernamesWithPrefix(username);
 
         Long suffix = allUsernames.stream()
-                .map(u -> u.substring(username.length()))
-                .filter(s -> !s.isEmpty()).map(Long::valueOf)
-                .max(Long::compareTo).orElse(0L);
+            .map(u -> u.substring(username.length()))
+            .filter(s -> !s.isEmpty()).map(Long::valueOf)
+            .max(Long::compareTo).orElse(0L);
 
         return suffix + 1;
     }

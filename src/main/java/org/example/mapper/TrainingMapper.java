@@ -29,10 +29,10 @@ public class TrainingMapper {
         }
 
         return new TrainingDto(
-                trainingEntity.getTrainee().getId(), trainingEntity.getTrainer().getId(),
-                trainingEntity.getTrainingName(),
-                trainingEntity.getTrainingType().getId(),
-                trainingEntity.getTrainingDate(), trainingEntity.getTrainingDuration());
+            trainingEntity.getTrainee().getId(), trainingEntity.getTrainer().getId(),
+            trainingEntity.getTrainingName(),
+            trainingEntity.getTrainingType().getId(),
+            trainingEntity.getTrainingDate(), trainingEntity.getTrainingDuration());
     }
 
     /**
@@ -64,8 +64,8 @@ public class TrainingMapper {
         }
 
         return new TraineeCriteriaTrainingsResponseDto(training.getTrainingName(), training.getTrainingDate(),
-                trainingTypeMapper.entityToResponseDto(training.getTrainingType()),
-                training.getTrainingDuration(), training.getTrainer().getUser().getUsername());
+            trainingTypeMapper.entityToResponseDto(training.getTrainingType()),
+            training.getTrainingDuration(), training.getTrainer().getUser().getUsername());
     }
 
     /**
@@ -77,8 +77,8 @@ public class TrainingMapper {
         }
 
         return new TrainerCriteriaTrainingsResponseDto(training.getTrainingName(), training.getTrainingDate(),
-                trainingTypeMapper.entityToResponseDto(training.getTrainingType()),
-                training.getTrainingDuration(), training.getTrainee().getUser().getUsername());
+            trainingTypeMapper.entityToResponseDto(training.getTrainingType()),
+            training.getTrainingDuration(), training.getTrainee().getUser().getUsername());
     }
 
 }

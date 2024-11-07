@@ -34,21 +34,14 @@ public class UserAuth {
         }
         Optional<UserEntity> user = userService.getUserByUsername(username);
         if (user.isEmpty()) {
-            log.debug("No user with username: {}", username);
-            throw new GymAuthenticationException(
-                    String.format("No user with username: %s", username));
+            log.debug("Bad credentials");
+            throw new GymAuthenticationException("Bad credentials");
         }
 
         if (!user.get().getPassword().equals(password)) {
-            log.debug("Incorrect password for user with username: {}", username);
-            throw new GymAuthenticationException(
-                    String.format("Incorrect password for user with username: %s",
-                            username));
+            log.debug("Bad credentials");
+            throw new GymAuthenticationException("Bad credentials");
         }
-
-        // TODO distinguishing between "No user with username" and "Incorrect password for user with username"
-        //  makes brute force easier, never make different error messages for different cases in login form
-
     }
 
 }

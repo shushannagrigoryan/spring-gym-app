@@ -14,10 +14,13 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 @Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
+    private static final String AUTH_PATH_MATCHER = "^/gym/(trainees|trainers)$";
     private final UserAuth userAuth;
     private final ObjectMapper objectMapper;
 
-    /** Setting dependencies. */
+    /**
+     * Setting dependencies.
+     */
     public AuthInterceptor(UserAuth userAuth, ObjectMapper objectMapper) {
         this.userAuth = userAuth;
         this.objectMapper = objectMapper;
@@ -25,14 +28,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, @NonNull HttpServletResponse response,
-                              @NonNull Object handler) throws Exception {
-        // TODO you can take a look at AntPathMatcher matcher = new AntPathMatcher();
-        //  spring security has AntPathRequestMatcher, which you can not hav now
-
-        // TODO You could use regexp
-        if (request.getMethod().equals("POST")
-                && (request.getRequestURI().equals("/gym/trainers")
-                || request.getRequestURI().equals("/gym/trainees"))) {
+                             @NonNull Object handler) throws Exception {
+        if (request.getMethod().equals("POST") && request.getRequestURI().matches(AUTH_PATH_MATCHER)) {
             return true;
         }
         String username = request.getHeader("username");
@@ -47,8 +44,8 @@ public class AuthInterceptor implements HandlerInterceptor {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             ObjectWriter objectWriter = objectMapper.writer().withDefaultPrettyPrinter();
             String json = objectWriter.writeValueAsString(
-                    new ExceptionResponse<>("Authentication failed: Bad credentials",
-                            request.getRequestURI()));
+                new ExceptionResponse<>("Authentication failed: Bad credentials",
+                    request.getRequestURI()));
             response.getWriter().write(json);
             return false;
         }

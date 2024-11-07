@@ -50,6 +50,11 @@ public class TrainingServiceTest {
     @InjectMocks
     private TrainingService trainingService;
 
+    @SuppressWarnings("unchecked")
+    private static Specification<TrainingEntity> anySpecification() {
+        return any(Specification.class);
+    }
+
     @Test
     public void testCreateTrainingSuccess() {
         //given
@@ -69,7 +74,7 @@ public class TrainingServiceTest {
         String trainingName = "trainingName";
         when(trainingRepository.save(any(TrainingEntity.class))).thenReturn(new TrainingEntity());
         TrainingCreateRequestDto requestDto = new TrainingCreateRequestDto(traineeUsername, trainerUsername,
-                trainingName, LocalDateTime.now(), BigDecimal.valueOf(60));
+            trainingName, LocalDateTime.now(), BigDecimal.valueOf(60));
         doNothing().when(trainingMetrics).incrementCounter();
 
         //when
@@ -107,16 +112,10 @@ public class TrainingServiceTest {
 
         //then
         GymEntityNotFoundException exception = assertThrows(GymEntityNotFoundException.class,
-                () -> trainingService.getTrainingById(trainingId));
+            () -> trainingService.getTrainingById(trainingId));
         assertEquals(String.format(String.format("No training with id: %d", trainingId)), exception.getMessage());
 
         verify(trainingRepository).findById(trainingId);
-    }
-
-
-    @SuppressWarnings("unchecked")
-    private static Specification<TrainingEntity> anySpecification() {
-        return any(Specification.class);
     }
 
     @Test
@@ -128,12 +127,12 @@ public class TrainingServiceTest {
         Long trainingTypeId = 1L;
         String trainerUsername = "B.B";
         TraineeTrainingsFilterRequestDto requestDto = new TraineeTrainingsFilterRequestDto(
-                traineeUsername, fromDate, toDate, trainerUsername, trainingTypeId);
+            traineeUsername, fromDate, toDate, trainerUsername, trainingTypeId);
 
         List<TrainingEntity> expectedTrainings = List.of(new TrainingEntity());
 
         when(trainingRepository.findAll(anySpecification()))
-                .thenReturn(expectedTrainings);
+            .thenReturn(expectedTrainings);
 
         // When
         List<TrainingEntity> actualTrainings = trainingService.getTraineeTrainingsByFilter(requestDto);
@@ -151,11 +150,11 @@ public class TrainingServiceTest {
         LocalDateTime toDate = LocalDateTime.of(2023, 12, 31, 0, 0);
         String traineeUsername = "B.B";
         TrainerTrainingsFilterRequestDto requestDto = new TrainerTrainingsFilterRequestDto(
-                trainerUsername, fromDate, toDate, traineeUsername);
+            trainerUsername, fromDate, toDate, traineeUsername);
 
         List<TrainingEntity> expectedTrainings = List.of(new TrainingEntity());
         when(trainingRepository.findAll(anySpecification()))
-                .thenReturn(expectedTrainings);
+            .thenReturn(expectedTrainings);
 
         // When
         List<TrainingEntity> actualTrainings = trainingService.getTrainerTrainingsByFilter(requestDto);

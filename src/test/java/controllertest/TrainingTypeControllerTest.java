@@ -45,7 +45,7 @@ public class TrainingTypeControllerTest {
 
         //when
         ResponseEntity<ResponseDto<List<TrainingTypeResponseDto>>> result =
-                trainingTypeController.getTrainingTypes();
+            trainingTypeController.getTrainingTypes();
 
         //then
         assertNotNull(result);

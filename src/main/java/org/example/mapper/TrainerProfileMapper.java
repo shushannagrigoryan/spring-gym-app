@@ -36,16 +36,16 @@ public class TrainerProfileMapper {
         trainerProfile.setFirstName(trainerEntity.getUser().getFirstName());
         trainerProfile.setLastName(trainerEntity.getUser().getLastName());
         TrainingTypeResponseDto trainingType = trainingTypeMapper
-                .entityToResponseDto(trainerEntity.getSpecialization());
+            .entityToResponseDto(trainerEntity.getSpecialization());
         trainerProfile.setSpecialization(trainingType);
         trainerProfile.setActive(trainerEntity.getUser().isActive());
 
 
         List<TrainingEntity> trainingEntityList = trainerEntity.getTrainings();
         Set<TrainerProfileTraineeResponseDto> trainees = trainingEntityList
-                .stream()
-                .map(x -> traineeMapper.entityToTrainerTraineeResponseDto(x.getTrainee()))
-                .collect(Collectors.toSet());
+            .stream()
+            .map(x -> traineeMapper.entityToTrainerTraineeResponseDto(x.getTrainee()))
+            .collect(Collectors.toSet());
 
         trainerProfile.setTrainees(trainees);
         return trainerProfile;
@@ -60,17 +60,17 @@ public class TrainerProfileMapper {
         }
 
         Set<TrainerProfileTraineeResponseDto> trainees = updatedTrainer.getTrainings()
-                .stream()
-                .map(x -> traineeMapper.entityToTrainerTraineeResponseDto(x.getTrainee()))
-                .collect(Collectors.toSet());
+            .stream()
+            .map(x -> traineeMapper.entityToTrainerTraineeResponseDto(x.getTrainee()))
+            .collect(Collectors.toSet());
 
         return new TrainerUpdateResponseDto(
-                updatedTrainer.getUser().getUsername(),
-                updatedTrainer.getUser().getFirstName(),
-                updatedTrainer.getUser().getLastName(),
-                trainingTypeMapper.entityToResponseDto(updatedTrainer.getSpecialization()),
-                updatedTrainer.getUser().isActive(),
-                trainees
+            updatedTrainer.getUser().getUsername(),
+            updatedTrainer.getUser().getFirstName(),
+            updatedTrainer.getUser().getLastName(),
+            trainingTypeMapper.entityToResponseDto(updatedTrainer.getSpecialization()),
+            updatedTrainer.getUser().isActive(),
+            trainees
         );
     }
 }

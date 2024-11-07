@@ -14,7 +14,9 @@ public class UserHealthIndicator implements HealthIndicator {
     private final TraineeRepository traineeRepository;
     private final TrainerRepository trainerRepository;
 
-    /** Setting dependencies. */
+    /**
+     * Setting dependencies.
+     */
     public UserHealthIndicator(UserRepository userRepository,
                                TraineeRepository traineeRepository,
                                TrainerRepository trainerRepository) {
@@ -32,18 +34,18 @@ public class UserHealthIndicator implements HealthIndicator {
     @Override
     public Health health() {
         boolean invalidTrainee =
-                traineeRepository.findAll().stream()
-                                .map(x -> userRepository.findById(x.getUser().getId()))
-                        .anyMatch(Optional::isEmpty);
+            traineeRepository.findAll().stream()
+                .map(x -> userRepository.findById(x.getUser().getId()))
+                .anyMatch(Optional::isEmpty);
 
         boolean invalidTrainer =
-                trainerRepository.findAll().stream()
-                        .map(x -> userRepository.findById(x.getUser().getId()))
-                        .anyMatch(Optional::isEmpty);
+            trainerRepository.findAll().stream()
+                .map(x -> userRepository.findById(x.getUser().getId()))
+                .anyMatch(Optional::isEmpty);
 
         if (invalidTrainee || invalidTrainer) {
             return Health.down().withDetail("User Existence Health Indicator",
-                    "Found trainees or trainers without corresponding users").build();
+                "Found trainees or trainers without corresponding users").build();
         }
 
         return Health.up().withDetail("User Existence Health Indicator", "All users are valid").build();

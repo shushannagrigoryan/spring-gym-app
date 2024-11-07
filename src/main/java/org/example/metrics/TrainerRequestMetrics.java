@@ -8,11 +8,13 @@ import org.springframework.stereotype.Component;
 public class TrainerRequestMetrics {
     private final Counter trainerCounter;
 
-    /** Trainer Request Metrics. */
+    /**
+     * Trainer Request Metrics.
+     */
     public TrainerRequestMetrics(MeterRegistry meterRegistry) {
         trainerCounter = Counter.builder("trainer_requests")
-                .description("Number of requests to trainer controller")
-                .register(meterRegistry);
+            .description("Number of requests to trainer controller")
+            .register(meterRegistry);
     }
 
     public void incrementCounter() {

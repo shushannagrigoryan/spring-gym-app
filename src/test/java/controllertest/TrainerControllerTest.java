@@ -67,7 +67,6 @@ public class TrainerControllerTest {
     }
 
 
-
     @Test
     public void testGetActiveTrainersNotAssignedToTrainee() {
         // Given
@@ -80,7 +79,7 @@ public class TrainerControllerTest {
 
         // When
         ResponseEntity<ResponseDto<Set<TrainerProfileDto>>> result =
-                trainerController.notAssignedOnTraineeActiveTrainers(traineeUsername);
+            trainerController.notAssignedOnTraineeActiveTrainers(traineeUsername);
 
         // Then
         assertEquals(Set.of(trainerProfileDto), Objects.requireNonNull(result.getBody()).getPayload());
@@ -94,7 +93,7 @@ public class TrainerControllerTest {
         String username = "A.B";
         boolean isActive = true;
         UserChangeActiveStatusRequestDto requestDto =
-                new UserChangeActiveStatusRequestDto(username, isActive);
+            new UserChangeActiveStatusRequestDto(username, isActive);
         doNothing().when(trainerRequestMetrics).incrementCounter();
         when(trainerService.changeActiveStatus(username, isActive)).thenReturn("Success.");
 
@@ -120,7 +119,7 @@ public class TrainerControllerTest {
 
         //when
         ResponseEntity<ResponseDto<TrainerProfileResponseDto>> result =
-                trainerController.getTrainerProfile(username);
+            trainerController.getTrainerProfile(username);
 
         //then
         verify(trainerService).getTrainerProfile(username);
@@ -137,7 +136,7 @@ public class TrainerControllerTest {
         Boolean isActive = false;
         Long specialization = 1L;
         TrainerUpdateRequestDto requestDto =
-                new TrainerUpdateRequestDto(username, firstName, lastName, specialization, isActive);
+            new TrainerUpdateRequestDto(username, firstName, lastName, specialization, isActive);
         TrainerEntity trainer = new TrainerEntity();
         doNothing().when(trainerRequestMetrics).incrementCounter();
         when(trainerMapper.updateDtoToEntity(requestDto)).thenReturn(trainer);
@@ -145,7 +144,7 @@ public class TrainerControllerTest {
         when(trainerService.updateTrainer(trainer)).thenReturn(updatedTrainer);
         TrainerUpdateResponseDto trainerResponse = new TrainerUpdateResponseDto();
         when(trainerProfileMapper
-                .entityToUpdatedDto(updatedTrainer)).thenReturn(trainerResponse);
+            .entityToUpdatedDto(updatedTrainer)).thenReturn(trainerResponse);
 
         //when
         ResponseEntity<ResponseDto<TrainerUpdateResponseDto>> result = trainerController.updateTrainer(requestDto);

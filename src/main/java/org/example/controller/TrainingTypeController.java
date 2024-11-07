@@ -46,32 +46,58 @@ public class TrainingTypeController {
      */
     @GetMapping
     @Operation(description = "Getting training types.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successfully got training types.",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ResponseEntity.class))),
-        @ApiResponse(responseCode = "401", description = "Authentication error",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class))),
-        @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class))),
-        @ApiResponse(responseCode = "405", description = "Method is not allowed.",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class))),
-        @ApiResponse(responseCode = "400", description = "Bad request.",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class)))
-    }
+    @ApiResponses(
+        {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Successfully got training types.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ResponseEntity.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Authentication error",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "404",
+                description = "The resource you were trying to reach is not found",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "405",
+                description = "Method is not allowed.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "400",
+                description = "Bad request.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            )
+        }
     )
     public ResponseEntity<ResponseDto<List<TrainingTypeResponseDto>>> getTrainingTypes() {
         trainingTypeRequestMetrics.incrementCounter();
         log.debug("Request to get all training types.");
         List<TrainingTypeEntity> trainingTypes = trainingTypeService.getAllTrainingTypes();
         List<TrainingTypeResponseDto> payload =
-                trainingTypes.stream()
-                        .map(trainingTypeMapper::entityToResponseDto).toList();
+            trainingTypes.stream()
+                .map(trainingTypeMapper::entityToResponseDto).toList();
         return new ResponseEntity<>(new ResponseDto<>(payload, "Successfully retrieved training types."),
-                HttpStatus.OK);
+            HttpStatus.OK);
     }
 }

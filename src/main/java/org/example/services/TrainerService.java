@@ -53,11 +53,11 @@ public class TrainerService {
     public TrainerEntity registerTrainer(TrainerEntity trainerEntity) {
         log.debug("Creating trainer: {}", trainerEntity);
         TrainingTypeEntity trainingType =
-                trainingTypeService.getTrainingTypeById(trainerEntity.getSpecializationId());
+            trainingTypeService.getTrainingTypeById(trainerEntity.getSpecializationId());
         trainerEntity.setSpecialization(trainingType);
         String username = usernameGenerator.generateUsername(
-                trainerEntity.getUser().getFirstName(),
-                trainerEntity.getUser().getLastName());
+            trainerEntity.getUser().getFirstName(),
+            trainerEntity.getUser().getLastName());
         trainerEntity.getUser().setUsername(username);
         trainerEntity.getUser().setPassword(passwordGeneration.generatePassword());
         userService.save(trainerEntity.getUser());
@@ -79,7 +79,7 @@ public class TrainerService {
         if (trainer.isEmpty()) {
             log.debug("No trainer with the username: {}", username);
             throw new GymEntityNotFoundException(
-                    String.format("Trainer with username %s does not exist.", username));
+                String.format("Trainer with username %s does not exist.", username));
         }
         log.debug("Successfully retrieved trainer by username: {}", username);
         return trainer.get();
@@ -144,7 +144,7 @@ public class TrainerService {
         if (trainer.isEmpty()) {
             log.debug("No trainer with the username: {}", username);
             throw new GymEntityNotFoundException(
-                    String.format("Trainer with username %s does not exist.", username));
+                String.format("Trainer with username %s does not exist.", username));
         }
         log.debug("Successfully retrieved trainer profile by username: {}", username);
         return trainer.get();
@@ -159,8 +159,8 @@ public class TrainerService {
     @Transactional
     public String changeActiveStatus(String username, boolean isActive) {
         TrainerEntity trainer = trainerRepository.findByUser_Username(username)
-                .orElseThrow(() -> new GymEntityNotFoundException(
-                        String.format("Trainer with username %s does not exist.", username)));
+            .orElseThrow(() -> new GymEntityNotFoundException(
+                String.format("Trainer with username %s does not exist.", username)));
 
         if (trainer.getUser().isActive() == isActive) {
             log.debug("Trainer : {} isActive status is already: {}", username, isActive);
@@ -185,6 +185,6 @@ public class TrainerService {
         log.debug("Getting active trainers which are not assigned on trainee: {}", traineeUsername);
         TraineeEntity trainee = traineeService.getTraineeByUsername(traineeUsername);
         return trainerRepository
-                .findByTrainingsTraineeNotInAndUserActive(Set.of(trainee), true);
+            .findByTrainingsTraineeNotInAndUserActive(Set.of(trainee), true);
     }
 }

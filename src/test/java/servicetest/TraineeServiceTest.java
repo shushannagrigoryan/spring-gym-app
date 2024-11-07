@@ -58,8 +58,8 @@ public class TraineeServiceTest {
         traineeEntity.setUser(user);
         traineeEntity.getUser().setPassword(password);
         when(usernameGenerator.generateUsername(traineeEntity.getUser().getFirstName(),
-                traineeEntity.getUser().getLastName()))
-                .thenReturn("Jack.Jones");
+            traineeEntity.getUser().getLastName()))
+            .thenReturn("Jack.Jones");
         when(traineeRepository.save(traineeEntity)).thenReturn(traineeEntity);
         when(userService.save(user)).thenReturn(user);
 
@@ -69,7 +69,7 @@ public class TraineeServiceTest {
         //then
         verify(passwordGeneration).generatePassword();
         verify(usernameGenerator).generateUsername(traineeEntity.getUser().getFirstName(),
-                traineeEntity.getUser().getLastName());
+            traineeEntity.getUser().getLastName());
         assertEquals("Jack.Jones", result.getUser().getUsername());
 
     }
@@ -107,8 +107,8 @@ public class TraineeServiceTest {
 
         //then
         assertThrows(GymEntityNotFoundException.class,
-                () -> traineeService.getTraineeByUsername(username),
-                String.format("Trainee with username %s does not exist.", username));
+            () -> traineeService.getTraineeByUsername(username),
+            String.format("Trainee with username %s does not exist.", username));
         verify(traineeRepository).findByUser_Username(username);
     }
 
@@ -137,8 +137,8 @@ public class TraineeServiceTest {
 
         //then
         assertThrows(GymEntityNotFoundException.class,
-                () -> traineeService.getTraineeById(id),
-                String.format("No trainee with id: %d", id));
+            () -> traineeService.getTraineeById(id),
+            String.format("No trainee with id: %d", id));
         verify(traineeRepository).findById(id);
     }
 
@@ -168,8 +168,8 @@ public class TraineeServiceTest {
 
         //then
         assertThrows(GymEntityNotFoundException.class,
-                () -> traineeService.deleteTraineeByUsername(username),
-                String.format(String.format("Trainee with username: %s does not exist.", username)));
+            () -> traineeService.deleteTraineeByUsername(username),
+            String.format(String.format("Trainee with username: %s does not exist.", username)));
     }
 
 
@@ -186,8 +186,8 @@ public class TraineeServiceTest {
 
         //then
         RuntimeException exception =
-                assertThrows(GymIllegalArgumentException.class,
-                        () -> traineeService.updateTrainee(trainee));
+            assertThrows(GymIllegalArgumentException.class,
+                () -> traineeService.updateTrainee(trainee));
         assertEquals(String.format("No trainee with username: %s", username), exception.getMessage());
     }
 
@@ -214,7 +214,7 @@ public class TraineeServiceTest {
         when(traineeRepository.save(traineeEntity)).thenReturn(traineeEntity);
 
         // when
-        TraineeEntity trainee =  traineeService.updateTrainee(traineeEntity);
+        TraineeEntity trainee = traineeService.updateTrainee(traineeEntity);
 
         // then
         assertNotNull(trainee);
@@ -270,10 +270,10 @@ public class TraineeServiceTest {
         //given
         String username = "A.I";
         doThrow(new GymEntityNotFoundException(String.format("Trainee with username %s does not exist.", username)))
-                .when(traineeRepository).findByUser_Username(username);
+            .when(traineeRepository).findByUser_Username(username);
         assertThrows(GymEntityNotFoundException.class, () ->
                 traineeService.changeActiveStatus(username, true),
-                String.format("Trainee with username %s does not exist.", username));
+            String.format("Trainee with username %s does not exist.", username));
     }
 
     @Test
@@ -303,8 +303,8 @@ public class TraineeServiceTest {
 
         //then
         assertThrows(GymEntityNotFoundException.class,
-                () -> traineeService.getTraineeProfile(username),
-                String.format("Trainee with username %s does not exist.", username));
+            () -> traineeService.getTraineeProfile(username),
+            String.format("Trainee with username %s does not exist.", username));
 
     }
 

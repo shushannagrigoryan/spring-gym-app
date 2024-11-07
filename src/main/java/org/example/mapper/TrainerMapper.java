@@ -34,8 +34,8 @@ public class TrainerMapper {
         }
 
         return new TrainerDto(trainerEntity.getUser().getFirstName(),
-                trainerEntity.getUser().getLastName(),
-                trainerEntity.getSpecialization().getId());
+            trainerEntity.getUser().getLastName(),
+            trainerEntity.getSpecialization().getId());
     }
 
     /**
@@ -48,7 +48,7 @@ public class TrainerMapper {
         }
 
         return new TrainerResponseDto(trainerEntity.getUser().getUsername(),
-                trainerEntity.getUser().getPassword());
+            trainerEntity.getUser().getPassword());
     }
 
     /**
@@ -79,7 +79,7 @@ public class TrainerMapper {
 
         TrainerEntity trainerEntity = new TrainerEntity();
         trainerEntity.setUser(new UserEntity(trainerCreateDto.getFirstName(),
-                trainerCreateDto.getLastName()));
+            trainerCreateDto.getLastName()));
 
         trainerEntity.setSpecializationId(Long.valueOf(trainerCreateDto.getSpecialization()));
 
@@ -98,7 +98,7 @@ public class TrainerMapper {
         trainer.setFirstName(trainerEntity.getUser().getFirstName());
         trainer.setLastName(trainerEntity.getUser().getLastName());
         TrainingTypeResponseDto trainingType = trainingTypeMapper
-                .entityToResponseDto(trainerEntity.getSpecialization());
+            .entityToResponseDto(trainerEntity.getSpecialization());
         trainer.setSpecialization(trainingType);
 
         return trainer;
@@ -133,11 +133,11 @@ public class TrainerMapper {
         }
 
         return new TrainerProfileDto(
-                trainerEntity.getUser().getUsername(),
-                trainerEntity.getUser().getFirstName(),
-                trainerEntity.getUser().getLastName(),
-                new TrainingTypeResponseDto(trainerEntity.getSpecialization().getId(),
-                        trainerEntity.getSpecialization().getTrainingTypeName()));
+            trainerEntity.getUser().getUsername(),
+            trainerEntity.getUser().getFirstName(),
+            trainerEntity.getUser().getLastName(),
+            new TrainingTypeResponseDto(trainerEntity.getSpecialization().getId(),
+                trainerEntity.getSpecialization().getTrainingTypeName()));
 
     }
 }

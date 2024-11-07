@@ -47,7 +47,7 @@ public class TrainingTypeMapperTest {
     public void testDtoToEntity() {
         //given
         TrainingTypeDto trainingTypeDto =
-                new TrainingTypeDto("boxing");
+            new TrainingTypeDto("boxing");
 
         //when
         TrainingTypeEntity trainingEntity = trainingTypeMapper.dtoToEntity(trainingTypeDto);
@@ -65,7 +65,7 @@ public class TrainingTypeMapperTest {
         trainingType.setId(1L);
 
         //when
-        TrainingTypeResponseDto  typeResponseDto = trainingTypeMapper.entityToResponseDto(trainingType);
+        TrainingTypeResponseDto typeResponseDto = trainingTypeMapper.entityToResponseDto(trainingType);
 
         //then
         assertNotNull(typeResponseDto);

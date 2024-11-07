@@ -36,9 +36,9 @@ public class TraineeProfileMapper {
         traineeProfile.setActive(traineeProfile.isActive());
         List<TrainingEntity> trainingEntityList = traineeEntity.getTrainings();
         Set<TraineeProfileTrainerResponseDto> trainers = trainingEntityList
-                .stream()
-                .map(x -> trainerMapper.entityToTraineeTrainerResponseDto(x.getTrainer()))
-                .collect(Collectors.toSet());
+            .stream()
+            .map(x -> trainerMapper.entityToTraineeTrainerResponseDto(x.getTrainer()))
+            .collect(Collectors.toSet());
 
         traineeProfile.setTrainers(trainers);
         return traineeProfile;
@@ -53,17 +53,17 @@ public class TraineeProfileMapper {
         }
 
         Set<TraineeProfileTrainerResponseDto> trainers = updatedTrainee.getTrainings()
-                .stream()
-                .map(x -> trainerMapper.entityToTraineeTrainerResponseDto(x.getTrainer()))
-                .collect(Collectors.toSet());
+            .stream()
+            .map(x -> trainerMapper.entityToTraineeTrainerResponseDto(x.getTrainer()))
+            .collect(Collectors.toSet());
 
         return new TraineeUpdateResponseDto(updatedTrainee.getUser().getUsername(),
-                updatedTrainee.getUser().getFirstName(),
-                updatedTrainee.getUser().getLastName(),
-                updatedTrainee.getDateOfBirth(),
-                updatedTrainee.getAddress(),
-                updatedTrainee.getUser().isActive(),
-                trainers);
+            updatedTrainee.getUser().getFirstName(),
+            updatedTrainee.getUser().getLastName(),
+            updatedTrainee.getDateOfBirth(),
+            updatedTrainee.getAddress(),
+            updatedTrainee.getUser().isActive(),
+            trainers);
 
     }
 }

@@ -51,8 +51,8 @@ public class TrainingTypeServiceTest {
 
         //then
         assertThrows(GymIllegalIdException.class,
-                () -> trainingTypeService.getTrainingTypeById(id),
-                String.format("No training type with id: %d", id));
+            () -> trainingTypeService.getTrainingTypeById(id),
+            String.format("No training type with id: %d", id));
     }
 
     @Test
@@ -69,9 +69,6 @@ public class TrainingTypeServiceTest {
         assertEquals(trainingTypes, trainingType);
 
     }
-
-
-
 
 
 }

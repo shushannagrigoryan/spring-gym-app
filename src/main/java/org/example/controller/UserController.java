@@ -49,31 +49,60 @@ public class UserController {
      */
     @GetMapping("/login")
     @Operation(description = "Logging in a user.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successfully logged in."),
-        @ApiResponse(responseCode = "401", description = "Authentication error",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class),
-            examples = @ExampleObject(value = "{ \"message\": \"Authentication failed\","
-                 + " \"httpStatus\": \"401 UNAUTHORIZED\" }"))),
-        @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class),
-            examples = @ExampleObject(value = "{ \"message\": \"Resource not found\","
-                 + " \"httpStatus\": \"404 NOT_FOUND\" }"))),
-        @ApiResponse(responseCode = "405", description = "Method is not allowed.",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class),
-            examples = @ExampleObject(value = "{ \"message\": \"Method is not allowed\","
-                 + " \"httpStatus\": \"405 METHOD_NOT_ALLOWED\" }"))),
-        @ApiResponse(responseCode = "400", description = "Bad request.",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class),
-            examples = @ExampleObject(value = "{ \"message\": \"Bad request\","
-                 + " \"httpStatus\": \"400 BAD_REQUEST\" }")))
-    })
+    @ApiResponses(
+        {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Successfully logged in."
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Authentication error",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class),
+                    examples = @ExampleObject(
+                        value = "{ \"message\": \"Authentication failed\" \"httpStatus\": \"401 UNAUTHORIZED\" }"
+                    )
+                )
+            ),
+            @ApiResponse(
+                responseCode = "404",
+                description = "The resource you were trying to reach is not found",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class),
+                    examples = @ExampleObject(
+                        value = "{ \"message\": \"Resource not found\" \"httpStatus\": \"404 NOT_FOUND\" }"
+                    )
+                )
+            ),
+            @ApiResponse(
+                responseCode = "405",
+                description = "Method is not allowed.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class),
+                    examples = @ExampleObject(
+                        value = "{ \"message\": \"Method is not allowed\" \"httpStatus\": \"405 METHOD_NOT_ALLOWED\" }"
+                    )
+                )
+            ),
+            @ApiResponse(
+                responseCode = "400",
+                description = "Bad request.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class),
+                    examples = @ExampleObject(
+                        value = "{ \"message\": \"Bad request\" \"httpStatus\": \"400 BAD_REQUEST\" }"
+                    )
+                )
+            )
+        }
+    )
     public ResponseEntity<ResponseDto<Object>> login(@RequestHeader("username") String username,
-                                             @RequestHeader("password") String password) {
+                                                     @RequestHeader("password") String password) {
         userRequestMetrics.incrementCounter();
         log.debug("Request to login a user.");
         userService.login(username, password);
@@ -90,38 +119,64 @@ public class UserController {
      */
     @PutMapping("/password")
     @Operation(description = "Change user password.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successfully changed the password."),
-        @ApiResponse(responseCode = "401", description = "Authentication error",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class),
-            examples = @ExampleObject(value = "{ \"message\": \"Authentication failed\","
-                    + " \"httpStatus\": \"401 UNAUTHORIZED\" }"))),
-        @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class),
-            examples = @ExampleObject(value = "{ \"message\": \"Resource not found\","
-                    + " \"httpStatus\": \"404 NOT_FOUND\" }"))),
-        @ApiResponse(responseCode = "405", description = "Method is not allowed.",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class),
-            examples = @ExampleObject(value = "{ \"message\": \"Method is not allowed\","
-                    + " \"httpStatus\": \"405 METHOD_NOT_ALLOWED\" }"))),
-        @ApiResponse(responseCode = "400", description = "Bad request.",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class),
-            examples = @ExampleObject(value = "{ \"message\": \"Bad request\","
-                    + " \"httpStatus\": \"400 BAD_REQUEST\" }")))
-    }
+    @ApiResponses(
+        {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Successfully changed the password."
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Authentication error",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class),
+                    examples = @ExampleObject(
+                        value = "{ \"message\": \"Authentication failed\" \"httpStatus\": \"401 UNAUTHORIZED\" }"
+                    )
+                )
+            ),
+            @ApiResponse(
+                responseCode = "404",
+                description = "The resource you were trying to reach is not found",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class),
+                    examples = @ExampleObject(
+                        value = "{ \"message\": \"Resource not found\" \"httpStatus\": \"404 NOT_FOUND\" }"
+                    )
+                )
+            ),
+            @ApiResponse(
+                responseCode = "405",
+                description = "Method is not allowed.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class),
+                    examples = @ExampleObject(
+                        value = "{ \"message\": \"Method is not allowed\" "
+                            + "\"httpStatus\": \"405 METHOD_NOT_ALLOWED\" }"))),
+            @ApiResponse(
+                responseCode = "400",
+                description = "Bad request.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class),
+                    examples = @ExampleObject(
+                        value = "{ \"message\": \"Bad request\" \"httpStatus\": \"400 BAD_REQUEST\" }"
+                    )
+                )
+            )
+        }
     )
     public ResponseEntity<ResponseDto<Object>> changePassword(
-            @Valid @RequestBody ChangePasswordRequestDto changePasswordDto) {
+        @Valid @RequestBody ChangePasswordRequestDto changePasswordDto) {
         userRequestMetrics.incrementCounter();
         log.debug("Request to change password of user with username: {}", changePasswordDto.getUsername());
         userService.changeUserPassword(changePasswordDto.getUsername(), changePasswordDto.getPassword(),
-                changePasswordDto.getNewPassword());
+            changePasswordDto.getNewPassword());
         return new ResponseEntity<>(
-                new ResponseDto<>(null, "Successfully changed user password."), HttpStatus.OK);
+            new ResponseDto<>(null, "Successfully changed user password."), HttpStatus.OK);
     }
 
 }

@@ -95,11 +95,11 @@ public class TrainingService {
     public List<TrainingEntity> getTraineeTrainingsByFilter(TraineeTrainingsFilterRequestDto traineeTrainings) {
         log.debug("Getting trainee trainings by filter");
         Specification<TrainingEntity> specification = Specification.where(
-                        TrainingSpecification.hasTraineeUsername(traineeTrainings.getTraineeUsername()))
-                .and(TrainingSpecification.hasTrainingDateBetween(traineeTrainings.getFromDate(),
-                        traineeTrainings.getToDate()))
-                .and(TrainingSpecification.hasTrainingType(traineeTrainings.getTrainingType()))
-                .and(TrainingSpecification.hasTrainerUsername(traineeTrainings.getTrainerUsername()));
+                TrainingSpecification.hasTraineeUsername(traineeTrainings.getTraineeUsername()))
+            .and(TrainingSpecification.hasTrainingDateBetween(traineeTrainings.getFromDate(),
+                traineeTrainings.getToDate()))
+            .and(TrainingSpecification.hasTrainingType(traineeTrainings.getTrainingType()))
+            .and(TrainingSpecification.hasTrainerUsername(traineeTrainings.getTrainerUsername()));
 
         return trainingRepository.findAll(specification);
     }
@@ -114,10 +114,10 @@ public class TrainingService {
     public List<TrainingEntity> getTrainerTrainingsByFilter(TrainerTrainingsFilterRequestDto trainerTrainings) {
         log.debug("Getting trainer trainings by filter");
         Specification<TrainingEntity> specification = Specification.where(
-                TrainingSpecification.hasTrainerUsername(trainerTrainings.getTrainerUsername())
-                        .and(TrainingSpecification.hasTrainingDateBetween(trainerTrainings.getFromDate(),
-                                trainerTrainings.getToDate()))
-                        .and(TrainingSpecification.hasTraineeUsername(trainerTrainings.getTraineeUsername()))
+            TrainingSpecification.hasTrainerUsername(trainerTrainings.getTrainerUsername())
+                .and(TrainingSpecification.hasTrainingDateBetween(trainerTrainings.getFromDate(),
+                    trainerTrainings.getToDate()))
+                .and(TrainingSpecification.hasTraineeUsername(trainerTrainings.getTraineeUsername()))
         );
 
         return trainingRepository.findAll(specification);

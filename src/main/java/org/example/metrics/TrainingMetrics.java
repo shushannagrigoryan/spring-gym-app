@@ -10,12 +10,14 @@ public class TrainingMetrics {
 
     private final Counter trainingCreationCounter;
 
-    /** Custom metrics. */
+    /**
+     * Custom metrics.
+     */
     public TrainingMetrics(MeterRegistry meterRegistry,
                            TrainingRepository trainingRepository) {
         trainingCreationCounter = Counter.builder("trainings_created")
-                .description("Number of trainings created")
-                .register(meterRegistry);
+            .description("Number of trainings created")
+            .register(meterRegistry);
         trainingCreationCounter.increment(trainingRepository.count());
     }
 

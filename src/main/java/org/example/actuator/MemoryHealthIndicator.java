@@ -23,16 +23,16 @@ public class MemoryHealthIndicator implements HealthIndicator {
         long usedNonHeapMemory = nonHeapMemoryUsage.getUsed();
 
         if ((double) usedHeapMemory / maxHeapMemory * 100 > 80
-                || (double) usedNonHeapMemory / maxNonHeapMemory * 100 > 80) {
+            || (double) usedNonHeapMemory / maxNonHeapMemory * 100 > 80) {
             return Health.down()
-                    .withDetail("Heap Memory Usage", usedHeapMemory)
-                    .withDetail("Non-Heap Memory Usage", usedNonHeapMemory)
-                    .build();
-        }
-
-        return Health.up()
                 .withDetail("Heap Memory Usage", usedHeapMemory)
                 .withDetail("Non-Heap Memory Usage", usedNonHeapMemory)
                 .build();
+        }
+
+        return Health.up()
+            .withDetail("Heap Memory Usage", usedHeapMemory)
+            .withDetail("Non-Heap Memory Usage", usedNonHeapMemory)
+            .build();
     }
 }

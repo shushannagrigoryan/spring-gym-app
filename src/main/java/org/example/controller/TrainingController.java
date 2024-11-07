@@ -55,29 +55,53 @@ public class TrainingController {
      */
     @PostMapping()
     @Operation(description = "Creating new training.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successfully created new training."),
-        @ApiResponse(responseCode = "401", description = "Authentication error",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class))),
-        @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class))),
-        @ApiResponse(responseCode = "405", description = "Method is not allowed.",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class))),
-        @ApiResponse(responseCode = "400", description = "Bad request.",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class)))
-    }
+    @ApiResponses(
+        {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Successfully created new training."
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Authentication error",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "404",
+                description = "The resource you were trying to reach is not found",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "405",
+                description = "Method is not allowed.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "400",
+                description = "Bad request.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            )
+        }
     )
     public ResponseEntity<ResponseDto<Object>> createTraining(
-            @Valid @RequestBody TrainingCreateRequestDto trainingDto) {
+        @Valid @RequestBody TrainingCreateRequestDto trainingDto) {
         trainingRequestMetrics.incrementCounter();
         log.debug("Request to create new training: {}", trainingDto);
         trainingService.createTraining(trainingDto);
         return new ResponseEntity<>(new ResponseDto<>(null,
-                "Successfully created a new training."), HttpStatus.OK);
+            "Successfully created a new training."), HttpStatus.OK);
     }
 
     /**
@@ -88,40 +112,66 @@ public class TrainingController {
      */
     @GetMapping("/trainees/{username}")
     @Operation(description = "Getting trainee trainings.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successfully got trainee trainings.",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ResponseEntity.class))),
-        @ApiResponse(responseCode = "401", description = "Authentication error",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class))),
-        @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class))),
-        @ApiResponse(responseCode = "405", description = "Method is not allowed.",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class))),
-        @ApiResponse(responseCode = "400", description = "Bad request.",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class)))
-    }
+    @ApiResponses(
+        {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Successfully got trainee trainings.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ResponseEntity.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Authentication error",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "404",
+                description = "The resource you were trying to reach is not found",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "405",
+                description = "Method is not allowed.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "400",
+                description = "Bad request.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            )
+        }
     )
     public ResponseEntity<ResponseDto<List<TraineeCriteriaTrainingsResponseDto>>> getTraineeTrainingsFilter(
-            @PathVariable("username") String username,
-            @Valid @RequestBody TraineeTrainingsFilterRequestDto trainingsDto) {
+        @PathVariable("username") String username,
+        @Valid @RequestBody TraineeTrainingsFilterRequestDto trainingsDto) {
         trainingRequestMetrics.incrementCounter();
         log.debug("Request for getting trainee's: {} trainings by filter"
-                        + "(dateFrom: {} , dateTo: {}, trainerName: {}, trainingType: {})",
-                username, trainingsDto.getFromDate(), trainingsDto.getToDate(),
-                trainingsDto.getTrainerUsername(), trainingsDto.getTrainingType());
+                + "(dateFrom: {} , dateTo: {}, trainerName: {}, trainingType: {})",
+            username, trainingsDto.getFromDate(), trainingsDto.getToDate(),
+            trainingsDto.getTrainerUsername(), trainingsDto.getTrainingType());
 
         List<TrainingEntity> trainings = trainingService.getTraineeTrainingsByFilter(trainingsDto);
         List<TraineeCriteriaTrainingsResponseDto> payload =
-                trainings.stream().map(trainingMapper::traineeTrainingsEntityToCriteriaDto)
-                        .toList();
+            trainings.stream().map(trainingMapper::traineeTrainingsEntityToCriteriaDto)
+                .toList();
 
         return new ResponseEntity<>(new ResponseDto<>(payload, "Successfully retrieved trainee trainings"),
-                HttpStatus.OK);
+            HttpStatus.OK);
     }
 
     /**
@@ -132,39 +182,65 @@ public class TrainingController {
      */
     @GetMapping("/trainers/{username}")
     @Operation(description = "Getting trainer trainings.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successfully got trainer trainings.",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ResponseEntity.class))),
-        @ApiResponse(responseCode = "401", description = "Authentication error",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class))),
-        @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class))),
-        @ApiResponse(responseCode = "405", description = "Method is not allowed.",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class))),
-        @ApiResponse(responseCode = "400", description = "Bad request.",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ExceptionResponse.class)))
-    }
+    @ApiResponses(
+        {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Successfully got trainer trainings.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ResponseEntity.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Authentication error",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "404",
+                description = "The resource you were trying to reach is not found",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "405",
+                description = "Method is not allowed.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "400",
+                description = "Bad request.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            )
+        }
     )
     public ResponseEntity<ResponseDto<List<TrainerCriteriaTrainingsResponseDto>>> getTrainerTrainingsFilter(
-            @PathVariable("username") String username,
-            @Valid @RequestBody TrainerTrainingsFilterRequestDto trainingsDto) {
+        @PathVariable("username") String username,
+        @Valid @RequestBody TrainerTrainingsFilterRequestDto trainingsDto) {
         trainingRequestMetrics.incrementCounter();
         log.debug("Request for getting trainer's: {} trainings by filter"
-                        + "(dateFrom: {} , dateTo: {}, traineeName: {})",
-                username, trainingsDto.getFromDate(), trainingsDto.getToDate(),
-                trainingsDto.getTraineeUsername());
+                + "(dateFrom: {} , dateTo: {}, traineeName: {})",
+            username, trainingsDto.getFromDate(), trainingsDto.getToDate(),
+            trainingsDto.getTraineeUsername());
 
         List<TrainingEntity> trainings = trainingService.getTrainerTrainingsByFilter(trainingsDto);
         List<TrainerCriteriaTrainingsResponseDto> payload =
-                trainings.stream().map(trainingMapper::trainerTrainingsEntityToCriteriaDto)
-                        .toList();
+            trainings.stream().map(trainingMapper::trainerTrainingsEntityToCriteriaDto)
+                .toList();
         return new ResponseEntity<>(new ResponseDto<>(payload, "Successfully retrieved trainer trainings"),
-                HttpStatus.OK);
+            HttpStatus.OK);
 
 
     }

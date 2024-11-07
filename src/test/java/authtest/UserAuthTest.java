@@ -49,7 +49,7 @@ public class UserAuthTest {
 
         //then
         assertThrows(GymAuthenticationException.class,
-                () -> userAuth.userAuth(username, "password12"));
+            () -> userAuth.userAuth(username, "password12"));
         verify(userService).getUserByUsername(username);
     }
 
@@ -70,8 +70,7 @@ public class UserAuthTest {
 
         // then
         assertThrows(GymAuthenticationException.class,
-                () -> userAuth.userAuth(username, wrongPassword),
-                String.format("Incorrect password for trainee with username: %s", username));
+            () -> userAuth.userAuth(username, wrongPassword), "Bad credentials");
         verify(userService).getUserByUsername(username);
     }
 
@@ -87,8 +86,8 @@ public class UserAuthTest {
 
         // then
         assertThrows(GymAuthenticationException.class,
-                () -> userAuth.userAuth(null, wrongPassword),
-                "Please enter username and password.");
+            () -> userAuth.userAuth(null, wrongPassword),
+            "Please enter username and password.");
         verify(userService, times(0)).getUserByUsername(null);
     }
 }

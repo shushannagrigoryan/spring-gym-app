@@ -102,8 +102,8 @@ public class UserService {
     public void changeUserPassword(String username, String oldPassword, String newPassword) {
         log.debug("Changing the password of user with username: {}", username);
         UserEntity user = userRepository.findByUsernameAndPassword(username, oldPassword)
-                .orElseThrow(() -> new GymEntityNotFoundException(
-                                String.format("No user with username: %s and password: %s", username, oldPassword)));
+            .orElseThrow(() -> new GymEntityNotFoundException(
+                String.format("No user with username: %s and password: %s", username, oldPassword)));
         user.setPassword(newPassword);
         userRepository.save(user);
         log.debug("Successfully changed password of user with username: {}", username);

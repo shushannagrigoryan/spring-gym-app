@@ -60,9 +60,14 @@ public class TrainerServiceTest {
         user.setPassword(password);
         TrainerEntity trainerEntity = new TrainerEntity();
         trainerEntity.setUser(user);
+        Long specialization = 1L;
+        TrainingTypeEntity trainingType = new TrainingTypeEntity();
+        trainingType.setId(specialization);
+        trainerEntity.setSpecializationId(specialization);
+        when(trainingTypeService.getTrainingTypeById(specialization)).thenReturn(trainingType);
         when(usernameGenerator.generateUsername(trainerEntity.getUser().getFirstName(),
-                trainerEntity.getUser().getLastName()))
-                .thenReturn(username);
+            trainerEntity.getUser().getLastName()))
+            .thenReturn(username);
         when(userService.save(user)).thenReturn(user);
         when(trainerRepository.save(trainerEntity)).thenReturn(new TrainerEntity());
 
@@ -73,7 +78,7 @@ public class TrainerServiceTest {
         //then
         verify(passwordGeneration).generatePassword();
         verify(usernameGenerator).generateUsername(trainerEntity.getUser().getFirstName(),
-                trainerEntity.getUser().getLastName());
+            trainerEntity.getUser().getLastName());
 
     }
 
@@ -107,8 +112,8 @@ public class TrainerServiceTest {
 
         //then
         assertThrows(GymEntityNotFoundException.class,
-                () -> trainerService.getTrainerByUsername(username),
-                String.format("Trainer with username %s does not exist.", username));
+            () -> trainerService.getTrainerByUsername(username),
+            String.format("Trainer with username %s does not exist.", username));
         verify(trainerRepository).findByUser_Username(username);
     }
 
@@ -137,8 +142,8 @@ public class TrainerServiceTest {
 
         //then
         assertThrows(GymEntityNotFoundException.class,
-                () -> trainerService.getTrainerById(id),
-                String.format("No trainer with id: %d", id));
+            () -> trainerService.getTrainerById(id),
+            String.format("No trainer with id: %d", id));
         verify(trainerRepository).findById(id);
     }
 
@@ -154,7 +159,7 @@ public class TrainerServiceTest {
         when(traineeService.getTraineeByUsername(username)).thenReturn(trainee);
         TrainerEntity trainer = new TrainerEntity();
         when(trainerRepository.findByTrainingsTraineeNotInAndUserActive(Set.of(trainee), true))
-                .thenReturn(List.of(trainer));
+            .thenReturn(List.of(trainer));
 
         //when
         List<TrainerEntity> result = trainerService.notAssignedOnTraineeActiveTrainers(username);
@@ -178,8 +183,8 @@ public class TrainerServiceTest {
 
         //then
         RuntimeException exception =
-                assertThrows(GymIllegalArgumentException.class,
-                        () -> trainerService.updateTrainer(trainer));
+            assertThrows(GymIllegalArgumentException.class,
+                () -> trainerService.updateTrainer(trainer));
         assertEquals(String.format("No trainer with username: %s", username), exception.getMessage());
     }
 
@@ -238,8 +243,8 @@ public class TrainerServiceTest {
 
         //then
         assertThrows(GymEntityNotFoundException.class,
-                () -> trainerService.getTrainerProfile(username),
-                String.format("Trainer with username %s does not exist.", username));
+            () -> trainerService.getTrainerProfile(username),
+            String.format("Trainer with username %s does not exist.", username));
 
     }
 
@@ -291,10 +296,10 @@ public class TrainerServiceTest {
         //given
         String username = "A.I";
         doThrow(new GymEntityNotFoundException(String.format("Trainer with username %s does not exist.", username)))
-                .when(trainerRepository).findByUser_Username(username);
+            .when(trainerRepository).findByUser_Username(username);
         assertThrows(GymEntityNotFoundException.class, () ->
-                        trainerService.changeActiveStatus(username, false),
-                String.format("Trainer with username %s does not exist.", username));
+                trainerService.changeActiveStatus(username, false),
+            String.format("Trainer with username %s does not exist.", username));
     }
 
 }

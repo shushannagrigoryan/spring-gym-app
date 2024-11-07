@@ -8,11 +8,13 @@ import org.springframework.stereotype.Component;
 public class UserRequestMetrics {
     private final Counter userCounter;
 
-    /** User Request Metrics. */
+    /**
+     * User Request Metrics.
+     */
     public UserRequestMetrics(MeterRegistry meterRegistry) {
         userCounter = Counter.builder("user_requests")
-                .description("Number of requests to user controller")
-                .register(meterRegistry);
+            .description("Number of requests to user controller")
+            .register(meterRegistry);
     }
 
     public void incrementCounter() {

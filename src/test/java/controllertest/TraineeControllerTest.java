@@ -64,7 +64,7 @@ public class TraineeControllerTest {
 
         //when
         ResponseEntity<ResponseDto<TraineeResponseDto>> result =
-                traineeController.registerTrainee(traineeCreateRequestDto);
+            traineeController.registerTrainee(traineeCreateRequestDto);
 
         //then
         verify(traineeService).registerTrainee(traineeEntity);
@@ -79,7 +79,7 @@ public class TraineeControllerTest {
         String username = "A.B";
         boolean isActive = true;
         UserChangeActiveStatusRequestDto requestDto =
-                new UserChangeActiveStatusRequestDto(username, isActive);
+            new UserChangeActiveStatusRequestDto(username, isActive);
         doNothing().when(traineeRequestMetrics).incrementCounter();
         when(traineeService.changeActiveStatus(username, isActive)).thenReturn("Success.");
 
@@ -115,7 +115,7 @@ public class TraineeControllerTest {
         //given
         String username = "A.A";
         TraineeUpdateTrainersRequestDto requestDto = new TraineeUpdateTrainersRequestDto(
-                username, new ArrayList<>());
+            username, new ArrayList<>());
         TrainerEntity trainer = new TrainerEntity();
         List<String> list = new ArrayList<>();
         doNothing().when(traineeRequestMetrics).incrementCounter();
@@ -126,7 +126,7 @@ public class TraineeControllerTest {
 
         //when
         ResponseEntity<ResponseDto<List<TrainerProfileDto>>> result =
-                traineeController.updateTraineesTrainerList(username, requestDto);
+            traineeController.updateTraineesTrainerList(username, requestDto);
 
         //then
         verify(traineeService).updateTraineesTrainerList(username, list);
@@ -146,7 +146,7 @@ public class TraineeControllerTest {
 
         //when
         ResponseEntity<ResponseDto<TraineeProfileResponseDto>> result =
-                traineeController.getTraineeProfile(username);
+            traineeController.getTraineeProfile(username);
 
         //then
         verify(traineeService).getTraineeProfile(username);
@@ -164,7 +164,7 @@ public class TraineeControllerTest {
         String address = "newAddress";
         Boolean isActive = false;
         TraineeUpdateRequestDto requestDto =
-                new TraineeUpdateRequestDto(username, firstName, lastName, dateOfBirth, address, isActive);
+            new TraineeUpdateRequestDto(username, firstName, lastName, dateOfBirth, address, isActive);
         TraineeEntity trainee = new TraineeEntity();
         doNothing().when(traineeRequestMetrics).incrementCounter();
         when(traineeMapper.updateDtoToEntity(requestDto)).thenReturn(trainee);
@@ -172,7 +172,7 @@ public class TraineeControllerTest {
         when(traineeService.updateTrainee(trainee)).thenReturn(updatedTrainee);
         TraineeUpdateResponseDto traineeResponse = new TraineeUpdateResponseDto();
         when(traineeProfileMapper
-                .entityToUpdatedDto(updatedTrainee)).thenReturn(traineeResponse);
+            .entityToUpdatedDto(updatedTrainee)).thenReturn(traineeResponse);
 
         //when
         ResponseEntity<ResponseDto<TraineeUpdateResponseDto>> result = traineeController.updateTrainee(requestDto);
@@ -184,7 +184,6 @@ public class TraineeControllerTest {
         assertEquals(traineeResponse, Objects.requireNonNull(result.getBody()).getPayload());
         assertEquals(HttpStatus.OK, result.getStatusCode());
     }
-
 
 
 }

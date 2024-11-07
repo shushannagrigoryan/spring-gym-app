@@ -80,7 +80,7 @@ public class UserHealthIndicatorTest {
 
         //then
         assertEquals(Health.down().withDetail("User Existence Health Indicator",
-                "Found trainees or trainers without corresponding users").build(), health);
+            "Found trainees or trainers without corresponding users").build(), health);
     }
 
     @Test
@@ -104,7 +104,7 @@ public class UserHealthIndicatorTest {
 
         //then
         assertEquals(Health.down().withDetail("User Existence Health Indicator",
-                "Found trainees or trainers without corresponding users").build(), health);
+            "Found trainees or trainers without corresponding users").build(), health);
     }
 
 }

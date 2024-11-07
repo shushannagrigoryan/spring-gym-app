@@ -97,7 +97,7 @@ public class UserServiceTest {
         String username = "A";
         String password = "B";
         when(userRepository.findByUsernameAndPassword(username, password))
-                .thenReturn(Optional.of(new UserEntity()));
+            .thenReturn(Optional.of(new UserEntity()));
 
         //when
         userService.login(username, password);
@@ -115,8 +115,8 @@ public class UserServiceTest {
 
         //then
         assertThrows(GymEntityNotFoundException.class,
-                () -> userService.login(username, password),
-                "Invalid username and password.");
+            () -> userService.login(username, password),
+            "Invalid username and password.");
     }
 
     @Test
@@ -129,7 +129,7 @@ public class UserServiceTest {
         user.setUsername(username);
         user.setPassword(oldPassword);
         when(userRepository.findByUsernameAndPassword(username, oldPassword))
-                .thenReturn(Optional.of(user));
+            .thenReturn(Optional.of(user));
         when(userRepository.save(user)).thenReturn(user);
 
         //when

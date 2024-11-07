@@ -12,11 +12,13 @@ import lombok.ToString;
 public class ExceptionResponse<T> {
     private T message;
     @JsonFormat(shape = JsonFormat.Shape.STRING,
-            pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
+        pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
     private LocalDateTime timestamp;
     private String path;
 
-    /** Constructs a new exception response instance. */
+    /**
+     * Constructs a new exception response instance.
+     */
     public ExceptionResponse(T message, String path) {
         this.message = message;
         this.path = path;

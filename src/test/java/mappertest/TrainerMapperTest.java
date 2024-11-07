@@ -61,7 +61,7 @@ public class TrainerMapperTest {
     public void testDtoToEntity() {
         //given
         TrainerDto trainerDto =
-                new TrainerDto("Jack", "Smith", 1L);
+            new TrainerDto("Jack", "Smith", 1L);
 
         //when
         TrainerEntity trainerEntity = trainerMapper.dtoToEntity(trainerDto);
@@ -101,7 +101,7 @@ public class TrainerMapperTest {
     public void testCreateDtoToEntity() {
         //given
         TrainerCreateRequestDto trainerCreateDto = new TrainerCreateRequestDto(
-                "A", "A", "1");
+            "A", "A", "1");
 
         //when
         TrainerEntity trainer = trainerMapper.dtoToEntity(trainerCreateDto);
@@ -121,7 +121,7 @@ public class TrainerMapperTest {
 
         //when
         TrainerProfileDto trainerResponseDto
-                = trainerMapper.entityToProfileDto(trainer);
+            = trainerMapper.entityToProfileDto(trainer);
 
         //then
         assertNotNull(trainerResponseDto);
@@ -134,7 +134,7 @@ public class TrainerMapperTest {
         trainerEntity.setUser(new UserEntity("A", "D", "A.B", "pass"));
         trainerEntity.setSpecialization(new TrainingTypeEntity());
         when(trainingTypeMapper
-                .entityToResponseDto(trainerEntity.getSpecialization())).thenReturn(new TrainingTypeResponseDto());
+            .entityToResponseDto(trainerEntity.getSpecialization())).thenReturn(new TrainingTypeResponseDto());
 
         //when
         TraineeProfileTrainerResponseDto trainer = trainerMapper.entityToTraineeTrainerResponseDto(trainerEntity);
@@ -158,8 +158,8 @@ public class TrainerMapperTest {
     public void updateDtoToEntity() {
         //given
         TrainerUpdateRequestDto trainer =
-                new TrainerUpdateRequestDto("A.B", "A",
-                        "B", 1L, false);
+            new TrainerUpdateRequestDto("A.B", "A",
+                "B", 1L, false);
 
         //when
         TrainerEntity trainerEntity = trainerMapper.updateDtoToEntity(trainer);

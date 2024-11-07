@@ -49,12 +49,12 @@ public class TrainingControllerTest {
         doNothing().when(trainingService).createTraining(requestDto);
 
         //when
-        ResponseEntity<ResponseDto<Object>> result =  trainingController.createTraining(requestDto);
+        ResponseEntity<ResponseDto<Object>> result = trainingController.createTraining(requestDto);
 
         //then
         verify(trainingService).createTraining(requestDto);
         assertEquals("Successfully created a new training.",
-                Objects.requireNonNull(result.getBody()).getMessage());
+            Objects.requireNonNull(result.getBody()).getMessage());
         assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
@@ -67,7 +67,7 @@ public class TrainingControllerTest {
         String trainerUsername = "B.B";
         Long trainingType = 1L;
         TraineeTrainingsFilterRequestDto requestDto = new TraineeTrainingsFilterRequestDto(
-                traineeUsername, fromDate, toDate, trainerUsername, trainingType);
+            traineeUsername, fromDate, toDate, trainerUsername, trainingType);
         TrainingEntity training = new TrainingEntity();
         doNothing().when(trainingRequestMetrics).incrementCounter();
         when(trainingService.getTraineeTrainingsByFilter(requestDto)).thenReturn(List.of(training));
@@ -76,7 +76,7 @@ public class TrainingControllerTest {
 
         //when
         ResponseEntity<ResponseDto<List<TraineeCriteriaTrainingsResponseDto>>> result =
-                trainingController.getTraineeTrainingsFilter(traineeUsername, requestDto);
+            trainingController.getTraineeTrainingsFilter(traineeUsername, requestDto);
 
         //then
         verify(trainingService).getTraineeTrainingsByFilter(requestDto);
@@ -94,7 +94,7 @@ public class TrainingControllerTest {
         LocalDateTime toDate = LocalDateTime.of(2024, 8, 2, 0, 0);
         String trainerUsername = "B.B";
         TrainerTrainingsFilterRequestDto requestDto = new TrainerTrainingsFilterRequestDto(
-                trainerUsername, fromDate, toDate, traineeUsername);
+            trainerUsername, fromDate, toDate, traineeUsername);
         TrainingEntity training = new TrainingEntity();
         doNothing().when(trainingRequestMetrics).incrementCounter();
         when(trainingService.getTrainerTrainingsByFilter(requestDto)).thenReturn(List.of(training));
@@ -103,7 +103,7 @@ public class TrainingControllerTest {
 
         //when
         ResponseEntity<ResponseDto<List<TrainerCriteriaTrainingsResponseDto>>> result =
-                trainingController.getTrainerTrainingsFilter(trainerUsername, requestDto);
+            trainingController.getTrainerTrainingsFilter(trainerUsername, requestDto);
 
         //then
         verify(trainingService).getTrainerTrainingsByFilter(requestDto);
