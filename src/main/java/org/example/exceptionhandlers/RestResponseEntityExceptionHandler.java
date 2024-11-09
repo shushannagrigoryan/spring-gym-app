@@ -25,8 +25,11 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @Slf4j
 public class RestResponseEntityExceptionHandler {
 
+    /**
+     * Exception handler for IllegalArgumentException.
+     */
     @ExceptionHandler(value = {GymIllegalArgumentException.class, GymIllegalIdException.class})
-    protected ResponseEntity<ExceptionResponse<String>> handleIllegalArgumentException(
+    public ResponseEntity<ExceptionResponse<String>> handleIllegalArgumentException(
         HttpServletRequest request) {
         log.debug("Exception handling for bad request.");
         HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -35,8 +38,11 @@ public class RestResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, status);
     }
 
+    /**
+     * Exception handler for GymEntityNotFoundException.
+     */
     @ExceptionHandler(value = {GymEntityNotFoundException.class})
-    protected ResponseEntity<ExceptionResponse<String>> handleEntityNotFoundException(
+    public ResponseEntity<ExceptionResponse<String>> handleEntityNotFoundException(
         HttpServletRequest request) {
         log.debug("Exception handling for bad request for EntityNotFoundException.");
         HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -45,8 +51,11 @@ public class RestResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, status);
     }
 
+    /**
+     * Exception handler for GymAuthenticationException.
+     */
     @ExceptionHandler(value = {GymAuthenticationException.class})
-    protected ResponseEntity<ExceptionResponse<String>> handleAuthenticationFailException(
+    public ResponseEntity<ExceptionResponse<String>> handleAuthenticationFailException(
         HttpServletRequest request,
         HttpServletResponse servletResponse) throws IOException {
         log.debug("Exception handling for authentication.");
@@ -57,8 +66,11 @@ public class RestResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, status);
     }
 
+    /**
+     * Exception handler for DateTimeParseException.
+     */
     @ExceptionHandler(value = {DateTimeParseException.class})
-    protected ResponseEntity<ExceptionResponse<String>> handleDateFormatException(HttpServletRequest request) {
+    public ResponseEntity<ExceptionResponse<String>> handleDateFormatException(HttpServletRequest request) {
         log.debug("Exception handling for date format parse exception.");
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ExceptionResponse<String> response = new ExceptionResponse<>(
@@ -66,8 +78,11 @@ public class RestResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, status);
     }
 
+    /**
+     * Exception handler for HttpRequestMethodNotSupportedException.
+     */
     @ExceptionHandler(value = {HttpRequestMethodNotSupportedException.class})
-    protected ResponseEntity<ExceptionResponse<String>> handleNotSupportedMethodException(
+    public ResponseEntity<ExceptionResponse<String>> handleNotSupportedMethodException(
         HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
         log.debug("Exception handling not supported request methods exception.");
         HttpStatus status = HttpStatus.METHOD_NOT_ALLOWED;
@@ -75,8 +90,11 @@ public class RestResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, status);
     }
 
+    /**
+     * Exception handler for NoHandlerFoundException.
+     */
     @ExceptionHandler(value = {NoHandlerFoundException.class})
-    protected ResponseEntity<ExceptionResponse<String>> handleRequestNoHandlerFoundException(
+    public ResponseEntity<ExceptionResponse<String>> handleRequestNoHandlerFoundException(
         NoHandlerFoundException e, HttpServletRequest request) {
         log.debug("Exception handling no handler found exception.");
         HttpStatus status = HttpStatus.NOT_FOUND;
@@ -84,8 +102,11 @@ public class RestResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, status);
     }
 
+    /**
+     * Exception handler for HttpMessageNotReadableException.
+     */
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
-    protected ResponseEntity<ExceptionResponse<String>> handleHttpMessageNotReadableException(
+    public ResponseEntity<ExceptionResponse<String>> handleHttpMessageNotReadableException(
         HttpMessageNotReadableException e, HttpServletRequest request) {
         log.debug("Exception handling for http message not readable exception.");
         HttpStatus status = HttpStatus.BAD_REQUEST;

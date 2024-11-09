@@ -1,0 +1,2 @@
+ALTER TABLE users
+    ADD COLUMN username_index INT NOT NULL DEFAULT 0;

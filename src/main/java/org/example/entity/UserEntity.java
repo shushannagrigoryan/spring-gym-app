@@ -29,6 +29,8 @@ public class UserEntity {
     private String password;
     @Column(name = "is_active", nullable = false)
     private boolean active;
+    @Column(name = "username_index", nullable = false)
+    private Long usernameIndex;
 
     /**
      * constructor.

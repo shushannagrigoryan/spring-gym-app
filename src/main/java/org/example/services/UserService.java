@@ -52,15 +52,6 @@ public class UserService {
     }
 
     /**
-     * Get all usernames(both trainer and trainee) starting with prefix.
-     */
-    @Transactional
-    public List<String> getAllUsernamesWithPrefix(String prefix) {
-        log.debug("Getting all usernames with prefix: {}.", prefix);
-        return userRepository.findUsernamesStartingWith(prefix);
-    }
-
-    /**
      * Getting user by username.
      *
      * @param username username of the user
@@ -119,6 +110,20 @@ public class UserService {
         log.debug("Deleting user with username: {}", user.getUsername());
         userRepository.deleteById(user.getId());
         log.debug("Successfully deleted user with username: {}", user.getUsername());
+    }
+
+    /**
+     * Returns max username index for users with given firstName and lastName.
+     *
+     * @param firstName fistName of the user
+     * @param lastName  lastName of the user
+     * @return max index
+     */
+    @Transactional
+    public Long getUsernameMaxIndex(String firstName, String lastName) {
+        log.debug("Getting max username index for users with firstName: {} and lastName: {}",
+            firstName, lastName);
+        return userRepository.findUsernameMaxIndex(firstName, lastName);
     }
 
 }

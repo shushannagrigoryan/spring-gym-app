@@ -49,9 +49,7 @@ public class TraineeService {
     public TraineeEntity registerTrainee(TraineeEntity traineeEntity) {
         log.debug("Creating trainee: {}", traineeEntity);
 
-        String username = usernameGenerator.generateUsername(
-            traineeEntity.getUser().getFirstName(),
-            traineeEntity.getUser().getLastName());
+        String username = usernameGenerator.generateUsername(traineeEntity.getUser());
         traineeEntity.getUser().setUsername(username);
         traineeEntity.getUser().setPassword(passwordGeneration.generatePassword());
         userService.save(traineeEntity.getUser());

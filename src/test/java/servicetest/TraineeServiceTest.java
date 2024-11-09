@@ -57,8 +57,7 @@ public class TraineeServiceTest {
         UserEntity user = new UserEntity();
         traineeEntity.setUser(user);
         traineeEntity.getUser().setPassword(password);
-        when(usernameGenerator.generateUsername(traineeEntity.getUser().getFirstName(),
-            traineeEntity.getUser().getLastName()))
+        when(usernameGenerator.generateUsername(traineeEntity.getUser()))
             .thenReturn("Jack.Jones");
         when(traineeRepository.save(traineeEntity)).thenReturn(traineeEntity);
         when(userService.save(user)).thenReturn(user);
@@ -68,8 +67,7 @@ public class TraineeServiceTest {
 
         //then
         verify(passwordGeneration).generatePassword();
-        verify(usernameGenerator).generateUsername(traineeEntity.getUser().getFirstName(),
-            traineeEntity.getUser().getLastName());
+        verify(usernameGenerator).generateUsername(traineeEntity.getUser());
         assertEquals("Jack.Jones", result.getUser().getUsername());
 
     }

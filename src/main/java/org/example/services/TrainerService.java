@@ -55,9 +55,7 @@ public class TrainerService {
         TrainingTypeEntity trainingType =
             trainingTypeService.getTrainingTypeById(trainerEntity.getSpecializationId());
         trainerEntity.setSpecialization(trainingType);
-        String username = usernameGenerator.generateUsername(
-            trainerEntity.getUser().getFirstName(),
-            trainerEntity.getUser().getLastName());
+        String username = usernameGenerator.generateUsername(trainerEntity.getUser());
         trainerEntity.getUser().setUsername(username);
         trainerEntity.getUser().setPassword(passwordGeneration.generatePassword());
         userService.save(trainerEntity.getUser());

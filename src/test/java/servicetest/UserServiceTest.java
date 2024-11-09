@@ -154,4 +154,18 @@ public class UserServiceTest {
         verify(userRepository).deleteById(user.getId());
 
     }
+
+    @Test
+    public void testGetUsernameMaxIndex() {
+        //given
+        String firstName = "A";
+        String lastName = "B";
+        when(userRepository.findUsernameMaxIndex(firstName, lastName)).thenReturn(1L);
+
+        //when
+        userService.getUsernameMaxIndex(firstName, lastName);
+
+        //then
+        verify(userRepository).findUsernameMaxIndex(firstName, lastName);
+    }
 }

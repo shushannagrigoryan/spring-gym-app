@@ -65,8 +65,7 @@ public class TrainerServiceTest {
         trainingType.setId(specialization);
         trainerEntity.setSpecializationId(specialization);
         when(trainingTypeService.getTrainingTypeById(specialization)).thenReturn(trainingType);
-        when(usernameGenerator.generateUsername(trainerEntity.getUser().getFirstName(),
-            trainerEntity.getUser().getLastName()))
+        when(usernameGenerator.generateUsername(trainerEntity.getUser()))
             .thenReturn(username);
         when(userService.save(user)).thenReturn(user);
         when(trainerRepository.save(trainerEntity)).thenReturn(new TrainerEntity());
@@ -77,8 +76,7 @@ public class TrainerServiceTest {
 
         //then
         verify(passwordGeneration).generatePassword();
-        verify(usernameGenerator).generateUsername(trainerEntity.getUser().getFirstName(),
-            trainerEntity.getUser().getLastName());
+        verify(usernameGenerator).generateUsername(trainerEntity.getUser());
 
     }
 

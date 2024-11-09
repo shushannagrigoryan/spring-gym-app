@@ -15,7 +15,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 @Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
-    private static final String AUTH_PATH_MATCHER = "/gym/{spring:(trainees|trainers)}";
+    private static final String AUTH_PATH_PATTERN = "/gym/{spring:(trainees|trainers)}";
+    private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
     private final UserAuth userAuth;
     private final ObjectMapper objectMapper;
 
@@ -30,8 +31,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, @NonNull HttpServletResponse response,
                              @NonNull Object handler) throws Exception {
-        AntPathMatcher antPathMatcher = new AntPathMatcher();
-        if (request.getMethod().equals("POST") && antPathMatcher.match(AUTH_PATH_MATCHER, request.getRequestURI())) {
+        if (request.getMethod().equals("POST") && ANT_PATH_MATCHER.match(AUTH_PATH_PATTERN, request.getRequestURI())) {
             return true;
         }
         String username = request.getHeader("username");

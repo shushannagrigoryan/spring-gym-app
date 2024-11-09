@@ -1,7 +1,5 @@
 package org.example.username;
 
-import java.util.List;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
 import org.example.services.UserService;
@@ -22,43 +20,26 @@ public class UsernameGenerator {
     /**
      * Generates username for the user (firstName.lastName)
      * Adds suffix if the username is taken either by a trainee or a trainer.
+     * Sets the user usernameIndex field to suffix if present otherwise to 0.
      *
-     * @param firstName firstName of the user
-     * @param lastName  lastName of the user
+     * @param user User to generate username for
      * @return the username
      */
 
-    public String generateUsername(String firstName, String lastName) {
-        log.debug("Generating username for firstName: {}, lastName: {}", firstName, lastName);
+    public String generateUsername(UserEntity user) {
+        String firstName = user.getFirstName();
+        String lastName = user.getLastName();
+        log.debug("Generating username for user with firstName: {} and  lastName: {}", firstName, lastName);
 
         String username = firstName.concat(".").concat(lastName);
+        Long usernameMaxIndex = userService.getUsernameMaxIndex(firstName, lastName);
 
-        Optional<UserEntity> user = userService.getUserByUsername(username);
+        long index = usernameMaxIndex == null ? 0 : usernameMaxIndex + 1;
+        log.debug("Setting username index to: {}", index);
+        user.setUsernameIndex(index);
 
-        if (user.isPresent()) {
-            log.debug("Username taken.");
-            return username + getSuffix(username);
-        }
-        return username;
-    }
+        return index == 0 ? username : username.concat(String.valueOf(usernameMaxIndex + 1));
 
-
-    /**
-     * Generates suffix for the given username which is not present both for trainees and trainers.
-     *
-     * @param username username for which suffix is generated
-     * @return the suffix
-     */
-    public Long getSuffix(String username) {
-        log.debug("Generating suffix for username: {}", username);
-        List<String> allUsernames = userService.getAllUsernamesWithPrefix(username);
-
-        Long suffix = allUsernames.stream()
-            .map(u -> u.substring(username.length()))
-            .filter(s -> !s.isEmpty()).map(Long::valueOf)
-            .max(Long::compareTo).orElse(0L);
-
-        return suffix + 1;
     }
 
 }
