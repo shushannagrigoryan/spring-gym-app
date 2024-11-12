@@ -37,12 +37,12 @@ public class TraineeEntity {
 
     private String address;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;
 
     @OneToMany(mappedBy = "trainee", fetch = FetchType.LAZY,
-        cascade = CascadeType.REMOVE, orphanRemoval = true)
+        cascade = CascadeType.REMOVE)
     private List<TrainingEntity> trainings;
 
     @ManyToMany(fetch = FetchType.LAZY)

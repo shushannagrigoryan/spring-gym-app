@@ -370,8 +370,8 @@ public class TraineeController {
     /**
      * PUT request to updates trainee's trainer list.
      *
-     * @param updateTrainersDto {@code TraineeUpdateTrainersRequestDto}:username of the trainee
-     *                          list of trainers
+     * @param traineeUsername   username of the trainee
+     * @param updateTrainersDto {@code TraineeUpdateTrainersRequestDto}:list of trainers
      * @return {@code Set<TrainerProfileDto>} updated trainers set
      */
     @PutMapping("/{username}/trainers")
@@ -421,13 +421,13 @@ public class TraineeController {
         }
     )
     public ResponseEntity<ResponseDto<List<TrainerProfileDto>>> updateTraineesTrainerList(
-        @PathVariable(value = "username") String username,
+        @PathVariable(value = "username") String traineeUsername,
         @Valid @RequestBody TraineeUpdateTrainersRequestDto updateTrainersDto) {
         traineeRequestMetrics.incrementCounter();
         log.debug("Request to update trainee's: {} trainer list with: {}.",
-            username, updateTrainersDto.getTrainers());
+            traineeUsername, updateTrainersDto.getTrainers());
 
-        List<TrainerProfileDto> payload = traineeService.updateTraineesTrainerList(username,
+        List<TrainerProfileDto> payload = traineeService.updateTraineesTrainerList(traineeUsername,
                 updateTrainersDto.getTrainers())
             .stream().map(trainerMapper::entityToProfileDto)
             .toList();

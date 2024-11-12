@@ -107,7 +107,8 @@ public class TrainingController {
     /**
      * GET request to get trainee trainings by given criteria.
      *
-     * @param trainingsDto {@code TraineeTrainingsFilterRequestDto} the given criteria
+     * @param traineeUsername username of the trainee
+     * @param trainingsDto    {@code TraineeTrainingsFilterRequestDto} the given criteria
      * @return {@code List<TraineeCriteriaTrainingsResponseDto>}
      */
     @GetMapping("/trainees/{username}")
@@ -157,15 +158,15 @@ public class TrainingController {
         }
     )
     public ResponseEntity<ResponseDto<List<TraineeCriteriaTrainingsResponseDto>>> getTraineeTrainingsFilter(
-        @PathVariable("username") String username,
+        @PathVariable("username") String traineeUsername,
         @Valid @RequestBody TraineeTrainingsFilterRequestDto trainingsDto) {
         trainingRequestMetrics.incrementCounter();
         log.debug("Request for getting trainee's: {} trainings by filter"
                 + "(dateFrom: {} , dateTo: {}, trainerName: {}, trainingType: {})",
-            username, trainingsDto.getFromDate(), trainingsDto.getToDate(),
+            traineeUsername, trainingsDto.getFromDate(), trainingsDto.getToDate(),
             trainingsDto.getTrainerUsername(), trainingsDto.getTrainingType());
 
-        List<TrainingEntity> trainings = trainingService.getTraineeTrainingsByFilter(trainingsDto);
+        List<TrainingEntity> trainings = trainingService.getTraineeTrainingsByFilter(traineeUsername, trainingsDto);
         List<TraineeCriteriaTrainingsResponseDto> payload =
             trainings.stream().map(trainingMapper::traineeTrainingsEntityToCriteriaDto)
                 .toList();
@@ -177,7 +178,8 @@ public class TrainingController {
     /**
      * GET request to get trainer trainings by given criteria.
      *
-     * @param trainingsDto {@code TrainerTrainingsFilterRequestDto} the given criteria
+     * @param trainerUsername username of the trainer
+     * @param trainingsDto    {@code TrainerTrainingsFilterRequestDto} the given criteria
      * @return {@code List<TrainerCriteriaTrainingsResponseDto>}
      */
     @GetMapping("/trainers/{username}")
@@ -227,15 +229,15 @@ public class TrainingController {
         }
     )
     public ResponseEntity<ResponseDto<List<TrainerCriteriaTrainingsResponseDto>>> getTrainerTrainingsFilter(
-        @PathVariable("username") String username,
+        @PathVariable("username") String trainerUsername,
         @Valid @RequestBody TrainerTrainingsFilterRequestDto trainingsDto) {
         trainingRequestMetrics.incrementCounter();
         log.debug("Request for getting trainer's: {} trainings by filter"
                 + "(dateFrom: {} , dateTo: {}, traineeName: {})",
-            username, trainingsDto.getFromDate(), trainingsDto.getToDate(),
+            trainerUsername, trainingsDto.getFromDate(), trainingsDto.getToDate(),
             trainingsDto.getTraineeUsername());
 
-        List<TrainingEntity> trainings = trainingService.getTrainerTrainingsByFilter(trainingsDto);
+        List<TrainingEntity> trainings = trainingService.getTrainerTrainingsByFilter(trainerUsername, trainingsDto);
         List<TrainerCriteriaTrainingsResponseDto> payload =
             trainings.stream().map(trainingMapper::trainerTrainingsEntityToCriteriaDto)
                 .toList();

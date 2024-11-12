@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.TraineeTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainerTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainingCreateRequestDto;
+import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.exceptions.GymEntityNotFoundException;
@@ -92,10 +93,12 @@ public class TrainingService {
      * @return {@code List<TrainingEntity>}
      */
     @Transactional
-    public List<TrainingEntity> getTraineeTrainingsByFilter(TraineeTrainingsFilterRequestDto traineeTrainings) {
-        log.debug("Getting trainee trainings by filter");
+    public List<TrainingEntity> getTraineeTrainingsByFilter(String traineeUsername,
+                                                            TraineeTrainingsFilterRequestDto traineeTrainings) {
+        TraineeEntity trainee = traineeService.getTraineeByUsername(traineeUsername);
+        log.debug("Getting trainee: {}  trainings by filter", trainee);
         Specification<TrainingEntity> specification = Specification.where(
-                TrainingSpecification.hasTraineeUsername(traineeTrainings.getTraineeUsername()))
+                TrainingSpecification.hasTraineeUsername(traineeUsername))
             .and(TrainingSpecification.hasTrainingDateBetween(traineeTrainings.getFromDate(),
                 traineeTrainings.getToDate()))
             .and(TrainingSpecification.hasTrainingType(traineeTrainings.getTrainingType()))
@@ -111,10 +114,12 @@ public class TrainingService {
      * @return {@code List<TrainingEntity>}
      */
     @Transactional
-    public List<TrainingEntity> getTrainerTrainingsByFilter(TrainerTrainingsFilterRequestDto trainerTrainings) {
-        log.debug("Getting trainer trainings by filter");
+    public List<TrainingEntity> getTrainerTrainingsByFilter(String trainerUsername,
+                                                            TrainerTrainingsFilterRequestDto trainerTrainings) {
+        TrainerEntity trainer = trainerService.getTrainerByUsername(trainerUsername);
+        log.debug("Getting trainer: {} trainings by filter", trainer);
         Specification<TrainingEntity> specification = Specification.where(
-            TrainingSpecification.hasTrainerUsername(trainerTrainings.getTrainerUsername())
+            TrainingSpecification.hasTrainerUsername(trainerUsername)
                 .and(TrainingSpecification.hasTrainingDateBetween(trainerTrainings.getFromDate(),
                     trainerTrainings.getToDate()))
                 .and(TrainingSpecification.hasTraineeUsername(trainerTrainings.getTraineeUsername()))

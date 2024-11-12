@@ -67,10 +67,10 @@ public class TrainingControllerTest {
         String trainerUsername = "B.B";
         Long trainingType = 1L;
         TraineeTrainingsFilterRequestDto requestDto = new TraineeTrainingsFilterRequestDto(
-            traineeUsername, fromDate, toDate, trainerUsername, trainingType);
+            fromDate, toDate, trainerUsername, trainingType);
         TrainingEntity training = new TrainingEntity();
         doNothing().when(trainingRequestMetrics).incrementCounter();
-        when(trainingService.getTraineeTrainingsByFilter(requestDto)).thenReturn(List.of(training));
+        when(trainingService.getTraineeTrainingsByFilter(traineeUsername, requestDto)).thenReturn(List.of(training));
         TraineeCriteriaTrainingsResponseDto responseDto = new TraineeCriteriaTrainingsResponseDto();
         when(trainingMapper.traineeTrainingsEntityToCriteriaDto(training)).thenReturn(responseDto);
 
@@ -79,7 +79,7 @@ public class TrainingControllerTest {
             trainingController.getTraineeTrainingsFilter(traineeUsername, requestDto);
 
         //then
-        verify(trainingService).getTraineeTrainingsByFilter(requestDto);
+        verify(trainingService).getTraineeTrainingsByFilter(traineeUsername, requestDto);
         verify(trainingMapper).traineeTrainingsEntityToCriteriaDto(training);
         assertEquals(responseDto, Objects.requireNonNull(result.getBody()).getPayload().get(0));
         assertEquals(HttpStatus.OK, result.getStatusCode());
@@ -94,10 +94,10 @@ public class TrainingControllerTest {
         LocalDateTime toDate = LocalDateTime.of(2024, 8, 2, 0, 0);
         String trainerUsername = "B.B";
         TrainerTrainingsFilterRequestDto requestDto = new TrainerTrainingsFilterRequestDto(
-            trainerUsername, fromDate, toDate, traineeUsername);
+            fromDate, toDate, traineeUsername);
         TrainingEntity training = new TrainingEntity();
         doNothing().when(trainingRequestMetrics).incrementCounter();
-        when(trainingService.getTrainerTrainingsByFilter(requestDto)).thenReturn(List.of(training));
+        when(trainingService.getTrainerTrainingsByFilter(trainerUsername, requestDto)).thenReturn(List.of(training));
         TrainerCriteriaTrainingsResponseDto responseDto = new TrainerCriteriaTrainingsResponseDto();
         when(trainingMapper.trainerTrainingsEntityToCriteriaDto(training)).thenReturn(responseDto);
 
@@ -106,7 +106,7 @@ public class TrainingControllerTest {
             trainingController.getTrainerTrainingsFilter(trainerUsername, requestDto);
 
         //then
-        verify(trainingService).getTrainerTrainingsByFilter(requestDto);
+        verify(trainingService).getTrainerTrainingsByFilter(trainerUsername, requestDto);
         verify(trainingMapper).trainerTrainingsEntityToCriteriaDto(training);
         assertEquals(responseDto, Objects.requireNonNull(result.getBody()).getPayload().get(0));
         assertEquals(HttpStatus.OK, result.getStatusCode());

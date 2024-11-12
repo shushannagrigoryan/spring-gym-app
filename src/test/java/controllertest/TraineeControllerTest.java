@@ -114,8 +114,7 @@ public class TraineeControllerTest {
     public void testUpdateTraineesTrainerList() {
         //given
         String username = "A.A";
-        TraineeUpdateTrainersRequestDto requestDto = new TraineeUpdateTrainersRequestDto(
-            username, new ArrayList<>());
+        TraineeUpdateTrainersRequestDto requestDto = new TraineeUpdateTrainersRequestDto(new ArrayList<>());
         TrainerEntity trainer = new TrainerEntity();
         List<String> list = new ArrayList<>();
         doNothing().when(traineeRequestMetrics).incrementCounter();

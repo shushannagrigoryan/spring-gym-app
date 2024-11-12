@@ -18,6 +18,7 @@ import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
 import org.example.entity.TrainingTypeEntity;
+import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.metrics.TrainingMetrics;
 import org.example.repositories.TrainingRepository;
@@ -122,20 +123,25 @@ public class TrainingServiceTest {
     public void testGetTraineeTrainingsByFilter() {
         // Given
         String traineeUsername = "A.A";
+        UserEntity user = new UserEntity();
+        user.setUsername(traineeUsername);
+        TraineeEntity trainee = new TraineeEntity();
+        trainee.setUser(user);
         LocalDateTime fromDate = LocalDateTime.of(2023, 1, 1, 0, 0);
         LocalDateTime toDate = LocalDateTime.of(2023, 12, 31, 0, 0);
         Long trainingTypeId = 1L;
         String trainerUsername = "B.B";
         TraineeTrainingsFilterRequestDto requestDto = new TraineeTrainingsFilterRequestDto(
-            traineeUsername, fromDate, toDate, trainerUsername, trainingTypeId);
+            fromDate, toDate, trainerUsername, trainingTypeId);
 
         List<TrainingEntity> expectedTrainings = List.of(new TrainingEntity());
 
+        when(traineeService.getTraineeByUsername(traineeUsername)).thenReturn(trainee);
         when(trainingRepository.findAll(anySpecification()))
             .thenReturn(expectedTrainings);
 
         // When
-        List<TrainingEntity> actualTrainings = trainingService.getTraineeTrainingsByFilter(requestDto);
+        List<TrainingEntity> actualTrainings = trainingService.getTraineeTrainingsByFilter(traineeUsername, requestDto);
 
         // Then
         assertEquals(expectedTrainings, actualTrainings);
@@ -146,18 +152,23 @@ public class TrainingServiceTest {
     public void testGetTrainerTrainingsByFilter() {
         // Given
         String trainerUsername = "A.A";
+        UserEntity user = new UserEntity();
+        user.setUsername(trainerUsername);
+        TrainerEntity trainer = new TrainerEntity();
+        trainer.setUser(user);
         LocalDateTime fromDate = LocalDateTime.of(2023, 1, 1, 0, 0);
         LocalDateTime toDate = LocalDateTime.of(2023, 12, 31, 0, 0);
         String traineeUsername = "B.B";
         TrainerTrainingsFilterRequestDto requestDto = new TrainerTrainingsFilterRequestDto(
-            trainerUsername, fromDate, toDate, traineeUsername);
+            fromDate, toDate, traineeUsername);
 
         List<TrainingEntity> expectedTrainings = List.of(new TrainingEntity());
+        when(trainerService.getTrainerByUsername(trainerUsername)).thenReturn(trainer);
         when(trainingRepository.findAll(anySpecification()))
             .thenReturn(expectedTrainings);
 
         // When
-        List<TrainingEntity> actualTrainings = trainingService.getTrainerTrainingsByFilter(requestDto);
+        List<TrainingEntity> actualTrainings = trainingService.getTrainerTrainingsByFilter(trainerUsername, requestDto);
 
         // Then
         assertEquals(expectedTrainings, actualTrainings);
