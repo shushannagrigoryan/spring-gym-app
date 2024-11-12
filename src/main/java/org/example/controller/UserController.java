@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/users")
 @Slf4j
-@Tag(name = "User methods.")
+@Tag(name = "UserController")
 public class UserController {
     private final UserService userService;
     private final UserRequestMetrics userRequestMetrics;
