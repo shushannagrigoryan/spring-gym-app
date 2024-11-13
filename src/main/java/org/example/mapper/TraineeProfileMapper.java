@@ -33,7 +33,7 @@ public class TraineeProfileMapper {
         traineeProfile.setLastName(traineeEntity.getUser().getLastName());
         traineeProfile.setDateOfBirth(traineeEntity.getDateOfBirth());
         traineeProfile.setAddress(traineeEntity.getAddress());
-        traineeProfile.setActive(traineeProfile.isActive());
+        traineeProfile.setActive(traineeEntity.getUser().isActive());
         List<TrainingEntity> trainingEntityList = traineeEntity.getTrainings();
         Set<TraineeProfileTrainerResponseDto> trainers = trainingEntityList
             .stream()
