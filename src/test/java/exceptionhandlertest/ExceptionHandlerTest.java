@@ -61,13 +61,12 @@ public class ExceptionHandlerTest {
             restResponseEntityExceptionHandler.handleEntityNotFoundException(request);
 
         //then
-        assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
         assertEquals("Entity not found.", Objects.requireNonNull(result.getBody()).getMessage());
     }
 
     @Test
     public void testHandleAuthenticationFailException() {
-        //given
         try (PrintWriter printWriter = mock(PrintWriter.class)) {
             //given
             when(response.getWriter()).thenReturn(printWriter);

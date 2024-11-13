@@ -45,7 +45,7 @@ public class RestResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionResponse<String>> handleEntityNotFoundException(
         HttpServletRequest request) {
         log.debug("Exception handling for bad request for EntityNotFoundException.");
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        HttpStatus status = HttpStatus.NOT_FOUND;
         ExceptionResponse<String> response = new ExceptionResponse<>(
             "Entity not found.", request.getRequestURI());
         return new ResponseEntity<>(response, status);
