@@ -142,7 +142,8 @@ public class RestResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionResponse<String>> handleGeneralException(Exception e, HttpServletRequest request) {
         log.debug("Exception handling for general exceptions.");
         HttpStatus status = HttpStatus.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        ExceptionResponse<String> response = new ExceptionResponse<>(e.getMessage(), request.getRequestURI());
+        log.debug(e.getMessage());
+        ExceptionResponse<String> response = new ExceptionResponse<>("INTERNAL_SERVER_ERROR", request.getRequestURI());
         return new ResponseEntity<>(response, status);
     }
 

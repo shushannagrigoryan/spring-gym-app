@@ -183,7 +183,7 @@ public class ExceptionHandlerTest {
         ResponseEntity<ExceptionResponse<String>> result =
             restResponseEntityExceptionHandler.handleGeneralException(exception, request);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
-        assertEquals("General error", Objects.requireNonNull(result.getBody()).getMessage());
+        assertEquals("INTERNAL_SERVER_ERROR", Objects.requireNonNull(result.getBody()).getMessage());
     }
 
 }
