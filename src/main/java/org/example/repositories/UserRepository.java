@@ -13,7 +13,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query("select username from UserEntity")
     List<String> findAllUsernames();
 
-    @Query("select max(u.usernameIndex) from UserEntity u where u.username like concat(:firstName, '.', :lastName, '%')")
+    @Query("select max(u.usernameIndex) "
+        + "from UserEntity u where u.username like concat(:firstName, '.', :lastName, '%')")
     Long findUsernameMaxIndex(@Param("firstName") String firstName, @Param("lastName") String lastName);
 
     Optional<UserEntity> findByUsername(String username);
