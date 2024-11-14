@@ -51,11 +51,11 @@ public class UserControllerTest {
         String oldPassword = "oldPassword";
         String newPassword = "newPassword";
         ChangePasswordRequestDto requestDto =
-            new ChangePasswordRequestDto(username, oldPassword, newPassword);
+            new ChangePasswordRequestDto(oldPassword, newPassword);
         doNothing().when(userRequestMetrics).incrementCounter();
 
         //when
-        ResponseEntity<ResponseDto<Object>> result = userController.changePassword(requestDto);
+        ResponseEntity<ResponseDto<Object>> result = userController.changePassword(username, requestDto);
 
         //then
         verify(userService).changeUserPassword(username, oldPassword, newPassword);

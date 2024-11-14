@@ -17,6 +17,7 @@ import org.example.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -117,7 +118,7 @@ public class UserController {
      *                          password(required)
      *                          newPassword(required)
      */
-    @PutMapping("/password")
+    @PutMapping("/{username}/password")
     @Operation(description = "Change user password.")
     @ApiResponses(
         {
@@ -170,10 +171,11 @@ public class UserController {
         }
     )
     public ResponseEntity<ResponseDto<Object>> changePassword(
+        @PathVariable("username") String username,
         @Valid @RequestBody ChangePasswordRequestDto changePasswordDto) {
         userRequestMetrics.incrementCounter();
-        log.debug("Request to change password of user with username: {}", changePasswordDto.getUsername());
-        userService.changeUserPassword(changePasswordDto.getUsername(), changePasswordDto.getPassword(),
+        log.debug("Request to change password of user with username: {}", username);
+        userService.changeUserPassword(username, changePasswordDto.getPassword(),
             changePasswordDto.getNewPassword());
         return new ResponseEntity<>(
             new ResponseDto<>(null, "Successfully changed user password."), HttpStatus.OK);

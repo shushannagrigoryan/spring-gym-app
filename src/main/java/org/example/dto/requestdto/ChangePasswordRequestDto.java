@@ -14,11 +14,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChangePasswordRequestDto {
-    @NotNull(message = "Username is required.")
-    private String username;
     @NotNull(message = "Password is required.")
     private String password;
     @NotNull(message = "New Password is required.")
-    @Pattern(regexp = "[!-~]+", message = "Right password characters(ASCII 33 - 126).")
+    @Pattern(regexp = "^[a-zA-Z0-9!@#$%^&*+-=]+$",
+        message = "Password must contain characters: a-z, A-Z, 0-9, and !@#$%^&*+-=")
     private String newPassword;
 }
