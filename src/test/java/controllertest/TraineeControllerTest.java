@@ -79,12 +79,12 @@ public class TraineeControllerTest {
         String username = "A.B";
         boolean isActive = true;
         UserChangeActiveStatusRequestDto requestDto =
-            new UserChangeActiveStatusRequestDto(username, isActive);
+            new UserChangeActiveStatusRequestDto(isActive);
         doNothing().when(traineeRequestMetrics).incrementCounter();
         when(traineeService.changeActiveStatus(username, isActive)).thenReturn("Success.");
 
         //when
-        ResponseEntity<ResponseDto<Object>> response = traineeController.changeActiveStatus(requestDto);
+        ResponseEntity<ResponseDto<Object>> response = traineeController.changeActiveStatus(username, requestDto);
 
         //then
         verify(traineeService).changeActiveStatus(username, isActive);

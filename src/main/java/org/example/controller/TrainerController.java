@@ -251,7 +251,7 @@ public class TrainerController {
      * @param activeStatusRequestDto {@code UserChangeActiveStatusRequestDto}: username(required)
      *                               isActive(required)
      */
-    @PatchMapping("activation")
+    @PatchMapping("/{username}/activation")
     @Operation(description = "Activating/Deactivating trainee")
     @ApiResponses(
         {
@@ -293,12 +293,13 @@ public class TrainerController {
             )
         }
     )
-    public ResponseEntity<ResponseDto<Object>> changeActiveStatus(@Valid @RequestBody UserChangeActiveStatusRequestDto
-                                                                      activeStatusRequestDto) {
+    public ResponseEntity<ResponseDto<Object>> changeActiveStatus(
+        @PathVariable("username") String username,
+        @Valid @RequestBody UserChangeActiveStatusRequestDto activeStatusRequestDto) {
         trainerRequestMetrics.incrementCounter();
         log.debug("Request to change the active status of trainer with username: {} to {}",
-            activeStatusRequestDto.getUsername(), activeStatusRequestDto.getIsActive());
-        String response = trainerService.changeActiveStatus(activeStatusRequestDto.getUsername(),
+            username, activeStatusRequestDto.getIsActive());
+        String response = trainerService.changeActiveStatus(username,
             activeStatusRequestDto.getIsActive());
         return new ResponseEntity<>(new ResponseDto<>(null, response), HttpStatus.OK);
     }
