@@ -23,6 +23,7 @@ import org.example.services.TrainingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -113,7 +114,7 @@ public class TrainingController {
      * @param trainingsDto    {@code TraineeTrainingsFilterRequestDto} the given criteria
      * @return {@code List<TraineeCriteriaTrainingsResponseDto>}
      */
-    @GetMapping("/trainees/{username}")
+
     @Operation(description = "Getting trainee trainings.")
     @ApiResponses(
         {
@@ -159,9 +160,10 @@ public class TrainingController {
             )
         }
     )
+    @GetMapping("/trainees/{username}")
     public ResponseEntity<ResponseDto<List<TraineeCriteriaTrainingsResponseDto>>> getTraineeTrainingsFilter(
         @PathVariable("username") String traineeUsername,
-        @Valid @RequestBody TraineeTrainingsFilterRequestDto trainingsDto) {
+        @Valid @ModelAttribute TraineeTrainingsFilterRequestDto trainingsDto) {
         trainingRequestMetrics.incrementCounter();
         log.debug("Request for getting trainee's: {} trainings by filter"
                 + "(dateFrom: {} , dateTo: {}, trainerName: {}, trainingType: {})",
@@ -232,7 +234,7 @@ public class TrainingController {
     )
     public ResponseEntity<ResponseDto<List<TrainerCriteriaTrainingsResponseDto>>> getTrainerTrainingsFilter(
         @PathVariable("username") String trainerUsername,
-        @Valid @RequestBody TrainerTrainingsFilterRequestDto trainingsDto) {
+        @Valid @ModelAttribute TrainerTrainingsFilterRequestDto trainingsDto) {
         trainingRequestMetrics.incrementCounter();
         log.debug("Request for getting trainer's: {} trainings by filter"
                 + "(dateFrom: {} , dateTo: {}, traineeName: {})",

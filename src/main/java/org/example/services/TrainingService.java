@@ -1,6 +1,7 @@
 package org.example.services;
 
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -97,11 +98,16 @@ public class TrainingService {
                                                             TraineeTrainingsFilterRequestDto traineeTrainings) {
         TraineeEntity trainee = traineeService.getTraineeByUsername(traineeUsername);
         log.debug("Getting trainee: {}  trainings by filter", trainee);
+
+        LocalDateTime fromDate =
+            traineeTrainings.getFromDate() == null ? null : LocalDateTime.parse(traineeTrainings.getFromDate());
+        LocalDateTime toDate =
+            traineeTrainings.getToDate() == null ? null : LocalDateTime.parse(traineeTrainings.getToDate());
+
         Specification<TrainingEntity> specification = Specification.where(
                 TrainingSpecification.hasTraineeUsername(traineeUsername))
-            .and(TrainingSpecification.hasTrainingDateBetween(traineeTrainings.getFromDate(),
-                traineeTrainings.getToDate()))
-            .and(TrainingSpecification.hasTrainingType(traineeTrainings.getTrainingType()))
+            .and(TrainingSpecification.hasTrainingDateBetween(fromDate, toDate))
+            .and(TrainingSpecification.hasTrainingType(Long.parseLong(traineeTrainings.getTrainingType())))
             .and(TrainingSpecification.hasTrainerUsername(traineeTrainings.getTrainerUsername()));
 
         return trainingRepository.findAll(specification);
@@ -118,10 +124,13 @@ public class TrainingService {
                                                             TrainerTrainingsFilterRequestDto trainerTrainings) {
         TrainerEntity trainer = trainerService.getTrainerByUsername(trainerUsername);
         log.debug("Getting trainer: {} trainings by filter", trainer);
+        LocalDateTime fromDate =
+            trainerTrainings.getFromDate() == null ? null : LocalDateTime.parse(trainerTrainings.getFromDate());
+        LocalDateTime toDate =
+            trainerTrainings.getToDate() == null ? null : LocalDateTime.parse(trainerTrainings.getToDate());
         Specification<TrainingEntity> specification = Specification.where(
             TrainingSpecification.hasTrainerUsername(trainerUsername)
-                .and(TrainingSpecification.hasTrainingDateBetween(trainerTrainings.getFromDate(),
-                    trainerTrainings.getToDate()))
+                .and(TrainingSpecification.hasTrainingDateBetween(fromDate, toDate))
                 .and(TrainingSpecification.hasTraineeUsername(trainerTrainings.getTraineeUsername()))
         );
 

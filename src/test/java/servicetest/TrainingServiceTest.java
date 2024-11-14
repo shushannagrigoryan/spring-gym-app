@@ -127,9 +127,9 @@ public class TrainingServiceTest {
         user.setUsername(traineeUsername);
         TraineeEntity trainee = new TraineeEntity();
         trainee.setUser(user);
-        LocalDateTime fromDate = LocalDateTime.of(2023, 1, 1, 0, 0);
-        LocalDateTime toDate = LocalDateTime.of(2023, 12, 31, 0, 0);
-        Long trainingTypeId = 1L;
+        String fromDate = "2023-01-01T00:00";
+        String toDate = "2023-12-31T00:00";
+        String trainingTypeId = "1";
         String trainerUsername = "B.B";
         TraineeTrainingsFilterRequestDto requestDto = new TraineeTrainingsFilterRequestDto(
             fromDate, toDate, trainerUsername, trainingTypeId);
@@ -156,8 +156,8 @@ public class TrainingServiceTest {
         user.setUsername(trainerUsername);
         TrainerEntity trainer = new TrainerEntity();
         trainer.setUser(user);
-        LocalDateTime fromDate = LocalDateTime.of(2023, 1, 1, 0, 0);
-        LocalDateTime toDate = LocalDateTime.of(2023, 12, 31, 0, 0);
+        String fromDate = "2023-01-01T00:00";
+        String toDate = "2023-12-31T00:00";
         String traineeUsername = "B.B";
         TrainerTrainingsFilterRequestDto requestDto = new TrainerTrainingsFilterRequestDto(
             fromDate, toDate, traineeUsername);

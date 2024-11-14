@@ -5,7 +5,6 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import org.example.controller.TrainingController;
@@ -62,10 +61,10 @@ public class TrainingControllerTest {
     public void getTraineeTrainingsFilter() {
         //given
         String traineeUsername = "A.A";
-        LocalDateTime fromDate = LocalDateTime.of(2024, 1, 2, 0, 0);
-        LocalDateTime toDate = LocalDateTime.of(2024, 8, 2, 0, 0);
+        String fromDate = "2024-01-02T00:00";
+        String toDate = "2024-08-02T00:00";
         String trainerUsername = "B.B";
-        Long trainingType = 1L;
+        String trainingType = "1";
         TraineeTrainingsFilterRequestDto requestDto = new TraineeTrainingsFilterRequestDto(
             fromDate, toDate, trainerUsername, trainingType);
         TrainingEntity training = new TrainingEntity();
@@ -90,8 +89,8 @@ public class TrainingControllerTest {
     public void getTrainerTrainingsFilter() {
         //given
         String traineeUsername = "A.A";
-        LocalDateTime fromDate = LocalDateTime.of(2024, 1, 2, 0, 0);
-        LocalDateTime toDate = LocalDateTime.of(2024, 8, 2, 0, 0);
+        String fromDate = "2024-01-02T00:00";
+        String toDate = "2024-08-02T00:00";
         String trainerUsername = "B.B";
         TrainerTrainingsFilterRequestDto requestDto = new TrainerTrainingsFilterRequestDto(
             fromDate, toDate, traineeUsername);

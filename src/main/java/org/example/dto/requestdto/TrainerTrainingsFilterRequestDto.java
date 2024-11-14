@@ -1,11 +1,11 @@
 package org.example.dto.requestdto;
 
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.example.constraints.CustomDateTimeConstraint;
 
 @Getter
 @Setter
@@ -13,7 +13,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrainerTrainingsFilterRequestDto {
-    private LocalDateTime fromDate;
-    private LocalDateTime toDate;
+    @CustomDateTimeConstraint
+    private String fromDate;
+    @CustomDateTimeConstraint
+    private String toDate;
     private String traineeUsername;
 }

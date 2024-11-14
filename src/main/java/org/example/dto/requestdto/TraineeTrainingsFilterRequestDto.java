@@ -1,11 +1,12 @@
 package org.example.dto.requestdto;
 
-import java.time.LocalDateTime;
+import jakarta.validation.constraints.Digits;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.example.constraints.CustomDateTimeConstraint;
 
 @Getter
 @Setter
@@ -13,9 +14,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TraineeTrainingsFilterRequestDto {
-    private LocalDateTime fromDate;
-    private LocalDateTime toDate;
+    @CustomDateTimeConstraint
+    private String fromDate;
+    @CustomDateTimeConstraint
+    private String toDate;
     private String trainerUsername;
-    private Long trainingType;
+    @Digits(message = "Training type must be a valid long number.", integer = 50, fraction = 0)
+    private String trainingType;
 
 }
