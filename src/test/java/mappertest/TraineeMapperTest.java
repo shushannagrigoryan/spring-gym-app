@@ -140,11 +140,11 @@ public class TraineeMapperTest {
     @Test
     public void testUpdateDtoToEntity() {
         //given
-        TraineeUpdateRequestDto traineeDto = new TraineeUpdateRequestDto("A.A", "A", "B",
+        TraineeUpdateRequestDto traineeDto = new TraineeUpdateRequestDto("A", "B",
             LocalDate.now(), "myAddress", false);
 
         //when
-        TraineeEntity trainee = traineeMapper.updateDtoToEntity(traineeDto);
+        TraineeEntity trainee = traineeMapper.updateDtoToEntity("A.A", traineeDto);
 
         //then
         assertNotNull(trainee);
@@ -156,7 +156,7 @@ public class TraineeMapperTest {
     @Test
     public void testUpdateDtoToEntityNull() {
         //when
-        TraineeEntity trainee = traineeMapper.updateDtoToEntity(null);
+        TraineeEntity trainee = traineeMapper.updateDtoToEntity(null, null);
 
         //then
         assertNull(trainee);

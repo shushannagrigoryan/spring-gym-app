@@ -14,8 +14,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TraineeUpdateRequestDto {
-    @NotNull(message = "Username is required")
-    private String username;
     @NotNull(message = "First name is required")
     private String firstName;
     @NotNull(message = "Last name is required")

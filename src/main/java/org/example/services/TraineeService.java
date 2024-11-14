@@ -128,6 +128,8 @@ public class TraineeService {
             traineeEntity.setDateOfBirth(traineeToUpdate.getDateOfBirth());
         }
 
+        traineeEntity.getUser().setActive(traineeToUpdate.getUser().isActive());
+
         TraineeEntity updatedTrainee = traineeRepository.save(traineeEntity);
 
         log.debug("Successfully updated trainee with username: {}", username);

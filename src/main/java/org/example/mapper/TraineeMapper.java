@@ -92,14 +92,14 @@ public class TraineeMapper {
     /**
      * Mapping trainee update dto to trainee entity.
      */
-    public TraineeEntity updateDtoToEntity(TraineeUpdateRequestDto traineeDto) {
+    public TraineeEntity updateDtoToEntity(String username, TraineeUpdateRequestDto traineeDto) {
         if (traineeDto == null) {
             return null;
         }
         TraineeEntity trainee = new TraineeEntity();
 
         UserEntity user = new UserEntity();
-        user.setUsername(traineeDto.getUsername());
+        user.setUsername(username);
         user.setFirstName(traineeDto.getFirstName());
         user.setLastName(traineeDto.getLastName());
         user.setActive(traineeDto.getIsActive());

@@ -163,10 +163,10 @@ public class TraineeControllerTest {
         String address = "newAddress";
         Boolean isActive = false;
         TraineeUpdateRequestDto requestDto =
-            new TraineeUpdateRequestDto(username, firstName, lastName, dateOfBirth, address, isActive);
+            new TraineeUpdateRequestDto(firstName, lastName, dateOfBirth, address, isActive);
         TraineeEntity trainee = new TraineeEntity();
         doNothing().when(traineeRequestMetrics).incrementCounter();
-        when(traineeMapper.updateDtoToEntity(requestDto)).thenReturn(trainee);
+        when(traineeMapper.updateDtoToEntity(username, requestDto)).thenReturn(trainee);
         TraineeEntity updatedTrainee = new TraineeEntity();
         when(traineeService.updateTrainee(trainee)).thenReturn(updatedTrainee);
         TraineeUpdateResponseDto traineeResponse = new TraineeUpdateResponseDto();
@@ -174,10 +174,11 @@ public class TraineeControllerTest {
             .entityToUpdatedDto(updatedTrainee)).thenReturn(traineeResponse);
 
         //when
-        ResponseEntity<ResponseDto<TraineeUpdateResponseDto>> result = traineeController.updateTrainee(requestDto);
+        ResponseEntity<ResponseDto<TraineeUpdateResponseDto>> result =
+            traineeController.updateTrainee(username, requestDto);
 
         //then
-        verify(traineeMapper).updateDtoToEntity(requestDto);
+        verify(traineeMapper).updateDtoToEntity(username, requestDto);
         verify(traineeService).updateTrainee(trainee);
         verify(traineeProfileMapper).entityToUpdatedDto(updatedTrainee);
         assertEquals(traineeResponse, Objects.requireNonNull(result.getBody()).getPayload());

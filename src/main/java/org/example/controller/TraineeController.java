@@ -186,16 +186,16 @@ public class TraineeController {
     /**
      * PUT request to update trainee.
      *
-     * @param trainee to update: {@code TraineeUpdateRequestDto}:
-     *                username(required)
-     *                firstName(required)
-     *                lastName(required)
-     *                dateOfBirth(optional)
-     *                address(optional)
-     *                isActive(required)
+     * @param username                of the trainee
+     * @param traineeUpdateRequestDto to update: {@code TraineeUpdateRequestDto}:
+     *                                firstName(required)
+     *                                lastName(required)
+     *                                dateOfBirth(optional)
+     *                                address(optional)
+     *                                isActive(required)
      * @return {@code TraineeUpdateResponseDto}
      */
-    @PutMapping()
+    @PutMapping("/{username}")
     @Operation(description = "Updating trainee profile")
     @ApiResponses(
         {
@@ -242,10 +242,11 @@ public class TraineeController {
         }
     )
     public ResponseEntity<ResponseDto<TraineeUpdateResponseDto>> updateTrainee(
-        @Valid @RequestBody TraineeUpdateRequestDto trainee) {
+        @PathVariable("username") String username,
+        @Valid @RequestBody TraineeUpdateRequestDto traineeUpdateRequestDto) {
         traineeRequestMetrics.incrementCounter();
-        log.debug("Request to update trainee with username: {}", trainee.getUsername());
-        TraineeEntity traineeEntity = traineeMapper.updateDtoToEntity(trainee);
+        log.debug("Request to update trainee with username: {}", username);
+        TraineeEntity traineeEntity = traineeMapper.updateDtoToEntity(username, traineeUpdateRequestDto);
         TraineeEntity updatedTrainee = traineeService.updateTrainee(traineeEntity);
         TraineeUpdateResponseDto traineeResponse = traineeProfileMapper
             .entityToUpdatedDto(updatedTrainee);
