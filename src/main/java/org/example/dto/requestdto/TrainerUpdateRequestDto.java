@@ -13,8 +13,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrainerUpdateRequestDto {
-    @NotNull(message = "Username is required.")
-    private String username;
     @NotNull(message = "First Name is required.")
     private String firstName;
     @NotNull(message = "Last Name is required.")

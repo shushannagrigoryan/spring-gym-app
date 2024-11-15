@@ -187,7 +187,7 @@ public class TrainerController {
      *                isActive(required)
      * @return {@code TrainerUpdateResponseDto}
      */
-    @PutMapping()
+    @PutMapping("/{username}")
     @Operation(description = "Updating trainer profile")
     @ApiResponses(
         {
@@ -234,10 +234,11 @@ public class TrainerController {
         }
     )
     public ResponseEntity<ResponseDto<TrainerUpdateResponseDto>> updateTrainer(
+        @PathVariable("username") String username,
         @Valid @RequestBody TrainerUpdateRequestDto trainer) {
         trainerRequestMetrics.incrementCounter();
-        log.debug("Request to update trainer with username: {}", trainer.getUsername());
-        TrainerEntity trainerEntity = trainerMapper.updateDtoToEntity(trainer);
+        log.debug("Request to update trainer with username: {}", username);
+        TrainerEntity trainerEntity = trainerMapper.updateDtoToEntity(username, trainer);
         TrainerEntity updatedTrainer = trainerService.updateTrainer(trainerEntity);
         TrainerUpdateResponseDto payload = trainerProfileMapper
             .entityToUpdatedDto(updatedTrainer);

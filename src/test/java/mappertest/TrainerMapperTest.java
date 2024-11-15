@@ -151,18 +151,17 @@ public class TrainerMapperTest {
 
     @Test
     public void updateNullDtoToEntity() {
-        assertNull(trainerMapper.updateDtoToEntity(null));
+        assertNull(trainerMapper.updateDtoToEntity(null, null));
     }
 
     @Test
     public void updateDtoToEntity() {
         //given
         TrainerUpdateRequestDto trainer =
-            new TrainerUpdateRequestDto("A.B", "A",
-                "B", 1L, false);
+            new TrainerUpdateRequestDto("A", "B", 1L, false);
 
         //when
-        TrainerEntity trainerEntity = trainerMapper.updateDtoToEntity(trainer);
+        TrainerEntity trainerEntity = trainerMapper.updateDtoToEntity("A.B", trainer);
 
         //then
         assertNotNull(trainerEntity);

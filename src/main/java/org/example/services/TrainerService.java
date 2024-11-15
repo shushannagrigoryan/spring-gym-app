@@ -2,6 +2,7 @@ package org.example.services;
 
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
@@ -120,8 +121,15 @@ public class TrainerService {
             throw new GymIllegalArgumentException(String.format("No trainer with username: %s", username));
         }
         TrainerEntity trainerEntity = trainer.get();
+        Long specialization = trainerToUpdate.getSpecializationId();
+
+        if (!Objects.equals(trainerEntity.getSpecialization().getId(), specialization)) {
+            throw new GymIllegalArgumentException(String.format(
+                "No trainer with username: %s and specializationId: %d", username, specialization));
+        }
         trainerEntity.getUser().setFirstName(trainerToUpdate.getUser().getFirstName());
         trainerEntity.getUser().setLastName(trainerToUpdate.getUser().getLastName());
+        trainerEntity.getUser().setActive(trainerToUpdate.getUser().isActive());
 
         TrainerEntity updatedTrainer = trainerRepository.save(trainerEntity);
         log.debug("Successfully updated trainer with username: {}", username);

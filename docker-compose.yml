@@ -1,15 +1,14 @@
 services:
   postgres:
-    container_name: postgres-container-new
-    image: postgres:15.4
+    image: postgres:latest
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: gymdb
     ports:
-      - "5432:5432"  # Expose PostgreSQL port
+      - "5432:5432"
     volumes:
-      - postgres_data_new:/var/lib/postgresql/data  # Match this with the defined volume name
+      - postgres_data:/var/lib/postgresql/data
+      - ./init/init-multiple-databases-and-users.sql:/docker-entrypoint-initdb.d/init-multiple-databases-and-users.sql
 
 volumes:
-  postgres_data_new:  # Define the volume here with the same name
+  postgres_data:

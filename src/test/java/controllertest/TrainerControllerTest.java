@@ -136,10 +136,10 @@ public class TrainerControllerTest {
         Boolean isActive = false;
         Long specialization = 1L;
         TrainerUpdateRequestDto requestDto =
-            new TrainerUpdateRequestDto(username, firstName, lastName, specialization, isActive);
+            new TrainerUpdateRequestDto(firstName, lastName, specialization, isActive);
         TrainerEntity trainer = new TrainerEntity();
         doNothing().when(trainerRequestMetrics).incrementCounter();
-        when(trainerMapper.updateDtoToEntity(requestDto)).thenReturn(trainer);
+        when(trainerMapper.updateDtoToEntity(username, requestDto)).thenReturn(trainer);
         TrainerEntity updatedTrainer = new TrainerEntity();
         when(trainerService.updateTrainer(trainer)).thenReturn(updatedTrainer);
         TrainerUpdateResponseDto trainerResponse = new TrainerUpdateResponseDto();
@@ -147,10 +147,11 @@ public class TrainerControllerTest {
             .entityToUpdatedDto(updatedTrainer)).thenReturn(trainerResponse);
 
         //when
-        ResponseEntity<ResponseDto<TrainerUpdateResponseDto>> result = trainerController.updateTrainer(requestDto);
+        ResponseEntity<ResponseDto<TrainerUpdateResponseDto>> result =
+            trainerController.updateTrainer(username, requestDto);
 
         //then
-        verify(trainerMapper).updateDtoToEntity(requestDto);
+        verify(trainerMapper).updateDtoToEntity(username, requestDto);
         verify(trainerService).updateTrainer(trainer);
         verify(trainerProfileMapper).entityToUpdatedDto(updatedTrainer);
         assertEquals(trainerResponse, Objects.requireNonNull(result.getBody()).getPayload());

@@ -200,6 +200,7 @@ public class TrainerServiceTest {
         TrainingTypeEntity specialization = new TrainingTypeEntity();
         specialization.setId(1L);
         trainerEntity.setSpecialization(specialization);
+        trainerEntity.setSpecializationId(1L);
 
         when(trainerRepository.findByUser_Username("A.V")).thenReturn(Optional.of(trainerEntity));
         user.setFirstName("B");

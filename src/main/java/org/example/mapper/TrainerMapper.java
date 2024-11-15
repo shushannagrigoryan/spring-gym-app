@@ -107,20 +107,20 @@ public class TrainerMapper {
     /**
      * Mapping trainer update request dto to trainer entity.
      */
-    public TrainerEntity updateDtoToEntity(TrainerUpdateRequestDto trainer) {
-        if (trainer == null) {
+    public TrainerEntity updateDtoToEntity(String username, TrainerUpdateRequestDto trainerUpdateRequestDto) {
+        if (trainerUpdateRequestDto == null) {
             return null;
         }
 
         TrainerEntity trainerEntity = new TrainerEntity();
         UserEntity user = new UserEntity();
-        user.setUsername(trainer.getUsername());
-        user.setFirstName(trainer.getFirstName());
-        user.setLastName(trainer.getLastName());
-        user.setActive(trainer.getIsActive());
+        user.setUsername(username);
+        user.setFirstName(trainerUpdateRequestDto.getFirstName());
+        user.setLastName(trainerUpdateRequestDto.getLastName());
+        user.setActive(trainerUpdateRequestDto.getIsActive());
         trainerEntity.setUser(user);
 
-        trainerEntity.setSpecializationId(trainer.getSpecialization());
+        trainerEntity.setSpecializationId(trainerUpdateRequestDto.getSpecialization());
         return trainerEntity;
     }
 
