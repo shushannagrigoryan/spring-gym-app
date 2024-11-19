@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.example.dto.responsedto.TraineeResponseDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingEntity;
@@ -63,12 +64,12 @@ public class TraineeServiceTest {
         when(userService.save(user)).thenReturn(user);
 
         //when
-        TraineeEntity result = traineeService.registerTrainee(traineeEntity);
+        TraineeResponseDto result = traineeService.registerTrainee(traineeEntity);
 
         //then
         verify(passwordGeneration).generatePassword();
         verify(usernameGenerator).generateUsername(traineeEntity.getUser());
-        assertEquals("Jack.Jones", result.getUser().getUsername());
+        assertEquals("Jack.Jones", result.getUsername());
 
     }
 

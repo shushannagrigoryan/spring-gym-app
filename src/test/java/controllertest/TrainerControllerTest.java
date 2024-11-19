@@ -51,19 +51,16 @@ public class TrainerControllerTest {
         TrainerEntity trainerEntity = new TrainerEntity();
         doNothing().when(trainerRequestMetrics).incrementCounter();
         when(trainerMapper.dtoToEntity(requestDto)).thenReturn(trainerEntity);
-        TrainerEntity registered = new TrainerEntity();
+        TrainerResponseDto registered = new TrainerResponseDto(null, null);
         when(trainerService.registerTrainer(trainerEntity)).thenReturn(registered);
-        TrainerResponseDto response = new TrainerResponseDto();
-        when(trainerMapper.entityToResponseDto(registered)).thenReturn(response);
 
         //when
         ResponseEntity<ResponseDto<TrainerResponseDto>> result = trainerController.registerTrainer(requestDto);
 
         //then
         verify(trainerService).registerTrainer(trainerEntity);
-        verify(trainerMapper).entityToResponseDto(registered);
         assertEquals(HttpStatus.CREATED, result.getStatusCode());
-        assertEquals(response, Objects.requireNonNull(result.getBody()).getPayload());
+        assertEquals(registered, Objects.requireNonNull(result.getBody()).getPayload());
     }
 
 

@@ -57,10 +57,8 @@ public class TraineeControllerTest {
         TraineeCreateRequestDto traineeCreateRequestDto = new TraineeCreateRequestDto();
         TraineeEntity traineeEntity = new TraineeEntity();
         when(traineeMapper.dtoToEntity(traineeCreateRequestDto)).thenReturn(traineeEntity);
-        TraineeEntity registered = new TraineeEntity();
+        TraineeResponseDto registered  = new TraineeResponseDto(null, null);
         when(traineeService.registerTrainee(traineeEntity)).thenReturn(registered);
-        TraineeResponseDto response = new TraineeResponseDto();
-        when(traineeMapper.entityToResponseDto(registered)).thenReturn(response);
 
         //when
         ResponseEntity<ResponseDto<TraineeResponseDto>> result =
@@ -68,9 +66,8 @@ public class TraineeControllerTest {
 
         //then
         verify(traineeService).registerTrainee(traineeEntity);
-        verify(traineeMapper).entityToResponseDto(registered);
         assertEquals(HttpStatus.CREATED, result.getStatusCode());
-        assertEquals(response, Objects.requireNonNull(result.getBody()).getPayload());
+        assertEquals(registered, Objects.requireNonNull(result.getBody()).getPayload());
     }
 
     @Test

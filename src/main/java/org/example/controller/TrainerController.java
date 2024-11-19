@@ -110,8 +110,7 @@ public class TrainerController {
         trainerRequestMetrics.incrementCounter();
         log.debug("Request to register a new trainer: {}", trainerCreateDto);
         TrainerEntity trainer = trainerMapper.dtoToEntity(trainerCreateDto);
-        TrainerEntity registeredTrainer = trainerService.registerTrainer(trainer);
-        return new ResponseEntity<>(new ResponseDto<>(trainerMapper.entityToResponseDto(registeredTrainer),
+        return new ResponseEntity<>(new ResponseDto<>(trainerService.registerTrainer(trainer),
             "Successfully registered a new trainer."), HttpStatus.CREATED);
     }
 

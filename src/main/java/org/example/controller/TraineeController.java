@@ -116,8 +116,7 @@ public class TraineeController {
         traineeRequestMetrics.incrementCounter();
         log.debug("Request to register a new trainee: {}", traineeCreateDto);
         TraineeEntity trainee = traineeMapper.dtoToEntity(traineeCreateDto);
-        TraineeEntity registeredTrainee = traineeService.registerTrainee(trainee);
-        return new ResponseEntity<>(new ResponseDto<>(traineeMapper.entityToResponseDto(registeredTrainee),
+        return new ResponseEntity<>(new ResponseDto<>(traineeService.registerTrainee(trainee),
             "Successfully registered a new trainee."), HttpStatus.CREATED);
     }
 

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.responsedto.TraineeResponseDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.GymEntityNotFoundException;
@@ -46,16 +47,17 @@ public class TraineeService {
      * @param traineeEntity the new {@code TraineeEntity}
      */
     @Transactional
-    public TraineeEntity registerTrainee(TraineeEntity traineeEntity) {
+    public TraineeResponseDto registerTrainee(TraineeEntity traineeEntity) {
         log.debug("Creating trainee: {}", traineeEntity);
 
         String username = usernameGenerator.generateUsername(traineeEntity.getUser());
+        String password = passwordGeneration.generatePassword();
         traineeEntity.getUser().setUsername(username);
-        traineeEntity.getUser().setPassword(passwordGeneration.generatePassword());
+        traineeEntity.getUser().setPassword(password);
         userService.save(traineeEntity.getUser());
         TraineeEntity trainee = traineeRepository.save(traineeEntity);
-        log.debug("Successfully registered trainee: {}", traineeEntity);
-        return trainee;
+        log.debug("Successfully registered trainee: {}", trainee);
+        return new TraineeResponseDto(username, password);
     }
 
 

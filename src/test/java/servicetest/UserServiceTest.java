@@ -20,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -27,6 +28,8 @@ public class UserServiceTest {
     private UserRepository userRepository;
     @Mock
     private UserMetrics userMetrics;
+    @Mock
+    private PasswordEncoder passwordEncoder;
     @InjectMocks
     private UserService userService;
 
@@ -81,14 +84,17 @@ public class UserServiceTest {
     public void testRegisterUser() {
         //given
         UserEntity user = new UserEntity();
+        user.setPassword("pass");
         when(userRepository.save(user)).thenReturn(user);
         doNothing().when(userMetrics).incrementCounter();
+        when(passwordEncoder.encode("pass")).thenReturn("encodedPassword");
 
         //when
         userService.save(user);
 
         //then
         verify(userRepository).save(user);
+        verify(passwordEncoder).encode("pass");
     }
 
     @Test
@@ -131,6 +137,7 @@ public class UserServiceTest {
         when(userRepository.findByUsernameAndPassword(username, oldPassword))
             .thenReturn(Optional.of(user));
         when(userRepository.save(user)).thenReturn(user);
+        when(passwordEncoder.encode(newPassword)).thenReturn("encodedPassword");
 
         //when
         userService.changeUserPassword(username, oldPassword, newPassword);
@@ -138,6 +145,7 @@ public class UserServiceTest {
         //then
         verify(userRepository).findByUsernameAndPassword(username, oldPassword);
         verify(userRepository).save(user);
+        verify(passwordEncoder).encode(newPassword);
 
     }
 

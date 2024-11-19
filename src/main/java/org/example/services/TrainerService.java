@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.responsedto.TrainerResponseDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingTypeEntity;
@@ -51,18 +52,19 @@ public class TrainerService {
      * @param trainerEntity {@code TrainerEntity} to create
      */
     @Transactional
-    public TrainerEntity registerTrainer(TrainerEntity trainerEntity) {
+    public TrainerResponseDto registerTrainer(TrainerEntity trainerEntity) {
         log.debug("Creating trainer: {}", trainerEntity);
         TrainingTypeEntity trainingType =
             trainingTypeService.getTrainingTypeById(trainerEntity.getSpecializationId());
         trainerEntity.setSpecialization(trainingType);
         String username = usernameGenerator.generateUsername(trainerEntity.getUser());
+        String password = passwordGeneration.generatePassword();
         trainerEntity.getUser().setUsername(username);
-        trainerEntity.getUser().setPassword(passwordGeneration.generatePassword());
+        trainerEntity.getUser().setPassword(password);
         userService.save(trainerEntity.getUser());
         TrainerEntity trainer = trainerRepository.save(trainerEntity);
-        log.debug("Successfully created a new trainer with username: {}", username);
-        return trainer;
+        log.debug("Successfully created a new trainer: {}", trainer);
+        return new TrainerResponseDto(username, password);
     }
 
     /**

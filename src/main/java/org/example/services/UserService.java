@@ -9,6 +9,7 @@ import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.metrics.UserMetrics;
 import org.example.repositories.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,11 +17,14 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMetrics userMetrics;
+    private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository,
-                       UserMetrics userMetrics) {
+                       UserMetrics userMetrics,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMetrics = userMetrics;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostConstruct
@@ -36,6 +40,7 @@ public class UserService {
     @Transactional
     public UserEntity save(UserEntity userEntity) {
         log.debug("Saving user: {}", userEntity);
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         UserEntity user = userRepository.save(userEntity);
         userMetrics.incrementCounter();
         log.debug("Successfully saved user: {}", user);
@@ -95,7 +100,7 @@ public class UserService {
         UserEntity user = userRepository.findByUsernameAndPassword(username, oldPassword)
             .orElseThrow(() -> new GymEntityNotFoundException(
                 String.format("No user with username: %s and password: %s", username, oldPassword)));
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         log.debug("Successfully changed password of user with username: {}", username);
     }
