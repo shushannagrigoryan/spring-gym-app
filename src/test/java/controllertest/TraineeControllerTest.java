@@ -57,7 +57,7 @@ public class TraineeControllerTest {
         TraineeCreateRequestDto traineeCreateRequestDto = new TraineeCreateRequestDto();
         TraineeEntity traineeEntity = new TraineeEntity();
         when(traineeMapper.dtoToEntity(traineeCreateRequestDto)).thenReturn(traineeEntity);
-        TraineeResponseDto registered  = new TraineeResponseDto(null, null);
+        TraineeResponseDto registered = new TraineeResponseDto(null, null);
         when(traineeService.registerTrainee(traineeEntity)).thenReturn(registered);
 
         //when

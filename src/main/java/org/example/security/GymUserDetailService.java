@@ -2,13 +2,13 @@ package org.example.security;
 
 import org.example.entity.UserEntity;
 import org.example.repositories.UserRepository;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 
-@Service
+@Configuration
 public class GymUserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
 
@@ -34,7 +34,7 @@ public class GymUserDetailService implements UserDetailsService {
         return User.builder()
             .username(user.getUsername())
             .password(user.getPassword())
-            //.roles(myUser.getRoles().split(","))
+            .roles(String.valueOf(user.getRole()))
             .build();
     }
 }
