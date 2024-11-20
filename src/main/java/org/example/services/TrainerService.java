@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.responsedto.TrainerResponseDto;
+import org.example.entity.Role;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.entity.TrainingTypeEntity;
@@ -61,6 +62,7 @@ public class TrainerService {
         String password = passwordGeneration.generatePassword();
         trainerEntity.getUser().setUsername(username);
         trainerEntity.getUser().setPassword(password);
+        trainerEntity.getUser().setRole(Role.TRAINER);
         userService.save(trainerEntity.getUser());
         TrainerEntity trainer = trainerRepository.save(trainerEntity);
         log.debug("Successfully created a new trainer: {}", trainer);

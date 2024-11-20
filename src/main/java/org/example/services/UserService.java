@@ -19,6 +19,9 @@ public class UserService {
     private final UserMetrics userMetrics;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Setting dependencies.
+     */
     public UserService(UserRepository userRepository,
                        UserMetrics userMetrics,
                        PasswordEncoder passwordEncoder) {

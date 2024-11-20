@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.responsedto.TraineeResponseDto;
+import org.example.entity.Role;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
 import org.example.exceptions.GymEntityNotFoundException;
@@ -54,6 +55,7 @@ public class TraineeService {
         String password = passwordGeneration.generatePassword();
         traineeEntity.getUser().setUsername(username);
         traineeEntity.getUser().setPassword(password);
+        traineeEntity.getUser().setRole(Role.TRAINEE);
         userService.save(traineeEntity.getUser());
         TraineeEntity trainee = traineeRepository.save(traineeEntity);
         log.debug("Successfully registered trainee: {}", trainee);
