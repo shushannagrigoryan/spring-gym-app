@@ -8,21 +8,31 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
     private final AuthenticationProvider authenticationProvider;
+    private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
+    private final CustomAuthenticationFailureHandler authenticationFailureHandler;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    private final CustomLogoutSuccessHandler logoutSuccessHandler;
 
     /**
      * Setting dependencies.
      */
-    public WebSecurityConfig(AuthenticationProvider authenticationProvider) {
+    public WebSecurityConfig(AuthenticationProvider authenticationProvider,
+                             CustomAuthenticationSuccessHandler authenticationSuccessHandler,
+                             CustomAuthenticationFailureHandler authenticationFailureHandler,
+                             CustomAuthenticationEntryPoint authenticationEntryPoint,
+                             CustomLogoutSuccessHandler logoutSuccessHandler) {
         this.authenticationProvider = authenticationProvider;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
+        this.authenticationFailureHandler = authenticationFailureHandler;
+        this.authenticationEntryPoint = authenticationEntryPoint;
+        this.logoutSuccessHandler = logoutSuccessHandler;
     }
 
     /**
@@ -36,8 +46,15 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/trainees", "/trainers").permitAll()
                 .anyRequest().authenticated())
             .authenticationProvider(authenticationProvider)
-            .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
-            .logout(LogoutConfigurer::permitAll);
+            .formLogin(login -> login
+                .permitAll()
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailureHandler)
+            )
+            .exceptionHandling(e -> e.authenticationEntryPoint(authenticationEntryPoint))
+            .logout(logout -> logout
+                .permitAll()
+                .logoutSuccessHandler(logoutSuccessHandler));
         return http.build();
     }
 
