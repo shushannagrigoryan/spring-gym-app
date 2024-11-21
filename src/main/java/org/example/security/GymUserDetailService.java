@@ -1,6 +1,8 @@
 package org.example.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
+import org.example.exceptions.GymUserBlockedException;
 import org.example.repositories.UserRepository;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.User;
@@ -9,14 +11,18 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Configuration
+@Slf4j
 public class GymUserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final LoginAttemptService loginAttemptService;
 
     /**
      * Setting dependencies.
      */
-    public GymUserDetailService(UserRepository userRepository) {
+    public GymUserDetailService(UserRepository userRepository,
+                                LoginAttemptService loginAttemptService) {
         this.userRepository = userRepository;
+        this.loginAttemptService = loginAttemptService;
     }
 
 
@@ -29,12 +35,21 @@ public class GymUserDetailService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
         UserEntity user = userRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException(String.format("User not found: %s", username)));
-        return User.builder()
+
+        User.UserBuilder userBuilder = User.builder()
             .username(user.getUsername())
             .password(user.getPassword())
-            .roles(String.valueOf(user.getRole()))
-            .build();
+            .roles(String.valueOf(user.getRole()));
+
+        if (loginAttemptService.isBlocked(username)) {
+            log.debug("User with username {} is blocked for 5 minutes", username);
+            userBuilder.disabled(true);
+            throw new GymUserBlockedException("Too many failed attempts. Try again later.");
+        }
+
+        return userBuilder.build();
     }
 }
