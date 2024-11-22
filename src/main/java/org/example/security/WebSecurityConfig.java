@@ -9,7 +9,9 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -19,6 +21,8 @@ public class WebSecurityConfig {
     private final CustomAuthenticationFailureHandler authenticationFailureHandler;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
     private final CustomLogoutSuccessHandler logoutSuccessHandler;
+    private final JwtAuthenticationFilter jwtAuthFilter;
+    private final CustomLogoutHandler logoutHandler;
 
     /**
      * Setting dependencies.
@@ -27,12 +31,16 @@ public class WebSecurityConfig {
                              CustomAuthenticationSuccessHandler authenticationSuccessHandler,
                              CustomAuthenticationFailureHandler authenticationFailureHandler,
                              CustomAuthenticationEntryPoint authenticationEntryPoint,
-                             CustomLogoutSuccessHandler logoutSuccessHandler) {
+                             CustomLogoutSuccessHandler logoutSuccessHandler,
+                             JwtAuthenticationFilter jwtAuthFilter,
+                             CustomLogoutHandler logoutHandler) {
         this.authenticationProvider = authenticationProvider;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
         this.authenticationFailureHandler = authenticationFailureHandler;
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.logoutSuccessHandler = logoutSuccessHandler;
+        this.jwtAuthFilter = jwtAuthFilter;
+        this.logoutHandler = logoutHandler;
     }
 
     /**
@@ -44,7 +52,9 @@ public class WebSecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.POST, "/trainees", "/trainers").permitAll()
+                .requestMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationProvider(authenticationProvider)
             .formLogin(login -> login
                 .permitAll()
@@ -54,7 +64,9 @@ public class WebSecurityConfig {
             .exceptionHandling(e -> e.authenticationEntryPoint(authenticationEntryPoint))
             .logout(logout -> logout
                 .permitAll()
-                .logoutSuccessHandler(logoutSuccessHandler));
+                .addLogoutHandler(logoutHandler)
+                .logoutSuccessHandler(logoutSuccessHandler))
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
