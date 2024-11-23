@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.example.authorizationvalidators.AuthorizeUserByUsername;
 import org.example.dto.requestdto.ChangePasswordRequestDto;
 import org.example.dto.responsedto.ResponseDto;
 import org.example.exceptionhandlers.ExceptionResponse;
@@ -31,15 +32,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserService userService;
     private final UserRequestMetrics userRequestMetrics;
+    private final AuthorizeUserByUsername authorizeUser;
 
     /**
      * Setting dependencies.
      */
 
     public UserController(UserService userService,
-                          UserRequestMetrics userRequestMetrics) {
+                          UserRequestMetrics userRequestMetrics,
+                          AuthorizeUserByUsername authorizeUser) {
         this.userService = userService;
         this.userRequestMetrics = userRequestMetrics;
+        this.authorizeUser = authorizeUser;
     }
 
     /**
@@ -175,6 +179,11 @@ public class UserController {
         @Valid @RequestBody ChangePasswordRequestDto changePasswordDto) {
         userRequestMetrics.incrementCounter();
         log.debug("Request to change password of user with username: {}", username);
+        if (!authorizeUser.isAuthorized(username)) {
+            return new ResponseEntity<>(new ResponseDto<>(null,
+                "You are not authorized to change this password."),
+                HttpStatus.FORBIDDEN);
+        }
         userService.changeUserPassword(username, changePasswordDto.getPassword(),
             changePasswordDto.getNewPassword());
         return new ResponseEntity<>(

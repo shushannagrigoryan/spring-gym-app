@@ -100,9 +100,13 @@ public class UserService {
     @Transactional
     public void changeUserPassword(String username, String oldPassword, String newPassword) {
         log.debug("Changing the password of user with username: {}", username);
-        UserEntity user = userRepository.findByUsernameAndPassword(username, oldPassword)
+        UserEntity user = userRepository.findByUsername(username)
             .orElseThrow(() -> new GymEntityNotFoundException(
                 String.format("No user with username: %s and password: %s", username, oldPassword)));
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new GymEntityNotFoundException(
+                String.format("No user with username: %s and password: %s", username, oldPassword));
+        }
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         log.debug("Successfully changed password of user with username: {}", username);

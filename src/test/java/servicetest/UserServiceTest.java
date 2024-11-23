@@ -134,16 +134,17 @@ public class UserServiceTest {
         UserEntity user = new UserEntity();
         user.setUsername(username);
         user.setPassword(oldPassword);
-        when(userRepository.findByUsernameAndPassword(username, oldPassword))
-            .thenReturn(Optional.of(user));
         when(userRepository.save(user)).thenReturn(user);
         when(passwordEncoder.encode(newPassword)).thenReturn("encodedPassword");
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(oldPassword, user.getPassword())).thenReturn(true);
 
         //when
         userService.changeUserPassword(username, oldPassword, newPassword);
 
         //then
-        verify(userRepository).findByUsernameAndPassword(username, oldPassword);
+        verify(userRepository).findByUsername(username);
+        verify(passwordEncoder).matches(oldPassword, oldPassword);
         verify(userRepository).save(user);
         verify(passwordEncoder).encode(newPassword);
 

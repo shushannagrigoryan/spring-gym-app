@@ -46,7 +46,7 @@ public class JwtService {
     /**
      * Extracts a specific claim from the given token.
      *
-     * @param jwtToken the jwt token form which the claim should be extracted
+     * @param jwtToken       the jwt token form which the claim should be extracted
      * @param claimsResolver a {@code Function} for getting a specific claim from all claims
      * @return the extracted claim
      */
@@ -93,7 +93,7 @@ public class JwtService {
     /**
      * Checks if the given token is valid or not.
      *
-     * @param jwtToken the jwt token
+     * @param jwtToken    the jwt token
      * @param userDetails user for whom the jwt token was generated
      * @return {@code boolean} true is the token is valid, otherwise false
      */
