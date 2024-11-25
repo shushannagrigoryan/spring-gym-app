@@ -6,6 +6,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
+import org.example.entity.TokenType;
+import org.example.services.GymUserDetailService;
+import org.example.services.JwtService;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,23 +39,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-
         String jwtToken = authHeader.substring(7);
 
-        //check if the token is in the blacklist
-        if (jwtService.isTokenBlacklisted(jwtToken)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Token has been invalidated");
-            return;
-        }
-
-
         String tokenType = jwtService.extractClaim(jwtToken, claims -> claims.get("Type")).toString();
-
         String username = jwtService.getUsernameFromJwt(jwtToken);
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailService.loadUserByUsername(username);
-            if (jwtService.isTokenValid(jwtToken, userDetails) && tokenType.equals("Access Token")) {
+            boolean isTokenRevoked = jwtService.isTokenRevoked(jwtToken);
+            if (jwtService.isTokenValid(jwtToken, userDetails) && tokenType.equals(TokenType.ACCESS.name())
+                && !isTokenRevoked) {
                 log.debug("Access token: {}", jwtToken);
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     userDetails,

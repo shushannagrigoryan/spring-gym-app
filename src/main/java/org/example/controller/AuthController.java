@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.RefreshTokenRequestDto;
-import org.example.security.JwtAuthenticationResponse;
+import org.example.dto.responsedto.JwtAuthenticationResponse;
 import org.example.services.RefreshTokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

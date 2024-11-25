@@ -1,4 +1,4 @@
-package org.example.security;
+package org.example.dto.responsedto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

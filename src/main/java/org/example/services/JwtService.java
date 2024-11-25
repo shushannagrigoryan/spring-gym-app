@@ -1,17 +1,20 @@
-package org.example.security;
+package org.example.services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.persistence.EntityNotFoundException;
 import java.security.Key;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
+import org.example.entity.TokenEntity;
+import org.example.entity.UserEntity;
+import org.example.repositories.TokenRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +25,14 @@ public class JwtService {
         "FCj633yv9QJ57lcxB2jmDFvQAyR8dX4esyUYw1L8u2tNZoA2yE3J3azpQB7F4Agt";
     private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 5;
     private static final long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 60;
-    private final List<String> tokenBlacklist = new ArrayList<>();
+    private final TokenRepository tokenRepository;
+
+    /**
+     * Setting dependencies.
+     */
+    public JwtService(TokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
+    }
 
     public String getUsernameFromJwt(String jwtToken) {
         log.debug("JwtToken = {}", jwtToken);
@@ -113,14 +123,38 @@ public class JwtService {
         return extractClaim(jwtToken, Claims::getExpiration);
     }
 
-    public void invalidateToken(String jwtToken) {
-        log.debug("Invalidating the token: {}.", jwtToken);
-        tokenBlacklist.add(jwtToken);
+    public void saveGeneratedToken(TokenEntity jwtToken) {
+        log.debug("Saving jwtToken in database.");
+        tokenRepository.save(jwtToken);
     }
 
-    public boolean isTokenBlacklisted(String token) {
-        return tokenBlacklist.contains(token);
+    /**
+     * Revoking user's active tokens.
+     *
+     * @param user user for whose tokens should be revoked.
+     */
+    public void revokeAllUserTokens(UserEntity user) {
+        log.debug("Revoking user's all active tokens.");
+        List<TokenEntity> activeTokens = tokenRepository
+            .findByUserAndRevoked(user, false);
+        if (activeTokens.isEmpty()) {
+            return;
+        }
+
+        activeTokens.forEach(token -> token.setRevoked(true));
+        tokenRepository.saveAll(activeTokens);
     }
 
-
+    /**
+     * Returns true if the token is revoked, otherwise false.
+     *
+     * @param jwtToken jwt token
+     */
+    public boolean isTokenRevoked(String jwtToken) {
+        log.debug("Checking if the given token is not expired and not revoked.");
+        TokenEntity token = tokenRepository.findByToken(jwtToken).orElseThrow(
+            () -> new EntityNotFoundException("No token found.")
+        );
+        return token.isRevoked();
+    }
 }

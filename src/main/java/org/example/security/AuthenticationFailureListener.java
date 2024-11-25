@@ -1,6 +1,7 @@
 package org.example.security;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.services.LoginAttemptService;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.stereotype.Component;
