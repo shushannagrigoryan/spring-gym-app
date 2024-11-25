@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
+    private final SecurityConfig securityConfig;
     private final AuthenticationProvider authenticationProvider;
     private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
     private final CustomAuthenticationFailureHandler authenticationFailureHandler;
@@ -27,13 +28,14 @@ public class WebSecurityConfig {
     /**
      * Setting dependencies.
      */
-    public WebSecurityConfig(AuthenticationProvider authenticationProvider,
+    public WebSecurityConfig(SecurityConfig securityConfig, AuthenticationProvider authenticationProvider,
                              CustomAuthenticationSuccessHandler authenticationSuccessHandler,
                              CustomAuthenticationFailureHandler authenticationFailureHandler,
                              CustomAuthenticationEntryPoint authenticationEntryPoint,
                              CustomLogoutSuccessHandler logoutSuccessHandler,
                              JwtAuthenticationFilter jwtAuthFilter,
                              CustomLogoutHandler logoutHandler) {
+        this.securityConfig = securityConfig;
         this.authenticationProvider = authenticationProvider;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
         this.authenticationFailureHandler = authenticationFailureHandler;
@@ -49,6 +51,7 @@ public class WebSecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .cors(cors -> cors.configurationSource(securityConfig.corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.POST, "/trainees", "/trainers").permitAll()
