@@ -1,24 +1,21 @@
 package org.example.services;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
+import com.nimbusds.jose.JOSEException;
 import jakarta.persistence.EntityNotFoundException;
-import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
+import java.time.Instant;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TokenEntity;
 import org.example.entity.UserEntity;
 import org.example.repositories.TokenRepository;
+import org.example.security.JwtCustomDecoder;
+import org.example.security.JwtCustomEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,17 +24,19 @@ public class JwtService {
     private static final String SECRET_KEY =
         "FCj633yv9QJ57lcxB2jmDFvQAyR8dX4esyUYw1L8u2tNZoA2yE3J3azpQB7F4Agt";
     private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 5;
-    private static final long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 60;
     private final TokenRepository tokenRepository;
-    private final JwtDecoder jwtDecoder;
+    private final JwtCustomDecoder jwtDecoder;
+    private final JwtCustomEncoder jwtEncoder;
 
     /**
      * Setting dependencies.
      */
     public JwtService(TokenRepository tokenRepository,
-                      JwtDecoder jwtDecoder) {
+                      JwtCustomDecoder jwtDecoder,
+                      JwtCustomEncoder jwtEncoder) {
         this.tokenRepository = tokenRepository;
         this.jwtDecoder = jwtDecoder;
+        this.jwtEncoder = jwtEncoder;
     }
 
 //    public String getUsernameFromJwt(String jwtToken) {
@@ -53,14 +52,15 @@ public class JwtService {
 //            .getBody();
 //    }
 
-    private Key getSigningKey() {
-        log.debug("Getting the signing key for jwt token.");
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
+//    private Key getSigningKey() {
+//        log.debug("Getting the signing key for jwt token.");
+//        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+//        return Keys.hmacShaKeyFor(keyBytes);
+//    }
     public Jwt decodeToken(String token) {
         log.debug("Decode token.");
-        return jwtDecoder.decode(token);
+//        return jwtDecoder.jwtDecoder(decode(token);
+        return jwtDecoder.jwtDecoder().decode(token);
     }
 
 //    /**
@@ -163,20 +163,19 @@ public class JwtService {
 
 
     public String generateToken(Authentication authentication) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("roles",authentication.getAuthorities().stream()
-            .map(GrantedAuthority::getAuthority)
-            .collect(Collectors.toList()));
-
-        return Jwts.builder()
-            .setClaims(claims)
-            //.setSubject(user.getUsername())
-            .setSubject(authentication.getName())
-            .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
-            //.signWith(SignatureAlgorithm.HS512, secretKey.getBytes())
-            .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-            .compact();
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+            .subject(authentication.getName())
+            .issuedAt(Instant.now())
+            .expiresAt(Instant.now().plusMillis(ACCESS_TOKEN_EXPIRATION))
+            .claim("authorities", authentication.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList())
+            .build();
+        var encoder = jwtEncoder.jwtEncoder();
+        JwsHeader jwsHeader = JwsHeader.with(() -> "HS256").build();
+        String token = encoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
+        System.out.println("GENERATED TOKEN = " + token);
+        return token;
     }
-
 }
