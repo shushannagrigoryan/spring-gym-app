@@ -6,7 +6,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.responsedto.ResponseDto;
@@ -22,7 +21,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
@@ -33,19 +31,19 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
     private final JwtService jwtService;
     private final UserService userService;
     private final ObjectMapper objectMapper;
-    private final JwtCustomDecoder jwtDecoder;
 
+    /**
+     * Setting dependencies.
+     */
     public JwtAuthFilter(@Lazy AuthenticationManager authenticationManager,
                          JwtService jwtService,
                          UserService userService,
-                         ObjectMapper objectMapper,
-                         JwtCustomDecoder jwtDecoder) {
+                         ObjectMapper objectMapper) {
         super(new AntPathRequestMatcher("/login", "GET"));
         setAuthenticationManager(authenticationManager);
         this.jwtService = jwtService;
         this.userService = userService;
         this.objectMapper = objectMapper;
-        this.jwtDecoder = jwtDecoder;
     }
 
     @Override
@@ -74,12 +72,13 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
 
         UserEntity user = userService.getUserByUsername(authResult.getName())
             .orElseThrow(() -> new EntityNotFoundException("Entity not found"));
-        //TODO check if the user has a valid jwt token(not expired), if yes throw an exception.
 
-        List<TokenEntity> validTokensForUser  = jwtService.findNonRevokedTokensByUser(user.getUsername());
+
+        List<TokenEntity> validTokensForUser = jwtService.findNonRevokedTokensByUser(user.getUsername());
 
         if (!validTokensForUser.isEmpty()) {
-            jwtDecoder.jwtDecoder().decode(validTokensForUser.get(0).getToken());
+            //TODO check if the user has a valid jwt token(not expired), if yes throw an exception.
+            //jwtDecoder.jwtDecoder().decode(validTokensForUser.get(0).getToken());
             log.debug("User is already logged in.");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setContentType("application/json");

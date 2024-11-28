@@ -8,7 +8,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +22,6 @@ public class CustomJwtAuthenticationProvider implements AuthenticationProvider {
         log.debug("Running the authenticate method in AuthenticationProvider");
         String name = authentication.getName();
         System.out.println("NAME = " + name);
-        //String username = jwtService.getUsernameFromJwt(name);
         Jwt jwt = jwtService.decodeToken(name);
         System.out.println("CLAIMS");
         System.out.println(jwt.getClaims());
@@ -33,29 +31,15 @@ public class CustomJwtAuthenticationProvider implements AuthenticationProvider {
         });
         log.debug("Username = {}", jwt.getSubject());
         authentication.getAuthorities().forEach(System.out::println);
-
-
         authentication.setAuthenticated(true);
-
-
-
         return authentication;
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
         log.debug("Supports method in custom authentication provider.");
-
-        //return false;
-//        boolean s = JwtAuthenticationToken.class.isAssignableFrom(authentication);
-//        log.debug("Supports : {}", s);
-//        return s;
-        //return JwtAuthenticationToken.class.isAssignableFrom(authentication);
-        System.out.println("authentication.getName() = " + authentication.getName());
-        System.out.println("JwtAuthenticationToken.class.isAssignableFrom(authentication) = " +
-            JwtAuthenticationToken.class.isAssignableFrom(authentication));
-
-//        return true;
+        System.out.println("JwtAuthenticationToken.class.isAssignableFrom(authentication) = "
+            + JwtAuthenticationToken.class.isAssignableFrom(authentication));
         return BearerTokenAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }

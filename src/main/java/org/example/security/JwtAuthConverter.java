@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -15,17 +16,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-//public class JwtAuthConverter implements Converter<Jwt, JwtAuthenticationToken> {
 public class JwtAuthConverter implements Converter<Jwt, JwtAuthenticationToken> {
-
-    /**
-     * @param source the source object to convert, which must be an instance of {@code S} (never {@code null})
-     * @return
-     */
     @Override
-    public JwtAuthenticationToken convert(Jwt source) {
+    public JwtAuthenticationToken convert(@NonNull Jwt source) {
         log.debug("Converting jwt token.");
-        //return null;
         Collection<GrantedAuthority> authorities = extractAuthorities(source);
         return new JwtAuthenticationToken(source);
     }
@@ -34,7 +28,7 @@ public class JwtAuthConverter implements Converter<Jwt, JwtAuthenticationToken> 
         log.debug("Extracting authorities.");
         Map<String, Object> claims = jwt.getClaims();
         jwt.getClaims().forEach((claim, c) -> {
-            System.out.println(claim.toString());
+            System.out.println(claim);
             System.out.println(c.toString());
 
         });
@@ -47,8 +41,6 @@ public class JwtAuthConverter implements Converter<Jwt, JwtAuthenticationToken> 
             .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
             .collect(Collectors.toList());
     }
-
-
 
 
 }
