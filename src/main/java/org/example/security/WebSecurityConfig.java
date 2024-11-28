@@ -1,5 +1,6 @@
 package org.example.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,35 +16,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig {
     private final SecurityConfig securityConfig;
-    private final AuthenticationProvider authenticationProvider;
-    private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
-    private final CustomAuthenticationFailureHandler authenticationFailureHandler;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
-    private final CustomLogoutSuccessHandler logoutSuccessHandler;
-    private final JwtAuthenticationFilter jwtAuthFilter;
-    private final CustomLogoutHandler logoutHandler;
+    private final JwtAuthFilter jwtAuthFilter;
+//    private final CustomLogoutHandler logoutHandler;
+    private final JwtAuthConverter jwtAuthConverter;
+//    private final JwtAuthenticationConverter jwtAuthenticationConverter;
+private final CustomJwtAuthenticationProvider authenticationProvider;
 
-    /**
-     * Setting dependencies.
-     */
-    public WebSecurityConfig(SecurityConfig securityConfig, AuthenticationProvider authenticationProvider,
-                             CustomAuthenticationSuccessHandler authenticationSuccessHandler,
-                             CustomAuthenticationFailureHandler authenticationFailureHandler,
-                             CustomAuthenticationEntryPoint authenticationEntryPoint,
-                             CustomLogoutSuccessHandler logoutSuccessHandler,
-                             JwtAuthenticationFilter jwtAuthFilter,
-                             CustomLogoutHandler logoutHandler) {
-        this.securityConfig = securityConfig;
-        this.authenticationProvider = authenticationProvider;
-        this.authenticationSuccessHandler = authenticationSuccessHandler;
-        this.authenticationFailureHandler = authenticationFailureHandler;
-        this.authenticationEntryPoint = authenticationEntryPoint;
-        this.logoutSuccessHandler = logoutSuccessHandler;
-        this.jwtAuthFilter = jwtAuthFilter;
-        this.logoutHandler = logoutHandler;
-    }
+
 
     /**
      * Configuring security filter chain.
@@ -53,34 +36,27 @@ public class WebSecurityConfig {
         http
             .cors(cors -> cors.configurationSource(securityConfig.corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
+            .oauth2ResourceServer(oauth -> oauth
+                .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter)))
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.POST, "/trainees", "/trainers").permitAll()
-                .requestMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationProvider(authenticationProvider)
-            .formLogin(login -> login
-                .permitAll()
-                .successHandler(authenticationSuccessHandler)
-                .failureHandler(authenticationFailureHandler)
-            )
             .exceptionHandling(e -> e.authenticationEntryPoint(authenticationEntryPoint))
-            .logout(logout -> logout
-                .permitAll()
-                .addLogoutHandler(logoutHandler)
-                .logoutSuccessHandler(logoutSuccessHandler))
+            .logout(logout -> logout.permitAll())
+                //.addLogoutHandler(logoutHandler)
+                //.logoutSuccessHandler(logoutSuccessHandler))
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
 
-    /**
-     * Authentication manager.
-     */
     @Bean
-    public AuthenticationManager authenticationManager(
-        AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
 
 }

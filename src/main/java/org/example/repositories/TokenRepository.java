@@ -10,4 +10,6 @@ public interface TokenRepository extends JpaRepository<TokenEntity, Long> {
     List<TokenEntity> findByUserAndRevoked(UserEntity user, boolean revoked);
 
     Optional<TokenEntity> findByToken(String token);
+
+    List<TokenEntity> findByUser_UsernameAndRevoked(String username, boolean revoked);
 }

@@ -35,10 +35,11 @@ public class GymUserDetailService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
+        log.debug("Loading user by Username.");
         UserEntity user = userRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException(String.format("User not found: %s", username)));
 
+        log.debug("Building the UserBuilder object.");
         User.UserBuilder userBuilder = User.builder()
             .username(user.getUsername())
             .password(user.getPassword())
@@ -49,7 +50,7 @@ public class GymUserDetailService implements UserDetailsService {
             userBuilder.disabled(true);
             throw new GymUserBlockedException("Too many failed attempts. Try again later.");
         }
-
+        log.debug("Successfully built the UserBuilder object.");
         return userBuilder.build();
     }
 }
