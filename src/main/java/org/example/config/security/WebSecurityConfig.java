@@ -1,8 +1,8 @@
 package org.example.config.security;
 
 import lombok.RequiredArgsConstructor;
+import org.example.security.CustomAccessDeniesHandler;
 import org.example.security.CustomAuthenticationEntryPoint;
-import org.example.security.CustomJwtAuthenticationProvider;
 import org.example.security.JwtAuthConverter;
 import org.example.security.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +25,7 @@ public class WebSecurityConfig {
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
     private final JwtAuthFilter jwtAuthFilter;
     private final JwtAuthConverter jwtAuthConverter;
-    private final CustomJwtAuthenticationProvider authenticationProvider;
+    private final CustomAccessDeniesHandler accessDeniesHandler;
 
 
     /**
@@ -37,13 +37,17 @@ public class WebSecurityConfig {
             .cors(cors -> cors.configurationSource(securityConfig.corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
             .oauth2ResourceServer(oauth -> oauth
-                .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter)))
+                .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter))
+                .authenticationEntryPoint(authenticationEntryPoint))
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.POST, "/trainees", "/trainers").permitAll()
                 .anyRequest().authenticated())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authenticationProvider(authenticationProvider)
-            .exceptionHandling(e -> e.authenticationEntryPoint(authenticationEntryPoint))
+            //.authenticationProvider(authenticationProvider)
+            .exceptionHandling(e -> e
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(accessDeniesHandler)
+            )
             .logout(logout -> logout.permitAll())
             //.addLogoutHandler(logoutHandler)
             //.logoutSuccessHandler(logoutSuccessHandler))
@@ -58,6 +62,4 @@ public class WebSecurityConfig {
         AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
-
 }

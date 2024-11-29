@@ -1,9 +1,7 @@
 package org.example.security;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
@@ -21,25 +19,16 @@ public class JwtAuthConverter implements Converter<Jwt, JwtAuthenticationToken> 
     public JwtAuthenticationToken convert(@NonNull Jwt source) {
         log.debug("Converting jwt token.");
         Collection<GrantedAuthority> authorities = extractAuthorities(source);
-        return new JwtAuthenticationToken(source);
+        return new JwtAuthenticationToken(source, authorities);
     }
 
     private Collection<GrantedAuthority> extractAuthorities(Jwt jwt) {
         log.debug("Extracting authorities.");
-        Map<String, Object> claims = jwt.getClaims();
-        jwt.getClaims().forEach((claim, c) -> {
-            System.out.println(claim);
-            System.out.println(c.toString());
+        List<String> rolesList = jwt.getClaim("authorities");
 
-        });
-        System.out.println("Printing claims");
-        List<String> roles = (List<String>) claims.getOrDefault("roles", Collections.emptyList());
-
-
-        // Convert roles into GrantedAuthority
-        return roles.stream()
-            .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-            .collect(Collectors.toList());
+        return rolesList.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
 

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.responsedto.ResponseDto;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.oauth2.jwt.JwtValidationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
@@ -22,9 +23,19 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
                          AuthenticationException authException) throws IOException {
         log.debug("Authentication entry point.");
         log.debug("Authentication failed: {}", authException.getMessage());
+        ResponseDto<String> responseDto;
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
-        ResponseDto<String> responseDto = new ResponseDto<>(null,
+
+        Throwable authExceptionCause = authException.getCause();
+        if (authExceptionCause instanceof JwtValidationException) {
+            log.debug("JwtValidationException: Invalid jwt was sent.");
+            responseDto = new ResponseDto<>(null,
+                "Authentication failed: The provided JWT token is invalid or expired. Please provide a valid token.");
+            objectMapper.writeValue(response.getWriter(), responseDto);
+            return;
+        }
+        responseDto = new ResponseDto<>(null,
             "Authentication failed: " + authException.getMessage());
         objectMapper.writeValue(response.getWriter(), responseDto);
 
