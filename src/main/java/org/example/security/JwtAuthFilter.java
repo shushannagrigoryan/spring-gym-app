@@ -73,12 +73,12 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
         UserEntity user = userService.getUserByUsername(authResult.getName())
             .orElseThrow(() -> new EntityNotFoundException("Entity not found"));
 
-
         List<TokenEntity> validTokensForUser = jwtService.findNonRevokedTokensByUser(user.getUsername());
 
-        if (!validTokensForUser.isEmpty()) {
-            //TODO check if the user has a valid jwt token(not expired), if yes throw an exception.
-            //jwtDecoder.jwtDecoder().decode(validTokensForUser.get(0).getToken());
+        boolean hasValidToken = validTokensForUser.stream()
+            .anyMatch(token -> !jwtService.isTokenExpired(token.getToken()));
+
+        if (hasValidToken) {
             log.debug("User is already logged in.");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setContentType("application/json");

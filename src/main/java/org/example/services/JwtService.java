@@ -1,18 +1,19 @@
 package org.example.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.time.Instant;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TokenEntity;
 import org.example.repositories.TokenRepository;
-import org.example.security.JwtCustomDecoder;
 import org.example.security.JwtCustomEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwsHeader;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.JwtValidationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,23 +21,19 @@ import org.springframework.stereotype.Service;
 public class JwtService {
     private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 5;
     private final TokenRepository tokenRepository;
-    private final JwtCustomDecoder jwtDecoder;
     private final JwtCustomEncoder jwtEncoder;
+    private final JwtDecoder jwtDecoder;
+
 
     /**
      * Setting dependencies.
      */
     public JwtService(TokenRepository tokenRepository,
-                      JwtCustomDecoder jwtDecoder,
+                      JwtDecoder jwtDecoder,
                       JwtCustomEncoder jwtEncoder) {
         this.tokenRepository = tokenRepository;
         this.jwtDecoder = jwtDecoder;
         this.jwtEncoder = jwtEncoder;
-    }
-
-    public Jwt decodeToken(String token) {
-        log.debug("Decode token.");
-        return jwtDecoder.jwtDecoder().decode(token);
     }
 
     /**
@@ -73,5 +70,37 @@ public class JwtService {
         String token = encoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
         System.out.println("GENERATED TOKEN = " + token);
         return token;
+    }
+
+    /**
+     * Checks if the token is expired.
+     *
+     * @param token jwt token
+     * @return true if token is invalid, otherwise false.
+     */
+    public boolean isTokenExpired(String token) {
+        log.debug("Checking if the token is expired.");
+        try {
+            jwtDecoder.decode(token);
+            log.debug("Token is not expired.");
+            return false;
+        } catch (JwtValidationException e) {
+            log.debug(e.getMessage());
+        }
+        log.debug("Token is expired.");
+        return true;
+    }
+
+    /**
+     * Checks if the token is revoked.
+     *
+     * @param token jwt token
+     * @return true if token is revoked, otherwise false
+     */
+    public boolean isTokenRevoked(String token) {
+        log.debug("Checking if the token is revoked.");
+        TokenEntity tokenEntity = tokenRepository.findByToken(token)
+            .orElseThrow(() -> new EntityNotFoundException("Entity not found."));
+        return tokenEntity.isRevoked();
     }
 }
