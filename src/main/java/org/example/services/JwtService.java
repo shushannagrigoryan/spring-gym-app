@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TokenEntity;
+import org.example.entity.UserEntity;
 import org.example.repositories.TokenRepository;
 import org.example.security.JwtCustomEncoder;
 import org.springframework.security.core.Authentication;
@@ -102,5 +103,22 @@ public class JwtService {
         TokenEntity tokenEntity = tokenRepository.findByToken(token)
             .orElseThrow(() -> new EntityNotFoundException("Entity not found."));
         return tokenEntity.isRevoked();
+    }
+
+    /**
+     * Revoking user's active tokens.
+     *
+     * @param user user for whose tokens should be revoked.
+     */
+    public void revokeAllUserTokens(UserEntity user) {
+        log.debug("Revoking user's all active tokens.");
+        List<TokenEntity> activeTokens = tokenRepository
+            .findByUserAndRevoked(user, false);
+        if (activeTokens.isEmpty()) {
+            return;
+        }
+
+        activeTokens.forEach(token -> token.setRevoked(true));
+        tokenRepository.saveAll(activeTokens);
     }
 }

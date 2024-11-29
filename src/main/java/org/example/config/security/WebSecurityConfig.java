@@ -16,6 +16,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -26,7 +28,8 @@ public class WebSecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final JwtAuthConverter jwtAuthConverter;
     private final CustomAccessDeniesHandler accessDeniesHandler;
-
+    private final LogoutHandler logoutHandler;
+    private final LogoutSuccessHandler logoutSuccessHandler;
 
     /**
      * Configuring security filter chain.
@@ -43,14 +46,13 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/trainees", "/trainers").permitAll()
                 .anyRequest().authenticated())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            //.authenticationProvider(authenticationProvider)
             .exceptionHandling(e -> e
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .accessDeniedHandler(accessDeniesHandler)
             )
-            .logout(logout -> logout.permitAll())
-            //.addLogoutHandler(logoutHandler)
-            //.logoutSuccessHandler(logoutSuccessHandler))
+            .logout(logout -> logout.permitAll()
+            .addLogoutHandler(logoutHandler)
+            .logoutSuccessHandler(logoutSuccessHandler))
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
