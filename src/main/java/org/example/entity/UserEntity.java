@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.Collection;
 import java.util.List;
@@ -45,6 +46,9 @@ public class UserEntity implements UserDetails {
     private Role role;
     @OneToMany(mappedBy = "user")
     private Set<TokenEntity> tokens;
+    @OneToOne(mappedBy = "user")
+    private LoginAttemptEntity loginAttemptEntity;
+
 
     /**
      * constructor.

@@ -34,7 +34,7 @@ public class GymUserDetailService implements UserDetailsService {
      * @throws UsernameNotFoundException if user not found
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, GymUserBlockedException {
         log.debug("Loading user by Username.");
         UserEntity user = userRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException(String.format("User not found: %s", username)));
@@ -45,10 +45,9 @@ public class GymUserDetailService implements UserDetailsService {
             .password(user.getPassword())
             .roles(String.valueOf(user.getRole()));
 
-        if (loginAttemptService.isBlocked(username)) {
+        if (loginAttemptService.isBlocked(user)) {
             log.debug("User with username {} is blocked for 5 minutes", username);
             userBuilder.disabled(true);
-            throw new GymUserBlockedException("Too many failed attempts. Try again later.");
         }
         log.debug("Successfully built the UserBuilder object.");
         return userBuilder.build();

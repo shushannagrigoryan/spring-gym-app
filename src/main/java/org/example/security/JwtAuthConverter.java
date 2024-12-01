@@ -37,8 +37,8 @@ public class JwtAuthConverter implements Converter<Jwt, JwtAuthenticationToken> 
         List<String> rolesList = jwt.getClaim("authorities");
 
         return rolesList.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
     }
 
 

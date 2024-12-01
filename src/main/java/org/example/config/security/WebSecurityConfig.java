@@ -1,7 +1,7 @@
 package org.example.config.security;
 
 import lombok.RequiredArgsConstructor;
-import org.example.security.CustomAccessDeniesHandler;
+import org.example.security.CustomAccessDeniedHandler;
 import org.example.security.CustomAuthenticationEntryPoint;
 import org.example.security.JwtAuthConverter;
 import org.example.security.JwtAuthFilter;
@@ -27,7 +27,7 @@ public class WebSecurityConfig {
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
     private final JwtAuthFilter jwtAuthFilter;
     private final JwtAuthConverter jwtAuthConverter;
-    private final CustomAccessDeniesHandler accessDeniesHandler;
+    private final CustomAccessDeniedHandler accessDeniesHandler;
     private final LogoutHandler logoutHandler;
     private final LogoutSuccessHandler logoutSuccessHandler;
 
@@ -48,11 +48,10 @@ public class WebSecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .exceptionHandling(e -> e
                 .authenticationEntryPoint(authenticationEntryPoint)
-                .accessDeniedHandler(accessDeniesHandler)
-            )
+                .accessDeniedHandler(accessDeniesHandler))
             .logout(logout -> logout.permitAll()
-            .addLogoutHandler(logoutHandler)
-            .logoutSuccessHandler(logoutSuccessHandler))
+                .addLogoutHandler(logoutHandler)
+                .logoutSuccessHandler(logoutSuccessHandler))
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

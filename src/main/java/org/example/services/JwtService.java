@@ -13,6 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.jwt.JwtValidationException;
 import org.springframework.stereotype.Service;
@@ -66,7 +67,7 @@ public class JwtService {
                 .map(GrantedAuthority::getAuthority)
                 .toList())
             .build();
-        var encoder = jwtEncoder.jwtEncoder();
+        JwtEncoder encoder = jwtEncoder.jwtEncoder();
         JwsHeader jwsHeader = JwsHeader.with(() -> "HS256").build();
         String token = encoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
         System.out.println("GENERATED TOKEN = " + token);

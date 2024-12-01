@@ -17,6 +17,7 @@ import org.example.services.JwtService;
 import org.example.services.UserService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -52,7 +53,6 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
         log.debug("Running authentication for login request");
         String username = request.getHeader("username");
         String password = request.getHeader("password");
-
 
         if (username == null || password == null) {
             log.debug("Bad credentials for login.");
@@ -96,4 +96,26 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
         response.setContentType("application/json");
         objectMapper.writeValue(response.getWriter(), responseDto);
     }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+                                              HttpServletResponse response,
+                                              AuthenticationException failed) throws IOException {
+        log.debug("Unsuccessful authentication.");
+
+        ResponseDto<String> responseDto;
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+
+        responseDto = new ResponseDto<>(null,
+            "Authentication failed: " + failed.getMessage());
+        if (failed instanceof DisabledException) {
+            responseDto.setMessage("Too many failed attempts. Try again later.");
+        }
+        objectMapper.writeValue(response.getWriter(), responseDto);
+
+    }
+
 }
+
+
