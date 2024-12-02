@@ -2,7 +2,7 @@ package org.example.config.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.services.GymUserDetailService;
+import org.example.services.GymUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -16,7 +16,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 @Slf4j
 public class SecurityConfig {
-    private final GymUserDetailService userDetailsService;
+    private final GymUserDetailsService userDetailsService;
 
     /**
      * Password Encoder.

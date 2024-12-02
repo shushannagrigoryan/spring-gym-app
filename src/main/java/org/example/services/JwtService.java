@@ -3,6 +3,7 @@ package org.example.services;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.Instant;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TokenEntity;
 import org.example.entity.UserEntity;
@@ -20,23 +21,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class JwtService {
     private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 60;
     private final TokenRepository tokenRepository;
     private final JwtCustomEncoder jwtEncoder;
     private final JwtDecoder jwtDecoder;
-
-
-    /**
-     * Setting dependencies.
-     */
-    public JwtService(TokenRepository tokenRepository,
-                      JwtDecoder jwtDecoder,
-                      JwtCustomEncoder jwtEncoder) {
-        this.tokenRepository = tokenRepository;
-        this.jwtDecoder = jwtDecoder;
-        this.jwtEncoder = jwtEncoder;
-    }
 
     /**
      * Saving the generated jwt token to database.
@@ -69,9 +59,7 @@ public class JwtService {
             .build();
         JwtEncoder encoder = jwtEncoder.jwtEncoder();
         JwsHeader jwsHeader = JwsHeader.with(() -> "HS256").build();
-        String token = encoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
-        System.out.println("GENERATED TOKEN = " + token);
-        return token;
+        return encoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
 
     /**

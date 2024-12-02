@@ -1,5 +1,6 @@
 package org.example.services;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymUserBlockedException;
@@ -12,19 +13,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Configuration
 @Slf4j
-public class GymUserDetailService implements UserDetailsService {
+@RequiredArgsConstructor
+public class GymUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
     private final LoginAttemptService loginAttemptService;
-
-    /**
-     * Setting dependencies.
-     */
-    public GymUserDetailService(UserRepository userRepository,
-                                LoginAttemptService loginAttemptService) {
-        this.userRepository = userRepository;
-        this.loginAttemptService = loginAttemptService;
-    }
-
 
     /**
      * Loads user by username.
