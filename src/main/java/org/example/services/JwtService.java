@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class JwtService {
-    private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 5;
+    private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 60;
     private final TokenRepository tokenRepository;
     private final JwtCustomEncoder jwtEncoder;
     private final JwtDecoder jwtDecoder;

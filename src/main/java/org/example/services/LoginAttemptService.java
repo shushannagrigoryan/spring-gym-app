@@ -52,7 +52,6 @@ public class LoginAttemptService {
             loginAttemptRepository.findByUser_Username(user.getUsername());
 
         if (loginAttempt.isPresent()) {
-            log.debug("login attempt is present.");
             if (loginAttempt.get().getFailedCount() >= MAX_FAIL_ATTEMPT
                 && loginAttempt.get().getLastFailedAttempt().isAfter(LocalDateTime.now().minusMinutes(BLOCK_TIME))) {
                 log.debug("Too many failed login attempts.");

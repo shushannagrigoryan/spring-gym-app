@@ -26,6 +26,7 @@ import org.example.metrics.TrainerRequestMetrics;
 import org.example.services.TrainerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -166,6 +167,7 @@ public class TrainerController {
             )
         }
     )
+    @PreAuthorize("hasRole('TRAINER') and #username == authentication.name")
     public ResponseEntity<ResponseDto<TrainerProfileResponseDto>> getTrainerProfile(
         @PathVariable("username") String username) {
         trainerRequestMetrics.incrementCounter();
@@ -232,6 +234,7 @@ public class TrainerController {
             )
         }
     )
+    @PreAuthorize("hasRole('TRAINER') and #username == authentication.name")
     public ResponseEntity<ResponseDto<TrainerUpdateResponseDto>> updateTrainer(
         @PathVariable("username") String username,
         @Valid @RequestBody TrainerUpdateRequestDto trainer) {
@@ -293,6 +296,7 @@ public class TrainerController {
             )
         }
     )
+    @PreAuthorize("hasRole('TRAINER') and #username == authentication.name")
     public ResponseEntity<ResponseDto<Object>> changeActiveStatus(
         @PathVariable("username") String username,
         @Valid @RequestBody UserChangeActiveStatusRequestDto activeStatusRequestDto) {
@@ -357,6 +361,7 @@ public class TrainerController {
             )
         }
     )
+    @PreAuthorize("hasRole('TRAINER')")
     public ResponseEntity<ResponseDto<Set<TrainerProfileDto>>> notAssignedOnTraineeActiveTrainers(
         @PathVariable("username") String traineeUsername) {
         trainerRequestMetrics.incrementCounter();

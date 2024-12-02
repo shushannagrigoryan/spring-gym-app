@@ -14,6 +14,7 @@ import org.example.exceptions.GymIllegalIdException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -141,6 +142,14 @@ public class RestResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse<String>> handleGeneralException(Exception e, HttpServletRequest request) {
         log.debug("Exception handling for general exceptions.");
+        if (e instanceof AuthorizationDeniedException) {
+            log.debug("Access Denied Exception.");
+
+            HttpStatus status = HttpStatus.valueOf(HttpStatus.FORBIDDEN.value());
+            ExceptionResponse<String> response = new ExceptionResponse<>("Access to the resource is denied",
+                request.getRequestURI());
+            return new ResponseEntity<>(response, status);
+        }
         HttpStatus status = HttpStatus.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value());
         log.debug(e.getMessage());
         ExceptionResponse<String> response = new ExceptionResponse<>("INTERNAL_SERVER_ERROR", request.getRequestURI());

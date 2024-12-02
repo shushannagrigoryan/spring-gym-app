@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.responsedto.TraineeResponseDto;
 import org.example.entity.Role;
@@ -225,4 +226,19 @@ public class TraineeService {
         traineeRepository.save(trainee);
         return trainerEntities;
     }
+
+    /**
+     * Return the usernames of trainees who are assigned to the given trainer.
+     *
+     * @param trainerUsername trainer username
+     * @return {@code List<String>}
+     */
+    public List<String> getAssignedTrainees(String trainerUsername) {
+        log.debug("Getting trainees who are assigned to trainer: {}", trainerUsername);
+        TrainerEntity trainer = trainerService.getTrainerByUsername(trainerUsername);
+        return traineeRepository.findByTrainingsTrainerIn(Set.of(trainer))
+            .stream().map(traineeEntity -> traineeEntity.getUser()
+                .getUsername()).collect(Collectors.toList());
+    }
+
 }

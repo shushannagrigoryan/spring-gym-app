@@ -27,6 +27,7 @@ import org.example.metrics.TraineeRequestMetrics;
 import org.example.services.TraineeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -172,6 +173,8 @@ public class TraineeController {
             )
         }
     )
+    @PreAuthorize("hasRole('TRAINEE') and #username == authentication.name "
+        + "or @trainerPermissionEvaluator.hasPermission(authentication, #username, 'view')")
     public ResponseEntity<ResponseDto<TraineeProfileResponseDto>> getTraineeProfile(
         @PathVariable("username") String username) {
         traineeRequestMetrics.incrementCounter();
@@ -240,6 +243,7 @@ public class TraineeController {
             )
         }
     )
+    @PreAuthorize("hasRole('TRAINEE') and #username == authentication.name")
     public ResponseEntity<ResponseDto<TraineeUpdateResponseDto>> updateTrainee(
         @PathVariable("username") String username,
         @Valid @RequestBody TraineeUpdateRequestDto traineeUpdateRequestDto) {
@@ -302,6 +306,7 @@ public class TraineeController {
             )
         }
     )
+    @PreAuthorize("hasRole('TRAINEE') and #username == authentication.name")
     public ResponseEntity<ResponseDto<Object>> changeActiveStatus(
         @PathVariable("username") String username,
         @Valid @RequestBody UserChangeActiveStatusRequestDto activeStatusRequestDto) {
@@ -360,6 +365,7 @@ public class TraineeController {
             )
         }
     )
+    @PreAuthorize("hasRole('TRAINEE') and #username == authentication.name")
     public ResponseEntity<ResponseDto<Object>> deleteTrainee(@PathVariable(value = "username") String username) {
         traineeRequestMetrics.incrementCounter();
         log.debug("Request to delete trainee with username: {}", username);
@@ -421,6 +427,7 @@ public class TraineeController {
             )
         }
     )
+    @PreAuthorize("hasRole('TRAINEE') and #traineeUsername == authentication.name")
     public ResponseEntity<ResponseDto<List<TrainerProfileDto>>> updateTraineesTrainerList(
         @PathVariable(value = "username") String traineeUsername,
         @Valid @RequestBody TraineeUpdateTrainersRequestDto updateTrainersDto) {

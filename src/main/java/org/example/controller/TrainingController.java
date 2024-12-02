@@ -22,6 +22,7 @@ import org.example.metrics.TrainingRequestMetrics;
 import org.example.services.TrainingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -161,6 +162,7 @@ public class TrainingController {
         }
     )
     @GetMapping("/trainees/{username}")
+    @PreAuthorize("hasRole('TRAINEE') and #traineeUsername == authentication.name")
     public ResponseEntity<ResponseDto<List<TraineeCriteriaTrainingsResponseDto>>> getTraineeTrainingsFilter(
         @PathVariable("username") String traineeUsername,
         @Valid @ModelAttribute TraineeTrainingsFilterRequestDto trainingsDto) {
@@ -232,6 +234,7 @@ public class TrainingController {
             )
         }
     )
+    @PreAuthorize("hasRole('TRAINER') and #trainerUsername == authentication.name")
     public ResponseEntity<ResponseDto<List<TrainerCriteriaTrainingsResponseDto>>> getTrainerTrainingsFilter(
         @PathVariable("username") String trainerUsername,
         @Valid @ModelAttribute TrainerTrainingsFilterRequestDto trainingsDto) {
