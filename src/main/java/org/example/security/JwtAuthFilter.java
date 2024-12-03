@@ -65,8 +65,8 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                            FilterChain chain, Authentication authResult) throws IOException {
+    public void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+                                         FilterChain chain, Authentication authResult) throws IOException {
         log.debug("Success Authentication");
         SecurityContextHolder.getContext().setAuthentication(authResult);
 
@@ -98,9 +98,9 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request,
-                                              HttpServletResponse response,
-                                              AuthenticationException failed) throws IOException {
+    public void unsuccessfulAuthentication(HttpServletRequest request,
+                                           HttpServletResponse response,
+                                           AuthenticationException failed) throws IOException {
         log.debug("Unsuccessful authentication.");
 
         ResponseDto<String> responseDto;

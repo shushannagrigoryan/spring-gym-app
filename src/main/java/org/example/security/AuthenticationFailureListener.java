@@ -24,9 +24,9 @@ public class AuthenticationFailureListener implements
         if (event.getSource() instanceof UsernamePasswordAuthenticationToken) {
             String username = event.getAuthentication().getPrincipal().toString();
             log.debug("Failed authentication due to bad credentials for user {}.", username);
-            UserEntity user = userService.getUserByUsername(username).orElseThrow(
-                () -> new GymEntityNotFoundException("User is not found.")
-            );
+            UserEntity user = userService.getUserByUsername(username)
+                .orElseThrow(() -> new GymEntityNotFoundException("User is not found.")
+                );
             loginAttemptService.loginFailed(user);
         }
     }

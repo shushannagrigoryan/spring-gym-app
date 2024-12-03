@@ -3,13 +3,17 @@ package servicetest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import org.example.entity.TokenEntity;
+import org.example.entity.UserEntity;
 import org.example.repositories.TokenRepository;
 import org.example.services.JwtService;
 import org.junit.jupiter.api.Test;
@@ -87,5 +91,57 @@ public class JwtServiceTest {
 
         //then
         assertTrue(result);
+    }
+
+    @Test
+    public void testIsTokenRevokedSuccess() {
+        //given
+        String token = "token";
+        TokenEntity tokenEntity = new TokenEntity();
+        tokenEntity.setToken(token);
+        tokenEntity.setRevoked(true);
+        when(tokenRepository.findByToken(token)).thenReturn(Optional.of(tokenEntity));
+
+        //when
+        boolean result = jwtService.isTokenRevoked(token);
+
+        //then
+        assertTrue(result);
+        verify(tokenRepository).findByToken(token);
+
+    }
+
+    @Test
+    public void testIsTokenRevokedTokenNotFound() {
+        //given
+        String token = "token";
+        TokenEntity tokenEntity = new TokenEntity();
+        tokenEntity.setToken(token);
+        tokenEntity.setRevoked(true);
+        when(tokenRepository.findByToken(token)).thenThrow(new EntityNotFoundException("Entity not found"));
+
+        //then
+        assertThrows(EntityNotFoundException.class, () -> jwtService.isTokenRevoked(token),
+            "Entity not found");
+
+        verify(tokenRepository).findByToken(token);
+
+    }
+
+    @Test
+    public void testRevokeAllTokens() {
+        //given
+        UserEntity user = new UserEntity();
+        TokenEntity token = new TokenEntity();
+        List<TokenEntity> tokenEntityList = List.of(token);
+        when(tokenRepository.findByUserAndRevoked(user, false)).thenReturn(tokenEntityList);
+        when(tokenRepository.saveAll(tokenEntityList)).thenReturn(tokenEntityList);
+
+        //when
+        jwtService.revokeAllUserTokens(user);
+
+        //then
+        verify(tokenRepository).findByUserAndRevoked(user, false);
+        verify(tokenRepository).saveAll(tokenEntityList);
     }
 }

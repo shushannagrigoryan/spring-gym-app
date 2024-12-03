@@ -41,9 +41,9 @@ public class CustomLogoutHandler implements LogoutHandler {
         }
 
         String username = jwt.getClaim("sub");
-        UserEntity user = userService.getUserByUsername(username).orElseThrow(
-            () -> new EntityNotFoundException("User not found.")
-        );
+        UserEntity user = userService.getUserByUsername(username)
+            .orElseThrow(() -> new EntityNotFoundException("User not found.")
+            );
 
         jwtService.revokeAllUserTokens(user);
 

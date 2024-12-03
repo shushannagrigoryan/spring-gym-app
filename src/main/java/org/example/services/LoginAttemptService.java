@@ -30,8 +30,7 @@ public class LoginAttemptService {
 
         LocalDateTime lastFailedAttempt = loginAttempt.getLastFailedAttempt();
 
-        if (lastFailedAttempt != null
-            && lastFailedAttempt.isBefore(LocalDateTime.now().minusMinutes(BLOCK_TIME))) {
+        if (lastFailedAttempt != null && lastFailedAttempt.isBefore(LocalDateTime.now().minusMinutes(BLOCK_TIME))) {
             //Clearing the login attempt failure entity for the given user is the block time has exceeded.
             log.debug("Clearing attempt failure entity for user: {}", user);
             clearFailedLogin(user.getUsername());
@@ -59,6 +58,7 @@ public class LoginAttemptService {
             }
         }
         return false;
+
     }
 
     /**
@@ -72,10 +72,8 @@ public class LoginAttemptService {
         LoginAttemptEntity loginAttempt =
             loginAttemptRepository.findByUser_Username(username)
                 .orElseThrow(() -> new GymEntityNotFoundException("FailedAttemptEntity not found."));
-
         loginAttempt.setFailedCount(0);
         loginAttempt.setLastFailedAttempt(null);
         loginAttemptRepository.save(loginAttempt);
     }
-
 }
