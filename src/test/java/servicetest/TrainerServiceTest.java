@@ -187,7 +187,7 @@ public class TrainerServiceTest {
     }
 
     @Test
-    public void testUpdateTraineeSuccess() {
+    public void testUpdateTrainerSuccess() {
         // given
         String firstName = "A";
         String lastName = "V";
@@ -213,6 +213,30 @@ public class TrainerServiceTest {
         assertNotNull(trainer);
         assertEquals("B", trainer.getUser().getFirstName());
         assertEquals("A.V", trainer.getUser().getUsername());
+    }
+
+    @Test
+    public void testUpdateTrainerInvalidSpecialization() {
+        // given
+        String username = "A.V";
+        TrainerEntity trainerToUpdateEntity = new TrainerEntity();
+        UserEntity user = new UserEntity();
+        user.setUsername(username);
+        trainerToUpdateEntity.setUser(user);
+        TrainingTypeEntity specialization = new TrainingTypeEntity();
+        specialization.setId(1L);
+        trainerToUpdateEntity.setSpecialization(specialization);
+        trainerToUpdateEntity.setSpecializationId(1L);
+        TrainerEntity trainer = new TrainerEntity();
+        TrainingTypeEntity spec = new TrainingTypeEntity();
+        spec.setId(2L);
+        trainer.setSpecialization(spec);
+        when(trainerRepository.findByUser_Username("A.V")).thenReturn(Optional.of(trainer));
+
+        // then
+        assertThrows(GymIllegalArgumentException.class, () -> trainerService.updateTrainer(trainerToUpdateEntity),
+            String.format("No trainer with username: %s and specializationId: %d",
+                username, trainerToUpdateEntity.getSpecializationId()));
     }
 
     @Test

@@ -147,7 +147,42 @@ public class UserServiceTest {
         verify(passwordEncoder).matches(oldPassword, oldPassword);
         verify(userRepository).save(user);
         verify(passwordEncoder).encode(newPassword);
+    }
 
+    @Test
+    public void testChangeUserPasswordInvalidOldPassword() {
+        //given
+        String username = "A.B";
+        String oldPassword = "oldPassword";
+        String newPassword = "newPassword";
+        UserEntity user = new UserEntity();
+        user.setUsername(username);
+        user.setPassword(oldPassword);
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(oldPassword, user.getPassword())).thenReturn(false);
+
+        //then
+        assertThrows(GymEntityNotFoundException.class,
+            () -> userService.changeUserPassword(username, oldPassword, newPassword),
+            String.format("No user with username: %s and password: %s", username, oldPassword));
+        verify(userRepository).findByUsername(username);
+        verify(passwordEncoder).matches(oldPassword, oldPassword);
+    }
+
+    @Test
+    public void testChangeUserPasswordInvalidUsername() {
+        //given
+        String username = "A.B";
+        String oldPassword = "oldPassword";
+        String newPassword = "newPassword";
+        when(userRepository.findByUsername(username)).thenThrow(GymEntityNotFoundException.class);
+
+
+        //then
+        assertThrows(GymEntityNotFoundException.class,
+            () -> userService.changeUserPassword(username, oldPassword, newPassword),
+            String.format("No user with username: %s and password: %s", username, oldPassword));
+        verify(userRepository).findByUsername(username);
     }
 
     @Test

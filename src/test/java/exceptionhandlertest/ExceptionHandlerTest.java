@@ -24,6 +24,8 @@ import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.security.authorization.AuthorizationResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -35,6 +37,8 @@ public class ExceptionHandlerTest {
     private HttpServletRequest request;
     @Mock
     private HttpServletResponse response;
+    @Mock
+    private AuthorizationResult authorizationResult;
     @InjectMocks
     private RestResponseEntityExceptionHandler restResponseEntityExceptionHandler;
 
@@ -183,6 +187,21 @@ public class ExceptionHandlerTest {
             restResponseEntityExceptionHandler.handleGeneralException(exception, request);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
         assertEquals("INTERNAL_SERVER_ERROR", Objects.requireNonNull(result.getBody()).getMessage());
+    }
+
+    @Test
+    void testHandleAuthorizationDeniedException() {
+        //given
+        AuthorizationDeniedException exception = new AuthorizationDeniedException("Access to the resource is denied",
+            authorizationResult);
+
+        //when
+        ResponseEntity<ExceptionResponse<String>> result =
+            restResponseEntityExceptionHandler.handleGeneralException(exception, request);
+
+        //then
+        assertEquals(HttpStatus.FORBIDDEN, result.getStatusCode());
+        assertEquals("Access to the resource is denied", Objects.requireNonNull(result.getBody()).getMessage());
     }
 
 }

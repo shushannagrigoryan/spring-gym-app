@@ -1,20 +1,33 @@
 package securitytest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.Writer;
+import java.util.List;
+import java.util.Optional;
 import org.example.dto.responsedto.ResponseDto;
+import org.example.entity.TokenEntity;
+import org.example.entity.UserEntity;
 import org.example.exceptions.GymAuthenticationException;
 import org.example.security.JwtAuthFilter;
+import org.example.services.JwtService;
+import org.example.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -31,7 +44,6 @@ public class JwtAuthFilterTest {
 
     @Mock
     private HttpServletRequest request;
-
     @Mock
     private HttpServletResponse response;
     @Mock
@@ -42,6 +54,12 @@ public class JwtAuthFilterTest {
     private PrintWriter printWriter;
     @Mock
     private AuthenticationException failed;
+    @Mock
+    private UserService userService;
+    @Mock
+    private FilterChain chain;
+    @Mock
+    private JwtService jwtService;
     @InjectMocks
     private JwtAuthFilter jwtAuthFilter;
 
@@ -101,5 +119,92 @@ public class JwtAuthFilterTest {
         verify(response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         verify(response).setContentType("application/json");
         verify(objectMapper).writeValue(any(Writer.class), any(ResponseDto.class));
+    }
+
+    @Test
+    public void testSuccessfulAuthenticationEntityNotFound() {
+        //given
+        String username = "user";
+        UserEntity user = new UserEntity();
+        user.setUsername(username);
+        when(authentication.getName()).thenReturn(username);
+        when(userService.getUserByUsername(username)).thenThrow(EntityNotFoundException.class);
+
+        //then
+        assertThrows(EntityNotFoundException.class,
+            () -> jwtAuthFilter.successfulAuthentication(request, response, chain, authentication),
+            "Entity not found");
+
+    }
+
+    @Test
+    public void testSuccessfulAuthenticationAlreadyLoggedIn() throws IOException {
+        //given
+        String username = "user";
+        UserEntity user = new UserEntity();
+        user.setUsername(username);
+        when(authentication.getName()).thenReturn(username);
+        when(userService.getUserByUsername(username)).thenReturn(Optional.of(user));
+
+        StringWriter stringWriter = new StringWriter();
+        printWriter = new PrintWriter(stringWriter);
+        when(response.getWriter()).thenReturn(printWriter);
+        TokenEntity token = new TokenEntity();
+        when(jwtService.findNonRevokedTokensByUser(username)).thenReturn(List.of(token));
+        when(jwtService.isTokenExpired(token.getToken())).thenReturn(false);
+
+        //when
+        jwtAuthFilter.successfulAuthentication(request, response, chain, authentication);
+
+        //then
+        verify(authentication).getName();
+        verify(userService).getUserByUsername(username);
+        verify(jwtService).findNonRevokedTokensByUser(username);
+        verify(jwtService).isTokenExpired(token.getToken());
+
+        @SuppressWarnings("unchecked")
+        ArgumentCaptor<ResponseDto<String>> captor = ArgumentCaptor.forClass(ResponseDto.class);
+        verify(objectMapper).writeValue(any(Writer.class), captor.capture());
+        ResponseDto<String> responseDto = captor.getValue();
+        assertEquals("User is already logged in. Please use your valid token or log out before logging in again.",
+            responseDto.getMessage());
+    }
+
+    @Test
+    public void testSuccessfulAuthentication() throws IOException {
+        //given
+        String username = "user";
+        UserEntity user = new UserEntity();
+        user.setUsername(username);
+        when(authentication.getName()).thenReturn(username);
+        when(userService.getUserByUsername(username)).thenReturn(Optional.of(user));
+
+        StringWriter stringWriter = new StringWriter();
+        printWriter = new PrintWriter(stringWriter);
+        when(response.getWriter()).thenReturn(printWriter);
+        TokenEntity token = new TokenEntity();
+        when(jwtService.findNonRevokedTokensByUser(username)).thenReturn(List.of(token));
+        when(jwtService.isTokenExpired(token.getToken())).thenReturn(true);
+        String tokenVal = "token";
+        when(jwtService.generateToken(authentication)).thenReturn(tokenVal);
+        doNothing().when(jwtService).saveGeneratedToken(any(TokenEntity.class));
+
+        //when
+        jwtAuthFilter.successfulAuthentication(request, response, chain, authentication);
+
+        //then
+        verify(authentication).getName();
+        verify(userService).getUserByUsername(username);
+        verify(jwtService).findNonRevokedTokensByUser(username);
+        verify(jwtService).isTokenExpired(token.getToken());
+        verify(response).setStatus(HttpServletResponse.SC_OK);
+        verify(response).setContentType("application/json");
+
+        @SuppressWarnings("unchecked")
+        ArgumentCaptor<ResponseDto<String>> captor = ArgumentCaptor.forClass(ResponseDto.class);
+        verify(objectMapper).writeValue(any(Writer.class), captor.capture());
+        ResponseDto<String> responseDto = captor.getValue();
+        assertEquals("Successfully logged in.", responseDto.getMessage());
+
     }
 }

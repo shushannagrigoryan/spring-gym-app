@@ -3,7 +3,6 @@ package org.example.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
-import org.example.exceptions.GymUserBlockedException;
 import org.example.repositories.UserRepository;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.User;
@@ -26,7 +25,7 @@ public class GymUserDetailsService implements UserDetailsService {
      * @throws UsernameNotFoundException if user not found
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, GymUserBlockedException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.debug("Loading user by Username.");
         UserEntity user = userRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException(String.format("User not found: %s", username)));

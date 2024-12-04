@@ -215,8 +215,8 @@ public class TraineeService {
     @Transactional
     public Set<TrainerEntity> updateTraineesTrainerList(String username, List<String> trainers) {
         TraineeEntity trainee = traineeRepository.findByUser_Username(username)
-            .orElseThrow(() -> new GymEntityNotFoundException(
-                String.format("Trainee with username %s does not exist.", username)));
+            .orElseThrow(() -> new GymEntityNotFoundException(String.format("Trainee with username %s does not exist.",
+                username)));
         Set<TrainerEntity> trainerEntities = new HashSet<>();
         trainers.forEach(t -> {
             TrainerEntity trainerEntity = trainerService.getTrainerByUsername(t);

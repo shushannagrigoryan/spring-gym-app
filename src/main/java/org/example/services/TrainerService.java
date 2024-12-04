@@ -128,8 +128,8 @@ public class TrainerService {
         Long specialization = trainerToUpdate.getSpecializationId();
 
         if (!Objects.equals(trainerEntity.getSpecialization().getId(), specialization)) {
-            throw new GymIllegalArgumentException(String.format(
-                "No trainer with username: %s and specializationId: %d", username, specialization));
+            throw new GymIllegalArgumentException(String.format("No trainer with username: %s and specializationId: %d",
+                username, specialization));
         }
         trainerEntity.getUser().setFirstName(trainerToUpdate.getUser().getFirstName());
         trainerEntity.getUser().setLastName(trainerToUpdate.getUser().getLastName());
@@ -169,8 +169,8 @@ public class TrainerService {
     @Transactional
     public String changeActiveStatus(String username, boolean isActive) {
         TrainerEntity trainer = trainerRepository.findByUser_Username(username)
-            .orElseThrow(() -> new GymEntityNotFoundException(
-                String.format("Trainer with username %s does not exist.", username)));
+            .orElseThrow(() -> new GymEntityNotFoundException(String.format("Trainer with username %s does not exist.",
+                username)));
 
         if (trainer.getUser().isActive() == isActive) {
             log.debug("Trainer : {} isActive status is already: {}", username, isActive);

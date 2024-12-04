@@ -5,25 +5,34 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import jakarta.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.example.entity.TokenEntity;
+import org.example.entity.TokenType;
 import org.example.entity.UserEntity;
 import org.example.repositories.TokenRepository;
+import org.example.security.JwtCustomEncoder;
 import org.example.services.JwtService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.jwt.JwtValidationException;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,6 +41,12 @@ public class JwtServiceTest {
     private TokenRepository tokenRepository;
     @Mock
     private JwtDecoder jwtDecoder;
+    @Mock
+    private Authentication authentication;
+    @Mock
+    private JwtCustomEncoder jwtCustomEncoder;
+    @Mock
+    private JwtEncoder jwtEncoder;
     @InjectMocks
     private JwtService jwtService;
 
@@ -39,7 +54,8 @@ public class JwtServiceTest {
     @Test
     public void testSaveGeneratedToken() {
         //given
-        TokenEntity jwtToken = new TokenEntity();
+        UserEntity user = new UserEntity();
+        TokenEntity jwtToken = new TokenEntity("token", TokenType.ACCESS, false, user);
         when(tokenRepository.save(jwtToken)).thenReturn(jwtToken);
 
         //when
@@ -143,5 +159,27 @@ public class JwtServiceTest {
         //then
         verify(tokenRepository).findByUserAndRevoked(user, false);
         verify(tokenRepository).saveAll(tokenEntityList);
+    }
+
+    @Test
+    public void testGenerateToken() {
+        //given
+        String expectedToken = "test-token";
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        when(authentication.getAuthorities()).thenAnswer(x -> authorities);
+        when(jwtCustomEncoder.jwtEncoder()).thenReturn(jwtEncoder);
+        Jwt jwt = mock(Jwt.class);
+        when(jwt.getTokenValue()).thenReturn(expectedToken);
+        when(authentication.getName()).thenReturn("test-user");
+        when(jwtEncoder.encode(any(JwtEncoderParameters.class))).thenReturn(jwt);
+
+        //when
+        String actualToken = jwtService.generateToken(authentication);
+
+        //then
+        assertEquals(expectedToken, actualToken);
+        verify(authentication).getName();
+        verify(authentication).getAuthorities();
     }
 }

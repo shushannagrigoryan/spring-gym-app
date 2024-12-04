@@ -336,7 +336,26 @@ public class TraineeServiceTest {
 
         //then
         assertEquals(Set.of(trainer1, trainer2), result);
+    }
 
+    @Test
+    public void testGetAssignedTrainees() {
+        //given
+        String username = "username";
+        TrainerEntity trainer = new TrainerEntity();
+        UserEntity user = new UserEntity();
+        user.setUsername(username);
+        TraineeEntity trainee = new TraineeEntity();
+        trainee.setUser(user);
+        when(trainerService.getTrainerByUsername(username)).thenReturn(trainer);
+        when(traineeRepository.findByTrainingsTrainerIn(Set.of(trainer))).thenReturn(List.of(trainee));
+
+        //when
+        List<String> traineeUsernames = traineeService.getAssignedTrainees(username);
+
+        //then
+        assertEquals(1, traineeUsernames.size());
+        assertEquals(List.of(username), traineeUsernames);
     }
 
 }
