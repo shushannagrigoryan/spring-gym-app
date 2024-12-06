@@ -137,19 +137,25 @@ public class RestResponseEntityExceptionHandler {
     }
 
     /**
+     * Exception handler for AuthorizationDeniedException.
+     */
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ExceptionResponse<String>> handleAuthorizationDeniedException(AuthorizationDeniedException e,
+                                                                                        HttpServletRequest request) {
+        log.debug("Exception handling for AuthorizationDenied exceptions.");
+        log.debug(e.getMessage());
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        ExceptionResponse<String> response = new ExceptionResponse<>("Access to the resource is denied",
+            request.getRequestURI());
+        return new ResponseEntity<>(response, status);
+    }
+
+    /**
      * General exception handler.
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse<String>> handleGeneralException(Exception e, HttpServletRequest request) {
         log.debug("Exception handling for general exceptions.");
-        if (e instanceof AuthorizationDeniedException) {
-            log.debug("Access Denied Exception.");
-
-            HttpStatus status = HttpStatus.valueOf(HttpStatus.FORBIDDEN.value());
-            ExceptionResponse<String> response = new ExceptionResponse<>("Access to the resource is denied",
-                request.getRequestURI());
-            return new ResponseEntity<>(response, status);
-        }
         HttpStatus status = HttpStatus.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value());
         log.debug(e.getMessage());
         ExceptionResponse<String> response = new ExceptionResponse<>("INTERNAL_SERVER_ERROR", request.getRequestURI());

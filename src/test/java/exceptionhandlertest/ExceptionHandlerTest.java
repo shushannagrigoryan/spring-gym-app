@@ -197,7 +197,7 @@ public class ExceptionHandlerTest {
 
         //when
         ResponseEntity<ExceptionResponse<String>> result =
-            restResponseEntityExceptionHandler.handleGeneralException(exception, request);
+            restResponseEntityExceptionHandler.handleAuthorizationDeniedException(exception, request);
 
         //then
         assertEquals(HttpStatus.FORBIDDEN, result.getStatusCode());
