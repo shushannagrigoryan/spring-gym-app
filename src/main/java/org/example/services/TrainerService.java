@@ -62,7 +62,7 @@ public class TrainerService {
         String password = passwordGeneration.generatePassword();
         trainerEntity.getUser().setUsername(username);
         trainerEntity.getUser().setPassword(password);
-        trainerEntity.getUser().setRole(Role.TRAINER);
+        trainerEntity.getUser().setRoles(Set.of(Role.TRAINER));
         userService.save(trainerEntity.getUser());
         TrainerEntity trainer = trainerRepository.save(trainerEntity);
         log.debug("Successfully created a new trainer: {}", trainer);

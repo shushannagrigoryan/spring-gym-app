@@ -56,7 +56,7 @@ public class TraineeService {
         String password = passwordGeneration.generatePassword();
         traineeEntity.getUser().setUsername(username);
         traineeEntity.getUser().setPassword(password);
-        traineeEntity.getUser().setRole(Role.TRAINEE);
+        traineeEntity.getUser().setRoles(Set.of(Role.TRAINEE));
         userService.save(traineeEntity.getUser());
         TraineeEntity trainee = traineeRepository.save(traineeEntity);
         log.debug("Successfully registered trainee: {}", trainee);

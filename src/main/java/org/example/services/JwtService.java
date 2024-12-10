@@ -27,6 +27,7 @@ public class JwtService {
     private final TokenRepository tokenRepository;
     private final JwtCustomEncoder jwtEncoder;
     private final JwtDecoder jwtDecoder;
+    //private final JwtCustomDecoder jwtDecoder;
 
     /**
      * Saving the generated jwt token to database.

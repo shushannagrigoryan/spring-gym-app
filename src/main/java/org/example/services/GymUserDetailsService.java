@@ -1,5 +1,6 @@
 package org.example.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
@@ -25,16 +26,16 @@ public class GymUserDetailsService implements UserDetailsService {
      * @throws UsernameNotFoundException if user not found
      */
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.debug("Loading user by Username.");
         UserEntity user = userRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException(String.format("User not found: %s", username)));
-
         log.debug("Building the UserBuilder object.");
         User.UserBuilder userBuilder = User.builder()
             .username(user.getUsername())
             .password(user.getPassword())
-            .roles(String.valueOf(user.getRole()));
+            .roles(user.getRoles().stream().map(Enum::name).toArray(String[]::new));
 
         if (loginAttemptService.isBlocked(user)) {
             log.debug("User with username {} is blocked for 5 minutes", username);

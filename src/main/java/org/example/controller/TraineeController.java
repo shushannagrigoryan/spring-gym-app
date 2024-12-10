@@ -174,7 +174,7 @@ public class TraineeController {
         }
     )
     @PreAuthorize("hasRole('TRAINEE') and #username == authentication.name "
-        + "or @trainerPermissionEvaluator.hasPermission(authentication, #username, 'view')")
+        + "or @trainerHasPermissionOnTrainee.hasPermission(authentication, #username)")
     public ResponseEntity<ResponseDto<TraineeProfileResponseDto>> getTraineeProfile(
         @PathVariable("username") String username) {
         traineeRequestMetrics.incrementCounter();
