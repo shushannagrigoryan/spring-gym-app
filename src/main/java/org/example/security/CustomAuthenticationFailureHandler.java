@@ -19,7 +19,8 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
     private final ObjectMapper objectMapper;
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+                                        AuthenticationException exception) throws IOException {
         log.debug("Unsuccessful authentication.");
         ResponseDto<String> responseDto;
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

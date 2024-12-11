@@ -2,11 +2,9 @@ package org.example.services;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.time.Instant;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TokenEntity;
-import org.example.entity.UserEntity;
 import org.example.repositories.TokenRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,7 +15,6 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.jwt.JwtException;
-import org.springframework.security.oauth2.jwt.JwtValidationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,10 +36,10 @@ public class JwtService {
     }
 
 
-    public List<TokenEntity> findNonRevokedTokensByUser(String username) {
-        log.debug("Getting non revoked tokens of user {}.", username);
-        return tokenRepository.findByUser_UsernameAndRevoked(username, false);
-    }
+    //    public List<TokenEntity> findNonRevokedTokensByUser(String username) {
+    //        log.debug("Getting non revoked tokens of user {}.", username);
+    //        return tokenRepository.findByUser_UsernameAndRevoked(username, false);
+    //    }
 
 
     /**
@@ -62,24 +59,24 @@ public class JwtService {
         return jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
 
-    /**
-     * Checks if the token is expired.
-     *
-     * @param token jwt token
-     * @return true if token is invalid, otherwise false.
-     */
-    public boolean isTokenExpired(String token) {
-        log.debug("Checking if the token is expired.");
-        try {
-            jwtDecoder.decode(token);
-            log.debug("Token is not expired.");
-            return false;
-        } catch (JwtValidationException e) {
-            log.debug(e.getMessage());
-        }
-        log.debug("Token is expired.");
-        return true;
-    }
+    //    /**
+    //     * Checks if the token is expired.
+    //     *
+    //     * @param token jwt token
+    //     * @return true if token is invalid, otherwise false.
+    //     */
+    //    public boolean isTokenExpired(String token) {
+    //        log.debug("Checking if the token is expired.");
+    //        try {
+    //            jwtDecoder.decode(token);
+    //            log.debug("Token is not expired.");
+    //            return false;
+    //        } catch (JwtValidationException e) {
+    //            log.debug(e.getMessage());
+    //        }
+    //        log.debug("Token is expired.");
+    //        return true;
+    //    }
 
     /**
      * Checks if the token is revoked.
@@ -94,29 +91,49 @@ public class JwtService {
         return tokenEntity.isRevoked();
     }
 
-    /**
-     * Revoking user's active tokens.
-     *
-     * @param user user for whose tokens should be revoked.
-     */
-    public void revokeAllUserTokens(UserEntity user) {
-        log.debug("Revoking user's all active tokens.");
-        List<TokenEntity> activeTokens = tokenRepository
-            .findByUserAndRevoked(user, false);
-        if (activeTokens.isEmpty()) {
-            return;
-        }
+    //    /**
+    //     * Revoking user's active tokens.
+    //     *
+    //     * @param user user for whose tokens should be revoked.
+    //     */
+    //    public void revokeAllUserTokens(UserEntity user) {
+    //        log.debug("Revoking user's all active tokens.");
+    //        List<TokenEntity> activeTokens = tokenRepository
+    //            .findByUserAndRevoked(user, false);
+    //        if (activeTokens.isEmpty()) {
+    //            return;
+    //        }
+    //
+    //        activeTokens.forEach(token -> token.setRevoked(true));
+    //        tokenRepository.saveAll(activeTokens);
+    //    }
 
-        activeTokens.forEach(token -> token.setRevoked(true));
-        tokenRepository.saveAll(activeTokens);
+    /**
+     * Revoking the given token.
+     *
+     * @param token that should be revoked.
+     */
+    public void revokeToken(String token) {
+        log.debug("Revoking the given token.");
+        TokenEntity tokenEntity = tokenRepository.findByToken(token)
+            .orElseThrow(() -> new EntityNotFoundException("Token not found"));
+        tokenEntity.setRevoked(true);
+        tokenRepository.save(tokenEntity);
     }
 
+    /**
+     * Checks if the token is valid and token's subject is the given username.
+     *
+     * @param token jwt token
+     * @param username username of the user
+     * @return true if the jwt is valid for the given user.
+     */
     public boolean isValid(String token, String username) {
         log.debug("Checking if the token is valid.");
         Jwt jwt;
         try {
             jwt = jwtDecoder.decode(token);
-            if (!jwt.getSubject().equals(username)){
+            if (!jwt.getSubject().equals(username)) {
                 return false;
             }
             return tokenRepository.findByToken(token).filter(entity -> !entity.isRevoked()).isPresent();

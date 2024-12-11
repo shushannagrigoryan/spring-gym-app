@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.Collection;
 import java.util.List;
-import org.example.exceptions.GymAuthenticationException;
 import org.example.security.JwtAuthConverter;
 import org.example.services.JwtService;
 import org.junit.jupiter.api.Test;
@@ -19,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 @ExtendWith(MockitoExtension.class)
@@ -60,7 +60,7 @@ public class JwtAuthConverterTest {
 
         //then
         assertThrows(
-            GymAuthenticationException.class, () -> jwtAuthConverter.convert(jwt), "Authentication failed.");
+            JwtException.class, () -> jwtAuthConverter.convert(jwt), "Token is revoked");
         verify(jwtService).isTokenRevoked(revokedToken);
     }
 }
