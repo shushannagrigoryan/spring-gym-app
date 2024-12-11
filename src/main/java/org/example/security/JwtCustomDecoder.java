@@ -6,7 +6,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtException;
 
-//@Component
+
 @RequiredArgsConstructor
 @Slf4j
 public class JwtCustomDecoder implements JwtDecoder {

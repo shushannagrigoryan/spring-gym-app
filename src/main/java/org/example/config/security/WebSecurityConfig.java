@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.security.CustomAccessDeniedHandler;
 import org.example.security.CustomAuthenticationEntryPoint;
 import org.example.security.JwtAuthConverter;
-import org.example.security.JwtAuthFilter;
+import org.example.security.UsernamePasswordAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,7 +16,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
@@ -27,7 +26,7 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 public class WebSecurityConfig {
     private final SecurityConfig securityConfig;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
-    private final JwtAuthFilter jwtAuthFilter;
+    private final UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter;
     private final JwtAuthConverter jwtAuthConverter;
     private final CustomAccessDeniedHandler accessDeniesHandler;
     private final LogoutHandler logoutHandler;
@@ -54,7 +53,8 @@ public class WebSecurityConfig {
             .logout(logout -> logout.permitAll()
                 .addLogoutHandler(logoutHandler)
                 .logoutSuccessHandler(logoutSuccessHandler))
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(usernamePasswordAuthenticationFilter,
+                org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

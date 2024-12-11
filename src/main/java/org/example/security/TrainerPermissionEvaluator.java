@@ -7,9 +7,7 @@ import org.example.services.TraineeService;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.stereotype.Component;
 
-//@Component
 @RequiredArgsConstructor
 public class TrainerPermissionEvaluator implements PermissionEvaluator {
     private static final SimpleGrantedAuthority ROLE_TRAINER = new SimpleGrantedAuthority("ROLE_TRAINER");

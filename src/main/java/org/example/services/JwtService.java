@@ -8,14 +8,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TokenEntity;
 import org.example.entity.UserEntity;
 import org.example.repositories.TokenRepository;
-import org.example.security.JwtCustomEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwsHeader;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.jwt.JwtValidationException;
 import org.springframework.stereotype.Service;
 
@@ -25,9 +26,8 @@ import org.springframework.stereotype.Service;
 public class JwtService {
     private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 60;
     private final TokenRepository tokenRepository;
-    private final JwtCustomEncoder jwtEncoder;
+    private final JwtEncoder jwtEncoder;
     private final JwtDecoder jwtDecoder;
-    //private final JwtCustomDecoder jwtDecoder;
 
     /**
      * Saving the generated jwt token to database.
@@ -58,9 +58,8 @@ public class JwtService {
                 .map(GrantedAuthority::getAuthority)
                 .toList())
             .build();
-        JwtEncoder encoder = jwtEncoder.jwtEncoder();
         JwsHeader jwsHeader = JwsHeader.with(() -> "HS256").build();
-        return encoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
+        return jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
 
     /**
@@ -111,4 +110,22 @@ public class JwtService {
         activeTokens.forEach(token -> token.setRevoked(true));
         tokenRepository.saveAll(activeTokens);
     }
+
+    public boolean isValid(String token, String username) {
+        log.debug("Checking if the token is valid.");
+        Jwt jwt;
+        try {
+            jwt = jwtDecoder.decode(token);
+            if (!jwt.getSubject().equals(username)){
+                return false;
+            }
+            return tokenRepository.findByToken(token).filter(entity -> !entity.isRevoked()).isPresent();
+        } catch (JwtException e) {
+            log.debug(e.getMessage());
+            return false;
+        }
+
+    }
+
+
 }

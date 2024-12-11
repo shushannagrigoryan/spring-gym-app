@@ -13,6 +13,9 @@ public class TrainerHasPermissionOnTrainee {
     private static final SimpleGrantedAuthority ROLE_TRAINER = new SimpleGrantedAuthority("ROLE_TRAINER");
     private final TraineeService traineeService;
 
+    /**
+     * Returns true if the trainer has permission on trainee.
+     */
     public boolean hasPermission(Authentication authentication, Object targetDomainObject) {
         if (authentication.getAuthorities().contains(ROLE_TRAINER)) {
             List<String> assignedTrainees = traineeService.getAssignedTrainees(

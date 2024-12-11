@@ -19,7 +19,6 @@ import org.example.entity.TokenEntity;
 import org.example.entity.TokenType;
 import org.example.entity.UserEntity;
 import org.example.repositories.TokenRepository;
-import org.example.security.JwtCustomEncoder;
 import org.example.services.JwtService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,8 +42,6 @@ public class JwtServiceTest {
     private JwtDecoder jwtDecoder;
     @Mock
     private Authentication authentication;
-    @Mock
-    private JwtCustomEncoder jwtCustomEncoder;
     @Mock
     private JwtEncoder jwtEncoder;
     @InjectMocks
@@ -168,7 +165,6 @@ public class JwtServiceTest {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         when(authentication.getAuthorities()).thenAnswer(x -> authorities);
-        when(jwtCustomEncoder.jwtEncoder()).thenReturn(jwtEncoder);
         Jwt jwt = mock(Jwt.class);
         when(jwt.getTokenValue()).thenReturn(expectedToken);
         when(authentication.getName()).thenReturn("test-user");

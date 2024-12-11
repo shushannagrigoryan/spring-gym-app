@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.security.oauth2.jwt.JwtValidationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -146,6 +147,17 @@ public class RestResponseEntityExceptionHandler {
         log.debug(e.getMessage());
         HttpStatus status = HttpStatus.FORBIDDEN;
         ExceptionResponse<String> response = new ExceptionResponse<>("Access to the resource is denied",
+            request.getRequestURI());
+        return new ResponseEntity<>(response, status);
+    }
+
+    @ExceptionHandler(JwtValidationException.class)
+    public ResponseEntity<ExceptionResponse<String>> handleJwtValidationException(JwtValidationException e,
+                                                                                        HttpServletRequest request) {
+        log.debug("Exception handling for JwtValidation exceptions.");
+        log.debug(e.getMessage());
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        ExceptionResponse<String> response = new ExceptionResponse<>("Authentication failed",
             request.getRequestURI());
         return new ResponseEntity<>(response, status);
     }
