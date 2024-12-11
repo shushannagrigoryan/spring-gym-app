@@ -1,0 +1,5 @@
+db_name: gym_stg_db
+db_password: stg_pass
+db_username: stg_user
+server:
+    port: 8084

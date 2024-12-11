@@ -1,0 +1,5 @@
+db_name: gym_test_db
+db_password: test_pass
+db_username: test_user
+server:
+    port: 8082

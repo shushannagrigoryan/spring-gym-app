@@ -1,0 +1,5 @@
+db_name: gym_db
+db_password: postgres
+db_username: postgres
+server:
+    port: 8080
