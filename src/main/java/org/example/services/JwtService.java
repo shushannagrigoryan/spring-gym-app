@@ -124,7 +124,7 @@ public class JwtService {
     /**
      * Checks if the token is valid and token's subject is the given username.
      *
-     * @param token jwt token
+     * @param token    jwt token
      * @param username username of the user
      * @return true if the jwt is valid for the given user.
      */

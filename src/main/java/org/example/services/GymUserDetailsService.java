@@ -16,7 +16,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 @RequiredArgsConstructor
 public class GymUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
-    private final LoginAttemptService loginAttemptService;
 
     /**
      * Loads user by username.
@@ -36,11 +35,6 @@ public class GymUserDetailsService implements UserDetailsService {
             .username(user.getUsername())
             .password(user.getPassword())
             .roles(user.getRoles().stream().map(Enum::name).toArray(String[]::new));
-
-        if (loginAttemptService.isBlocked(user)) {
-            log.debug("User with username {} is blocked for 5 minutes", username);
-            userBuilder.disabled(true);
-        }
         log.debug("Successfully built the UserBuilder object.");
         return userBuilder.build();
     }

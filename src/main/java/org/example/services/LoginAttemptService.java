@@ -6,7 +6,6 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.LoginAttemptEntity;
-import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.repositories.LoginAttemptRepository;
 import org.springframework.stereotype.Service;
@@ -23,20 +22,22 @@ public class LoginAttemptService {
      * Incrementing the number of failed login attempts for the given username.
      */
     @Transactional
-    public void loginFailed(UserEntity user) {
-        log.debug("Failed login for user: {}", user.getUsername());
-        LoginAttemptEntity loginAttempt =
-            loginAttemptRepository.findByUser_Username(user.getUsername()).orElse(new LoginAttemptEntity());
+    public void loginFailed(String userIp) {
+        log.debug("Failed login for user with ip address: {}", userIp);
+        LoginAttemptEntity loginAttempt = loginAttemptRepository.findByUserIp(userIp).orElse(new LoginAttemptEntity());
 
         LocalDateTime lastFailedAttempt = loginAttempt.getLastFailedAttempt();
 
         if (lastFailedAttempt != null && lastFailedAttempt.isBefore(LocalDateTime.now().minusMinutes(BLOCK_TIME))) {
             //Clearing the login attempt failure entity for the given user is the block time has exceeded.
-            log.debug("Clearing attempt failure entity for user: {}", user);
-            clearFailedLogin(user.getUsername());
+            log.debug("Clearing attempt failure entity for user with ip: {}", userIp);
+            clearFailedLogin(userIp);
         }
-
-        loginAttempt.setUser(user);
+        if (loginAttempt.getFailedCount() >= MAX_FAIL_ATTEMPT) {
+            log.debug("Number od login fails exceeds {}", MAX_FAIL_ATTEMPT);
+            return;
+        }
+        loginAttempt.setUserIp(userIp);
         loginAttempt.setFailedCount(loginAttempt.getFailedCount() + 1);
         loginAttempt.setLastFailedAttempt(LocalDateTime.now());
         loginAttemptRepository.save(loginAttempt);
@@ -45,10 +46,9 @@ public class LoginAttemptService {
     /**
      * Checks if the number of failed login attempts exceeds the given threshold.
      */
-    public boolean isBlocked(UserEntity user) {
+    public boolean isBlocked(String userIp) {
         log.debug("Checking if the user is blocked.");
-        Optional<LoginAttemptEntity> loginAttempt =
-            loginAttemptRepository.findByUser_Username(user.getUsername());
+        Optional<LoginAttemptEntity> loginAttempt = loginAttemptRepository.findByUserIp(userIp);
 
         if (loginAttempt.isPresent()) {
             if (loginAttempt.get().getFailedCount() >= MAX_FAIL_ATTEMPT
@@ -64,13 +64,13 @@ public class LoginAttemptService {
     /**
      * Clearing failed login attempt(fail count and last fail time) entity for the given user.
      *
-     * @param username username of the user.
+     * @param userIp ip address of the user.
      */
     @Transactional
-    public void clearFailedLogin(String username) {
-        log.debug("Clearing failed attempt entity data for user {} ", username);
+    public void clearFailedLogin(String userIp) {
+        log.debug("Clearing failed attempt entity data for user {} ", userIp);
         LoginAttemptEntity loginAttempt =
-            loginAttemptRepository.findByUser_Username(username)
+            loginAttemptRepository.findByUserIp(userIp)
                 .orElseThrow(() -> new GymEntityNotFoundException("FailedAttemptEntity not found."));
         loginAttempt.setFailedCount(0);
         loginAttempt.setLastFailedAttempt(null);

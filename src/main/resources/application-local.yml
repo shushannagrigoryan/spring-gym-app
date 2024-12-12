@@ -2,4 +2,4 @@ db_name: gym_local_db
 db_password: local_pass
 db_username: local_user
 server:
-    port: 8083
+  port: 8083

@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.example.exceptions.GymAuthenticationException;
+import org.example.services.LoginAttemptService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,25 +19,34 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class UsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     private static final RequestMatcher LOGIN_REQUEST_MATCHER = new AntPathRequestMatcher("/login", "GET");
+    private final LoginAttemptService loginAttemptService;
 
     /**
      * Setting dependencies.
      */
     public UsernamePasswordAuthenticationFilter(@Lazy AuthenticationManager authenticationManager,
                                                 CustomAuthenticationSuccessHandler successHandler,
-                                                CustomAuthenticationFailureHandler failureHandler) {
+                                                CustomAuthenticationFailureHandler failureHandler,
+                                                LoginAttemptService loginAttemptService) {
         super(LOGIN_REQUEST_MATCHER);
         setAuthenticationManager(authenticationManager);
         setAuthenticationSuccessHandler(successHandler);
         setAuthenticationFailureHandler(failureHandler);
+        this.loginAttemptService = loginAttemptService;
     }
-
 
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
         log.debug("Running authentication for login request");
+
+        String ipAddress = request.getRemoteAddr();
+        if (ipAddress != null && loginAttemptService.isBlocked(ipAddress)) {
+            log.debug("User with ip address {} is blocked for 5 minutes", ipAddress);
+            throw new GymAuthenticationException("Too many failed login attempts, try again later.");
+        }
+
         String username = request.getHeader("username");
         String password = request.getHeader("password");
 

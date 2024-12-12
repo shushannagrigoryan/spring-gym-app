@@ -11,7 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.Set;
 import lombok.Getter;
@@ -46,9 +45,6 @@ public class UserEntity {
     private Set<Role> roles;
     @OneToMany(mappedBy = "user")
     private Set<TokenEntity> tokens;
-    @OneToOne(mappedBy = "user")
-    private LoginAttemptEntity loginAttemptEntity;
-
 
     /**
      * constructor.
