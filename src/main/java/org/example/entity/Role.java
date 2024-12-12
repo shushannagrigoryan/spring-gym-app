@@ -2,5 +2,6 @@ package org.example.entity;
 
 public enum Role {
     TRAINEE,
-    TRAINER
+    TRAINER,
+    API_DEV
 }

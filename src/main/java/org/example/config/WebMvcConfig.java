@@ -32,6 +32,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
             )
             .info(
                 new Info().title("Gym Api.")
+                    .description("Documentation for Gym Api.")
+                    .version("1.0.0")
             );
     }
 }

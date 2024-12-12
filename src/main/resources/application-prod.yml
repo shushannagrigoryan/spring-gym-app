@@ -3,3 +3,12 @@ db_password: prod_pass
 db_username: prod_user
 server:
   port: 8081
+springdoc:
+  api-docs:
+    enabled: false
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        exclude: '*'
