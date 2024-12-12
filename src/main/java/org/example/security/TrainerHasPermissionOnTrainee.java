@@ -1,8 +1,7 @@
 package org.example.security;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.example.services.TraineeService;
+import org.example.services.TrainingService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -11,16 +10,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TrainerHasPermissionOnTrainee {
     private static final SimpleGrantedAuthority ROLE_TRAINER = new SimpleGrantedAuthority("ROLE_TRAINER");
-    private final TraineeService traineeService;
+    private final TrainingService trainingService;
 
     /**
      * Returns true if the trainer has permission on trainee.
      */
-    public boolean hasPermission(Authentication authentication, Object targetDomainObject) {
+    public boolean hasPermission(Authentication authentication, String traineeUsername) {
         if (authentication.getAuthorities().contains(ROLE_TRAINER)) {
-            List<String> assignedTrainees = traineeService.getAssignedTrainees(
-                authentication.getName());
-            return assignedTrainees.contains((String) targetDomainObject);
+            return trainingService.trainingExists(traineeUsername, authentication.getName());
         }
         return false;
     }

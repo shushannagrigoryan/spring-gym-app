@@ -136,4 +136,19 @@ public class TrainingService {
 
         return trainingRepository.findAll(specification);
     }
+
+    /**
+     * Checking if training exists with the given trainee and trainer.
+     *
+     * @param traineeUsername trainee username
+     * @param trainerUsername trainer username
+     * @return {@code boolean} true if training exists, else false
+     */
+
+    @Transactional
+    public boolean trainingExists(String traineeUsername, String trainerUsername) {
+        log.debug("Checking if a training exists with the given trainee and trainer.");
+        return trainingRepository.existsByTrainee_User_UsernameAndTrainer_User_Username(
+            traineeUsername, trainerUsername);
+    }
 }
