@@ -104,10 +104,12 @@ public class TrainingService {
         LocalDateTime toDate =
             traineeTrainings.getToDate() == null ? null : LocalDateTime.parse(traineeTrainings.getToDate());
 
+        Long trainingType =
+            traineeTrainings.getTrainingType() == null ? null : Long.parseLong(traineeTrainings.getTrainingType());
         Specification<TrainingEntity> specification = Specification.where(
                 TrainingSpecification.hasTraineeUsername(traineeUsername))
             .and(TrainingSpecification.hasTrainingDateBetween(fromDate, toDate))
-            .and(TrainingSpecification.hasTrainingType(Long.parseLong(traineeTrainings.getTrainingType())))
+            .and(TrainingSpecification.hasTrainingType(trainingType))
             .and(TrainingSpecification.hasTrainerUsername(traineeTrainings.getTrainerUsername()));
 
         return trainingRepository.findAll(specification);
