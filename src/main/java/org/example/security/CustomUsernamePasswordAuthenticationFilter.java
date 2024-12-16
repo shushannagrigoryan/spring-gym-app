@@ -17,17 +17,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class UsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+public class CustomUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     private static final RequestMatcher LOGIN_REQUEST_MATCHER = new AntPathRequestMatcher("/login", "GET");
     private final LoginAttemptService loginAttemptService;
 
     /**
      * Setting dependencies.
      */
-    public UsernamePasswordAuthenticationFilter(@Lazy AuthenticationManager authenticationManager,
-                                                CustomAuthenticationSuccessHandler successHandler,
-                                                CustomAuthenticationFailureHandler failureHandler,
-                                                LoginAttemptService loginAttemptService) {
+    public CustomUsernamePasswordAuthenticationFilter(@Lazy AuthenticationManager authenticationManager,
+                                                      CustomAuthenticationSuccessHandler successHandler,
+                                                      CustomAuthenticationFailureHandler failureHandler,
+                                                      LoginAttemptService loginAttemptService) {
         super(LOGIN_REQUEST_MATCHER);
         setAuthenticationManager(authenticationManager);
         setAuthenticationSuccessHandler(successHandler);

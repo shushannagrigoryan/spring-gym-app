@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.exceptions.GymAuthenticationException;
 import org.example.security.CustomAuthenticationFailureHandler;
 import org.example.security.CustomAuthenticationSuccessHandler;
-import org.example.security.UsernamePasswordAuthenticationFilter;
+import org.example.security.CustomUsernamePasswordAuthenticationFilter;
 import org.example.services.LoginAttemptService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +24,7 @@ import org.springframework.security.core.Authentication;
 
 @ExtendWith(MockitoExtension.class)
 @Slf4j
-public class UsernamePasswordAuthenticationFilterTest {
+public class CustomUsernamePasswordAuthenticationFilterTest {
     @Mock
     private AuthenticationManager authenticationManager;
 
@@ -41,7 +41,7 @@ public class UsernamePasswordAuthenticationFilterTest {
     @Mock
     private LoginAttemptService loginAttemptService;
     @InjectMocks
-    private UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter;
+    private CustomUsernamePasswordAuthenticationFilter customUsernamePasswordAuthenticationFilter;
 
     @Test
     void attemptAuthenticationSuccess() {
@@ -56,7 +56,7 @@ public class UsernamePasswordAuthenticationFilterTest {
         when(authenticationManager.authenticate(authRequest)).thenReturn(authentication);
 
         //when
-        usernamePasswordAuthenticationFilter.attemptAuthentication(request, response);
+        customUsernamePasswordAuthenticationFilter.attemptAuthentication(request, response);
 
         //then
         verify(authenticationManager).authenticate(authRequest);
@@ -73,7 +73,7 @@ public class UsernamePasswordAuthenticationFilterTest {
 
         //then
         assertThrows(GymAuthenticationException.class, () ->
-            usernamePasswordAuthenticationFilter.attemptAuthentication(request, response),
+                customUsernamePasswordAuthenticationFilter.attemptAuthentication(request, response),
             ("Too many failed login attempts, try again later."));
     }
 
@@ -85,7 +85,7 @@ public class UsernamePasswordAuthenticationFilterTest {
 
         //then
         assertThrows(GymAuthenticationException.class,
-            () -> usernamePasswordAuthenticationFilter.attemptAuthentication(request, response),
+            () -> customUsernamePasswordAuthenticationFilter.attemptAuthentication(request, response),
             "Bad credentials.");
 
     }
