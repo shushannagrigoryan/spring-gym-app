@@ -3,8 +3,11 @@ package org.example.config.security;
 import lombok.RequiredArgsConstructor;
 import org.example.security.CustomAccessDeniedHandler;
 import org.example.security.CustomAuthenticationEntryPoint;
+import org.example.security.CustomAuthenticationFailureHandler;
+import org.example.security.CustomAuthenticationSuccessHandler;
 import org.example.security.CustomUsernamePasswordAuthenticationFilter;
 import org.example.security.JwtAuthConverter;
+import org.example.services.LoginAttemptService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -27,11 +30,14 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 public class WebSecurityConfig {
     private final SecurityConfig securityConfig;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
-    private final CustomUsernamePasswordAuthenticationFilter customUsernamePasswordAuthenticationFilter;
     private final JwtAuthConverter jwtAuthConverter;
     private final CustomAccessDeniedHandler accessDeniesHandler;
     private final LogoutHandler logoutHandler;
     private final LogoutSuccessHandler logoutSuccessHandler;
+    private final AuthenticationConfiguration authenticationConfiguration;
+    private final CustomAuthenticationSuccessHandler successHandler;
+    private final CustomAuthenticationFailureHandler failureHandler;
+    private final LoginAttemptService loginAttemptService;
 
     /**
      * Configuring security filter chain.
@@ -56,7 +62,7 @@ public class WebSecurityConfig {
             .logout(logout -> logout.permitAll()
                 .addLogoutHandler(logoutHandler)
                 .logoutSuccessHandler(logoutSuccessHandler))
-            .addFilterBefore(customUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(customUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -66,5 +72,19 @@ public class WebSecurityConfig {
     public AuthenticationManager authenticationManager(
         AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    /**
+     * Custom UsernamePasswordAuthenticationFilter configuration.
+     *
+     * @return {@code CustomUsernamePasswordAuthenticationFilter}
+     */
+    @Bean
+    public CustomUsernamePasswordAuthenticationFilter customUsernamePasswordAuthenticationFilter() throws Exception {
+        return new CustomUsernamePasswordAuthenticationFilter(
+            authenticationManager(authenticationConfiguration),
+            successHandler, failureHandler,
+            loginAttemptService
+        );
     }
 }

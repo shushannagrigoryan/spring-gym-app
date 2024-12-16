@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.example.exceptions.GymAuthenticationException;
 import org.example.services.LoginAttemptService;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,9 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.stereotype.Component;
 
-@Component
 @Slf4j
 public class CustomUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     private static final RequestMatcher LOGIN_REQUEST_MATCHER = new AntPathRequestMatcher("/login", "GET");
@@ -24,7 +21,7 @@ public class CustomUsernamePasswordAuthenticationFilter extends AbstractAuthenti
     /**
      * Setting dependencies.
      */
-    public CustomUsernamePasswordAuthenticationFilter(@Lazy AuthenticationManager authenticationManager,
+    public CustomUsernamePasswordAuthenticationFilter(AuthenticationManager authenticationManager,
                                                       CustomAuthenticationSuccessHandler successHandler,
                                                       CustomAuthenticationFailureHandler failureHandler,
                                                       LoginAttemptService loginAttemptService) {
