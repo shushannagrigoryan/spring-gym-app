@@ -29,7 +29,7 @@ public class LoginAttemptService {
         LocalDateTime lastFailedAttempt = loginAttempt.getLastFailedAttempt();
 
         if (lastFailedAttempt != null && lastFailedAttempt.isBefore(LocalDateTime.now().minusMinutes(BLOCK_TIME))) {
-            //Clearing the login attempt failure entity for the given user is the block time has exceeded.
+            //Clearing the login attempt failure entity for the given user if the block time has exceeded.
             log.debug("Clearing attempt failure entity for user with ip: {}", userIp);
             clearFailedLogin(userIp);
         }
