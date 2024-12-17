@@ -35,13 +35,6 @@ public class JwtService {
         log.debug("Successfully saved the generated jwt token in database.");
     }
 
-
-    //    public List<TokenEntity> findNonRevokedTokensByUser(String username) {
-    //        log.debug("Getting non revoked tokens of user {}.", username);
-    //        return tokenRepository.findByUser_UsernameAndRevoked(username, false);
-    //    }
-
-
     /**
      * Generates a jwt token using the Authentication object.
      */
@@ -59,25 +52,6 @@ public class JwtService {
         return jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
 
-    //    /**
-    //     * Checks if the token is expired.
-    //     *
-    //     * @param token jwt token
-    //     * @return true if token is invalid, otherwise false.
-    //     */
-    //    public boolean isTokenExpired(String token) {
-    //        log.debug("Checking if the token is expired.");
-    //        try {
-    //            jwtDecoder.decode(token);
-    //            log.debug("Token is not expired.");
-    //            return false;
-    //        } catch (JwtValidationException e) {
-    //            log.debug(e.getMessage());
-    //        }
-    //        log.debug("Token is expired.");
-    //        return true;
-    //    }
-
     /**
      * Checks if the token is revoked.
      *
@@ -90,23 +64,6 @@ public class JwtService {
             .orElseThrow(() -> new EntityNotFoundException("Entity not found."));
         return tokenEntity.isRevoked();
     }
-
-    //    /**
-    //     * Revoking user's active tokens.
-    //     *
-    //     * @param user user for whose tokens should be revoked.
-    //     */
-    //    public void revokeAllUserTokens(UserEntity user) {
-    //        log.debug("Revoking user's all active tokens.");
-    //        List<TokenEntity> activeTokens = tokenRepository
-    //            .findByUserAndRevoked(user, false);
-    //        if (activeTokens.isEmpty()) {
-    //            return;
-    //        }
-    //
-    //        activeTokens.forEach(token -> token.setRevoked(true));
-    //        tokenRepository.saveAll(activeTokens);
-    //    }
 
     /**
      * Revoking the given token.
@@ -143,6 +100,4 @@ public class JwtService {
         }
 
     }
-
-
 }
