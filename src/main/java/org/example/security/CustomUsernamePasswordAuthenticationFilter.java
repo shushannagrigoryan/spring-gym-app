@@ -16,6 +16,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 @Slf4j
 public class CustomUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     private static final RequestMatcher LOGIN_REQUEST_MATCHER = new AntPathRequestMatcher("/login", "GET");
+    private static final int BLOCK_TIME = 5;
     private final LoginAttemptService loginAttemptService;
 
     /**
@@ -40,7 +41,7 @@ public class CustomUsernamePasswordAuthenticationFilter extends AbstractAuthenti
 
         String ipAddress = request.getRemoteAddr();
         if (ipAddress != null && loginAttemptService.isBlocked(ipAddress)) {
-            log.debug("User with ip address {} is blocked for 5 minutes", ipAddress);
+            log.debug("User with ip address {} is blocked for {} minutes", ipAddress, BLOCK_TIME);
             throw new GymAuthenticationException("Too many failed login attempts, try again later.");
         }
 

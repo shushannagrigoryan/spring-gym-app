@@ -1,6 +1,7 @@
 package org.example.services;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ public class JwtService {
     /**
      * Saving the generated jwt token to database.
      */
+    @Transactional
     public void saveGeneratedToken(TokenEntity jwtToken) {
         log.debug("Saving jwtToken in database.");
         tokenRepository.save(jwtToken);
@@ -70,12 +72,14 @@ public class JwtService {
      *
      * @param token that should be revoked.
      */
+    @Transactional
     public void revokeToken(String token) {
         log.debug("Revoking the given token.");
-        TokenEntity tokenEntity = tokenRepository.findByToken(token)
-            .orElseThrow(() -> new EntityNotFoundException("Token not found"));
-        tokenEntity.setRevoked(true);
-        tokenRepository.save(tokenEntity);
+        int revoked = tokenRepository.updateByTokenSetRevoked(true, token);
+        if (revoked == 0) {
+            throw new EntityNotFoundException("Token not found");
+        }
+        log.debug("Successfully revoked the given token: {}", token);
     }
 
     /**
