@@ -98,6 +98,5 @@ public class JwtService {
             log.debug(e.getMessage());
             return false;
         }
-
     }
 }

@@ -54,50 +54,6 @@ public class JwtServiceTest {
         verify(tokenRepository).save(jwtToken);
     }
 
-
-    //    @Test
-    //    public void testFindNonRevokedTokensByUser() {
-    //        //given
-    //        String username = "user";
-    //        TokenEntity token = new TokenEntity();
-    //        when(tokenRepository.findByUser_UsernameAndRevoked(username, false)).thenReturn(List.of(token));
-    //
-    //        //when
-    //        List<TokenEntity> result = jwtService.findNonRevokedTokensByUser(username);
-    //
-    //        //then
-    //        assertNotNull(result);
-    //        assertEquals(List.of(token), result);
-    //        verify(tokenRepository).findByUser_UsernameAndRevoked(username, false);
-    //    }
-
-    //    @Test
-    //    public void testIsTokenExpiredNonExpired() {
-    //        //given
-    //        String token = "token";
-    //        when(jwtDecoder.decode(token)).thenReturn(mock(Jwt.class));
-    //
-    //        //when
-    //        boolean result = jwtService.isTokenExpired(token);
-    //
-    //        //then
-    //        assertFalse(result);
-    //    }
-
-    //    @Test
-    //    public void testIsTokenExpiredExpired() {
-    //        //given
-    //        String token = "token";
-    //        List<OAuth2Error> errors = List.of(new OAuth2Error("error"));
-    //        when(jwtDecoder.decode(token)).thenThrow(new JwtValidationException("Token expired", errors));
-    //
-    //        //when
-    //        boolean result = jwtService.isTokenExpired(token);
-    //
-    //        //then
-    //        assertTrue(result);
-    //    }
-
     @Test
     public void testIsTokenRevokedSuccess() {
         //given
@@ -132,23 +88,6 @@ public class JwtServiceTest {
         verify(tokenRepository).findByToken(token);
 
     }
-
-    //    @Test
-    //    public void testRevokeAllTokens() {
-    //        //given
-    //        UserEntity user = new UserEntity();
-    //        TokenEntity token = new TokenEntity();
-    //        List<TokenEntity> tokenEntityList = List.of(token);
-    //        when(tokenRepository.findByUserAndRevoked(user, false)).thenReturn(tokenEntityList);
-    //        when(tokenRepository.saveAll(tokenEntityList)).thenReturn(tokenEntityList);
-    //
-    //        //when
-    //        jwtService.revokeAllUserTokens(user);
-    //
-    //        //then
-    //        verify(tokenRepository).findByUserAndRevoked(user, false);
-    //        verify(tokenRepository).saveAll(tokenEntityList);
-    //    }
 
     @Test
     public void testGenerateToken() {
