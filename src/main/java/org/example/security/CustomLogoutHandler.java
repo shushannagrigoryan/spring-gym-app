@@ -38,6 +38,6 @@ public class CustomLogoutHandler implements LogoutHandler {
 
         jwtService.revokeToken(jwt.getTokenValue());
 
-        log.debug("Successfully logged out and invalidated users tokens.");
+        log.debug("Successfully logged out and invalidated users token.");
     }
 }
