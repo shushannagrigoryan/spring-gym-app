@@ -1,6 +1,7 @@
 package org.example.config.security;
 
 import lombok.RequiredArgsConstructor;
+import org.example.filter.TransactionIdFilter;
 import org.example.security.CustomAccessDeniedHandler;
 import org.example.security.CustomAuthenticationEntryPoint;
 import org.example.security.CustomAuthenticationFailureHandler;
@@ -20,6 +21,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -39,6 +41,7 @@ public class WebSecurityConfig {
     private final CustomAuthenticationSuccessHandler successHandler;
     private final CustomAuthenticationFailureHandler failureHandler;
     private final LoginAttemptService loginAttemptService;
+    private final TransactionIdFilter transactionIdFilter;
 
     /**
      * Configuring security filter chain.
@@ -64,8 +67,9 @@ public class WebSecurityConfig {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
                 .addLogoutHandler(logoutHandler)
                 .logoutSuccessHandler(logoutSuccessHandler))
-            .addFilterBefore(customUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
+            .addFilterBefore(customUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(transactionIdFilter, CustomUsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(transactionIdFilter, LogoutFilter.class);
         return http.build();
     }
 

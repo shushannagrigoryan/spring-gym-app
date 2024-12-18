@@ -12,7 +12,7 @@ import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
 @Component
-@WebFilter(urlPatterns = {"/trainees/*", "/trainers/*", "/users/*", "/training-types/*", "/trainings/*"})
+@WebFilter(urlPatterns = {"/*"})
 public class TransactionIdFilter implements Filter {
 
     @Override
