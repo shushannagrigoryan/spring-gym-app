@@ -1,5 +1,6 @@
 package org.example.services;
 
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -17,6 +18,7 @@ public class LoginAttemptService {
     private static final int MAX_FAIL_ATTEMPT = 3;
     private static final int BLOCK_TIME = 5;
     private final LoginAttemptRepository loginAttemptRepository;
+    private final EntityManager entityManager;
 
     /**
      * Incrementing the number of failed login attempts for the given username.
@@ -31,10 +33,10 @@ public class LoginAttemptService {
         if (lastFailedAttempt != null && lastFailedAttempt.isBefore(LocalDateTime.now().minusMinutes(BLOCK_TIME))) {
             //Clearing the login attempt failure entity for the given user if the block time has exceeded.
             log.debug("Clearing attempt failure entity for user with ip: {}", userIp);
-            clearFailedLogin(userIp);
+            loginAttempt = clearFailedLogin(userIp);
         }
         if (loginAttempt.getFailedCount() >= MAX_FAIL_ATTEMPT) {
-            log.debug("Number od login fails exceeds {}", MAX_FAIL_ATTEMPT);
+            log.debug("Number of login fails exceeds {}", MAX_FAIL_ATTEMPT);
             return;
         }
         loginAttempt.setUserIp(userIp);
@@ -67,13 +69,11 @@ public class LoginAttemptService {
      * @param userIp ip address of the user.
      */
     @Transactional
-    public void clearFailedLogin(String userIp) {
+    public LoginAttemptEntity clearFailedLogin(String userIp) {
         log.debug("Clearing failed attempt entity data for user {} ", userIp);
-        LoginAttemptEntity loginAttempt =
-            loginAttemptRepository.findByUserIp(userIp)
+        loginAttemptRepository.updateByUserIp(0, null, userIp);
+        entityManager.clear();
+        return loginAttemptRepository.findByUserIp(userIp)
                 .orElseThrow(() -> new GymEntityNotFoundException("FailedAttemptEntity not found."));
-        loginAttempt.setFailedCount(0);
-        loginAttempt.setLastFailedAttempt(null);
-        loginAttemptRepository.save(loginAttempt);
     }
 }
