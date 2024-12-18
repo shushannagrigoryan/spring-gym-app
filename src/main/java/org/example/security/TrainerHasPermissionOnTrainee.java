@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class TrainerHasPermissionOnTrainee {
+
+    //TODO I think here could be not static
     private static final SimpleGrantedAuthority ROLE_TRAINER = new SimpleGrantedAuthority("ROLE_TRAINER");
     private final TrainingService trainingService;
 

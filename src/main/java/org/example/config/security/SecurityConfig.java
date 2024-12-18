@@ -27,6 +27,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
+// TODO: Consider consolidating all security-related configuration
+//  classes into a single package for better structure and maintainability.
 public class SecurityConfig {
     private final GymUserDetailsService userDetailsService;
     @Value("${jwt.secret}")

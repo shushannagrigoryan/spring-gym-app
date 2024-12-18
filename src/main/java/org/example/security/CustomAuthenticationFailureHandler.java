@@ -30,7 +30,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 
         ResponseDto<String> responseDto;
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType("application/json");
+        response.setContentType("application/json"); //TODO I think will be better when replace this literal with a constant
 
         responseDto = new ResponseDto<>(null,
             "Authentication failed: " + exception.getMessage());

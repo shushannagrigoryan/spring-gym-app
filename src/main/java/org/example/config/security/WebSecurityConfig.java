@@ -26,6 +26,7 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+//TODO I do not sure that it needs here
 @EnableMethodSecurity
 public class WebSecurityConfig {
     private final SecurityConfig securityConfig;

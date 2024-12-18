@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 @Slf4j
 @RequiredArgsConstructor
 public class GymUserDetailsService implements UserDetailsService {
+
+    //TODO how I know repository use services I think here good use UserService class
     private final UserRepository userRepository;
 
     /**

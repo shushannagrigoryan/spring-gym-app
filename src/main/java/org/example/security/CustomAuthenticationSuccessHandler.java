@@ -36,10 +36,10 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             .orElseThrow(() -> new EntityNotFoundException("Entity not found"));
 
         log.debug("Checking if the user is already logged in.");
-        String jwtToken = request.getHeader("Authorization");
+        String jwtToken = request.getHeader("Authorization");//TODO constant
 
 
-        if (jwtToken != null && jwtToken.startsWith("Bearer ")) {
+        if (jwtToken != null && jwtToken.startsWith("Bearer ")) {//TODO constant
             if (jwtService.isValid(jwtToken.substring(7), user.getUsername())) {
                 log.debug("User is already logged in.");
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

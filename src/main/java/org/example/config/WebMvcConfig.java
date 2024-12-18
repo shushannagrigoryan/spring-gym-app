@@ -17,6 +17,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableJpaRepositories(basePackages = "org.example.repositories")
 @EnableTransactionManagement
 @Slf4j
+//TODO I do not sure that here we need these
+// annotations( EnableTransactionManagement,EnableJpaRepositories,EntityScan) I write without it and work good
+
 public class WebMvcConfig implements WebMvcConfigurer {
 
     /**
