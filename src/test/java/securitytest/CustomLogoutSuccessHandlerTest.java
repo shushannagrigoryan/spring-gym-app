@@ -1,12 +1,16 @@
 package securitytest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.io.Writer;
+import org.example.dto.responsedto.ResponseDto;
 import org.example.security.CustomLogoutSuccessHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,9 +30,10 @@ public class CustomLogoutSuccessHandlerTest {
 
     @Mock
     private Authentication authentication;
-
     @Mock
     private PrintWriter writer;
+    @Mock
+    private ObjectMapper objectMapper;
     @InjectMocks
     private CustomLogoutSuccessHandler logoutSuccessHandler;
 
@@ -44,10 +49,11 @@ public class CustomLogoutSuccessHandlerTest {
         verify(response).setStatus(HttpServletResponse.SC_OK);
         verify(response).setContentType("application/json");
 
-        ArgumentCaptor<String> responseCaptor = ArgumentCaptor.forClass(String.class);
-        verify(writer).write(responseCaptor.capture());
+        @SuppressWarnings("unchecked")
+        ArgumentCaptor<ResponseDto<String>> responseCaptor = ArgumentCaptor.forClass(ResponseDto.class);
+        verify(objectMapper).writeValue(any(Writer.class), responseCaptor.capture());
 
-        String actualResponse = responseCaptor.getValue();
-        assertEquals("{\"message\": \"You have successfully logged out.\"}", actualResponse);
+        ResponseDto<String> responseDto = responseCaptor.getValue();
+        assertEquals("Successfully logged out.", responseDto.getMessage());
     }
 }

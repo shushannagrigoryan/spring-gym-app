@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.ChangePasswordRequestDto;
 import org.example.dto.responsedto.ResponseDto;
@@ -26,20 +27,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/users")
 @Slf4j
+@RequiredArgsConstructor
 @Tag(name = "UserController")
 public class UserController {
     private final UserService userService;
     private final UserRequestMetrics userRequestMetrics;
-
-    /**
-     * Setting dependencies.
-     */
-
-    public UserController(UserService userService,
-                          UserRequestMetrics userRequestMetrics) {
-        this.userService = userService;
-        this.userRequestMetrics = userRequestMetrics;
-    }
 
     /**
      * PUT request to change user password.

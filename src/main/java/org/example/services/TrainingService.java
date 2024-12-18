@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.TraineeTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainerTrainingsFilterRequestDto;
@@ -20,27 +21,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class TrainingService {
     private final TrainingRepository trainingRepository;
     private final TrainingTypeService trainingTypeService;
     private final TrainerService trainerService;
     private final TraineeService traineeService;
     private final TrainingMetrics trainingMetrics;
-
-    /**
-     * Injecting dependencies using constructor.
-     */
-    public TrainingService(TrainingRepository trainingRepository,
-                           TrainingTypeService trainingTypeService,
-                           TrainerService trainerService,
-                           TraineeService traineeService,
-                           TrainingMetrics trainingMetrics) {
-        this.trainingRepository = trainingRepository;
-        this.trainingTypeService = trainingTypeService;
-        this.trainerService = trainerService;
-        this.traineeService = traineeService;
-        this.trainingMetrics = trainingMetrics;
-    }
 
     /**
      * Creates training in service layer.

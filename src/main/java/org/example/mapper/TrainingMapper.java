@@ -1,5 +1,6 @@
 package org.example.mapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TrainingDto;
 import org.example.dto.responsedto.TraineeCriteriaTrainingsResponseDto;
@@ -9,15 +10,9 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class TrainingMapper {
     private final TrainingTypeMapper trainingTypeMapper;
-
-    /**
-     * Setting dependencies.
-     */
-    public TrainingMapper(TrainingTypeMapper trainingTypeMapper) {
-        this.trainingTypeMapper = trainingTypeMapper;
-    }
 
     /**
      * Maps a {@code TrainingEntity} to a {@code TrainingDto}.

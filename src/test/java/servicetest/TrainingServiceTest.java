@@ -2,6 +2,7 @@ package servicetest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
@@ -173,5 +174,22 @@ public class TrainingServiceTest {
         // Then
         assertEquals(expectedTrainings, actualTrainings);
         verify(trainingRepository).findAll(anySpecification());
+    }
+
+    @Test
+    public void testTrainingExists() {
+        //given
+        String traineeUsername = "trainee";
+        String trainerUsername = "trainer";
+        when(trainingRepository.existsByTrainee_User_UsernameAndTrainer_User_Username(
+            traineeUsername, trainerUsername)).thenReturn(true);
+
+        //when
+        boolean result = trainingService.trainingExists(traineeUsername, trainerUsername);
+
+        //then
+        verify(trainingRepository)
+            .existsByTrainee_User_UsernameAndTrainer_User_Username(traineeUsername, trainerUsername);
+        assertTrue(result);
     }
 }

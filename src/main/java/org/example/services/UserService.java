@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
 import org.example.exceptions.GymEntityNotFoundException;
@@ -14,21 +15,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final UserMetrics userMetrics;
     private final PasswordEncoder passwordEncoder;
-
-    /**
-     * Setting dependencies.
-     */
-    public UserService(UserRepository userRepository,
-                       UserMetrics userMetrics,
-                       PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.userMetrics = userMetrics;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @PostConstruct
     public void initUserGauge() {

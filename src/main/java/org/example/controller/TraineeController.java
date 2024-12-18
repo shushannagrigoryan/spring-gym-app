@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.TraineeCreateRequestDto;
 import org.example.dto.requestdto.TraineeUpdateRequestDto;
@@ -41,6 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/trainees")
 @Slf4j
+@RequiredArgsConstructor
 @Tag(name = "TraineeController")
 public class TraineeController {
     private final TraineeService traineeService;
@@ -48,21 +50,6 @@ public class TraineeController {
     private final TrainerMapper trainerMapper;
     private final TraineeProfileMapper traineeProfileMapper;
     private final TraineeRequestMetrics traineeRequestMetrics;
-
-    /**
-     * Setting dependencies.
-     */
-    public TraineeController(TraineeService traineeService,
-                             TraineeMapper traineeMapper,
-                             TraineeProfileMapper traineeProfileMapper,
-                             TrainerMapper trainerMapper,
-                             TraineeRequestMetrics traineeRequestMetrics) {
-        this.traineeService = traineeService;
-        this.traineeMapper = traineeMapper;
-        this.traineeProfileMapper = traineeProfileMapper;
-        this.trainerMapper = trainerMapper;
-        this.traineeRequestMetrics = traineeRequestMetrics;
-    }
 
     /**
      * POST request to register a new trainee.

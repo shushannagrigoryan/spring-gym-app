@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.responsedto.TraineeResponseDto;
 import org.example.entity.Role;
@@ -20,27 +21,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class TraineeService {
     private final TraineeRepository traineeRepository;
     private final UsernameGenerator usernameGenerator;
     private final PasswordGeneration passwordGeneration;
     private final TrainerService trainerService;
     private final UserService userService;
-
-    /**
-     * Injecting dependencies using constructor.
-     */
-    public TraineeService(TraineeRepository traineeRepository,
-                          UsernameGenerator usernameGenerator,
-                          PasswordGeneration passwordGeneration,
-                          TrainerService trainerService,
-                          UserService userService) {
-        this.traineeRepository = traineeRepository;
-        this.usernameGenerator = usernameGenerator;
-        this.passwordGeneration = passwordGeneration;
-        this.trainerService = trainerService;
-        this.userService = userService;
-    }
 
     /**
      * Creates a new trainee in the service layer.

@@ -1,5 +1,6 @@
 package org.example.username;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
 import org.example.services.UserService;
@@ -7,15 +8,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class UsernameGenerator {
     private final UserService userService;
-
-    /**
-     * Injecting dependencies using constructor.
-     */
-    public UsernameGenerator(UserService userService) {
-        this.userService = userService;
-    }
 
     /**
      * Generates username for the user (firstName.lastName)

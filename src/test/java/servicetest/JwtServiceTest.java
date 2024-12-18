@@ -1,6 +1,7 @@
 package servicetest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -25,8 +26,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.JwtException;
 
 @ExtendWith(MockitoExtension.class)
 public class JwtServiceTest {
@@ -36,6 +39,10 @@ public class JwtServiceTest {
     private Authentication authentication;
     @Mock
     private JwtEncoder jwtEncoder;
+    @Mock
+    private JwtDecoder jwtDecoder;
+    @Mock
+    private Jwt jwt;
     @InjectMocks
     private JwtService jwtService;
 
@@ -108,5 +115,86 @@ public class JwtServiceTest {
         assertEquals(expectedToken, actualToken);
         verify(authentication).getName();
         verify(authentication).getAuthorities();
+    }
+
+    @Test
+    public void testRevokeTokenSuccess() {
+        //given
+        String token = "token";
+        when(tokenRepository.updateByTokenSetRevoked(true, token)).thenReturn(1);
+
+        //when
+        jwtService.revokeToken(token);
+
+        //then
+        verify(tokenRepository).updateByTokenSetRevoked(true, token);
+    }
+
+    @Test
+    public void testRevokeTokenFailure() {
+        //given
+        String token = "token";
+        when(tokenRepository.updateByTokenSetRevoked(true, token)).thenReturn(0);
+
+        //then
+        assertThrows(EntityNotFoundException.class, () -> jwtService.revokeToken(token),
+            "Token not found");
+    }
+
+    @Test
+    public void testIsValid() {
+        //given
+        String username = "user";
+        String token = "token";
+        TokenEntity tokenEntity = new TokenEntity();
+        tokenEntity.setToken(token);
+        tokenEntity.setRevoked(false);
+        when(jwtDecoder.decode(token)).thenReturn(jwt);
+        when(jwt.getSubject()).thenReturn(username);
+        when(tokenRepository.findByToken(token)).thenReturn(Optional.of(tokenEntity));
+
+        //when
+        boolean result = jwtService.isValid(token, username);
+
+        //then
+        verify(jwtDecoder).decode(token);
+        verify(jwt).getSubject();
+        verify(tokenRepository).findByToken(token);
+        assertTrue(result);
+    }
+
+    @Test
+    public void testIsValid_Not_Valid() {
+        //given
+        String username = "user";
+        String token = "token";
+        TokenEntity tokenEntity = new TokenEntity();
+        tokenEntity.setToken(token);
+        tokenEntity.setRevoked(false);
+        when(jwtDecoder.decode(token)).thenReturn(jwt);
+        when(jwt.getSubject()).thenReturn("user1");
+
+        //when
+        boolean result = jwtService.isValid(token, username);
+
+        //then
+        verify(jwtDecoder).decode(token);
+        verify(jwt).getSubject();
+        assertFalse(result);
+    }
+
+    @Test
+    public void testIsValid_Not_Valid_Decode_Fail() {
+        //given
+        String username = "user";
+        String token = "token";
+        when(jwtDecoder.decode(token)).thenThrow(JwtException.class);
+
+        //when
+        boolean result = jwtService.isValid(token, username);
+
+        //then
+        verify(jwtDecoder).decode(token);
+        assertFalse(result);
     }
 }

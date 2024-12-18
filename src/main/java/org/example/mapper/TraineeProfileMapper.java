@@ -3,6 +3,7 @@ package org.example.mapper;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.example.dto.responsedto.TraineeProfileResponseDto;
 import org.example.dto.responsedto.TraineeProfileTrainerResponseDto;
 import org.example.dto.responsedto.TraineeUpdateResponseDto;
@@ -11,15 +12,9 @@ import org.example.entity.TrainingEntity;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class TraineeProfileMapper {
     private final TrainerMapper trainerMapper;
-
-    /**
-     * Setting dependencies.
-     */
-    public TraineeProfileMapper(TrainerMapper trainerMapper) {
-        this.trainerMapper = trainerMapper;
-    }
 
     /**
      * Maps trainee entity to trainee profile response dto.

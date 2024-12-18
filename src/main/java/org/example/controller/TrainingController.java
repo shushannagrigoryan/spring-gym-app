@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.TraineeTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainerTrainingsFilterRequestDto;
@@ -34,23 +35,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/trainings")
 @Slf4j
+@RequiredArgsConstructor
 @Tag(name = "TrainingController")
 public class TrainingController {
     private final TrainingService trainingService;
     private final TrainingMapper trainingMapper;
     private final TrainingRequestMetrics trainingRequestMetrics;
-
-    /**
-     * Setting dependencies.
-     */
-    public TrainingController(TrainingService trainingService,
-                              TrainingMapper trainingMapper,
-                              TrainingRequestMetrics trainingRequestMetrics) {
-        this.trainingService = trainingService;
-        this.trainingMapper = trainingMapper;
-        this.trainingRequestMetrics = trainingRequestMetrics;
-    }
-
 
     /**
      * POST request to add new training.

@@ -84,9 +84,7 @@ public class WebSecurityConfig {
     @Bean
     public CustomUsernamePasswordAuthenticationFilter customUsernamePasswordAuthenticationFilter() throws Exception {
         return new CustomUsernamePasswordAuthenticationFilter(
-            authenticationManager(authenticationConfiguration),
-            successHandler, failureHandler,
-            loginAttemptService
+            authenticationManager(authenticationConfiguration), successHandler, failureHandler, loginAttemptService
         );
     }
 }

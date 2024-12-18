@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.responsedto.ResponseDto;
 import org.example.dto.responsedto.TrainingTypeResponseDto;
@@ -24,22 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/trainingTypes")
 @Slf4j
+@RequiredArgsConstructor
 @Tag(name = "TrainingTypeController")
 public class TrainingTypeController {
     private final TrainingTypeService trainingTypeService;
     private final TrainingTypeMapper trainingTypeMapper;
     private final TrainingTypeRequestMetrics trainingTypeRequestMetrics;
-
-    /**
-     * Setting dependencies.
-     */
-    public TrainingTypeController(TrainingTypeService trainingTypeService,
-                                  TrainingTypeMapper trainingTypeMapper,
-                                  TrainingTypeRequestMetrics trainingTypeRequestMetrics) {
-        this.trainingTypeService = trainingTypeService;
-        this.trainingTypeMapper = trainingTypeMapper;
-        this.trainingTypeRequestMetrics = trainingTypeRequestMetrics;
-    }
 
     /**
      * GET request to get all training types.

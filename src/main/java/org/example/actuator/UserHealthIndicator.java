@@ -1,6 +1,7 @@
 package org.example.actuator;
 
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.example.repositories.TraineeRepository;
 import org.example.repositories.TrainerRepository;
 import org.example.repositories.UserRepository;
@@ -9,21 +10,11 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class UserHealthIndicator implements HealthIndicator {
     private final UserRepository userRepository;
     private final TraineeRepository traineeRepository;
     private final TrainerRepository trainerRepository;
-
-    /**
-     * Setting dependencies.
-     */
-    public UserHealthIndicator(UserRepository userRepository,
-                               TraineeRepository traineeRepository,
-                               TrainerRepository trainerRepository) {
-        this.userRepository = userRepository;
-        this.traineeRepository = traineeRepository;
-        this.trainerRepository = trainerRepository;
-    }
 
     /**
      * User existence health indicator.

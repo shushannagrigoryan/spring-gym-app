@@ -3,6 +3,7 @@ package org.example.services;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainingTypeEntity;
 import org.example.exceptions.GymIllegalIdException;
@@ -11,16 +12,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class TrainingTypeService {
     private final TrainingTypeRepository trainingTypeRepository;
-
-    /**
-     * Injecting dependencies using constructor.
-     */
-    public TrainingTypeService(TrainingTypeRepository trainingTypeRepository) {
-        this.trainingTypeRepository = trainingTypeRepository;
-    }
-
 
     /**
      * Gets the training type by id in the service layer.

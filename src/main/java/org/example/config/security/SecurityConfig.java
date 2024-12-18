@@ -6,7 +6,6 @@ import com.nimbusds.jose.proc.SecurityContext;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.example.security.JwtCustomDecoder;
 import org.example.security.JwtCustomEncoder;
 import org.example.services.GymUserDetailsService;
@@ -26,7 +25,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @RequiredArgsConstructor
-@Slf4j
 public class SecurityConfig {
     private final GymUserDetailsService userDetailsService;
     @Value("${jwt.secret}")

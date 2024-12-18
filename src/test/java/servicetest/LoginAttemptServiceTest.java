@@ -1,10 +1,14 @@
 package servicetest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
@@ -43,6 +47,23 @@ public class LoginAttemptServiceTest {
         //then
         verify(loginAttemptRepository).findByUserIp(userIp);
         verify(loginAttemptRepository).save(loginAttempt);
+    }
+
+    @Test
+    public void testLoginFailedExceedsMaxAttempts() {
+        //given
+        String userIp = "userIp";
+        LoginAttemptEntity loginAttempt = new LoginAttemptEntity();
+        loginAttempt.setUserIp(userIp);
+        loginAttempt.setFailedCount(MAX_FAIL_ATTEMPT + 1);
+        when(loginAttemptRepository.findByUserIp(userIp)).thenReturn(Optional.of(loginAttempt));
+
+        //when
+        loginAttemptService.loginFailed(userIp);
+
+        //then
+        verify(loginAttemptRepository).findByUserIp(userIp);
+        verifyNoMoreInteractions(loginAttemptRepository);
     }
 
     @Test
@@ -105,11 +126,15 @@ public class LoginAttemptServiceTest {
         when(loginAttemptRepository.save(loginAttempt)).thenReturn(loginAttempt);
 
         //when
-        loginAttemptService.clearFailedLogin(userIp);
+        LoginAttemptEntity result = loginAttemptService.clearFailedLogin(userIp);
 
         //then
         verify(loginAttemptRepository).findByUserIp(userIp);
         verify(loginAttemptRepository).save(loginAttempt);
+        assertNotNull(result);
+        assertEquals(userIp, result.getUserIp());
+        assertEquals(0, result.getFailedCount());
+        assertNull(result.getLastFailedAttempt());
     }
 
     @Test
