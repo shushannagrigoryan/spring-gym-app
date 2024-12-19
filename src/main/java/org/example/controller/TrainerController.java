@@ -350,7 +350,7 @@ public class TrainerController {
             )
         }
     )
-    @PreAuthorize("hasRole('TRAINER')")
+    @PreAuthorize("hasRole('TRAINEE') and #traineeUsername == authentication.name")
     public ResponseEntity<ResponseDto<Set<TrainerProfileDto>>> notAssignedOnTraineeActiveTrainers(
         @PathVariable("username") String traineeUsername) {
         trainerRequestMetrics.incrementCounter();
