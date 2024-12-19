@@ -12,9 +12,9 @@ import java.util.Optional;
 import java.util.Set;
 import org.example.entity.Role;
 import org.example.entity.UserEntity;
-import org.example.repositories.UserRepository;
 import org.example.services.GymUserDetailsService;
 import org.example.services.LoginAttemptService;
+import org.example.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,7 +26,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 @ExtendWith(MockitoExtension.class)
 public class GymUserDetailsServiceTest {
     @Mock
-    private UserRepository userRepository;
+    private UserService userService;
     @Mock
     private LoginAttemptService loginAttemptService;
     @InjectMocks
@@ -40,7 +40,7 @@ public class GymUserDetailsServiceTest {
         user.setUsername(username);
         user.setPassword("password");
         user.setRoles(Set.of(Role.TRAINEE));
-        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        when(userService.getUserByUsername(username)).thenReturn(Optional.of(user));
 
         //when
         UserDetails result = userDetailsService.loadUserByUsername(username);
@@ -50,7 +50,7 @@ public class GymUserDetailsServiceTest {
         assertEquals(username, result.getUsername());
         assertEquals("password", result.getPassword());
         assertTrue(result.isEnabled());
-        verify(userRepository).findByUsername(username);
+        verify(userService).getUserByUsername(username);
     }
 
     @Test
@@ -61,12 +61,12 @@ public class GymUserDetailsServiceTest {
         user.setUsername(username);
         user.setPassword("password");
         user.setRoles(Set.of(Role.TRAINEE));
-        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+        when(userService.getUserByUsername(username)).thenReturn(Optional.empty());
 
         //then
         assertThrows(UsernameNotFoundException.class, () ->
             userDetailsService.loadUserByUsername(username), String.format("User not found: %s", username));
-        verify(userRepository).findByUsername(username);
+        verify(userService).getUserByUsername(username);
         verifyNoInteractions(loginAttemptService);
     }
 

@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
-import org.example.repositories.UserRepository;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 @Slf4j
 @RequiredArgsConstructor
 public class GymUserDetailsService implements UserDetailsService {
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     /**
      * Loads user by username.
@@ -28,7 +27,7 @@ public class GymUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.debug("Loading user by Username.");
-        UserEntity user = userRepository.findByUsername(username)
+        UserEntity user = userService.getUserByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException(String.format("User not found: %s", username)));
         log.debug("Building the UserBuilder object.");
         User.UserBuilder userBuilder = User.builder()
