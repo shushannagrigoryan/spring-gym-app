@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.requestdto.ActionType;
 import org.example.dto.requestdto.TraineeTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainerTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainingCreateRequestDto;
@@ -28,6 +29,7 @@ public class TrainingService {
     private final TrainerService trainerService;
     private final TraineeService traineeService;
     private final TrainingMetrics trainingMetrics;
+    private final UpdateTrainerWorkloadService updateTrainerWorkloadService;
 
     /**
      * Creates training in service layer.
@@ -54,6 +56,7 @@ public class TrainingService {
         TrainingEntity createdTraining = trainingRepository.save(training);
         trainingMetrics.incrementCounter();
         log.debug("Successfully created new training with id: {}", createdTraining.getId());
+        updateTrainerWorkloadService.updateTrainerWorkload(createdTraining, ActionType.ADD);
     }
 
     /**

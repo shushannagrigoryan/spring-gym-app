@@ -52,7 +52,7 @@ public class TraineeService {
 
     /**
      * Gets trainee by username.
-     * If no trainee is found returns null.
+     * If no trainee is found throws {@code GymEntityNotFoundException}.
      *
      * @param username username of the trainee
      * @return the {@code TraineeEntity}

@@ -71,7 +71,7 @@ public class TrainerService {
 
     /**
      * Gets trainer by username.
-     * If no trainer is found returns null.
+     * If no trainer is found throws {@code GymEntityNotFoundException}.
      *
      * @param username username of the trainer
      * @return the {@code TrainerEntity}
