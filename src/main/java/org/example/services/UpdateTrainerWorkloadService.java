@@ -19,7 +19,14 @@ public class UpdateTrainerWorkloadService {
     private static final String BASE_URL = "http://localhost:8090";
     private static final String URI = "/updateWorkload";
     private final WebClient.Builder webClientBuilder;
-    public void updateTrainerWorkload(TrainingEntity trainingEntity, ActionType actionType){
+
+    /**
+     * Calling TrainerWorkloadService to update trainer's workload after adding/deleting a training.
+     *
+     * @param trainingEntity training added/deleted
+     * @param actionType Add/Delete
+     */
+    public void updateTrainerWorkload(TrainingEntity trainingEntity, ActionType actionType) {
         TrainerWorkloadRequestDto workloadDto = getTrainerWorkloadRequestDto(trainingEntity, actionType);
 
         Mono<ResponseEntity<ResponseDto<String>>> res = webClientBuilder
@@ -43,7 +50,8 @@ public class UpdateTrainerWorkloadService {
         }
     }
 
-    private static TrainerWorkloadRequestDto getTrainerWorkloadRequestDto(TrainingEntity trainingEntity, ActionType actionType) {
+    private static TrainerWorkloadRequestDto getTrainerWorkloadRequestDto(TrainingEntity trainingEntity,
+                                                                          ActionType actionType) {
         TrainerWorkloadRequestDto workloadDto = new TrainerWorkloadRequestDto();
         workloadDto.setUsername(trainingEntity.getTrainer().getUser().getUsername());
         workloadDto.setFirstName(trainingEntity.getTrainer().getUser().getFirstName());
