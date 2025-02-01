@@ -1,7 +1,5 @@
 package org.example.dto.requestdto;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,10 +13,7 @@ import lombok.ToString;
 @ToString
 public class TrainerWorkloadRequestDto {
     private String username;
-    private String firstName;
-    private String lastName;
-    private Boolean isActive;
-    private LocalDateTime trainingDate;
-    private BigDecimal trainingDuration;
-    private ActionType actionType;
+    //private LocalDateTime trainingDate;
+    private String trainingYear;
+    private String trainingMonth;
 }

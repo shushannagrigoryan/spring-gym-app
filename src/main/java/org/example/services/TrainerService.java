@@ -197,4 +197,6 @@ public class TrainerService {
         return trainerRepository
             .findByTrainingsTraineeNotInAndUserActive(Set.of(trainee), true);
     }
+
+
 }

@@ -7,12 +7,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.math.BigDecimal;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.TrainerCreateRequestDto;
 import org.example.dto.requestdto.TrainerUpdateRequestDto;
+import org.example.dto.requestdto.TrainerWorkloadRequestDto;
 import org.example.dto.requestdto.UserChangeActiveStatusRequestDto;
 import org.example.dto.responsedto.ResponseDto;
 import org.example.dto.responsedto.TrainerProfileDto;
@@ -25,6 +27,7 @@ import org.example.mapper.TrainerMapper;
 import org.example.mapper.TrainerProfileMapper;
 import org.example.metrics.TrainerRequestMetrics;
 import org.example.services.TrainerService;
+import org.example.services.TrainerWorkloadService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,6 +38,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -47,6 +51,7 @@ public class TrainerController {
     private final TrainerMapper trainerMapper;
     private final TrainerProfileMapper trainerProfileMapper;
     private final TrainerRequestMetrics trainerRequestMetrics;
+    private final TrainerWorkloadService trainerWorkloadService;
 
     /**
      * POST request to register a new trainer.
@@ -362,6 +367,25 @@ public class TrainerController {
             .map(trainerMapper::entityToProfileDto).collect(Collectors.toSet());
         return new ResponseEntity<>(new ResponseDto<>(payload,
             "Successfully retrieved active trainers which are not assigned to trainee."),
+            HttpStatus.OK);
+    }
+
+
+    /** getting trainer workload. */
+    @GetMapping("/workload")
+    public ResponseEntity<ResponseDto<String>> getTrainerWorkload(
+        @RequestParam("username") String username,
+        @RequestParam("year") String year,
+        @RequestParam("month") String month) {
+        log.debug("Request to get trainer : {} workload by month: {}",
+            username, year + ":" + month);
+
+        BigDecimal payload = trainerWorkloadService.getTrainerWorkload(new TrainerWorkloadRequestDto(
+            username, year, month
+        ));
+
+        return new ResponseEntity<>(new ResponseDto<>(payload.toString(),
+            "Successfully retrieved trainers workload."),
             HttpStatus.OK);
     }
 

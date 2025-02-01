@@ -29,7 +29,7 @@ public class TrainingService {
     private final TrainerService trainerService;
     private final TraineeService traineeService;
     private final TrainingMetrics trainingMetrics;
-    private final UpdateTrainerWorkloadService updateTrainerWorkloadService;
+    private final TrainerWorkloadService trainerWorkloadService;
 
     /**
      * Creates training in service layer.
@@ -56,7 +56,7 @@ public class TrainingService {
         TrainingEntity createdTraining = trainingRepository.save(training);
         trainingMetrics.incrementCounter();
         log.debug("Successfully created new training with id: {}", createdTraining.getId());
-        updateTrainerWorkloadService.updateTrainerWorkload(createdTraining, ActionType.ADD);
+        trainerWorkloadService.updateTrainerWorkload(createdTraining, ActionType.ADD);
     }
 
     /**
