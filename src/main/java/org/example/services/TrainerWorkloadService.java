@@ -55,14 +55,15 @@ public class TrainerWorkloadService {
             .toEntity(new ParameterizedTypeReference<>() {
             });
 
+        res.subscribe(response -> {
+                log.debug("Status code: {}", response.getStatusCode());
+                if (response.getBody() != null) {
+                    log.debug(response.getBody().getMessage());
+                }
+            },
+            error -> log.error("Error occurred", error));
 
-        ResponseEntity<ResponseDto<String>> result = res.block();
-        if (result != null) {
-            log.debug("Status code: {}", result.getStatusCode());
-            if (result.getBody() != null) {
-                log.debug(result.getBody().getMessage());
-            }
-        }
+        log.debug(String.format("Successfully updated trainer's %s workload", workloadDto.getUsername()));
     }
 
     /**
