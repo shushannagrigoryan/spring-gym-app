@@ -33,6 +33,10 @@ management:
     metrics:
       export:
         enabled: true
+  health:
+    circuitbreakers:
+      enabled: true
+
 logging:
   level:
     org:
@@ -43,8 +47,19 @@ logging:
         security: debug
     root: info
 
-
 eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      registerHealthIndicator: true
+      slidingWindowSize: 10
+      minimumNumberOfCalls: 5
+      permittedNumberOfCallsInHalfOpenState: 3
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+      waitDurationInOpenState: 5s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
