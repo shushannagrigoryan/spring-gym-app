@@ -2,6 +2,8 @@ server:
   servlet:
     context-path: /gym
 spring:
+  application:
+    name: spring-gym-app
   datasource:
     driver-class-name: org.postgresql.Driver
     password: ${db_password}
@@ -40,3 +42,9 @@ logging:
       springframework:
         security: debug
     root: info
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
