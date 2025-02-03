@@ -9,7 +9,6 @@ import org.example.dto.requestdto.TrainerWorkloadRequestDto;
 import org.example.dto.requestdto.UpdateTrainerWorkloadRequestDto;
 import org.example.dto.responsedto.ResponseDto;
 import org.example.entity.TrainingEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +16,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class TrainerWorkloadService {
-    @Autowired
-    private TrainerWorkloadClient trainerWorkloadClient;
+    private final TrainerWorkloadClient trainerWorkloadClient;
 
     private static UpdateTrainerWorkloadRequestDto getTrainerWorkloadRequestDto(TrainingEntity trainingEntity,
                                                                                 ActionType actionType) {
