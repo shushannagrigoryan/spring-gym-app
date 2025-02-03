@@ -7,10 +7,12 @@ import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.requestdto.ActionType;
 import org.example.dto.responsedto.TraineeResponseDto;
 import org.example.entity.Role;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
+import org.example.entity.TrainingEntity;
 import org.example.exceptions.GymEntityNotFoundException;
 import org.example.exceptions.GymIllegalArgumentException;
 import org.example.password.PasswordGeneration;
@@ -28,6 +30,7 @@ public class TraineeService {
     private final PasswordGeneration passwordGeneration;
     private final TrainerService trainerService;
     private final UserService userService;
+    private final TrainerWorkloadService trainerWorkloadService;
 
     /**
      * Creates a new trainee in the service layer.
@@ -142,8 +145,14 @@ public class TraineeService {
             throw new GymEntityNotFoundException(String.format("Trainee with username: %s does not exist.", username));
         }
 
+        log.debug("Getting trainee's {} trainings.", username);
+        List<TrainingEntity> traineeTrainings = trainee.get().getTrainings();
+
         log.debug("Deleting trainee with username: {}", username);
         traineeRepository.delete(trainee.get());
+        traineeTrainings
+            .forEach(training -> trainerWorkloadService.updateTrainerWorkload(training, ActionType.DELETE));
+
         log.debug("Successfully deleted trainee with username: {}", username);
     }
 
