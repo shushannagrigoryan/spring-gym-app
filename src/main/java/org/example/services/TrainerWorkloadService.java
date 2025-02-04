@@ -42,7 +42,7 @@ public class TrainerWorkloadService {
     public void updateTrainerWorkload(TrainingEntity trainingEntity, ActionType actionType) {
         UpdateTrainerWorkloadRequestDto workloadDto = getTrainerWorkloadRequestDto(trainingEntity, actionType);
 
-        ResponseEntity<ResponseDto<String>> response  = trainerWorkloadClient.updateWorkload(workloadDto);
+        ResponseEntity<ResponseDto<String>> response = trainerWorkloadClient.updateWorkload(workloadDto);
         if (response.getBody() != null) {
             log.debug(response.getBody().getPayload());
         }
@@ -50,12 +50,15 @@ public class TrainerWorkloadService {
         log.debug(String.format("Successfully updated trainer's %s workload", workloadDto.getUsername()));
     }
 
-    /** Fallback method for circuit breaker. */
+    /**
+     * Fallback method for circuit breaker.
+     */
     public void fallbackMethodForUpdateWorkload(Throwable throwable) {
         log.debug("Running the fallback method.");
         log.debug(throwable.getMessage());
         throw new RuntimeException("Update trainer workload service is currently not available.");
     }
+
     /**
      * Calling TrainerWorkloadService to get trainer's workload after adding/deleting a training.
      */
@@ -64,8 +67,8 @@ public class TrainerWorkloadService {
     public BigDecimal getTrainerWorkload(TrainerWorkloadRequestDto trainerWorkloadRequestDto) {
         ResponseEntity<ResponseDto<BigDecimal>> response =
             trainerWorkloadClient.getWorkload(trainerWorkloadRequestDto.getUsername(),
-            trainerWorkloadRequestDto.getTrainingYear(),
-            trainerWorkloadRequestDto.getTrainingMonth());
+                trainerWorkloadRequestDto.getTrainingYear(),
+                trainerWorkloadRequestDto.getTrainingMonth());
 
         if (response.getBody() != null) {
             return response.getBody().getPayload();

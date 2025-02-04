@@ -371,7 +371,9 @@ public class TrainerController {
     }
 
 
-    /** getting trainer workload. */
+    /**
+     * getting trainer workload.
+     */
     @GetMapping("/workload")
     public ResponseEntity<ResponseDto<String>> getTrainerWorkload(
         @RequestParam("username") String username,
