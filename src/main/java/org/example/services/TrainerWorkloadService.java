@@ -8,6 +8,7 @@ import org.example.controller.TrainerWorkloadClient;
 import org.example.dto.requestdto.ActionType;
 import org.example.dto.requestdto.TrainerWorkloadRequestDto;
 import org.example.dto.requestdto.UpdateTrainerWorkloadRequestDto;
+import org.example.dto.responsedto.GetTrainerWorkloadResponseDto;
 import org.example.dto.responsedto.ResponseDto;
 import org.example.entity.TrainingEntity;
 import org.springframework.http.ResponseEntity;
@@ -66,23 +67,30 @@ public class TrainerWorkloadService {
      */
 
     @CircuitBreaker(name = "getTrainerWorkload", fallbackMethod = "fallbackMethodForGetWorkload")
-    public BigDecimal getTrainerWorkload(TrainerWorkloadRequestDto trainerWorkloadRequestDto) {
+    public GetTrainerWorkloadResponseDto getTrainerWorkload(TrainerWorkloadRequestDto trainerWorkloadRequestDto) {
         ResponseEntity<ResponseDto<BigDecimal>> response =
             trainerWorkloadClient.getWorkload(trainerWorkloadRequestDto.getUsername(),
                 trainerWorkloadRequestDto.getTrainingYear(),
                 trainerWorkloadRequestDto.getTrainingMonth());
-
+        GetTrainerWorkloadResponseDto responseDto =
+            new GetTrainerWorkloadResponseDto(trainerWorkloadRequestDto.getUsername(),
+                trainerWorkloadRequestDto.getTrainingYear(),
+                trainerWorkloadRequestDto.getTrainingMonth());
         if (response.getBody() != null) {
-            return response.getBody().getPayload();
+            responseDto.setWorkload(response.getBody().getPayload());
+            return responseDto;
         }
-        return BigDecimal.ZERO;
+
+        responseDto.setWorkload(BigDecimal.ZERO);
+        return responseDto;
     }
 
     /**
      * Fallback method for circuit breaker for getting trainer workload.
      */
-    public BigDecimal fallbackMethodForGetWorkload(TrainerWorkloadRequestDto trainerWorkloadRequestDto,
-                                                Throwable throwable) {
+    public GetTrainerWorkloadResponseDto fallbackMethodForGetWorkload(
+        TrainerWorkloadRequestDto trainerWorkloadRequestDto,
+        Throwable throwable) {
         log.debug("Running the fallback method for getTraineeWorkload with trainerWorkload: {}.",
             trainerWorkloadRequestDto);
         log.debug(throwable.getMessage());

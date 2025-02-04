@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.math.BigDecimal;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +15,7 @@ import org.example.dto.requestdto.TrainerCreateRequestDto;
 import org.example.dto.requestdto.TrainerUpdateRequestDto;
 import org.example.dto.requestdto.TrainerWorkloadRequestDto;
 import org.example.dto.requestdto.UserChangeActiveStatusRequestDto;
+import org.example.dto.responsedto.GetTrainerWorkloadResponseDto;
 import org.example.dto.responsedto.ResponseDto;
 import org.example.dto.responsedto.TrainerProfileDto;
 import org.example.dto.responsedto.TrainerProfileResponseDto;
@@ -375,18 +375,18 @@ public class TrainerController {
      * getting trainer workload.
      */
     @GetMapping("/workload")
-    public ResponseEntity<ResponseDto<String>> getTrainerWorkload(
+    public ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>> getTrainerWorkload(
         @RequestParam("username") String username,
         @RequestParam("year") String year,
         @RequestParam("month") String month) {
         log.debug("Request to get trainer : {} workload by month: {}",
             username, year + ":" + month);
 
-        BigDecimal payload = trainerWorkloadService.getTrainerWorkload(new TrainerWorkloadRequestDto(
+        GetTrainerWorkloadResponseDto payload = trainerWorkloadService.getTrainerWorkload(new TrainerWorkloadRequestDto(
             username, year, month
         ));
 
-        return new ResponseEntity<>(new ResponseDto<>(payload.toString(),
+        return new ResponseEntity<>(new ResponseDto<>(payload,
             "Successfully retrieved trainers workload."),
             HttpStatus.OK);
     }
