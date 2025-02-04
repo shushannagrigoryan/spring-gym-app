@@ -51,10 +51,12 @@ public class TrainerWorkloadService {
     }
 
     /**
-     * Fallback method for circuit breaker.
+     * Fallback method for circuit breaker for updating trainer workload.
      */
-    public void fallbackMethodForUpdateWorkload(Throwable throwable) {
-        log.debug("Running the fallback method.");
+    public void fallbackMethodForUpdateWorkload(TrainingEntity trainingEntity, ActionType actionType,
+                                                Throwable throwable) {
+        log.debug("Running the fallback method for updateTraineeWorkload with training: {} and actionType: {}.",
+            trainingEntity, actionType);
         log.debug(throwable.getMessage());
         throw new RuntimeException("Update trainer workload service is currently not available.");
     }
@@ -63,7 +65,7 @@ public class TrainerWorkloadService {
      * Calling TrainerWorkloadService to get trainer's workload after adding/deleting a training.
      */
 
-    @CircuitBreaker(name = "getTrainerWorkload", fallbackMethod = "fallbackMethodForUpdateWorkload")
+    @CircuitBreaker(name = "getTrainerWorkload", fallbackMethod = "fallbackMethodForGetWorkload")
     public BigDecimal getTrainerWorkload(TrainerWorkloadRequestDto trainerWorkloadRequestDto) {
         ResponseEntity<ResponseDto<BigDecimal>> response =
             trainerWorkloadClient.getWorkload(trainerWorkloadRequestDto.getUsername(),
@@ -74,5 +76,16 @@ public class TrainerWorkloadService {
             return response.getBody().getPayload();
         }
         return BigDecimal.ZERO;
+    }
+
+    /**
+     * Fallback method for circuit breaker for getting trainer workload.
+     */
+    public BigDecimal fallbackMethodForGetWorkload(TrainerWorkloadRequestDto trainerWorkloadRequestDto,
+                                                Throwable throwable) {
+        log.debug("Running the fallback method for getTraineeWorkload with trainerWorkload: {}.",
+            trainerWorkloadRequestDto);
+        log.debug(throwable.getMessage());
+        throw new RuntimeException("Update trainer workload service is currently not available.");
     }
 }
