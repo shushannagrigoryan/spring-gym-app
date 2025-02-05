@@ -2,10 +2,14 @@ package org.example.exceptionhandlers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import java.io.IOException;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.example.exceptions.GymAuthenticationException;
 import org.example.exceptions.GymEntityNotFoundException;
@@ -18,6 +22,7 @@ import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -131,6 +136,37 @@ public class RestResponseEntityExceptionHandler {
         Map<String, String> response = new HashMap<>();
         exception.getBindingResult().getAllErrors().forEach(e ->
             response.put(((FieldError) e).getField(), e.getDefaultMessage()));
+        return new ResponseEntity<>(
+            new ExceptionResponse<>(response,
+                request.getRequestURI()), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Exception handler for ConstraintViolationException.
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ExceptionResponse<Set<String>>> handleInvalidRequestParamExceptions(
+        ConstraintViolationException exception, HttpServletRequest request) {
+        log.debug("Exception handling for ConstraintViolationExceptionException");
+        Set<String> response = exception.getConstraintViolations()
+            .stream()
+            .map(ConstraintViolation::getMessage)
+            .collect(Collectors.toSet());
+        return new ResponseEntity<>(
+            new ExceptionResponse<>(response,
+                request.getRequestURI()), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Exception handler for MissingServletRequestParameterException.
+     */
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ExceptionResponse<Map<String, String>>> handleMissingServletRequestParameterException(
+        MissingServletRequestParameterException exception, HttpServletRequest request) {
+        log.debug("Exception handling for MissingServletRequestParameterException");
+        Map<String, String> response = new HashMap<>();
+        response.put(exception.getParameterName(),
+            String.format("Parameter %s is required", exception.getParameterName()));
         return new ResponseEntity<>(
             new ExceptionResponse<>(response,
                 request.getRequestURI()), HttpStatus.BAD_REQUEST);

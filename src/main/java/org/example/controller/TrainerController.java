@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ import org.example.services.TrainerWorkloadService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,6 +48,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/trainers")
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 @Tag(name = "TrainerController")
 public class TrainerController {
     private final TrainerService trainerService;
@@ -376,9 +380,14 @@ public class TrainerController {
      */
     @GetMapping("/workload")
     public ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>> getTrainerWorkload(
-        @RequestParam("username") String username,
-        @RequestParam("year") String year,
-        @RequestParam("month") String month) {
+        @RequestParam("username") @NotBlank(message = "Username can't be blank") String username,
+        @RequestParam("year")
+        @NotBlank(message = "Training year can't be blank")
+        @Pattern(regexp = "\\d{4}", message = "Year must be a 4-digit number") String year,
+        @RequestParam("month")
+        @NotBlank(message = "Training month can't be blank")
+        @Pattern(regexp = "^(0?[1-9]|1[0-2])$", message = "Month must be between 1 and 12")
+        String month) {
         log.debug("Request to get trainer : {} workload by month: {}",
             username, year + ":" + month);
 
