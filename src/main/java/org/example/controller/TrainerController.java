@@ -376,24 +376,76 @@ public class TrainerController {
 
 
     /**
-     * getting trainer workload.
+     * Returns trainer's workload for a given month.
+     *
+     * @param username username
+     * @param year year
+     * @param month month
+     * @return {@code ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>>}
      */
     @GetMapping("/workload")
+    @Operation(description = "Getting trainer's workload for a given month.")
+    @ApiResponses(
+        {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Successfully retrieved trainer's workload for a given month.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ResponseEntity.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Authentication error",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "404",
+                description = "The resource you were trying to reach is not found",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "405",
+                description = "Method is not allowed.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "400",
+                description = "Bad request.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            )
+        }
+    )
     public ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>> getTrainerWorkload(
-        @RequestParam("username") @NotBlank(message = "Username can't be blank") String username,
+        @RequestParam("username") @NotBlank(message = "Username can't be blank")
+        String username,
         @RequestParam("year")
         @NotBlank(message = "Training year can't be blank")
-        @Pattern(regexp = "\\d{4}", message = "Year must be a 4-digit number") String year,
+        @Pattern(regexp = "\\d{4}", message = "Year must be a 4-digit number")
+        String year,
         @RequestParam("month")
         @NotBlank(message = "Training month can't be blank")
         @Pattern(regexp = "^(0?[1-9]|1[0-2])$", message = "Month must be between 1 and 12")
-        String month) {
+        String month
+    ) {
         log.debug("Request to get trainer : {} workload by month: {}",
             username, year + ":" + month);
 
-        GetTrainerWorkloadResponseDto payload = trainerWorkloadService.getTrainerWorkload(new TrainerWorkloadRequestDto(
-            username, year, month
-        ));
+        GetTrainerWorkloadResponseDto payload =
+            trainerWorkloadService.getTrainerWorkload(new TrainerWorkloadRequestDto(username, year, month));
 
         return new ResponseEntity<>(new ResponseDto<>(payload,
             "Successfully retrieved trainers workload."),

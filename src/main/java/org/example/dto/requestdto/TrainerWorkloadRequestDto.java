@@ -13,7 +13,6 @@ import lombok.ToString;
 @ToString
 public class TrainerWorkloadRequestDto {
     private String username;
-    //private LocalDateTime trainingDate;
     private String trainingYear;
     private String trainingMonth;
 }
