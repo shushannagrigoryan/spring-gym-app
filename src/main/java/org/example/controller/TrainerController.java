@@ -7,13 +7,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.TrainerCreateRequestDto;
 import org.example.dto.requestdto.TrainerUpdateRequestDto;
+import org.example.dto.requestdto.TrainerWorkloadRequestDto;
 import org.example.dto.requestdto.UserChangeActiveStatusRequestDto;
+import org.example.dto.responsedto.GetTrainerWorkloadResponseDto;
 import org.example.dto.responsedto.ResponseDto;
 import org.example.dto.responsedto.TrainerProfileDto;
 import org.example.dto.responsedto.TrainerProfileResponseDto;
@@ -25,9 +29,11 @@ import org.example.mapper.TrainerMapper;
 import org.example.mapper.TrainerProfileMapper;
 import org.example.metrics.TrainerRequestMetrics;
 import org.example.services.TrainerService;
+import org.example.services.TrainerWorkloadService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,18 +41,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/trainers")
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 @Tag(name = "TrainerController")
 public class TrainerController {
     private final TrainerService trainerService;
     private final TrainerMapper trainerMapper;
     private final TrainerProfileMapper trainerProfileMapper;
     private final TrainerRequestMetrics trainerRequestMetrics;
+    private final TrainerWorkloadService trainerWorkloadService;
 
     /**
      * POST request to register a new trainer.
@@ -362,6 +371,84 @@ public class TrainerController {
             .map(trainerMapper::entityToProfileDto).collect(Collectors.toSet());
         return new ResponseEntity<>(new ResponseDto<>(payload,
             "Successfully retrieved active trainers which are not assigned to trainee."),
+            HttpStatus.OK);
+    }
+
+
+    /**
+     * Returns trainer's workload for a given month.
+     *
+     * @param username username
+     * @param year     year
+     * @param month    month
+     * @return {@code ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>>}
+     */
+    @GetMapping("/workload")
+    @Operation(description = "Getting trainer's workload for a given month.")
+    @ApiResponses(
+        {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Successfully retrieved trainer's workload for a given month.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ResponseEntity.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Authentication error",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "404",
+                description = "The resource you were trying to reach is not found",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "405",
+                description = "Method is not allowed.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "400",
+                description = "Bad request.",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExceptionResponse.class)
+                )
+            )
+        }
+    )
+    public ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>> getTrainerWorkload(
+        @RequestParam("username") @NotBlank(message = "Username can't be blank")
+        String username,
+        @RequestParam("year")
+        @NotBlank(message = "Training year can't be blank")
+        @Pattern(regexp = "\\d{4}", message = "Year must be a 4-digit number")
+        String year,
+        @RequestParam("month")
+        @NotBlank(message = "Training month can't be blank")
+        @Pattern(regexp = "^(0?[1-9]|1[0-2])$", message = "Month must be between 1 and 12")
+        String month
+    ) {
+        log.debug("Request to get trainer : {} workload by month: {}",
+            username, year + ":" + month);
+
+        GetTrainerWorkloadResponseDto payload =
+            trainerWorkloadService.getTrainerWorkload(new TrainerWorkloadRequestDto(username, year, month));
+
+        return new ResponseEntity<>(new ResponseDto<>(payload,
+            "Successfully retrieved trainers workload."),
             HttpStatus.OK);
     }
 

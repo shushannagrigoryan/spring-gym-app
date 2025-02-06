@@ -1,16 +1,20 @@
 package exceptionhandlertest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import java.io.PrintWriter;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import org.example.exceptionhandlers.ExceptionResponse;
 import org.example.exceptionhandlers.RestResponseEntityExceptionHandler;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +33,7 @@ import org.springframework.security.authorization.AuthorizationResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,6 +44,8 @@ public class ExceptionHandlerTest {
     private HttpServletResponse response;
     @Mock
     private AuthorizationResult authorizationResult;
+    @Mock
+    private ConstraintViolation<?> violation;
     @InjectMocks
     private RestResponseEntityExceptionHandler restResponseEntityExceptionHandler;
 
@@ -202,6 +209,37 @@ public class ExceptionHandlerTest {
         //then
         assertEquals(HttpStatus.FORBIDDEN, result.getStatusCode());
         assertEquals("Access to the resource is denied", Objects.requireNonNull(result.getBody()).getMessage());
+    }
+
+    @Test
+    void testHandleInvalidRequestParamExceptions() {
+        //given
+        ConstraintViolationException exception = mock(ConstraintViolationException.class);
+        when(exception.getConstraintViolations()).thenReturn(Set.of(violation));
+        when(violation.getMessage()).thenReturn("Violation message");
+
+        //when
+        ResponseEntity<ExceptionResponse<Set<String>>> result =
+            restResponseEntityExceptionHandler.handleInvalidRequestParamExceptions(exception, request);
+
+        //then
+        assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
+        assertEquals(Objects.requireNonNull(result.getBody()).getMessage(), Set.of("Violation message"));
+    }
+
+    @Test
+    void testHandleMissingServletRequestParameterException() {
+        //given
+        MissingServletRequestParameterException exception = mock(MissingServletRequestParameterException.class);
+        when(exception.getParameterName()).thenReturn("paramName");
+
+        //when
+        ResponseEntity<ExceptionResponse<Map<String, String>>> result =
+            restResponseEntityExceptionHandler.handleMissingServletRequestParameterException(exception, request);
+
+        //then
+        assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
+        assertTrue(Objects.requireNonNull(result.getBody()).getMessage().containsKey("paramName"));
     }
 
 }
