@@ -11,6 +11,7 @@ import org.example.dto.requestdto.UpdateTrainerWorkloadRequestDto;
 import org.example.dto.responsedto.GetTrainerWorkloadResponseDto;
 import org.example.dto.responsedto.ResponseDto;
 import org.example.entity.TrainingEntity;
+import org.example.mapper.TrainingMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -19,19 +20,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TrainerWorkloadService {
     private final TrainerWorkloadClient trainerWorkloadClient;
+    private final TrainingMapper trainingMapper;
 
-    private static UpdateTrainerWorkloadRequestDto getTrainerWorkloadRequestDto(TrainingEntity trainingEntity,
-                                                                                ActionType actionType) {
-        UpdateTrainerWorkloadRequestDto workloadDto = new UpdateTrainerWorkloadRequestDto();
-        workloadDto.setUsername(trainingEntity.getTrainer().getUser().getUsername());
-        workloadDto.setFirstName(trainingEntity.getTrainer().getUser().getFirstName());
-        workloadDto.setLastName(trainingEntity.getTrainer().getUser().getLastName());
-        workloadDto.setIsActive(trainingEntity.getTrainer().getUser().isActive());
-        workloadDto.setTrainingDate(trainingEntity.getTrainingDate());
-        workloadDto.setTrainingDuration(trainingEntity.getTrainingDuration());
-        workloadDto.setActionType(actionType);
-        return workloadDto;
-    }
 
     /**
      * Calling TrainerWorkloadService to update trainer's workload after adding/deleting a training.
@@ -41,7 +31,8 @@ public class TrainerWorkloadService {
      */
     @CircuitBreaker(name = "updateTrainerWorkload", fallbackMethod = "fallbackMethodForUpdateWorkload")
     public void updateTrainerWorkload(TrainingEntity trainingEntity, ActionType actionType) {
-        UpdateTrainerWorkloadRequestDto workloadDto = getTrainerWorkloadRequestDto(trainingEntity, actionType);
+        UpdateTrainerWorkloadRequestDto workloadDto =
+            trainingMapper.getTrainerWorkloadRequestDto(trainingEntity, actionType);
 
         ResponseEntity<ResponseDto<String>> response = trainerWorkloadClient.updateWorkload(workloadDto);
         if (response.getBody() != null) {
@@ -59,7 +50,7 @@ public class TrainerWorkloadService {
         log.debug("Running the fallback method for updateTraineeWorkload with training: {} and actionType: {}.",
             trainingEntity, actionType);
         log.debug(throwable.getMessage());
-        throw new RuntimeException("Update trainer workload service is currently not available.");
+        throw new RuntimeException("Trainer workload service is currently not available.");
     }
 
     /**
@@ -68,14 +59,14 @@ public class TrainerWorkloadService {
 
     @CircuitBreaker(name = "getTrainerWorkload", fallbackMethod = "fallbackMethodForGetWorkload")
     public GetTrainerWorkloadResponseDto getTrainerWorkload(TrainerWorkloadRequestDto trainerWorkloadRequestDto) {
-        ResponseEntity<ResponseDto<BigDecimal>> response =
-            trainerWorkloadClient.getWorkload(trainerWorkloadRequestDto.getUsername(),
-                trainerWorkloadRequestDto.getTrainingYear(),
-                trainerWorkloadRequestDto.getTrainingMonth());
-        GetTrainerWorkloadResponseDto responseDto =
-            new GetTrainerWorkloadResponseDto(trainerWorkloadRequestDto.getUsername(),
-                trainerWorkloadRequestDto.getTrainingYear(),
-                trainerWorkloadRequestDto.getTrainingMonth());
+        ResponseEntity<ResponseDto<BigDecimal>> response = trainerWorkloadClient.getWorkload(
+            trainerWorkloadRequestDto.getUsername(),
+            trainerWorkloadRequestDto.getTrainingYear(),
+            trainerWorkloadRequestDto.getTrainingMonth());
+        GetTrainerWorkloadResponseDto responseDto = new GetTrainerWorkloadResponseDto(
+            trainerWorkloadRequestDto.getUsername(),
+            trainerWorkloadRequestDto.getTrainingYear(),
+            trainerWorkloadRequestDto.getTrainingMonth());
         if (response.getBody() != null) {
             responseDto.setWorkload(response.getBody().getPayload());
             return responseDto;
@@ -94,6 +85,6 @@ public class TrainerWorkloadService {
         log.debug("Running the fallback method for getTraineeWorkload with trainerWorkload: {}.",
             trainerWorkloadRequestDto);
         log.debug(throwable.getMessage());
-        throw new RuntimeException("Update trainer workload service is currently not available.");
+        throw new RuntimeException("Trainer workload service is currently not available.");
     }
 }

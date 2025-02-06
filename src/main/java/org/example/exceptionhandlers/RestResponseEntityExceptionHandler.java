@@ -134,8 +134,8 @@ public class RestResponseEntityExceptionHandler {
         MethodArgumentNotValidException exception, HttpServletRequest request) {
         log.debug("Exception handling for MethodArgumentNotValidException");
         Map<String, String> response = new HashMap<>();
-        exception.getBindingResult().getAllErrors().forEach(e ->
-            response.put(((FieldError) e).getField(), e.getDefaultMessage()));
+        exception.getBindingResult().getAllErrors().forEach(e -> response.put(((FieldError) e).getField(),
+            e.getDefaultMessage()));
         return new ResponseEntity<>(
             new ExceptionResponse<>(response,
                 request.getRequestURI()), HttpStatus.BAD_REQUEST);

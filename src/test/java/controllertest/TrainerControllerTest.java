@@ -1,6 +1,7 @@
 package controllertest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,7 +12,9 @@ import java.util.Set;
 import org.example.controller.TrainerController;
 import org.example.dto.requestdto.TrainerCreateRequestDto;
 import org.example.dto.requestdto.TrainerUpdateRequestDto;
+import org.example.dto.requestdto.TrainerWorkloadRequestDto;
 import org.example.dto.requestdto.UserChangeActiveStatusRequestDto;
+import org.example.dto.responsedto.GetTrainerWorkloadResponseDto;
 import org.example.dto.responsedto.ResponseDto;
 import org.example.dto.responsedto.TrainerProfileDto;
 import org.example.dto.responsedto.TrainerProfileResponseDto;
@@ -22,6 +25,7 @@ import org.example.mapper.TrainerMapper;
 import org.example.mapper.TrainerProfileMapper;
 import org.example.metrics.TrainerRequestMetrics;
 import org.example.services.TrainerService;
+import org.example.services.TrainerWorkloadService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -40,6 +44,8 @@ public class TrainerControllerTest {
     private TrainerProfileMapper trainerProfileMapper;
     @Mock
     private TrainerRequestMetrics trainerRequestMetrics;
+    @Mock
+    private TrainerWorkloadService trainerWorkloadService;
     @InjectMocks
     private TrainerController trainerController;
 
@@ -153,6 +159,26 @@ public class TrainerControllerTest {
         verify(trainerProfileMapper).entityToUpdatedDto(updatedTrainer);
         assertEquals(trainerResponse, Objects.requireNonNull(result.getBody()).getPayload());
         assertEquals(HttpStatus.OK, result.getStatusCode());
+    }
+
+    @Test
+    public void testGetTrainerWorkload() {
+        //given
+        String username = "user";
+        String month = "7";
+        String year = "2024";
+        GetTrainerWorkloadResponseDto responseDto = new GetTrainerWorkloadResponseDto(username, year, month);
+
+        when(trainerWorkloadService.getTrainerWorkload(any(TrainerWorkloadRequestDto.class)))
+            .thenReturn(responseDto);
+
+        //when
+        ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>> result =
+            trainerController.getTrainerWorkload(username, year, month);
+
+        //then
+        verify(trainerWorkloadService).getTrainerWorkload(any(TrainerWorkloadRequestDto.class));
+        assertEquals(responseDto, Objects.requireNonNull(result.getBody()).getPayload());
     }
 }
 

@@ -379,8 +379,8 @@ public class TrainerController {
      * Returns trainer's workload for a given month.
      *
      * @param username username
-     * @param year year
-     * @param month month
+     * @param year     year
+     * @param month    month
      * @return {@code ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>>}
      */
     @GetMapping("/workload")
