@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class TrainerWorkloadService {
     private final TrainerWorkloadClient trainerWorkloadClient;
     private final TrainingMapper trainingMapper;
+    private final UpdateTrainerWorkloadSenderService updateTrainerWorkloadSenderService;
 
 
     /**
@@ -33,11 +34,12 @@ public class TrainerWorkloadService {
     public void updateTrainerWorkload(TrainingEntity trainingEntity, ActionType actionType) {
         UpdateTrainerWorkloadRequestDto workloadDto =
             trainingMapper.getTrainerWorkloadRequestDto(trainingEntity, actionType);
+        updateTrainerWorkloadSenderService.send(workloadDto);
 
-        ResponseEntity<ResponseDto<String>> response = trainerWorkloadClient.updateWorkload(workloadDto);
-        if (response.getBody() != null) {
-            log.debug(response.getBody().getPayload());
-        }
+        //        ResponseEntity<ResponseDto<String>> response = trainerWorkloadClient.updateWorkload(workloadDto);
+        //        if (response.getBody() != null) {
+        //            log.debug(response.getBody().getPayload());
+        //        }
 
         log.debug(String.format("Successfully updated trainer's %s workload", workloadDto.getUsername()));
     }
