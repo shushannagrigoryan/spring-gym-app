@@ -15,7 +15,9 @@ public class UpdateTrainerWorkloadSenderService {
 
     private final JmsTemplate jmsTemplate;
 
-    /** send method for updating trainer workload. */
+    /**
+     * send method for updating trainer workload.
+     */
     @Transactional
     public void send(UpdateTrainerWorkloadRequestDto updateTrainerWorkloadRequestDto) {
         log.debug("Sending UpdateTrainerWorkloadRequestDto to ActiveMQ");

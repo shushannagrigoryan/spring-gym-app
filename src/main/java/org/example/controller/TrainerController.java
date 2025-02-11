@@ -10,7 +10,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -430,7 +429,7 @@ public class TrainerController {
             )
         }
     )
-    public CompletableFuture<ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>>> getTrainerWorkload(
+    public ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>> getTrainerWorkload(
         @RequestParam("username") @NotBlank(message = "Username can't be blank")
         String username,
         @RequestParam("year")
@@ -444,13 +443,6 @@ public class TrainerController {
     ) {
         log.debug("Request to get trainer : {} workload by month: {}",
             username, year + ":" + month);
-
-        //        GetTrainerWorkloadResponseDto payload =
-        //            trainerWorkloadService.getTrainerWorkload(new TrainerWorkloadRequestDto(username, year, month));
-        //
-        //        return new ResponseEntity<>(new ResponseDto<>(payload,
-        //            "Successfully retrieved trainers workload."),
-        //            HttpStatus.OK);
 
         return trainerWorkloadService.getTrainerWorkload(new TrainerWorkloadRequestDto(username, year, month));
     }

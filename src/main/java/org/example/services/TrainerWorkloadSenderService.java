@@ -14,13 +14,11 @@ public class TrainerWorkloadSenderService {
 
     private final JmsTemplate jmsTemplate;
 
-    /** send method for getting trainer workload. */
-    public void send(TrainerWorkloadRequestDto trainerWorkloadRequestDto, String responseQueue) {
+    /**
+     * send method for getting trainer workload.
+     */
+    public void send(TrainerWorkloadRequestDto trainerWorkloadRequestDto) {
         log.debug("Sending TrainerWorkloadRequestDto to ActiveMQ");
-        System.out.println(trainerWorkloadRequestDto);
-        jmsTemplate.convertAndSend(TRAINER_WORKLOAD_REQUEST_QUEUE, trainerWorkloadRequestDto, message -> {
-            message.setStringProperty("responseQueue", responseQueue);
-            return message;
-        });
+        jmsTemplate.convertAndSend(TRAINER_WORKLOAD_REQUEST_QUEUE, trainerWorkloadRequestDto);
     }
 }
