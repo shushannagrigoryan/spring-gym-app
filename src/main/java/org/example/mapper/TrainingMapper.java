@@ -3,6 +3,8 @@ package org.example.mapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.TrainingDto;
+import org.example.dto.requestdto.ActionType;
+import org.example.dto.requestdto.UpdateTrainerWorkloadRequestDto;
 import org.example.dto.responsedto.TraineeCriteriaTrainingsResponseDto;
 import org.example.dto.responsedto.TrainerCriteriaTrainingsResponseDto;
 import org.example.entity.TrainingEntity;
@@ -74,6 +76,26 @@ public class TrainingMapper {
         return new TrainerCriteriaTrainingsResponseDto(training.getTrainingName(), training.getTrainingDate(),
             trainingTypeMapper.entityToResponseDto(training.getTrainingType()),
             training.getTrainingDuration(), training.getTrainee().getUser().getUsername());
+    }
+
+    /**
+     * Mapping trainingEntity with ActionType to UpdateTrainerWorkloadRequestDto.
+     *
+     * @param trainingEntity training
+     * @param actionType     actionType(ADD/DELETE)
+     * @return {@code UpdateTrainerWorkloadRequestDto}
+     */
+    public UpdateTrainerWorkloadRequestDto getTrainerWorkloadRequestDto(TrainingEntity trainingEntity,
+                                                                        ActionType actionType) {
+        UpdateTrainerWorkloadRequestDto workloadDto = new UpdateTrainerWorkloadRequestDto();
+        workloadDto.setUsername(trainingEntity.getTrainer().getUser().getUsername());
+        workloadDto.setFirstName(trainingEntity.getTrainer().getUser().getFirstName());
+        workloadDto.setLastName(trainingEntity.getTrainer().getUser().getLastName());
+        workloadDto.setIsActive(trainingEntity.getTrainer().getUser().isActive());
+        workloadDto.setTrainingDate(trainingEntity.getTrainingDate());
+        workloadDto.setTrainingDuration(trainingEntity.getTrainingDuration());
+        workloadDto.setActionType(actionType);
+        return workloadDto;
     }
 
 }

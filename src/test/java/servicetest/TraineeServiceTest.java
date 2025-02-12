@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.example.dto.requestdto.ActionType;
 import org.example.dto.responsedto.TraineeResponseDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
@@ -25,6 +26,7 @@ import org.example.password.PasswordGeneration;
 import org.example.repositories.TraineeRepository;
 import org.example.services.TraineeService;
 import org.example.services.TrainerService;
+import org.example.services.TrainerWorkloadService;
 import org.example.services.UserService;
 import org.example.username.UsernameGenerator;
 import org.junit.jupiter.api.Test;
@@ -46,6 +48,8 @@ public class TraineeServiceTest {
     private TrainerService trainerService;
     @Mock
     private UserService userService;
+    @Mock
+    private TrainerWorkloadService trainerWorkloadService;
 
     @InjectMocks
     private TraineeService traineeService;
@@ -149,14 +153,18 @@ public class TraineeServiceTest {
         UserEntity user = new UserEntity();
         TraineeEntity trainee = new TraineeEntity();
         trainee.setUser(user);
+        TrainingEntity training = new TrainingEntity();
+        trainee.setTrainings(List.of(training));
         when(traineeRepository.findByUser_Username(username)).thenReturn(Optional.of(trainee));
         doNothing().when(traineeRepository).delete(trainee);
+        doNothing().when(trainerWorkloadService).updateTrainerWorkload(training, ActionType.DELETE);
 
         //when
         traineeService.deleteTraineeByUsername(username);
 
         //then
         verify(traineeRepository).delete(trainee);
+        verify(trainerWorkloadService).updateTrainerWorkload(training, ActionType.DELETE);
     }
 
     @Test

@@ -2,6 +2,8 @@ server:
   servlet:
     context-path: /gym
 spring:
+  application:
+    name: spring-gym-app
   datasource:
     driver-class-name: org.postgresql.Driver
     password: ${db_password}
@@ -31,6 +33,13 @@ management:
     metrics:
       export:
         enabled: true
+  health:
+    circuitbreakers:
+      enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+
 logging:
   level:
     org:
@@ -40,3 +49,20 @@ logging:
       springframework:
         security: debug
     root: info
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      registerHealthIndicator: true
+      slidingWindowSize: 10
+      minimumNumberOfCalls: 5
+      permittedNumberOfCallsInHalfOpenState: 3
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+      waitDurationInOpenState: 5s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
