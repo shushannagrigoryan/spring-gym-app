@@ -14,7 +14,6 @@ public class JwtCustomDecoder implements JwtDecoder {
     @Override
     public Jwt decode(String token) throws JwtException {
         log.debug("Running custom jwt decoder.");
-        log.debug("token = {}", token);
         return jwtDecoder.decode(token);
     }
 }

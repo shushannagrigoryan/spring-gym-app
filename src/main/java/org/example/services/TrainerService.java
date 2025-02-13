@@ -77,14 +77,14 @@ public class TrainerService {
      * @return the {@code TrainerEntity}
      */
     public TrainerEntity getTrainerByUsername(String username) {
-        log.debug("Retrieving trainer by username: {}", username);
+        log.debug("Retrieving trainer by username");
         Optional<TrainerEntity> trainer = trainerRepository.findByUser_Username(username);
         if (trainer.isEmpty()) {
-            log.debug("No trainer with the username: {}", username);
+            log.debug("No trainer with the username");
             throw new GymEntityNotFoundException(
                 String.format("Trainer with username %s does not exist.", username));
         }
-        log.debug("Successfully retrieved trainer by username: {}", username);
+        log.debug("Successfully retrieved trainer by username");
         return trainer.get();
     }
 
@@ -116,12 +116,12 @@ public class TrainerService {
     @Transactional
     public TrainerEntity updateTrainer(TrainerEntity trainerToUpdate) {
         String username = trainerToUpdate.getUser().getUsername();
-        log.debug("Updating trainer with username: {}", trainerToUpdate.getUser().getUsername());
+        log.debug("Updating trainer with username");
 
         Optional<TrainerEntity> trainer = trainerRepository.findByUser_Username(username);
 
         if (trainer.isEmpty()) {
-            log.debug("No trainer with username: {}", username);
+            log.debug("No trainer with username");
             throw new GymIllegalArgumentException(String.format("No trainer with username: %s", username));
         }
         TrainerEntity trainerEntity = trainer.get();

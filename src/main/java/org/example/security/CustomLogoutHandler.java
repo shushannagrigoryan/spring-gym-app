@@ -23,7 +23,6 @@ public class CustomLogoutHandler implements LogoutHandler {
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         log.debug("Running logout handler.");
         String authHeader = request.getHeader("Authorization");
-        log.debug(authHeader);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             log.debug("No token provided.");
             throw new GymAuthenticationException("Authentication failed.");

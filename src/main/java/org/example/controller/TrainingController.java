@@ -160,9 +160,9 @@ public class TrainingController {
         @PathVariable("username") String traineeUsername,
         @Valid @ModelAttribute TraineeTrainingsFilterRequestDto trainingsDto) {
         trainingRequestMetrics.incrementCounter();
-        log.debug("Request for getting trainee's: {} trainings by filter"
+        log.debug("Request for getting trainee's  trainings by filter"
                 + "(dateFrom: {} , dateTo: {}, trainerName: {}, trainingType: {})",
-            traineeUsername, trainingsDto.getFromDate(), trainingsDto.getToDate(),
+            trainingsDto.getFromDate(), trainingsDto.getToDate(),
             trainingsDto.getTrainerUsername(), trainingsDto.getTrainingType());
 
         List<TrainingEntity> trainings = trainingService.getTraineeTrainingsByFilter(traineeUsername, trainingsDto);
@@ -232,9 +232,9 @@ public class TrainingController {
         @PathVariable("username") String trainerUsername,
         @Valid @ModelAttribute TrainerTrainingsFilterRequestDto trainingsDto) {
         trainingRequestMetrics.incrementCounter();
-        log.debug("Request for getting trainer's: {} trainings by filter"
+        log.debug("Request for getting trainer's trainings by filter"
                 + "(dateFrom: {} , dateTo: {}, traineeName: {})",
-            trainerUsername, trainingsDto.getFromDate(), trainingsDto.getToDate(),
+            trainingsDto.getFromDate(), trainingsDto.getToDate(),
             trainingsDto.getTraineeUsername());
 
         List<TrainingEntity> trainings = trainingService.getTrainerTrainingsByFilter(trainerUsername, trainingsDto);

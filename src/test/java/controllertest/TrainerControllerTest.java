@@ -1,184 +1,186 @@
-//package controllertest;
-//
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.mockito.ArgumentMatchers.any;
-//import static org.mockito.Mockito.doNothing;
-//import static org.mockito.Mockito.verify;
-//import static org.mockito.Mockito.when;
-//
-//import java.util.List;
-//import java.util.Objects;
-//import java.util.Set;
-//import org.example.controller.TrainerController;
-//import org.example.dto.requestdto.TrainerCreateRequestDto;
-//import org.example.dto.requestdto.TrainerUpdateRequestDto;
-//import org.example.dto.requestdto.TrainerWorkloadRequestDto;
-//import org.example.dto.requestdto.UserChangeActiveStatusRequestDto;
-//import org.example.dto.responsedto.GetTrainerWorkloadResponseDto;
-//import org.example.dto.responsedto.ResponseDto;
-//import org.example.dto.responsedto.TrainerProfileDto;
-//import org.example.dto.responsedto.TrainerProfileResponseDto;
-//import org.example.dto.responsedto.TrainerResponseDto;
-//import org.example.dto.responsedto.TrainerUpdateResponseDto;
-//import org.example.entity.TrainerEntity;
-//import org.example.mapper.TrainerMapper;
-//import org.example.mapper.TrainerProfileMapper;
-//import org.example.metrics.TrainerRequestMetrics;
-//import org.example.services.TrainerService;
-//import org.example.services.TrainerWorkloadService;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//
-//@ExtendWith(MockitoExtension.class)
-//public class TrainerControllerTest {
-//    @Mock
-//    private TrainerService trainerService;
-//    @Mock
-//    private TrainerMapper trainerMapper;
-//    @Mock
-//    private TrainerProfileMapper trainerProfileMapper;
-//    @Mock
-//    private TrainerRequestMetrics trainerRequestMetrics;
-//    @Mock
-//    private TrainerWorkloadService trainerWorkloadService;
-//    @InjectMocks
-//    private TrainerController trainerController;
-//
-//
-//    @Test
-//    public void testRegisterTrainerSuccess() {
-//        //given
-//        TrainerCreateRequestDto requestDto = new TrainerCreateRequestDto();
-//        TrainerEntity trainerEntity = new TrainerEntity();
-//        doNothing().when(trainerRequestMetrics).incrementCounter();
-//        when(trainerMapper.dtoToEntity(requestDto)).thenReturn(trainerEntity);
-//        TrainerResponseDto registered = new TrainerResponseDto(null, null);
-//        when(trainerService.registerTrainer(trainerEntity)).thenReturn(registered);
-//
-//        //when
-//        ResponseEntity<ResponseDto<TrainerResponseDto>> result = trainerController.registerTrainer(requestDto);
-//
-//        //then
-//        verify(trainerService).registerTrainer(trainerEntity);
-//        assertEquals(HttpStatus.CREATED, result.getStatusCode());
-//        assertEquals(registered, Objects.requireNonNull(result.getBody()).getPayload());
-//    }
-//
-//
-//    @Test
-//    public void testGetActiveTrainersNotAssignedToTrainee() {
-//        // Given
-//        String traineeUsername = "A.A";
-//        TrainerEntity trainer = new TrainerEntity();
-//        doNothing().when(trainerRequestMetrics).incrementCounter();
-//        when(trainerService.notAssignedOnTraineeActiveTrainers(traineeUsername)).thenReturn(List.of(trainer));
-//        TrainerProfileDto trainerProfileDto = new TrainerProfileDto();
-//        when(trainerMapper.entityToProfileDto(trainer)).thenReturn(trainerProfileDto);
-//
-//        // When
-//        ResponseEntity<ResponseDto<Set<TrainerProfileDto>>> result =
-//            trainerController.notAssignedOnTraineeActiveTrainers(traineeUsername);
-//
-//        // Then
-//        assertEquals(Set.of(trainerProfileDto), Objects.requireNonNull(result.getBody()).getPayload());
-//        verify(trainerService).notAssignedOnTraineeActiveTrainers(traineeUsername);
-//        verify(trainerMapper).entityToProfileDto(trainer);
-//    }
-//
-//    @Test
-//    public void testChangeActiveStatusSuccess() {
-//        //given
-//        String username = "A.B";
-//        boolean isActive = true;
-//        UserChangeActiveStatusRequestDto requestDto =
-//            new UserChangeActiveStatusRequestDto(isActive);
-//        doNothing().when(trainerRequestMetrics).incrementCounter();
-//        when(trainerService.changeActiveStatus(username, isActive)).thenReturn("Success.");
-//
-//        //when
-//        ResponseEntity<ResponseDto<Object>> response = trainerController.changeActiveStatus(username, requestDto);
-//
-//        //then
-//        verify(trainerService).changeActiveStatus(username, isActive);
-//        assertEquals("Success.", Objects.requireNonNull(response.getBody()).getMessage());
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//
-//    }
-//
-//    @Test
-//    public void getTrainerProfile() {
-//        //given
-//        String username = "A.A";
-//        TrainerProfileResponseDto response = new TrainerProfileResponseDto();
-//        TrainerEntity trainer = new TrainerEntity();
-//        doNothing().when(trainerRequestMetrics).incrementCounter();
-//        when(trainerService.getTrainerProfile(username)).thenReturn(trainer);
-//        when(trainerProfileMapper.entityToProfileDto(trainer)).thenReturn(response);
-//
-//        //when
-//        ResponseEntity<ResponseDto<TrainerProfileResponseDto>> result =
-//            trainerController.getTrainerProfile(username);
-//
-//        //then
-//        verify(trainerService).getTrainerProfile(username);
-//        assertEquals(HttpStatus.OK, result.getStatusCode());
-//        assertEquals(response, Objects.requireNonNull(result.getBody()).getPayload());
-//    }
-//
-//    @Test
-//    public void testUpdateTrainer() {
-//        //given
-//        String username = "A.A";
-//        String firstName = "B";
-//        String lastName = "C";
-//        Boolean isActive = false;
-//        Long specialization = 1L;
-//        TrainerUpdateRequestDto requestDto =
-//            new TrainerUpdateRequestDto(firstName, lastName, specialization, isActive);
-//        TrainerEntity trainer = new TrainerEntity();
-//        doNothing().when(trainerRequestMetrics).incrementCounter();
-//        when(trainerMapper.updateDtoToEntity(username, requestDto)).thenReturn(trainer);
-//        TrainerEntity updatedTrainer = new TrainerEntity();
-//        when(trainerService.updateTrainer(trainer)).thenReturn(updatedTrainer);
-//        TrainerUpdateResponseDto trainerResponse = new TrainerUpdateResponseDto();
-//        when(trainerProfileMapper
-//            .entityToUpdatedDto(updatedTrainer)).thenReturn(trainerResponse);
-//
-//        //when
-//        ResponseEntity<ResponseDto<TrainerUpdateResponseDto>> result =
-//            trainerController.updateTrainer(username, requestDto);
-//
-//        //then
-//        verify(trainerMapper).updateDtoToEntity(username, requestDto);
-//        verify(trainerService).updateTrainer(trainer);
-//        verify(trainerProfileMapper).entityToUpdatedDto(updatedTrainer);
-//        assertEquals(trainerResponse, Objects.requireNonNull(result.getBody()).getPayload());
-//        assertEquals(HttpStatus.OK, result.getStatusCode());
-//    }
-//
-//    @Test
-//    public void testGetTrainerWorkload() {
-//        //given
-//        String username = "user";
-//        String month = "7";
-//        String year = "2024";
-//        GetTrainerWorkloadResponseDto responseDto = new GetTrainerWorkloadResponseDto(username, year, month);
-//
-//        when(trainerWorkloadService.getTrainerWorkload(any(TrainerWorkloadRequestDto.class)))
-//            .thenReturn(responseDto);
-//
-//        //when
-//        ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>> result =
-//            trainerController.getTrainerWorkload(username, year, month);
-//
-//        //then
-//        verify(trainerWorkloadService).getTrainerWorkload(any(TrainerWorkloadRequestDto.class));
-//        assertEquals(responseDto, Objects.requireNonNull(result.getBody()).getPayload());
-//    }
-//}
-//
+package controllertest;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import org.example.controller.TrainerController;
+import org.example.dto.requestdto.TrainerCreateRequestDto;
+import org.example.dto.requestdto.TrainerUpdateRequestDto;
+import org.example.dto.requestdto.TrainerWorkloadRequestDto;
+import org.example.dto.requestdto.UserChangeActiveStatusRequestDto;
+import org.example.dto.responsedto.GetTrainerWorkloadResponseDto;
+import org.example.dto.responsedto.ResponseDto;
+import org.example.dto.responsedto.TrainerProfileDto;
+import org.example.dto.responsedto.TrainerProfileResponseDto;
+import org.example.dto.responsedto.TrainerResponseDto;
+import org.example.dto.responsedto.TrainerUpdateResponseDto;
+import org.example.entity.TrainerEntity;
+import org.example.mapper.TrainerMapper;
+import org.example.mapper.TrainerProfileMapper;
+import org.example.metrics.TrainerRequestMetrics;
+import org.example.services.TrainerService;
+import org.example.services.TrainerWorkloadService;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+@ExtendWith(MockitoExtension.class)
+public class TrainerControllerTest {
+    @Mock
+    private TrainerService trainerService;
+    @Mock
+    private TrainerMapper trainerMapper;
+    @Mock
+    private TrainerProfileMapper trainerProfileMapper;
+    @Mock
+    private TrainerRequestMetrics trainerRequestMetrics;
+    @Mock
+    private TrainerWorkloadService trainerWorkloadService;
+    @InjectMocks
+    private TrainerController trainerController;
+
+
+    @Test
+    public void testRegisterTrainerSuccess() {
+        //given
+        TrainerCreateRequestDto requestDto = new TrainerCreateRequestDto();
+        TrainerEntity trainerEntity = new TrainerEntity();
+        doNothing().when(trainerRequestMetrics).incrementCounter();
+        when(trainerMapper.dtoToEntity(requestDto)).thenReturn(trainerEntity);
+        TrainerResponseDto registered = new TrainerResponseDto(null, null);
+        when(trainerService.registerTrainer(trainerEntity)).thenReturn(registered);
+
+        //when
+        ResponseEntity<ResponseDto<TrainerResponseDto>> result = trainerController.registerTrainer(requestDto);
+
+        //then
+        verify(trainerService).registerTrainer(trainerEntity);
+        assertEquals(HttpStatus.CREATED, result.getStatusCode());
+        assertEquals(registered, Objects.requireNonNull(result.getBody()).getPayload());
+    }
+
+
+    @Test
+    public void testGetActiveTrainersNotAssignedToTrainee() {
+        // Given
+        String traineeUsername = "A.A";
+        TrainerEntity trainer = new TrainerEntity();
+        doNothing().when(trainerRequestMetrics).incrementCounter();
+        when(trainerService.notAssignedOnTraineeActiveTrainers(traineeUsername)).thenReturn(List.of(trainer));
+        TrainerProfileDto trainerProfileDto = new TrainerProfileDto();
+        when(trainerMapper.entityToProfileDto(trainer)).thenReturn(trainerProfileDto);
+
+        // When
+        ResponseEntity<ResponseDto<Set<TrainerProfileDto>>> result =
+            trainerController.notAssignedOnTraineeActiveTrainers(traineeUsername);
+
+        // Then
+        assertEquals(Set.of(trainerProfileDto), Objects.requireNonNull(result.getBody()).getPayload());
+        verify(trainerService).notAssignedOnTraineeActiveTrainers(traineeUsername);
+        verify(trainerMapper).entityToProfileDto(trainer);
+    }
+
+    @Test
+    public void testChangeActiveStatusSuccess() {
+        //given
+        String username = "A.B";
+        boolean isActive = true;
+        UserChangeActiveStatusRequestDto requestDto =
+            new UserChangeActiveStatusRequestDto(isActive);
+        doNothing().when(trainerRequestMetrics).incrementCounter();
+        when(trainerService.changeActiveStatus(username, isActive)).thenReturn("Success.");
+
+        //when
+        ResponseEntity<ResponseDto<Object>> response = trainerController.changeActiveStatus(username, requestDto);
+
+        //then
+        verify(trainerService).changeActiveStatus(username, isActive);
+        assertEquals("Success.", Objects.requireNonNull(response.getBody()).getMessage());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+    }
+
+    @Test
+    public void getTrainerProfile() {
+        //given
+        String username = "A.A";
+        TrainerProfileResponseDto response = new TrainerProfileResponseDto();
+        TrainerEntity trainer = new TrainerEntity();
+        doNothing().when(trainerRequestMetrics).incrementCounter();
+        when(trainerService.getTrainerProfile(username)).thenReturn(trainer);
+        when(trainerProfileMapper.entityToProfileDto(trainer)).thenReturn(response);
+
+        //when
+        ResponseEntity<ResponseDto<TrainerProfileResponseDto>> result =
+            trainerController.getTrainerProfile(username);
+
+        //then
+        verify(trainerService).getTrainerProfile(username);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(response, Objects.requireNonNull(result.getBody()).getPayload());
+    }
+
+    @Test
+    public void testUpdateTrainer() {
+        //given
+        String username = "A.A";
+        String firstName = "B";
+        String lastName = "C";
+        Boolean isActive = false;
+        Long specialization = 1L;
+        TrainerUpdateRequestDto requestDto =
+            new TrainerUpdateRequestDto(firstName, lastName, specialization, isActive);
+        TrainerEntity trainer = new TrainerEntity();
+        doNothing().when(trainerRequestMetrics).incrementCounter();
+        when(trainerMapper.updateDtoToEntity(username, requestDto)).thenReturn(trainer);
+        TrainerEntity updatedTrainer = new TrainerEntity();
+        when(trainerService.updateTrainer(trainer)).thenReturn(updatedTrainer);
+        TrainerUpdateResponseDto trainerResponse = new TrainerUpdateResponseDto();
+        when(trainerProfileMapper
+            .entityToUpdatedDto(updatedTrainer)).thenReturn(trainerResponse);
+
+        //when
+        ResponseEntity<ResponseDto<TrainerUpdateResponseDto>> result =
+            trainerController.updateTrainer(username, requestDto);
+
+        //then
+        verify(trainerMapper).updateDtoToEntity(username, requestDto);
+        verify(trainerService).updateTrainer(trainer);
+        verify(trainerProfileMapper).entityToUpdatedDto(updatedTrainer);
+        assertEquals(trainerResponse, Objects.requireNonNull(result.getBody()).getPayload());
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+    }
+
+    @Test
+    public void testGetTrainerWorkload() {
+        //given
+        String username = "user";
+        String month = "7";
+        String year = "2024";
+        GetTrainerWorkloadResponseDto responseDto = new GetTrainerWorkloadResponseDto(username, year, month);
+        ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>> response =
+            ResponseEntity.ok(new ResponseDto<>(responseDto, "Successfully retrieved trainer's workload"));
+
+        when(trainerWorkloadService.getTrainerWorkload(any(TrainerWorkloadRequestDto.class)))
+            .thenReturn(response);
+
+        //when
+        ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>> result =
+            trainerController.getTrainerWorkload(username, year, month);
+
+        //then
+        verify(trainerWorkloadService).getTrainerWorkload(any(TrainerWorkloadRequestDto.class));
+        assertEquals(responseDto, Objects.requireNonNull(result.getBody()).getPayload());
+    }
+}
+

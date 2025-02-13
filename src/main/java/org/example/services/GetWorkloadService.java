@@ -57,6 +57,7 @@ public class GetWorkloadService {
         return ResponseEntity.ok(new ResponseDto<>(responseDto, "Successfully retrieved trainer's workload"));
     }
 
+    /** JmsListener for TRAINER_WORKLOAD_RESPONSE_QUEUE. */
     @JmsListener(destination = TRAINER_WORKLOAD_RESPONSE_QUEUE)
     public void onSuccessMessage(String successMessage, @Headers Map<String, Object> headers) {
         String trace = (String) headers.get("traceId");

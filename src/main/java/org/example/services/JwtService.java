@@ -79,7 +79,7 @@ public class JwtService {
         if (revoked == 0) {
             throw new EntityNotFoundException("Token not found");
         }
-        log.debug("Successfully revoked the given token: {}", token);
+        log.debug("Successfully revoked the given token");
     }
 
     /**

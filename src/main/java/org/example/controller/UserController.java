@@ -98,7 +98,7 @@ public class UserController {
         @PathVariable("username") String username,
         @Valid @RequestBody ChangePasswordRequestDto changePasswordDto) {
         userRequestMetrics.incrementCounter();
-        log.debug("Request to change password of user with username: {}", username);
+        log.debug("Request to change password of user");
         userService.changeUserPassword(username, changePasswordDto.getPassword(),
             changePasswordDto.getNewPassword());
         return new ResponseEntity<>(

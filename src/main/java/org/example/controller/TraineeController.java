@@ -165,7 +165,7 @@ public class TraineeController {
     public ResponseEntity<ResponseDto<TraineeProfileResponseDto>> getTraineeProfile(
         @PathVariable("username") String username) {
         traineeRequestMetrics.incrementCounter();
-        log.debug("Request to get trainee profile with username: {}", username);
+        log.debug("Request to get trainee profile with username");
         TraineeEntity trainee = traineeService.getTraineeProfile(username);
 
         return new ResponseEntity<>(new ResponseDto<>(traineeProfileMapper.entityToProfileDto(trainee),
@@ -235,7 +235,7 @@ public class TraineeController {
         @PathVariable("username") String username,
         @Valid @RequestBody TraineeUpdateRequestDto traineeUpdateRequestDto) {
         traineeRequestMetrics.incrementCounter();
-        log.debug("Request to update trainee with username: {}", username);
+        log.debug("Request to update trainee with username");
         TraineeEntity traineeEntity = traineeMapper.updateDtoToEntity(username, traineeUpdateRequestDto);
         TraineeEntity updatedTrainee = traineeService.updateTrainee(traineeEntity);
         TraineeUpdateResponseDto traineeResponse = traineeProfileMapper
@@ -298,8 +298,8 @@ public class TraineeController {
         @PathVariable("username") String username,
         @Valid @RequestBody UserChangeActiveStatusRequestDto activeStatusRequestDto) {
         traineeRequestMetrics.incrementCounter();
-        log.debug("Request to change the active status of trainee with username: {} to {}",
-            username, activeStatusRequestDto.getIsActive());
+        log.debug("Request to change the active status of trainee with username to {}",
+            activeStatusRequestDto.getIsActive());
         String response = traineeService.changeActiveStatus(username,
             activeStatusRequestDto.getIsActive());
         return new ResponseEntity<>(new ResponseDto<>(null, response), HttpStatus.OK);
@@ -355,7 +355,7 @@ public class TraineeController {
     @PreAuthorize("hasRole('TRAINEE') and #username == authentication.name")
     public ResponseEntity<ResponseDto<Object>> deleteTrainee(@PathVariable(value = "username") String username) {
         traineeRequestMetrics.incrementCounter();
-        log.debug("Request to delete trainee with username: {}", username);
+        log.debug("Request to delete trainee with");
         traineeService.deleteTraineeByUsername(username);
         return new ResponseEntity<>(
             new ResponseDto<>(null, "Successfully deleted trainee"), HttpStatus.OK);
@@ -419,8 +419,8 @@ public class TraineeController {
         @PathVariable(value = "username") String traineeUsername,
         @Valid @RequestBody TraineeUpdateTrainersRequestDto updateTrainersDto) {
         traineeRequestMetrics.incrementCounter();
-        log.debug("Request to update trainee's: {} trainer list with: {}.",
-            traineeUsername, updateTrainersDto.getTrainers());
+        log.debug("Request to update trainee's trainer list with: {}.",
+            updateTrainersDto.getTrainers());
 
         List<TrainerProfileDto> payload = traineeService.updateTraineesTrainerList(traineeUsername,
                 updateTrainersDto.getTrainers())
