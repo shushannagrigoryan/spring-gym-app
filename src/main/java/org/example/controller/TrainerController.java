@@ -444,12 +444,7 @@ public class TrainerController {
         log.debug("Request to get trainer : {} workload by month: {}",
             username, year + ":" + month);
 
-        GetTrainerWorkloadResponseDto payload =
-            trainerWorkloadService.getTrainerWorkload(new TrainerWorkloadRequestDto(username, year, month));
-
-        return new ResponseEntity<>(new ResponseDto<>(payload,
-            "Successfully retrieved trainers workload."),
-            HttpStatus.OK);
+        return trainerWorkloadService.getTrainerWorkload(new TrainerWorkloadRequestDto(username, year, month));
     }
 
 }

@@ -34,6 +34,8 @@ dependencies {
     implementation 'org.springframework.security:spring-security-oauth2-resource-server'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.boot:spring-boot-starter-activemq'
+    implementation 'org.apache.activemq:activemq-broker'
     implementation "io.github.resilience4j:resilience4j-spring-boot3:${resilience4jVersion}"
     implementation "io.github.resilience4j:resilience4j-reactor:${resilience4jVersion}"
     implementation 'org.springframework.boot:spring-boot-starter-aop'
@@ -60,6 +62,7 @@ dependencies {
     implementation 'io.micrometer:micrometer-tracing'
     implementation 'io.micrometer:micrometer-tracing-bridge-brave'
     implementation 'io.github.openfeign:feign-micrometer'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2'
 }
 
 dependencyManagement {

@@ -39,7 +39,7 @@ public class TrainingService {
      * @param trainingCreateDto {@code TrainingCreateRequestDto} to create the training
      */
     @Transactional
-    public void createTraining(TrainingCreateRequestDto trainingCreateDto) {
+    public TrainingEntity createTraining(TrainingCreateRequestDto trainingCreateDto) {
         log.debug("Creating training : {}", trainingCreateDto);
 
 
@@ -57,6 +57,7 @@ public class TrainingService {
         trainingMetrics.incrementCounter();
         log.debug("Successfully created new training with id: {}", createdTraining.getId());
         trainerWorkloadService.updateTrainerWorkload(createdTraining, ActionType.ADD);
+        return createdTraining;
     }
 
     /**
@@ -142,5 +143,17 @@ public class TrainingService {
         log.debug("Checking if a training exists with the given trainee and trainer.");
         return trainingRepository.existsByTrainee_User_UsernameAndTrainer_User_Username(
             traineeUsername, trainerUsername);
+    }
+
+    /**
+     * Deletes training by id.
+     *
+     * @param id id
+     */
+    @Transactional
+    public void deleteById(Long id) {
+        log.debug("Request to delete training by id.");
+        trainingRepository.deleteById(id);
+        log.debug("Successfully deleted training by id.");
     }
 }
