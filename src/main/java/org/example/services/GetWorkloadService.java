@@ -1,6 +1,7 @@
 package org.example.services;
 
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -9,9 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.TrainerWorkloadRequestDto;
 import org.example.dto.responsedto.GetTrainerWorkloadResponseDto;
 import org.example.dto.responsedto.ResponseDto;
+import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jms.annotation.JmsListener;
+import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -55,8 +58,11 @@ public class GetWorkloadService {
     }
 
     @JmsListener(destination = TRAINER_WORKLOAD_RESPONSE_QUEUE)
-    public void onSuccessMessage(String successMessage) {
+    public void onSuccessMessage(String successMessage, @Headers Map<String, Object> headers) {
+        String trace = (String) headers.get("traceId");
+        MDC.put("traceId", trace);
         log.debug("Received message from trainer-workload-response-queue: {}", successMessage);
+        MDC.clear();
         responseFuture.complete(successMessage);
     }
 }

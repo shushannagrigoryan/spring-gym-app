@@ -1,12 +1,15 @@
 package org.example.services;
 
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.TrainingEntity;
+import org.slf4j.MDC;
 import org.springframework.jms.annotation.JmsListener;
+import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,9 +47,13 @@ public class UpdateWorkloadService {
     }
 
 
+    /** JmsListener for UPDATE_TRAINER_WORKLOAD_RESPONSE_QUEUE.*/
     @JmsListener(destination = UPDATE_TRAINER_WORKLOAD_RESPONSE_QUEUE)
-    public void onSuccessMessage(String successMessage) {
+    public void onSuccessMessage(String successMessage, @Headers Map<String, Object> headers) {
+        String trace = (String) headers.get("traceId");
+        MDC.put("traceId", trace);
         log.debug("update-trainer-workload-response-queue message: {}", successMessage);
+        MDC.clear();
         responseFuture.complete(successMessage);
     }
 

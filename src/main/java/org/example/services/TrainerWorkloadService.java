@@ -69,7 +69,8 @@ public class TrainerWorkloadService {
     /**
      * Fallback method for circuit breaker for getting trainer workload.
      */
-    public GetTrainerWorkloadResponseDto fallbackMethodForGetWorkload(
+    public ResponseEntity
+        <ResponseDto<GetTrainerWorkloadResponseDto>> fallbackMethodForGetWorkload(
         TrainerWorkloadRequestDto trainerWorkloadRequestDto,
         Throwable throwable) {
         log.debug("Running the fallback method for getTraineeWorkload with trainerWorkload: {}.",
