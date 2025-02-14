@@ -168,9 +168,11 @@ public class TrainerControllerTest {
         String month = "7";
         String year = "2024";
         GetTrainerWorkloadResponseDto responseDto = new GetTrainerWorkloadResponseDto(username, year, month);
+        ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>> response =
+            ResponseEntity.ok(new ResponseDto<>(responseDto, "Successfully retrieved trainer's workload"));
 
         when(trainerWorkloadService.getTrainerWorkload(any(TrainerWorkloadRequestDto.class)))
-            .thenReturn(responseDto);
+            .thenReturn(response);
 
         //when
         ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>> result =

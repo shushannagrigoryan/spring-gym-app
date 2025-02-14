@@ -58,10 +58,10 @@ public class UserService {
      */
     @Transactional
     public Optional<UserEntity> getUserByUsername(String username) {
-        log.debug("Getting user with username: {}", username);
+        log.debug("Getting user with username");
         Optional<UserEntity> user = userRepository.findByUsername(username);
         if (user.isEmpty()) {
-            log.debug("No user with username: {}", username);
+            log.debug("No user with username");
         }
         return user;
     }
@@ -74,7 +74,7 @@ public class UserService {
      */
     @Transactional
     public void login(String username, String password) {
-        log.debug("Logging in user with username {} and password {}", username, password);
+        log.debug("Logging in user with username and password");
         Optional<UserEntity> user = userRepository.findByUsernameAndPassword(username, password);
         if (user.isEmpty()) {
             throw new GymEntityNotFoundException("Invalid username and password.");
@@ -90,7 +90,7 @@ public class UserService {
      */
     @Transactional
     public void changeUserPassword(String username, String oldPassword, String newPassword) {
-        log.debug("Changing the password of user with username: {}", username);
+        log.debug("Changing the password of user with username");
         String errorMessage = String.format("No user with username: %s and password: %s", username, oldPassword);
         UserEntity user = userRepository.findByUsername(username)
             .orElseThrow(() -> new GymEntityNotFoundException(errorMessage));
@@ -99,7 +99,7 @@ public class UserService {
         }
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-        log.debug("Successfully changed password of user with username: {}", username);
+        log.debug("Successfully changed password of user with username");
     }
 
     /**
@@ -109,9 +109,9 @@ public class UserService {
      */
     @Transactional
     public void deleteUser(UserEntity user) {
-        log.debug("Deleting user with username: {}", user.getUsername());
+        log.debug("Deleting user with username");
         userRepository.deleteById(user.getId());
-        log.debug("Successfully deleted user with username: {}", user.getUsername());
+        log.debug("Successfully deleted user with username");
     }
 
     /**

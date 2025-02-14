@@ -169,7 +169,7 @@ public class TrainerController {
     public ResponseEntity<ResponseDto<TrainerProfileResponseDto>> getTrainerProfile(
         @PathVariable("username") String username) {
         trainerRequestMetrics.incrementCounter();
-        log.debug("Request to get trainer profile with username: {}", username);
+        log.debug("Request to get trainer profile with username");
         TrainerEntity trainer = trainerService.getTrainerProfile(username);
         return new ResponseEntity<>(new ResponseDto<>(trainerProfileMapper.entityToProfileDto(trainer),
             "Successfully retrieved trainer profile."), HttpStatus.OK);
@@ -237,7 +237,7 @@ public class TrainerController {
         @PathVariable("username") String username,
         @Valid @RequestBody TrainerUpdateRequestDto trainer) {
         trainerRequestMetrics.incrementCounter();
-        log.debug("Request to update trainer with username: {}", username);
+        log.debug("Request to update trainer with username");
         TrainerEntity trainerEntity = trainerMapper.updateDtoToEntity(username, trainer);
         TrainerEntity updatedTrainer = trainerService.updateTrainer(trainerEntity);
         TrainerUpdateResponseDto payload = trainerProfileMapper
@@ -299,8 +299,8 @@ public class TrainerController {
         @PathVariable("username") String username,
         @Valid @RequestBody UserChangeActiveStatusRequestDto activeStatusRequestDto) {
         trainerRequestMetrics.incrementCounter();
-        log.debug("Request to change the active status of trainer with username: {} to {}",
-            username, activeStatusRequestDto.getIsActive());
+        log.debug("Request to change the active status of trainer with username to {}",
+            activeStatusRequestDto.getIsActive());
         String response = trainerService.changeActiveStatus(username,
             activeStatusRequestDto.getIsActive());
         return new ResponseEntity<>(new ResponseDto<>(null, response), HttpStatus.OK);
@@ -444,12 +444,7 @@ public class TrainerController {
         log.debug("Request to get trainer : {} workload by month: {}",
             username, year + ":" + month);
 
-        GetTrainerWorkloadResponseDto payload =
-            trainerWorkloadService.getTrainerWorkload(new TrainerWorkloadRequestDto(username, year, month));
-
-        return new ResponseEntity<>(new ResponseDto<>(payload,
-            "Successfully retrieved trainers workload."),
-            HttpStatus.OK);
+        return trainerWorkloadService.getTrainerWorkload(new TrainerWorkloadRequestDto(username, year, month));
     }
 
 }

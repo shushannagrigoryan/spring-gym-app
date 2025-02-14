@@ -2,12 +2,11 @@ package servicetest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import java.math.BigDecimal;
-import org.example.controller.TrainerWorkloadClient;
 import org.example.dto.requestdto.ActionType;
 import org.example.dto.requestdto.TrainerWorkloadRequestDto;
 import org.example.dto.requestdto.UpdateTrainerWorkloadRequestDto;
@@ -15,7 +14,10 @@ import org.example.dto.responsedto.GetTrainerWorkloadResponseDto;
 import org.example.dto.responsedto.ResponseDto;
 import org.example.entity.TrainingEntity;
 import org.example.mapper.TrainingMapper;
+import org.example.services.GetWorkloadService;
+import org.example.services.TrainerWorkloadSenderService;
 import org.example.services.TrainerWorkloadService;
+import org.example.services.UpdateTrainerWorkloadSenderService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,15 +28,13 @@ import org.springframework.http.ResponseEntity;
 @ExtendWith(MockitoExtension.class)
 public class TrainerWorkloadServiceTest {
     @Mock
-    private ResponseEntity<ResponseDto<String>> responseEntity;
-    @Mock
-    private ResponseEntity<ResponseDto<BigDecimal>> responseWorkload;
-    @Mock
-    private ResponseDto<String> responseDto;
-    @Mock
     private TrainingMapper trainingMapper;
     @Mock
-    private TrainerWorkloadClient trainerWorkloadClient;
+    private UpdateTrainerWorkloadSenderService updateTrainerWorkloadSenderService;
+    @Mock
+    private GetWorkloadService getWorkloadService;
+    @Mock
+    private TrainerWorkloadSenderService trainerWorkloadSenderService;
     @InjectMocks
     private TrainerWorkloadService trainerWorkloadService;
 
@@ -45,17 +45,14 @@ public class TrainerWorkloadServiceTest {
         UpdateTrainerWorkloadRequestDto updateTrainerWorkloadRequestDto = new UpdateTrainerWorkloadRequestDto();
         doReturn(updateTrainerWorkloadRequestDto)
             .when(trainingMapper).getTrainerWorkloadRequestDto(trainingEntity, ActionType.ADD);
-        doReturn(responseEntity).when(trainerWorkloadClient).updateWorkload(updateTrainerWorkloadRequestDto);
-        doReturn(responseDto).when(responseEntity).getBody();
+        doNothing().when(updateTrainerWorkloadSenderService).send(updateTrainerWorkloadRequestDto);
 
         //when
         trainerWorkloadService.updateTrainerWorkload(trainingEntity, ActionType.ADD);
 
         //then
         verify(trainingMapper).getTrainerWorkloadRequestDto(trainingEntity, ActionType.ADD);
-        verify(trainerWorkloadClient).updateWorkload(updateTrainerWorkloadRequestDto);
-        verify(responseEntity, times(2)).getBody();
-        verify(responseDto).getPayload();
+        verify(updateTrainerWorkloadSenderService).send(updateTrainerWorkloadRequestDto);
     }
 
     @Test
@@ -73,44 +70,24 @@ public class TrainerWorkloadServiceTest {
     }
 
     @Test
-    public void getTrainerWorkloadDurationNotPresent() {
-        //given
-        String username = "user";
-        String year = "2024";
-        String month = "7";
-        BigDecimal duration = BigDecimal.valueOf(60);
-        TrainerWorkloadRequestDto trainerWorkloadRequestDto = new TrainerWorkloadRequestDto(username, year, month);
-        doReturn(responseWorkload).when(trainerWorkloadClient).getWorkload(username, year, month);
-        doReturn(responseDto).when(responseWorkload).getBody();
-        doReturn(duration).when(responseDto).getPayload();
-
-        //when
-        GetTrainerWorkloadResponseDto result = trainerWorkloadService.getTrainerWorkload(trainerWorkloadRequestDto);
-
-        //then
-        verify(trainerWorkloadClient).getWorkload(username, year, month);
-        verify(responseWorkload, times(2)).getBody();
-        verify(responseDto).getPayload();
-        assertEquals(duration, result.getWorkload());
-    }
-
-    @Test
-    public void getTrainerWorkloadDurationPresent() {
+    public void getTrainerWorkload() {
         //given
         String username = "user";
         String year = "2024";
         String month = "7";
         TrainerWorkloadRequestDto trainerWorkloadRequestDto = new TrainerWorkloadRequestDto(username, year, month);
-        doReturn(responseWorkload).when(trainerWorkloadClient).getWorkload(username, year, month);
-        doReturn(null).when(responseWorkload).getBody();
+        GetTrainerWorkloadResponseDto trainerWorkloadResponseDto  = new GetTrainerWorkloadResponseDto(username, year, month);
+        ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>> response =
+            ResponseEntity.ok(new ResponseDto<>(trainerWorkloadResponseDto, "Successfully retrieved trainer's workload"));
+        doNothing().when(trainerWorkloadSenderService).send(trainerWorkloadRequestDto);
+        when(getWorkloadService.getWorkload(trainerWorkloadRequestDto)).thenReturn(response);
 
         //when
-        GetTrainerWorkloadResponseDto result = trainerWorkloadService.getTrainerWorkload(trainerWorkloadRequestDto);
+        ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>> result = trainerWorkloadService.getTrainerWorkload(trainerWorkloadRequestDto);
 
         //then
-        verify(trainerWorkloadClient).getWorkload(username, year, month);
-        verify(responseWorkload, times(1)).getBody();
-        verify(responseDto, times(0)).getPayload();
-        assertEquals(BigDecimal.ZERO, result.getWorkload());
+        verify(getWorkloadService).getWorkload(trainerWorkloadRequestDto);
+        verify(trainerWorkloadSenderService).send(trainerWorkloadRequestDto);
+        assertEquals(response.getBody(), result.getBody());
     }
 }

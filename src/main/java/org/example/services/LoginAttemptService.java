@@ -23,14 +23,14 @@ public class LoginAttemptService {
      */
     @Transactional
     public void loginFailed(String userIp) {
-        log.debug("Failed login for user with ip address: {}", userIp);
+        log.debug("Failed login for user with ip address");
         LoginAttemptEntity loginAttempt = loginAttemptRepository.findByUserIp(userIp).orElse(new LoginAttemptEntity());
 
         LocalDateTime lastFailedAttempt = loginAttempt.getLastFailedAttempt();
 
         if (lastFailedAttempt != null && lastFailedAttempt.isBefore(LocalDateTime.now().minusMinutes(BLOCK_TIME))) {
             //Clearing the login attempt failure entity for the given user if the block time has exceeded.
-            log.debug("Clearing attempt failure entity for user with ip: {}", userIp);
+            log.debug("Clearing attempt failure entity for user with given ip");
             loginAttempt = clearFailedLogin(userIp);
         }
         if (loginAttempt.getFailedCount() >= MAX_FAIL_ATTEMPT) {
@@ -68,7 +68,7 @@ public class LoginAttemptService {
      */
     @Transactional
     public LoginAttemptEntity clearFailedLogin(String userIp) {
-        log.debug("Clearing failed attempt entity data for user {} ", userIp);
+        log.debug("Clearing failed attempt entity data for user");
         LoginAttemptEntity loginAttempt =
             loginAttemptRepository.findByUserIp(userIp)
                 .orElseThrow(() -> new GymEntityNotFoundException("FailedAttemptEntity not found."));

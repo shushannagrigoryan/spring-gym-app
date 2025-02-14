@@ -21,6 +21,7 @@ import org.example.exceptionhandlers.ExceptionResponse;
 import org.example.mapper.TrainingMapper;
 import org.example.metrics.TrainingRequestMetrics;
 import org.example.services.TrainingService;
+import org.example.services.UpdateWorkloadService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,6 +42,7 @@ public class TrainingController {
     private final TrainingService trainingService;
     private final TrainingMapper trainingMapper;
     private final TrainingRequestMetrics trainingRequestMetrics;
+    private final UpdateWorkloadService updateWorkloadService;
 
     /**
      * POST request to add new training.
@@ -93,7 +95,8 @@ public class TrainingController {
         @Valid @RequestBody TrainingCreateRequestDto trainingDto) {
         trainingRequestMetrics.incrementCounter();
         log.debug("Request to create new training: {}", trainingDto);
-        trainingService.createTraining(trainingDto);
+        TrainingEntity createdTraining = trainingService.createTraining(trainingDto);
+        updateWorkloadService.confirmWorkloadUpdate(createdTraining);
         return new ResponseEntity<>(new ResponseDto<>(null,
             "Successfully created a new training."), HttpStatus.OK);
     }
@@ -157,9 +160,9 @@ public class TrainingController {
         @PathVariable("username") String traineeUsername,
         @Valid @ModelAttribute TraineeTrainingsFilterRequestDto trainingsDto) {
         trainingRequestMetrics.incrementCounter();
-        log.debug("Request for getting trainee's: {} trainings by filter"
+        log.debug("Request for getting trainee's  trainings by filter"
                 + "(dateFrom: {} , dateTo: {}, trainerName: {}, trainingType: {})",
-            traineeUsername, trainingsDto.getFromDate(), trainingsDto.getToDate(),
+            trainingsDto.getFromDate(), trainingsDto.getToDate(),
             trainingsDto.getTrainerUsername(), trainingsDto.getTrainingType());
 
         List<TrainingEntity> trainings = trainingService.getTraineeTrainingsByFilter(traineeUsername, trainingsDto);
@@ -229,9 +232,9 @@ public class TrainingController {
         @PathVariable("username") String trainerUsername,
         @Valid @ModelAttribute TrainerTrainingsFilterRequestDto trainingsDto) {
         trainingRequestMetrics.incrementCounter();
-        log.debug("Request for getting trainer's: {} trainings by filter"
+        log.debug("Request for getting trainer's trainings by filter"
                 + "(dateFrom: {} , dateTo: {}, traineeName: {})",
-            trainerUsername, trainingsDto.getFromDate(), trainingsDto.getToDate(),
+            trainingsDto.getFromDate(), trainingsDto.getToDate(),
             trainingsDto.getTraineeUsername());
 
         List<TrainingEntity> trainings = trainingService.getTrainerTrainingsByFilter(trainerUsername, trainingsDto);

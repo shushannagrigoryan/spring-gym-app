@@ -18,6 +18,7 @@ import org.example.entity.TrainingEntity;
 import org.example.mapper.TrainingMapper;
 import org.example.metrics.TrainingRequestMetrics;
 import org.example.services.TrainingService;
+import org.example.services.UpdateWorkloadService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,6 +37,8 @@ public class TrainingControllerTest {
     private TrainingService trainingService;
     @Mock
     private TrainingRequestMetrics trainingRequestMetrics;
+    @Mock
+    private UpdateWorkloadService updateWorkloadService;
 
     @InjectMocks
     private TrainingController trainingController;
@@ -44,8 +47,10 @@ public class TrainingControllerTest {
     public void testCreateTraining() {
         //given
         TrainingCreateRequestDto requestDto = new TrainingCreateRequestDto();
+        TrainingEntity training = new TrainingEntity();
         doNothing().when(trainingRequestMetrics).incrementCounter();
-        doNothing().when(trainingService).createTraining(requestDto);
+        when(trainingService.createTraining(requestDto)).thenReturn(training);
+        doNothing().when(updateWorkloadService).confirmWorkloadUpdate(training);
 
         //when
         ResponseEntity<ResponseDto<Object>> result = trainingController.createTraining(requestDto);

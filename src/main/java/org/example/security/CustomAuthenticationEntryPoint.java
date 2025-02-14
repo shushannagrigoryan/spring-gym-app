@@ -31,7 +31,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         if (authExceptionCause instanceof JwtValidationException) {
             log.debug("JwtValidationException: Invalid jwt was sent.");
             responseDto = new ResponseDto<>(null,
-                "Authentication failed: The provided JWT token is invalid or expired. Please provide a valid token.");
+                "Authentication failed.");
             objectMapper.writeValue(response.getWriter(), responseDto);
             return;
         }
