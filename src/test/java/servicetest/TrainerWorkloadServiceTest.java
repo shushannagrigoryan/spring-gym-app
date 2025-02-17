@@ -76,14 +76,17 @@ public class TrainerWorkloadServiceTest {
         String year = "2024";
         String month = "7";
         TrainerWorkloadRequestDto trainerWorkloadRequestDto = new TrainerWorkloadRequestDto(username, year, month);
-        GetTrainerWorkloadResponseDto trainerWorkloadResponseDto  = new GetTrainerWorkloadResponseDto(username, year, month);
+        GetTrainerWorkloadResponseDto trainerWorkloadResponseDto  =
+            new GetTrainerWorkloadResponseDto(username, year, month);
         ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>> response =
-            ResponseEntity.ok(new ResponseDto<>(trainerWorkloadResponseDto, "Successfully retrieved trainer's workload"));
+            ResponseEntity.ok(new ResponseDto<>(trainerWorkloadResponseDto,
+                "Successfully retrieved trainer's workload"));
         doNothing().when(trainerWorkloadSenderService).send(trainerWorkloadRequestDto);
         when(getWorkloadService.getWorkload(trainerWorkloadRequestDto)).thenReturn(response);
 
         //when
-        ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>> result = trainerWorkloadService.getTrainerWorkload(trainerWorkloadRequestDto);
+        ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>> result =
+            trainerWorkloadService.getTrainerWorkload(trainerWorkloadRequestDto);
 
         //then
         verify(getWorkloadService).getWorkload(trainerWorkloadRequestDto);

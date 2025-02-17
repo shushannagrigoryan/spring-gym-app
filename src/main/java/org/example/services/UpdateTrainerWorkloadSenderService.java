@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.UpdateTrainerWorkloadRequestDto;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -18,7 +17,6 @@ public class UpdateTrainerWorkloadSenderService {
     /**
      * send method for updating trainer workload.
      */
-    @Transactional
     public void send(UpdateTrainerWorkloadRequestDto updateTrainerWorkloadRequestDto) {
         log.debug("Sending UpdateTrainerWorkloadRequestDto to ActiveMQ");
         log.debug("jmsTemplate converter = {}", jmsTemplate.getMessageConverter());

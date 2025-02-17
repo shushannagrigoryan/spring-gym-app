@@ -12,7 +12,6 @@ import org.example.entity.TrainingEntity;
 import org.example.mapper.TrainingMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -30,7 +29,6 @@ public class TrainerWorkloadService {
      * @param actionType     Add/Delete
      */
     @CircuitBreaker(name = "updateTrainerWorkload", fallbackMethod = "fallbackMethodForUpdateWorkload")
-    @Transactional
     public void updateTrainerWorkload(TrainingEntity trainingEntity, ActionType actionType) {
         log.debug("updating trainer workload.");
         UpdateTrainerWorkloadRequestDto workloadDto =

@@ -1,5 +1,5 @@
 db_name: gym_stg_db
-db_password: stg_pass
-db_username: stg_user
+db_password: ${stg_password}
+db_username: ${stg_username}
 server:
   port: 8084

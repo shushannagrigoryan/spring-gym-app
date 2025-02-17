@@ -233,9 +233,8 @@ public class TrainingController {
         @Valid @ModelAttribute TrainerTrainingsFilterRequestDto trainingsDto) {
         trainingRequestMetrics.incrementCounter();
         log.debug("Request for getting trainer's trainings by filter"
-                + "(dateFrom: {} , dateTo: {}, traineeName: {})",
-            trainingsDto.getFromDate(), trainingsDto.getToDate(),
-            trainingsDto.getTraineeUsername());
+                + "(dateFrom: {} , dateTo: {})",
+            trainingsDto.getFromDate(), trainingsDto.getToDate());
 
         List<TrainingEntity> trainings = trainingService.getTrainerTrainingsByFilter(trainerUsername, trainingsDto);
         List<TrainerCriteriaTrainingsResponseDto> payload =
