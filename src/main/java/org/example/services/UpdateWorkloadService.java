@@ -1,11 +1,13 @@
 package org.example.services;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.requestdto.ActionType;
 import org.example.entity.TrainingEntity;
 import org.slf4j.MDC;
 import org.springframework.jms.annotation.JmsListener;
@@ -24,7 +26,7 @@ public class UpdateWorkloadService {
     /**
      * Confirms trainer workload update succeeded.
      */
-    public void confirmWorkloadUpdate(TrainingEntity createdTraining) {
+    public void confirmWorkloadUpdate(List<TrainingEntity> trainings, ActionType actionType) {
         log.debug("Waiting for workload update confirmation...");
 
         responseFuture = new CompletableFuture<>();
@@ -40,20 +42,29 @@ public class UpdateWorkloadService {
 
         log.debug("Response from update-trainer-workload-response-queue: {}", response);
         if (response == null) {
-            trainingService.deleteById(createdTraining.getId());
+            log.debug("Failed to update the workload in the second microservice.");
+            if (actionType.equals(ActionType.ADD)) {
+                trainingService.deleteById(trainings.get(0).getId());
+            }
             throw new RuntimeException("Trainer workload service is currently not available.");
         }
-        log.debug("Successfully updated trainer's workload");
+        log.debug("Successfully updated({}) trainer's workload", actionType.name());
     }
 
 
-    /** JmsListener for UPDATE_TRAINER_WORKLOAD_RESPONSE_QUEUE.*/
+    /**
+     * JmsListener for UPDATE_TRAINER_WORKLOAD_RESPONSE_QUEUE.
+     */
     @JmsListener(destination = UPDATE_TRAINER_WORKLOAD_RESPONSE_QUEUE)
     public void onSuccessMessage(String successMessage, @Headers Map<String, Object> headers) {
         String trace = (String) headers.get("traceId");
         MDC.put("traceId", trace);
         log.debug("update-trainer-workload-response-queue message: {}", successMessage);
         MDC.clear();
+        if (responseFuture == null) {
+            log.debug("responseFuture = null");
+            responseFuture = new CompletableFuture<>();
+        }
         responseFuture.complete(successMessage);
     }
 

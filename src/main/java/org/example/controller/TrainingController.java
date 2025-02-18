@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.requestdto.ActionType;
 import org.example.dto.requestdto.TraineeTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainerTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainingCreateRequestDto;
@@ -20,6 +21,7 @@ import org.example.entity.TrainingEntity;
 import org.example.exceptionhandlers.ExceptionResponse;
 import org.example.mapper.TrainingMapper;
 import org.example.metrics.TrainingRequestMetrics;
+import org.example.services.TrainerWorkloadService;
 import org.example.services.TrainingService;
 import org.example.services.UpdateWorkloadService;
 import org.springframework.http.HttpStatus;
@@ -43,6 +45,7 @@ public class TrainingController {
     private final TrainingMapper trainingMapper;
     private final TrainingRequestMetrics trainingRequestMetrics;
     private final UpdateWorkloadService updateWorkloadService;
+    private final TrainerWorkloadService trainerWorkloadService;
 
     /**
      * POST request to add new training.
@@ -96,7 +99,8 @@ public class TrainingController {
         trainingRequestMetrics.incrementCounter();
         log.debug("Request to create new training: {}", trainingDto);
         TrainingEntity createdTraining = trainingService.createTraining(trainingDto);
-        updateWorkloadService.confirmWorkloadUpdate(createdTraining);
+        trainerWorkloadService.updateTrainerWorkload(createdTraining, ActionType.ADD);
+        updateWorkloadService.confirmWorkloadUpdate(List.of(createdTraining), ActionType.ADD);
         return new ResponseEntity<>(new ResponseDto<>(null,
             "Successfully created a new training."), HttpStatus.OK);
     }

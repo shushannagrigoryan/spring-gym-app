@@ -76,7 +76,7 @@ public class TrainerWorkloadServiceTest {
         String year = "2024";
         String month = "7";
         TrainerWorkloadRequestDto trainerWorkloadRequestDto = new TrainerWorkloadRequestDto(username, year, month);
-        GetTrainerWorkloadResponseDto trainerWorkloadResponseDto  =
+        GetTrainerWorkloadResponseDto trainerWorkloadResponseDto =
             new GetTrainerWorkloadResponseDto(username, year, month);
         ResponseEntity<ResponseDto<GetTrainerWorkloadResponseDto>> response =
             ResponseEntity.ok(new ResponseDto<>(trainerWorkloadResponseDto,

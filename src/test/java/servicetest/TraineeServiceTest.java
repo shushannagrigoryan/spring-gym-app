@@ -13,7 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import org.example.dto.requestdto.ActionType;
 import org.example.dto.responsedto.TraineeResponseDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
@@ -157,14 +156,12 @@ public class TraineeServiceTest {
         trainee.setTrainings(List.of(training));
         when(traineeRepository.findByUser_Username(username)).thenReturn(Optional.of(trainee));
         doNothing().when(traineeRepository).delete(trainee);
-        doNothing().when(trainerWorkloadService).updateTrainerWorkload(training, ActionType.DELETE);
 
         //when
         traineeService.deleteTraineeByUsername(username);
 
         //then
         verify(traineeRepository).delete(trainee);
-        verify(trainerWorkloadService).updateTrainerWorkload(training, ActionType.DELETE);
     }
 
     @Test

@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Objects;
 import org.example.controller.TrainingController;
+import org.example.dto.requestdto.ActionType;
 import org.example.dto.requestdto.TraineeTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainerTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainingCreateRequestDto;
@@ -17,6 +18,7 @@ import org.example.dto.responsedto.TrainerCriteriaTrainingsResponseDto;
 import org.example.entity.TrainingEntity;
 import org.example.mapper.TrainingMapper;
 import org.example.metrics.TrainingRequestMetrics;
+import org.example.services.TrainerWorkloadService;
 import org.example.services.TrainingService;
 import org.example.services.UpdateWorkloadService;
 import org.junit.jupiter.api.Test;
@@ -39,6 +41,8 @@ public class TrainingControllerTest {
     private TrainingRequestMetrics trainingRequestMetrics;
     @Mock
     private UpdateWorkloadService updateWorkloadService;
+    @Mock
+    private TrainerWorkloadService trainerWorkloadService;
 
     @InjectMocks
     private TrainingController trainingController;
@@ -50,7 +54,8 @@ public class TrainingControllerTest {
         TrainingEntity training = new TrainingEntity();
         doNothing().when(trainingRequestMetrics).incrementCounter();
         when(trainingService.createTraining(requestDto)).thenReturn(training);
-        doNothing().when(updateWorkloadService).confirmWorkloadUpdate(training);
+        doNothing().when(updateWorkloadService).confirmWorkloadUpdate(List.of(training), ActionType.ADD);
+        doNothing().when(trainerWorkloadService).updateTrainerWorkload(training, ActionType.ADD);
 
         //when
         ResponseEntity<ResponseDto<Object>> result = trainingController.createTraining(requestDto);

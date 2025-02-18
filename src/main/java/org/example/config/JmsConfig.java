@@ -76,7 +76,9 @@ public class JmsConfig {
         return jmsTemplate;
     }
 
-    /** MessagePostProcessor config.*/
+    /**
+     * MessagePostProcessor config.
+     */
     @Bean
     public MessagePostProcessor tracingMessagePostProcessor() {
         return message -> {

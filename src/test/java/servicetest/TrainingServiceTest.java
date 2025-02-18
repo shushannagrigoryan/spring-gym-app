@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import org.example.dto.requestdto.ActionType;
 import org.example.dto.requestdto.TraineeTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainerTrainingsFilterRequestDto;
 import org.example.dto.requestdto.TrainingCreateRequestDto;
@@ -26,7 +25,6 @@ import org.example.metrics.TrainingMetrics;
 import org.example.repositories.TrainingRepository;
 import org.example.services.TraineeService;
 import org.example.services.TrainerService;
-import org.example.services.TrainerWorkloadService;
 import org.example.services.TrainingService;
 import org.example.services.TrainingTypeService;
 import org.junit.jupiter.api.Test;
@@ -50,8 +48,6 @@ public class TrainingServiceTest {
 
     @Mock
     private TrainingTypeService trainingTypeService;
-    @Mock
-    private TrainerWorkloadService trainerWorkloadService;
 
     @InjectMocks
     private TrainingService trainingService;
@@ -76,8 +72,7 @@ public class TrainingServiceTest {
         when(trainingTypeService.getTrainingTypeById(trainingTypeId)).thenReturn(trainingType);
         when(traineeService.getTraineeByUsername(traineeUsername)).thenReturn(new TraineeEntity());
         when(trainerService.getTrainerByUsername(trainerUsername)).thenReturn(trainer);
-        doNothing().when(trainerWorkloadService)
-            .updateTrainerWorkload(any(TrainingEntity.class), any(ActionType.class));
+
 
         String trainingName = "trainingName";
         when(trainingRepository.save(any(TrainingEntity.class))).thenReturn(new TrainingEntity());

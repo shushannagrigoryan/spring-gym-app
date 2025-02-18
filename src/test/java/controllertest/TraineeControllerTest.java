@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import org.example.controller.TraineeController;
+import org.example.dto.requestdto.ActionType;
 import org.example.dto.requestdto.TraineeCreateRequestDto;
 import org.example.dto.requestdto.TraineeUpdateRequestDto;
 import org.example.dto.requestdto.TraineeUpdateTrainersRequestDto;
@@ -22,11 +23,14 @@ import org.example.dto.responsedto.TraineeUpdateResponseDto;
 import org.example.dto.responsedto.TrainerProfileDto;
 import org.example.entity.TraineeEntity;
 import org.example.entity.TrainerEntity;
+import org.example.entity.UserEntity;
 import org.example.mapper.TraineeMapper;
 import org.example.mapper.TraineeProfileMapper;
 import org.example.mapper.TrainerMapper;
 import org.example.metrics.TraineeRequestMetrics;
 import org.example.services.TraineeService;
+import org.example.services.TrainerWorkloadService;
+import org.example.services.UpdateWorkloadService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -47,6 +51,10 @@ public class TraineeControllerTest {
     private TraineeProfileMapper traineeProfileMapper;
     @Mock
     private TraineeRequestMetrics traineeRequestMetrics;
+    @Mock
+    private TrainerWorkloadService trainerWorkloadService;
+    @Mock
+    private UpdateWorkloadService updateWorkloadService;
     @InjectMocks
     private TraineeController traineeController;
 
@@ -94,8 +102,15 @@ public class TraineeControllerTest {
     public void testDeleteTraineeByUsernameSuccess() {
         //given
         String username = "A.A";
+        UserEntity user = new UserEntity();
+        user.setUsername(username);
+        TraineeEntity trainee = new TraineeEntity();
+        trainee.setUser(user);
+        when(traineeService.getTraineeByUsername(username)).thenReturn(trainee);
         doNothing().when(traineeRequestMetrics).incrementCounter();
         doNothing().when(traineeService).deleteTraineeByUsername(username);
+        doNothing().when(trainerWorkloadService).updateTrainerWorkload(trainee.getTrainings(), ActionType.DELETE);
+        doNothing().when(updateWorkloadService).confirmWorkloadUpdate(List.of(), ActionType.DELETE);
 
         //when
         ResponseEntity<ResponseDto<Object>> result = traineeController.deleteTrainee(username);

@@ -1,6 +1,8 @@
 package org.example.services;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.ActionType;
@@ -23,10 +25,10 @@ public class TrainerWorkloadService {
     private final GetWorkloadService getWorkloadService;
 
     /**
-     * Calling TrainerWorkloadService to update trainer's workload after adding/deleting a training.
+     * Sends message to update trainer's workload based on the given training, and actionType.
      *
-     * @param trainingEntity training added/deleted
-     * @param actionType     Add/Delete
+     * @param trainingEntity {@code TrainingEntity}
+     * @param actionType {@code ActionType} (ADD/DELETE)
      */
     @CircuitBreaker(name = "updateTrainerWorkload", fallbackMethod = "fallbackMethodForUpdateWorkload")
     public void updateTrainerWorkload(TrainingEntity trainingEntity, ActionType actionType) {
@@ -34,6 +36,33 @@ public class TrainerWorkloadService {
         UpdateTrainerWorkloadRequestDto workloadDto =
             trainingMapper.getTrainerWorkloadRequestDto(trainingEntity, actionType);
         updateTrainerWorkloadSenderService.send(workloadDto);
+    }
+
+    /**
+     * Sends message to update trainer's workload based on the given list of trainings, and actionType.
+     *
+     * @param trainings {@code List<TrainingEntity>}
+     * @param actionType {@code ActionType} (ADD/DELETE)
+     */
+    @CircuitBreaker(name = "updateTrainerWorkloadWithTrainingsList",
+        fallbackMethod = "fallbackMethodForUpdateWorkloadWithTrainingsList")
+    public void updateTrainerWorkload(List<TrainingEntity> trainings, ActionType actionType) {
+        log.debug("Updating({}) trainer's  workload based on the given trainings.", actionType.name());
+        List<UpdateTrainerWorkloadRequestDto> trainerWorkloadRequestDtoList = new ArrayList<>();
+        trainings.forEach(training -> trainerWorkloadRequestDtoList
+            .add(trainingMapper.getTrainerWorkloadRequestDto(training, actionType)));
+        updateTrainerWorkloadSenderService.send(trainerWorkloadRequestDtoList);
+    }
+
+    /**
+     * Fallback method for circuit breaker for updating trainer workload based on the given trainings list.
+     */
+    public void fallbackMethodForUpdateWorkloadWithTrainingsList(List<TrainingEntity> trainings, ActionType actionType,
+                                                Throwable throwable) {
+        log.debug("Running the fallback method for updateTraineeWorkload with trainings list: {} and actionType: {}.",
+            trainings, actionType);
+        log.debug(throwable.getMessage());
+        throw new RuntimeException("Trainer workload service is currently not available.");
     }
 
     /**

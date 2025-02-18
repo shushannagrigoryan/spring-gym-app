@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.requestdto.ActionType;
 import org.example.dto.requestdto.TraineeCreateRequestDto;
 import org.example.dto.requestdto.TraineeUpdateRequestDto;
 import org.example.dto.requestdto.TraineeUpdateTrainersRequestDto;
@@ -26,6 +27,8 @@ import org.example.mapper.TraineeProfileMapper;
 import org.example.mapper.TrainerMapper;
 import org.example.metrics.TraineeRequestMetrics;
 import org.example.services.TraineeService;
+import org.example.services.TrainerWorkloadService;
+import org.example.services.UpdateWorkloadService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,6 +53,8 @@ public class TraineeController {
     private final TrainerMapper trainerMapper;
     private final TraineeProfileMapper traineeProfileMapper;
     private final TraineeRequestMetrics traineeRequestMetrics;
+    private final UpdateWorkloadService updateWorkloadService;
+    private final TrainerWorkloadService trainerWorkloadService;
 
     /**
      * POST request to register a new trainee.
@@ -355,7 +360,10 @@ public class TraineeController {
     @PreAuthorize("hasRole('TRAINEE') and #username == authentication.name")
     public ResponseEntity<ResponseDto<Object>> deleteTrainee(@PathVariable(value = "username") String username) {
         traineeRequestMetrics.incrementCounter();
-        log.debug("Request to delete trainee with");
+        log.debug("Request to delete trainee");
+        trainerWorkloadService.updateTrainerWorkload(traineeService.getTraineeByUsername(username).getTrainings(),
+            ActionType.DELETE);
+        updateWorkloadService.confirmWorkloadUpdate(List.of(), ActionType.DELETE);
         traineeService.deleteTraineeByUsername(username);
         return new ResponseEntity<>(
             new ResponseDto<>(null, "Successfully deleted trainee"), HttpStatus.OK);

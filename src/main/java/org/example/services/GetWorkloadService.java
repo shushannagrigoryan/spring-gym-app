@@ -57,13 +57,18 @@ public class GetWorkloadService {
         return ResponseEntity.ok(new ResponseDto<>(responseDto, "Successfully retrieved trainer's workload"));
     }
 
-    /** JmsListener for TRAINER_WORKLOAD_RESPONSE_QUEUE. */
+    /**
+     * JmsListener for TRAINER_WORKLOAD_RESPONSE_QUEUE.
+     */
     @JmsListener(destination = TRAINER_WORKLOAD_RESPONSE_QUEUE)
     public void onSuccessMessage(String successMessage, @Headers Map<String, Object> headers) {
         String trace = (String) headers.get("traceId");
         MDC.put("traceId", trace);
         log.debug("Received message from trainer-workload-response-queue: {}", successMessage);
         MDC.clear();
+        if (responseFuture == null) {
+            responseFuture = new CompletableFuture<>();
+        }
         responseFuture.complete(successMessage);
     }
 }
