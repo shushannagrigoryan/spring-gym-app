@@ -28,7 +28,7 @@ public class TrainerWorkloadService {
      * Sends message to update trainer's workload based on the given training, and actionType.
      *
      * @param trainingEntity {@code TrainingEntity}
-     * @param actionType {@code ActionType} (ADD/DELETE)
+     * @param actionType     {@code ActionType} (ADD/DELETE)
      */
     @CircuitBreaker(name = "updateTrainerWorkload", fallbackMethod = "fallbackMethodForUpdateWorkload")
     public void updateTrainerWorkload(TrainingEntity trainingEntity, ActionType actionType) {
@@ -41,7 +41,7 @@ public class TrainerWorkloadService {
     /**
      * Sends message to update trainer's workload based on the given list of trainings, and actionType.
      *
-     * @param trainings {@code List<TrainingEntity>}
+     * @param trainings  {@code List<TrainingEntity>}
      * @param actionType {@code ActionType} (ADD/DELETE)
      */
     @CircuitBreaker(name = "updateTrainerWorkloadWithTrainingsList",
@@ -58,7 +58,7 @@ public class TrainerWorkloadService {
      * Fallback method for circuit breaker for updating trainer workload based on the given trainings list.
      */
     public void fallbackMethodForUpdateWorkloadWithTrainingsList(List<TrainingEntity> trainings, ActionType actionType,
-                                                Throwable throwable) {
+                                                                 Throwable throwable) {
         log.debug("Running the fallback method for updateTraineeWorkload with trainings list: {} and actionType: {}.",
             trainings, actionType);
         log.debug(throwable.getMessage());
