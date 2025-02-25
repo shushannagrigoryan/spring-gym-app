@@ -1,7 +1,11 @@
 package org.example.steps;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -9,11 +13,6 @@ import io.cucumber.java.en.When;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.requestdto.TraineeCreateRequestDto;
-import org.example.dto.responsedto.ResponseDto;
-import org.example.dto.responsedto.TraineeResponseDto;
-import org.example.services.TraineeService;
-import org.junit.jupiter.api.Assertions;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,7 +25,6 @@ public class TraineeRegistrationSteps {
 
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
-    private final TraineeService traineeService;
 
     private MvcResult response;
     private final TraineeCreateRequestDto traineeCreateRequestDto = new TraineeCreateRequestDto();
@@ -48,10 +46,6 @@ public class TraineeRegistrationSteps {
      */
     @When("the trainee submits a registration request")
     public void theTraineeSubmitsARegistrationRequest() throws Exception {
-        Mockito.when(traineeService.registerTrainee(Mockito.any()))
-            .thenReturn(new TraineeResponseDto("A.B", "password"));
-
-
         response = mockMvc.perform(post("/trainees")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(traineeCreateRequestDto)))
@@ -65,7 +59,7 @@ public class TraineeRegistrationSteps {
      */
     @Then("the traineeRegistration response status should be {int}")
     public void theResponseStatusShouldBe(int status) {
-        Assertions.assertEquals(status, response.getResponse().getStatus());
+        assertEquals(status, response.getResponse().getStatus());
     }
 
     /**
@@ -75,18 +69,18 @@ public class TraineeRegistrationSteps {
     public void theResponseShouldContainAGeneratedUsernameAndPassword() throws Exception {
 
         String responseBody = response.getResponse().getContentAsString();
+        log.debug("ResponseBody = {}", responseBody);
 
-        ResponseDto<TraineeResponseDto> responseDto = objectMapper.readValue(responseBody,
-            objectMapper.getTypeFactory().constructParametricType(ResponseDto.class, TraineeResponseDto.class));
+        JsonNode jsonNode = objectMapper.readTree(responseBody);
 
-        TraineeResponseDto traineeResponseDto = responseDto.getPayload();
+        JsonNode payloadNode = jsonNode.get("payload");
+        String username = payloadNode.get("username").asText();
+        String password = payloadNode.get("password").asText();
 
-
-        Assertions.assertNotNull(traineeResponseDto.getUsername());
-        Assertions.assertNotNull(traineeResponseDto.getPassword());
-
-        Assertions.assertEquals("A.B", traineeResponseDto.getUsername());
-        Assertions.assertEquals("password", traineeResponseDto.getPassword());
+        assertNotNull(username);
+        assertNotNull(password);
+        assertTrue(username.startsWith(traineeCreateRequestDto.getFirstName().concat(".")
+            .concat(traineeCreateRequestDto.getLastName())));
     }
 
     /**
@@ -97,6 +91,6 @@ public class TraineeRegistrationSteps {
     @Then("the traineeRegistration response should contain an error message {string}")
     public void theResponseShouldContainAnErrorMessage(String errorMessage) throws Exception {
         String responseBody = response.getResponse().getContentAsString();
-        Assertions.assertTrue(responseBody.contains(errorMessage));
+        assertTrue(responseBody.contains(errorMessage));
     }
 }
