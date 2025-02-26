@@ -6,12 +6,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.UserDto;
+import org.example.utils.UserCreationHelper;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -28,11 +31,40 @@ public class UserLoginSteps {
     private MvcResult response;
     private String username;
     private String password;
+    private final UserCreationHelper userCreationHelper;
+    private UserDto userDto;
 
+    /**
+     * Before login request ensure that the user exists in db.
+     */
+    @Before("@createUser")
+    public void ensureLoggedIn() throws Exception {
+        log.debug("Ensuring user exists");
+        String firstName = "A";
+        String lastName = "B";
+        userDto = userCreationHelper.getCreatedUser(firstName, lastName); //Ensure user exists in db.
+    }
+
+    /**
+     * Given a user with invalid username and password.
+     *
+     * @param username username
+     * @param password password
+     */
     @Given("a user with username {string} and password {string}")
-    public void userWithUsernameAndPassword(String username, String password) {
+    public void userWithUsernameAndPasswordForInvalidLogin(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    /**
+     * Given a user with valid username and password.
+     */
+    @Given("a user with username and password")
+    public void userWithUsernameAndPassword() {
+        assertNotNull(userDto);
+        this.username = userDto.getUsername();
+        this.password = userDto.getPassword();
     }
 
     /**

@@ -1,7 +1,8 @@
 Feature: User Login
 
+  @createUser
   Scenario: Successfully login for user
-    Given a user with username "T.D4" and password "xsTzndddTm"
+    Given a user with username and password
     When the user submits a login request
     Then the login response status should be 200
     And the login response should contain a generated jwtToken
