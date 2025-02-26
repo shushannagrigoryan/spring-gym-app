@@ -1,5 +1,6 @@
 Feature: Retrieve all training types
 
+  @createUser
   @auth
   Scenario: Successfully retrieve training types with a valid JWT
     Given the user has a valid JWT token

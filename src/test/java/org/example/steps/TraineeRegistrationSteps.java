@@ -25,9 +25,8 @@ public class TraineeRegistrationSteps {
 
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
-
-    private MvcResult response;
     private final TraineeCreateRequestDto traineeCreateRequestDto = new TraineeCreateRequestDto();
+    private MvcResult response;
 
     @Given("a trainee with first name {string} and last name {string}")
     public void traineeWithFirstNameAndLastName(String firstName, String lastName) {

@@ -18,20 +18,17 @@ import org.springframework.test.web.servlet.MvcResult;
 @RequiredArgsConstructor
 public class UserCreationHelper {
 
+    private static UserDto userDto;
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
-    private static UserDto userDto;
     private final TraineeCreateRequestDto traineeCreateRequestDto = new TraineeCreateRequestDto();
 
     /**
      * Created a user and returns a {@code UserDto }. If user already exists, returns the existing user.
      */
     public UserDto getCreatedUser(String firstName, String lastName) throws Exception {
-        log.debug("getJwtToken method");
-        if (userDto == null) {
-            createUser(firstName, lastName);
-
-        }
+        log.debug("createUser method");
+        createUser(firstName, lastName);
         return userDto;
     }
 

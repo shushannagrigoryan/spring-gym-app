@@ -13,7 +13,9 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.UserDto;
 import org.example.utils.JwtTestHelper;
+import org.example.utils.UserCreationHelper;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,15 +28,30 @@ public class TrainingTypesSteps {
 
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
-
+    private final JwtTestHelper jwtTestHelper;
+    private final UserCreationHelper userCreationHelper;
+    private String username;
+    private String password;
     private MvcResult response;
     private String jwtToken;
-    private final JwtTestHelper jwtTestHelper;
 
-    @Before("@auth")
+    /**
+     * Ensure that the user exists in db.
+     */
+    @Before(value = "@createUser", order = 1)
+    public void ensureUserExists() throws Exception {
+        log.debug("Ensuring user exists");
+        String firstName = "A";
+        String lastName = "C";
+        UserDto userDto = userCreationHelper.getCreatedUser(firstName, lastName); //Ensure user exists in db.
+        this.username = userDto.getUsername();
+        this.password = userDto.getPassword();
+    }
+
+    @Before(value = "@auth", order = 2)
     public void ensureLoggedIn() throws Exception {
         log.debug("Ensuring logged in");
-        jwtToken = jwtTestHelper.getJwtToken();
+        jwtToken = jwtTestHelper.getJwtToken(username, password);
     }
 
     @Given("the user has a valid JWT token")
@@ -53,9 +70,8 @@ public class TrainingTypesSteps {
     @When("the user sends a GET request to get training types with the JWT token")
     public void theTraineeSubmitsARegistrationRequest() throws Exception {
         response = mockMvc.perform(get("/trainingTypes")
-            .header("Authorization", "Bearer " + jwtToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            )
+                .header("Authorization", "Bearer " + jwtToken)
+                .contentType(MediaType.APPLICATION_JSON))
             .andReturn();
     }
 

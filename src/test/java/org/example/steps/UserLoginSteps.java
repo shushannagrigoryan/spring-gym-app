@@ -28,17 +28,17 @@ public class UserLoginSteps {
 
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
+    private final UserCreationHelper userCreationHelper;
     private MvcResult response;
     private String username;
     private String password;
-    private final UserCreationHelper userCreationHelper;
     private UserDto userDto;
 
     /**
      * Before login request ensure that the user exists in db.
      */
     @Before("@createUser")
-    public void ensureLoggedIn() throws Exception {
+    public void ensureUserExists() throws Exception {
         log.debug("Ensuring user exists");
         String firstName = "A";
         String lastName = "B";

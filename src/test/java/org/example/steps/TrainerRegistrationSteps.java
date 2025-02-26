@@ -24,14 +24,14 @@ import org.springframework.test.web.servlet.MvcResult;
 public class TrainerRegistrationSteps {
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
+    private final TrainerCreateRequestDto trainerCreateRequestDto = new TrainerCreateRequestDto();
     private MvcResult response;
-    private final TrainerCreateRequestDto trainerCreateRequestDto  = new TrainerCreateRequestDto();
 
     /**
      * Initializes a trainer with the given first name, last name, and specialization.
      *
-     * @param firstName     the first name of the trainer
-     * @param lastName      the last name of the trainer
+     * @param firstName      the first name of the trainer
+     * @param lastName       the last name of the trainer
      * @param specialization the specialization of the trainer
      */
     @Given("a trainer with first name {string} and last name {string} and specialization {string}")
@@ -44,8 +44,8 @@ public class TrainerRegistrationSteps {
     /**
      * Initializes a trainer with the given first name and last name.
      *
-     * @param firstName     the first name of the trainer
-     * @param lastName      the last name of the trainer
+     * @param firstName the first name of the trainer
+     * @param lastName  the last name of the trainer
      */
     @Given("a trainer with first name {string} and last name {string} and missing specialization")
     public void trainerWithFirstNameAndLastNameAndMissingSpecialization(String firstName, String lastName) {
@@ -56,8 +56,8 @@ public class TrainerRegistrationSteps {
     /**
      * Initializes a trainer with the given first name, last name, and invalid specialization.
      *
-     * @param firstName     the first name of the trainer
-     * @param lastName      the last name of the trainer
+     * @param firstName      the first name of the trainer
+     * @param lastName       the last name of the trainer
      * @param specialization the invalid specialization of the trainer
      */
     @Given("a trainer with first name {string} and last name {string} and invalid specialization {string}")

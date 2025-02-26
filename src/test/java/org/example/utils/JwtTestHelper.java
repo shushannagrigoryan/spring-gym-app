@@ -17,29 +17,26 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @RequiredArgsConstructor
 public class JwtTestHelper {
 
+    private static String jwtToken;
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
-    private static String jwtToken; // Storing JWT for reuse
 
     /**
      * Logs in and retrieves a JWT token. If already logged in, returns the existing token.
      */
-    public String getJwtToken() throws Exception {
-        if (jwtToken == null) {
-            performLogin();
-        }
+    public String getJwtToken(String username, String password) throws Exception {
+        performLogin(username, password);
         return jwtToken;
     }
 
     /**
      * Performs the login and stores the token.
      */
-    public void performLogin() throws Exception {
-        log.debug("performing login");
+    public void performLogin(String username, String password) throws Exception {
         MvcResult loginResponse = mockMvc.perform(MockMvcRequestBuilders.get("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("username", "T.D4")
-                .header("password", "xsTzndddTm"))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("username", username)
+                    .header("password", password))
             .andReturn();
 
         String responseBody = loginResponse.getResponse().getContentAsString();
