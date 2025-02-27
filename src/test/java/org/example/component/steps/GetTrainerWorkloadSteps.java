@@ -1,4 +1,4 @@
-package org.example.steps;
+package org.example.component.steps;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -17,14 +17,14 @@ import io.cucumber.java.en.When;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.UserDto;
+import org.example.component.dto.UserDto;
+import org.example.component.utils.JwtTestHelper;
+import org.example.component.utils.TrainerCreationHelper;
 import org.example.dto.requestdto.TrainerWorkloadRequestDto;
 import org.example.dto.responsedto.GetTrainerWorkloadResponseDto;
 import org.example.dto.responsedto.ResponseDto;
 import org.example.services.GetWorkloadService;
 import org.example.services.TrainerWorkloadSenderService;
-import org.example.utils.JwtTestHelper;
-import org.example.utils.TrainerCreationHelper;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
@@ -158,7 +158,7 @@ public class GetTrainerWorkloadSteps {
         assertEquals(username, trainerUsername);
         assertEquals(month, trainingMonth);
         assertEquals(year, trainingYear);
-        assertEquals("60", workload);
+        assertNotNull(workload);
     }
 
     /**

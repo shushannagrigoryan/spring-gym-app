@@ -1,4 +1,4 @@
-package org.example.utils;
+package org.example.component.utils;
 
 
 import com.fasterxml.jackson.databind.JsonNode;

@@ -1,4 +1,4 @@
-Feature: Retrieve all training types
+Feature: Creating a new training
 
   @createUser
   @auth

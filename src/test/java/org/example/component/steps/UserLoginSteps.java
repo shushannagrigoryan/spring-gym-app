@@ -1,4 +1,4 @@
-package org.example.steps;
+package org.example.component.steps;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -13,8 +13,8 @@ import io.cucumber.java.en.When;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.UserDto;
-import org.example.utils.TraineeCreationHelper;
+import org.example.component.dto.UserDto;
+import org.example.component.utils.TraineeCreationHelper;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;

@@ -1,4 +1,4 @@
-package org.example.steps;
+package org.example.component.steps;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -13,9 +13,9 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.UserDto;
-import org.example.utils.JwtTestHelper;
-import org.example.utils.TraineeCreationHelper;
+import org.example.component.dto.UserDto;
+import org.example.component.utils.JwtTestHelper;
+import org.example.component.utils.TraineeCreationHelper;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;

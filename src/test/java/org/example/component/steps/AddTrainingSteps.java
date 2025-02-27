@@ -1,4 +1,4 @@
-package org.example.steps;
+package org.example.component.steps;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -19,15 +19,15 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.UserDto;
+import org.example.component.dto.UserDto;
+import org.example.component.utils.JwtTestHelper;
+import org.example.component.utils.TraineeCreationHelper;
+import org.example.component.utils.TrainerCreationHelper;
 import org.example.dto.requestdto.ActionType;
 import org.example.dto.requestdto.TrainingCreateRequestDto;
 import org.example.dto.requestdto.UpdateTrainerWorkloadRequestDto;
 import org.example.services.UpdateTrainerWorkloadSenderService;
 import org.example.services.UpdateWorkloadService;
-import org.example.utils.JwtTestHelper;
-import org.example.utils.TraineeCreationHelper;
-import org.example.utils.TrainerCreationHelper;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;

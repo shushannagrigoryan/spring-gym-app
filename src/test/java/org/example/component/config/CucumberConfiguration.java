@@ -1,4 +1,4 @@
-package org.example.config;
+package org.example.component.config;
 
 import io.cucumber.spring.CucumberContextConfiguration;
 import lombok.extern.slf4j.Slf4j;
