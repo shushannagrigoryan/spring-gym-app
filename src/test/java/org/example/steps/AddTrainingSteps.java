@@ -112,7 +112,7 @@ public class AddTrainingSteps {
      * Simulates post request to create a new training.
      */
     @When("the user sends a POST request to create a new training")
-    public void theUserSubmitsARegistrationRequest() throws Exception {
+    public void theUserSubmitsAPostRequestToCreateTraining() throws Exception {
         trainingCreateRequestDto.setTrainerUsername(trainerUsername);
         trainingCreateRequestDto.setTraineeUsername(traineeUsername);
         trainingCreateRequestDto.setTrainingDate(LocalDateTime.parse(trainingDate));
@@ -135,7 +135,7 @@ public class AddTrainingSteps {
      * Simulates adding new training request without jwtToken.
      */
     @When("an unauthorized user sends a POST request to create a new training")
-    public void theTraineeSubmitsARegistrationRequestWithoutJwtToken() throws Exception {
+    public void theUserSubmitsAPostRequestToCreateATrainingWithoutJwtToken() throws Exception {
         trainingCreateRequestDto.setTrainerUsername(trainerUsername);
         trainingCreateRequestDto.setTraineeUsername(traineeUsername);
         trainingCreateRequestDto.setTrainingDate(LocalDateTime.parse(trainingDate));
@@ -152,7 +152,7 @@ public class AddTrainingSteps {
      * Simulates post request to create a new training when the TrainerWorkloadService is not responding.
      */
     @When("the user sends a POST request to create a new training, the trainerWorkloadService is not responding")
-    public void theUserSubmitsARegistrationRequestButTrainerWorkloadServiceIsNotResponding() throws Exception {
+    public void theUserSubmitsAPostRequestToCreateTrainingButTrainerWorkloadServiceIsNotResponding() throws Exception {
         trainingCreateRequestDto.setTrainerUsername(trainerUsername);
         trainingCreateRequestDto.setTraineeUsername(traineeUsername);
         trainingCreateRequestDto.setTrainingDate(LocalDateTime.parse(trainingDate));
