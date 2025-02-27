@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.UserDto;
-import org.example.utils.UserCreationHelper;
+import org.example.utils.TraineeCreationHelper;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -28,7 +28,7 @@ public class UserLoginSteps {
 
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
-    private final UserCreationHelper userCreationHelper;
+    private final TraineeCreationHelper traineeCreationHelper;
     private MvcResult response;
     private String username;
     private String password;
@@ -42,7 +42,7 @@ public class UserLoginSteps {
         log.debug("Ensuring user exists");
         String firstName = "A";
         String lastName = "B";
-        userDto = userCreationHelper.getCreatedUser(firstName, lastName); //Ensure user exists in db.
+        userDto = traineeCreationHelper.getCreatedUser(firstName, lastName); //Ensure user exists in db.
     }
 
     /**

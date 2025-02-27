@@ -34,9 +34,9 @@ public class JwtTestHelper {
      */
     public void performLogin(String username, String password) throws Exception {
         MvcResult loginResponse = mockMvc.perform(MockMvcRequestBuilders.get("/login")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header("username", username)
-                    .header("password", password))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("username", username)
+                .header("password", password))
             .andReturn();
 
         String responseBody = loginResponse.getResponse().getContentAsString();

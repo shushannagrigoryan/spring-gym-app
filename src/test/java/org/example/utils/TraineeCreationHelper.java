@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.MvcResult;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class UserCreationHelper {
+public class TraineeCreationHelper {
 
     private static UserDto userDto;
     private final MockMvc mockMvc;
@@ -24,7 +24,7 @@ public class UserCreationHelper {
     private final TraineeCreateRequestDto traineeCreateRequestDto = new TraineeCreateRequestDto();
 
     /**
-     * Created a user and returns a {@code UserDto }. If user already exists, returns the existing user.
+     * Created a trainee and returns a {@code UserDto }. If user already exists, returns the existing user.
      */
     public UserDto getCreatedUser(String firstName, String lastName) throws Exception {
         log.debug("createUser method");

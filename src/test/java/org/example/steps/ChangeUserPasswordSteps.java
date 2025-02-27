@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dto.UserDto;
 import org.example.dto.requestdto.ChangePasswordRequestDto;
 import org.example.utils.JwtTestHelper;
-import org.example.utils.UserCreationHelper;
+import org.example.utils.TraineeCreationHelper;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -29,7 +29,7 @@ public class ChangeUserPasswordSteps {
 
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
-    private final UserCreationHelper userCreationHelper;
+    private final TraineeCreationHelper traineeCreationHelper;
     private final JwtTestHelper jwtTestHelper;
     private MvcResult response;
     private String username;
@@ -45,7 +45,7 @@ public class ChangeUserPasswordSteps {
         log.debug("Ensuring user exists");
         String firstName = "A";
         String lastName = "C";
-        userDto = userCreationHelper.getCreatedUser(firstName, lastName); //Ensure user exists in db.
+        userDto = traineeCreationHelper.getCreatedUser(firstName, lastName); //Ensure user exists in db.
         this.username = userDto.getUsername();
         this.password = userDto.getPassword();
     }

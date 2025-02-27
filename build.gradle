@@ -83,6 +83,13 @@ test {
     useJUnitPlatform()
 }
 
+tasks.register('cucumber', Test) {
+    group = 'verification'
+    description = 'Run Cucumber tests'
+    useJUnitPlatform()
+    include 'org/example/runner/TestRunner.class'
+}
+
 checkstyle {
     ignoreFailures = false
     maxWarnings = 0
