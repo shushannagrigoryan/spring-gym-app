@@ -7,20 +7,20 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     password: ${db_password}
-    url: jdbc:postgresql://localhost:5432/${db_name}
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/${db_name}
     username: ${db_username}
   flyway:
     baseline-on-migrate: true
     enabled: true
     locations: classpath:db/migration
     password: ${db_password}
-    url: jdbc:postgresql://localhost:5432/${db_name}
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/${db_name}
     user: ${db_username}
   jpa:
     database: postgresql
     show-sql: false
   activemq:
-    broker-url: tcp://localhost:61616
+    broker-url: tcp://${ACTIVE_MQ_HOST:localhost}:61616
     user: ${activeMQ_user}
     password: ${activeMQ_password}
 jwt:

@@ -1,8 +1,87 @@
 services:
+  eureka-service:
+    container_name: eureka-service
+    restart: always
+    build:
+      context: ../eureka-server
+      dockerfile: Dockerfile
+    networks:
+      - spring-network
+    ports:
+      - "8761:8761"
+
+  main-service:
+    container_name: main-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - spring-network
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      EUREKA_URI: ${EUREKA_URI}
+      ACTIVE_MQ_HOST: ${ACTIVE_MQ_HOST}
+      ACTIVE_MQ_USER: ${ACTIVE_MQ_USER}
+      ACTIVE_MQ_PASSWORD: ${ACTIVE_MQ_PASSWORD}
+    ports:
+      - "8080:8080"
+
+  trainer-workload-service:
+    container_name: trainer-workload-service
+    build:
+      context: ../TrainerWorkloadService
+      dockerfile: Dockerfile
+    networks:
+      - spring-network
+    environment:
+      MONGO_HOST: ${MONGO_HOST}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+      EUREKA_URI: ${EUREKA_URI}
+      ACTIVE_MQ_HOST: ${ACTIVE_MQ_HOST}
+      ACTIVE_MQ_USER: ${ACTIVE_MQ_USER}
+      ACTIVE_MQ_PASSWORD: ${ACTIVE_MQ_PASSWORD}
+    ports:
+      - "8090:8090"
+
+  activemq:
+    image: rmohr/activemq
+    container_name: activemq
+    networks:
+      - spring-network
+    ports:
+      - "8161:8161"
+      - "61616:61616"
+    environment:
+      ACTIVEMQ_USER: ${ACTIVE_MQ_USER}
+      ACTIVEMQ_PASSWORD: ${ACTIVE_MQ_PASSWORD}
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    networks:
+      - spring-network
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data-new:/data/db
+
   postgres:
     image: postgres:latest
+    container_name: postgresDB
+    networks:
+      - spring-network
     environment:
-      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
@@ -11,4 +90,9 @@ services:
       - ./init/init-multiple-databases-and-users.sql:/docker-entrypoint-initdb.d/init-multiple-databases-and-users.sql
 
 volumes:
+  mongo-data-new:
   postgres_data:
+
+networks:
+  spring-network:
+    driver: bridge
